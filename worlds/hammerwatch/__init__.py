@@ -2,7 +2,7 @@ import os
 import typing
 
 from Items import HammerwatchItem, ItemData, item_table, junk_table, get_item_counts
-from Locations import HammerwatchLocation, location_table, setup_locations, all_locations
+from Locations import HammerwatchLocation, setup_locations, all_locations
 from Regions import create_regions
 from Rules import set_rules
 
@@ -16,7 +16,6 @@ from ..AutoWorld import World, WebWorld
 class HammerwatchWeb(WebWorld):
     theme = "stone"
 
-    # noinspection PyArgumentList
     tutorials = [Tutorial(
         "Multiworld Setup Guide",
         "A guide to setting up the Hammerwatch randomizer on your computer.",
@@ -74,8 +73,7 @@ class HammerwatchWorld(World):
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
-        classification = ItemClassification.progression if data.progression else ItemClassification.filler
-        return HammerwatchItem(name, classification, data.code, self.player)
+        return HammerwatchItem(name, data.classification, data.code, self.player)
 
     def create_event(self, event: str):
         return HammerwatchItem(event, ItemClassification.progression, None, self.player)
@@ -84,12 +82,12 @@ class HammerwatchWorld(World):
         item_names: typing.List[str] = []
         itempool: typing.List[Item] = []
 
-        total_required_locations = 10  # -1 for the victory condition
+        # Get the total number of locations we need to fill
+        total_required_locations = 39
+        if self.world.randomize_recovery_items[self.player].value:
+            total_required_locations += 2
 
-        if self.world.randomize_shops[self.player]:
-            total_required_locations += 100  # Random number
-
-        # Choose stuff depending on which map is chosen
+        # Get the counts of each item we'll put in
         item_counts: typing.Dict[str, int] = get_item_counts(self.world, self.player)
 
         # Add items

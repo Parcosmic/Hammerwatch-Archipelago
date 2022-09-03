@@ -2,7 +2,7 @@ import typing
 
 from BaseClasses import MultiWorld, Region, RegionType, Entrance
 from Items import HammerwatchItem
-from Locations import HammerwatchLocation, location_table
+from Locations import HammerwatchLocation
 from Names import LocationName, ItemName, RegionName
 
 
@@ -14,8 +14,6 @@ def create_regions(world, player: int, active_locations):
 
 
 def create_tots_regions(world, player: int, active_locations):
-    used_names: typing.Dict[str, int] = {}
-
     menu_region = create_region(world, player, active_locations, RegionName.menu, None)
 
     hub_main_locations = [
@@ -32,7 +30,6 @@ def create_tots_regions(world, player: int, active_locations):
         LocationName.hub_field_south,
         LocationName.hub_field_nw,
         LocationName.hub_field_north,
-        LocationName.victory
     ]
     dunes_rocks_region = create_region(world, player, active_locations, RegionName.hub_rocks,
                                        dunes_rocks_locations)
@@ -67,6 +64,7 @@ def create_tots_regions(world, player: int, active_locations):
         LocationName.cave3_fall_ne,
         LocationName.cave3_fall_sw,
         LocationName.cave3_fall_se,
+        LocationName.victory
     ]
     cave3_fall_region = create_region(world, player, active_locations, RegionName.cave_3_fall, cave3_fall_locations)
 
@@ -115,7 +113,12 @@ def create_tots_regions(world, player: int, active_locations):
         cave3_secret_region,
     ]
 
-    # Connections
+    connect_tots_regions(world, player, active_locations)
+
+
+def connect_tots_regions(world, player: int, active_locations):
+    used_names: typing.Dict[str, int] = {}
+
     connect(world, player, used_names, RegionName.menu, RegionName.hub_main)
     connect(world, player, used_names, RegionName.hub_main, RegionName.hub_rocks,
             lambda state: (state.has(ItemName.pickaxe, player, 1)))
@@ -130,6 +133,7 @@ def create_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.library, RegionName.cave_3_main)
     connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_3_fields,
             lambda state: (state.has(ItemName.lever, player, 1)))
+
 
 def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[str, int], name: str,
                   locations: typing.List[str]) -> Region:

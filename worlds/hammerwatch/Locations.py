@@ -5,11 +5,6 @@ from Names import LocationName
 from Util import Counter
 
 
-class LocationData(typing.NamedTuple):
-    code: typing.Optional[int]
-    hwid: int
-
-
 class HammerwatchLocation(Location):
     game: str = "Hammerwatch"
 
@@ -100,8 +95,8 @@ temple_shop_locations: typing.Dict[str, int] = {
 }
 
 temple_event_locations: typing.Dict[str, None] = {
-    LocationName.visit_temple_entrance: None,
-    LocationName.pof_switch_hub: None
+    # LocationName.visit_temple_entrance: None,
+    # LocationName.pof_switch_hub: None
 }
 
 temple_locations: typing.Dict[str, int] = {
@@ -121,10 +116,6 @@ all_locations: typing.Dict[str, int] = {
     **temple_recovery_locations,
     **temple_shop_locations,
     **common_event_locations
-}
-
-location_table: typing.Dict[str, int] = {
-
 }
 
 
