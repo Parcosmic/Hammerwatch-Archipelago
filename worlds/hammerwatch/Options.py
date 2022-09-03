@@ -15,6 +15,13 @@ class Map(Choice):
     default = 1
 
 
+class RandomizeRecoveryItems(Toggle):
+    """
+    Randomize if recovery items (such as apples and mana crystals) are shuffled into the pool
+    """
+    display_name = "Randomize Recovery Items"
+    default = True
+
 class RandomizeShops(Toggle):
     """
     Randomize if shop upgrades are shuffled into the pool
@@ -41,6 +48,7 @@ class DeathLink(DeathLink):
 
 hammerwatch_options: typing.Dict[str, type(Option)] = {
     "map": Map,
+    "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_shops": RandomizeShops,
     "starting_life_count": StartingLifeCount,
     "death_link": DeathLink

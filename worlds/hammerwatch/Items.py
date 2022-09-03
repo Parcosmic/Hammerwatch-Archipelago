@@ -1,7 +1,7 @@
 import typing
 
 from BaseClasses import Item
-from .Names import ItemName
+from Names import ItemName
 
 
 class ItemData(typing.NamedTuple):
@@ -14,53 +14,74 @@ class HammerwatchItem(Item):
     game: str = "Hammerwatch"
 
 
-collectible_table: typing.Dict[str, ItemData] = {
+collectable_table: typing.Dict[str, ItemData] = {
     ItemName.bonus_chest: ItemData(0x130001, False),
     ItemName.bonus_key: ItemData(0x130002, False),
     ItemName.chest_blue: ItemData(0x130003, False),
     ItemName.chest_green: ItemData(0x130004, False),
-    ItemName.chest_red: ItemData(0x130005, False),
-    ItemName.chest_wood: ItemData(0x130006, False),
-    ItemName.vendor_coin: ItemData(0x130007, False),
-    ItemName.plank: ItemData(0x130008, True),
-    ItemName.key_bronze: ItemData(0x130009, True),
-    ItemName.key_silver: ItemData(0x130010, True),
-    ItemName.key_gold: ItemData(0x130011, True),
-    ItemName.mirror: ItemData(0x130012, True),
-    ItemName.ore: ItemData(0x130013, False),
-    ItemName.key_teleport: ItemData(0x130014, False),
-    ItemName.ankh: ItemData(0x130015, False),
-    ItemName.ankh_5up: ItemData(0x130016, False),
-    ItemName.potion_damage: ItemData(0x130017, False),
-    ItemName.potion_rejuvenation: ItemData(0x130018, False),
-    ItemName.potion_invulnerability: ItemData(0x130019, False),
-    ItemName.stat_upgrade_damage: ItemData(0x130020, False),
-    ItemName.pickaxe: ItemData(0x130021, True),
-    ItemName.diamond: ItemData(0x130022, False),
-    ItemName.diamond_red: ItemData(0x130023, False),
-    ItemName.diamond_small: ItemData(0x130024, False),
-    ItemName.diamond_small_red: ItemData(0x130025, False),
-    ItemName.stat_upgrade: ItemData(0x130026, False)
+    ItemName.chest_purple: ItemData(0x130005, False),
+    ItemName.chest_red: ItemData(0x130006, False),
+    ItemName.chest_wood: ItemData(0x130007, False),
+    ItemName.vendor_coin: ItemData(0x130008, False),
+    ItemName.plank: ItemData(0x130009, True),
+    ItemName.key_bronze: ItemData(0x130016, True),
+    ItemName.key_silver: ItemData(0x130017, True),
+    ItemName.key_gold: ItemData(0x130018, True),
+    ItemName.mirror: ItemData(0x130019, True),
+    ItemName.ore: ItemData(0x130020, True),
+    ItemName.key_teleport: ItemData(0x130021, False),
+    ItemName.ankh: ItemData(0x130022, False),
+    ItemName.ankh_5up: ItemData(0x130023, False),
+    ItemName.ankh_7up: ItemData(0x130024, False),
+    ItemName.potion_damage: ItemData(0x130025, False),
+    ItemName.potion_rejuvenation: ItemData(0x130026, False),
+    ItemName.potion_invulnerability: ItemData(0x130027, False),
+    ItemName.diamond: ItemData(0x130028, False),
+    ItemName.diamond_red: ItemData(0x130029, False),
+    ItemName.diamond_small: ItemData(0x130030, False),
+    ItemName.diamond_small_red: ItemData(0x130031, False),
+    ItemName.stat_upgrade: ItemData(0x130032, False),
+    ItemName.stat_upgrade_damage: ItemData(0x130033, False),
+}
+
+recovery_table: typing.Dict[str, ItemData] = {
+    ItemName.apple: ItemData(0x130010, False),
+    ItemName.orange: ItemData(0x130011, False),
+    ItemName.steak: ItemData(0x130012, False),
+    ItemName.fish: ItemData(0x130013, False),
+    ItemName.mana_1: ItemData(0x130014, False),
+    ItemName.mana_2: ItemData(0x130015, False),
+}
+
+tool_table: typing.Dict[str, ItemData] = {
+    ItemName.pickaxe: ItemData(0x130050, True),
+    ItemName.lever: ItemData(0x130051, True),
+    ItemName.pan: ItemData(0x130052, True),
+    ItemName.shovel: ItemData(0x130053, True),
 }
 
 special_table: typing.Dict[str, ItemData] = {
-    ItemName.sonic_ring: ItemData(0x130027, False),
-    ItemName.serious_health: ItemData(0x130028, False)
+    ItemName.sonic_ring: ItemData(0x130100, False),
+    ItemName.serious_health: ItemData(0x130101, False)
 }
 
 event_table: typing.Dict[str, ItemData] = {
-    ItemName.victory: ItemData(None, True)
+    ItemName.victory: ItemData(None, True),
+    ItemName.pof_switch: ItemData(None, True),
+    ItemName.visit_temple_entrance: ItemData(None, True)
 }
 
 item_table: typing.Dict[str, ItemData] = {
-    **collectible_table,
+    **collectable_table,
+    **recovery_table,
+    **tool_table,
     **special_table,
     **event_table
 }
 
 junk_table: typing.Dict[str, ItemData] = {
-    ItemName.ankh: item_table[ItemName.ankh],
-    ItemName.diamond_small: item_table[ItemName.diamond_small],
+    ItemName.apple: item_table[ItemName.apple],
+    ItemName.mana_1: item_table[ItemName.mana_1],
 }
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -95,34 +116,61 @@ castle_item_counts: typing.Dict[str, int] = {
 }
 
 temple_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 0,
-    ItemName.bonus_key: 0,
-    ItemName.chest_blue: 0,
+    ItemName.bonus_chest: 0,  # 75
+    ItemName.bonus_key: 0,  # 2
+    ItemName.chest_blue: 1,
     ItemName.chest_green: 0,
-    ItemName.chest_red: 0,
-    ItemName.chest_wood: 0,
-    ItemName.vendor_coin: 2,
+    ItemName.chest_purple: 0,
+    ItemName.chest_red: 3,
+    ItemName.chest_wood: 1,
+    ItemName.vendor_coin: 6,
     ItemName.plank: 0,
+    ItemName.apple: 2,
+    ItemName.orange: 0,
+    ItemName.steak: 0,
+    ItemName.fish: 0,
+    ItemName.mana_1: 0,
+    ItemName.mana_2: 0,
     ItemName.key_bronze: 0,
     ItemName.key_silver: 0,
     ItemName.key_gold: 0,
     ItemName.mirror: 0,
-    ItemName.ore: 0,
-    ItemName.key_teleport: 0,
-    ItemName.ankh: 0,
+    ItemName.ore: 2,
+    ItemName.key_teleport: 1,
+    ItemName.ankh: 4,
     ItemName.ankh_5up: 0,
+    ItemName.ankh_7up: 0,
     ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 1,
+    ItemName.potion_rejuvenation: 0,
     ItemName.potion_invulnerability: 0,
     ItemName.stat_upgrade_damage: 0,
-    ItemName.sonic_ring: 0,
-    ItemName.serious_health: 0,
-    ItemName.pickaxe: 1,
+    ItemName.sonic_ring: 12,
+    ItemName.serious_health: 1,
     ItemName.diamond: 0,
     ItemName.diamond_red: 0,
     ItemName.diamond_small: 0,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 0
+    ItemName.stat_upgrade: 5,
+    ItemName.pickaxe: 1,
+    ItemName.lever: 1,
+    ItemName.pan: 1,
+    ItemName.shovel: 0,
 }
+
+
+def get_item_counts(world, player: int):
+    item_counts_table: typing.Dict[str, int]
+
+    if world.map[player] == 0:  # Castle Hammerwatch
+        item_counts_table = {**castle_item_counts}
+    else:  # Temple of the Sun
+        item_counts_table = {**temple_item_counts}
+
+    if not world.randomize_recovery_items[player].value:
+        for recovery in recovery_table:
+            item_counts_table[recovery] = 0
+
+    return item_counts_table
+
 
 lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}

@@ -1,10 +1,10 @@
 import os
 import typing
 
-from .Items import HammerwatchItem, ItemData, item_table, junk_table, castle_item_counts, temple_item_counts
-from .Locations import HammerwatchLocation, location_table, setup_locations, all_locations
-from .Regions import create_regions
-from .Rules import set_rules
+from Items import HammerwatchItem, ItemData, item_table, junk_table, get_item_counts
+from Locations import HammerwatchLocation, location_table, setup_locations, all_locations
+from Regions import create_regions
+from Rules import set_rules
 
 from Names import ItemName, LocationName
 
@@ -84,17 +84,13 @@ class HammerwatchWorld(World):
         item_names: typing.List[str] = []
         itempool: typing.List[Item] = []
 
-        total_required_locations = 7  # -1 for the victory condition
+        total_required_locations = 10  # -1 for the victory condition
 
         if self.world.randomize_shops[self.player]:
             total_required_locations += 100  # Random number
 
         # Choose stuff depending on which map is chosen
-        item_counts: typing.Dict[str, int]
-        if self.world.map == 0:
-            item_counts = castle_item_counts
-        else:
-            item_counts = temple_item_counts
+        item_counts: typing.Dict[str, int] = get_item_counts(self.world, self.player)
 
         # Add items
         for item in item_table:
