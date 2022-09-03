@@ -2,15 +2,7 @@ import typing
 
 from BaseClasses import Location
 from Names import LocationName
-
-
-class Counter():
-    def __init__(self, start: int):
-        self.counter = start
-
-    def count(self):
-        self.counter += 1
-        return self.counter - 1
+from Util import Counter
 
 
 class LocationData(typing.NamedTuple):

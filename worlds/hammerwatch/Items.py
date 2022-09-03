@@ -2,6 +2,7 @@ import typing
 
 from BaseClasses import Item
 from Names import ItemName
+from Util import Counter
 
 
 class ItemData(typing.NamedTuple):
@@ -14,55 +15,56 @@ class HammerwatchItem(Item):
     game: str = "Hammerwatch"
 
 
+counter = Counter(0x130000)
 collectable_table: typing.Dict[str, ItemData] = {
-    ItemName.bonus_chest: ItemData(0x130001, False),
-    ItemName.bonus_key: ItemData(0x130002, False),
-    ItemName.chest_blue: ItemData(0x130003, False),
-    ItemName.chest_green: ItemData(0x130004, False),
-    ItemName.chest_purple: ItemData(0x130005, False),
-    ItemName.chest_red: ItemData(0x130006, False),
-    ItemName.chest_wood: ItemData(0x130007, False),
-    ItemName.vendor_coin: ItemData(0x130008, False),
-    ItemName.plank: ItemData(0x130009, True),
-    ItemName.key_bronze: ItemData(0x130016, True),
-    ItemName.key_silver: ItemData(0x130017, True),
-    ItemName.key_gold: ItemData(0x130018, True),
-    ItemName.mirror: ItemData(0x130019, True),
-    ItemName.ore: ItemData(0x130020, True),
-    ItemName.key_teleport: ItemData(0x130021, False),
-    ItemName.ankh: ItemData(0x130022, False),
-    ItemName.ankh_5up: ItemData(0x130023, False),
-    ItemName.ankh_7up: ItemData(0x130024, False),
-    ItemName.potion_damage: ItemData(0x130025, False),
-    ItemName.potion_rejuvenation: ItemData(0x130026, False),
-    ItemName.potion_invulnerability: ItemData(0x130027, False),
-    ItemName.diamond: ItemData(0x130028, False),
-    ItemName.diamond_red: ItemData(0x130029, False),
-    ItemName.diamond_small: ItemData(0x130030, False),
-    ItemName.diamond_small_red: ItemData(0x130031, False),
-    ItemName.stat_upgrade: ItemData(0x130032, False),
-    ItemName.stat_upgrade_damage: ItemData(0x130033, False),
+    ItemName.bonus_chest: ItemData(counter.count(), False),
+    ItemName.bonus_key: ItemData(counter.count(), False),
+    ItemName.chest_blue: ItemData(counter.count(), False),
+    ItemName.chest_green: ItemData(counter.count(), False),
+    ItemName.chest_purple: ItemData(counter.count(), False),
+    ItemName.chest_red: ItemData(counter.count(), False),
+    ItemName.chest_wood: ItemData(counter.count(), False),
+    ItemName.vendor_coin: ItemData(counter.count(), False),
+    ItemName.plank: ItemData(counter.count(), True),
+    ItemName.key_bronze: ItemData(counter.count(), True),
+    ItemName.key_silver: ItemData(counter.count(), True),
+    ItemName.key_gold: ItemData(counter.count(), True),
+    ItemName.mirror: ItemData(counter.count(), True),
+    ItemName.ore: ItemData(counter.count(), True),
+    ItemName.key_teleport: ItemData(counter.count(), False),
+    ItemName.ankh: ItemData(counter.count(), False),
+    ItemName.ankh_5up: ItemData(counter.count(), False),
+    ItemName.ankh_7up: ItemData(counter.count(), False),
+    ItemName.potion_damage: ItemData(counter.count(), False),
+    ItemName.potion_rejuvenation: ItemData(counter.count(), False),
+    ItemName.potion_invulnerability: ItemData(counter.count(), False),
+    ItemName.diamond: ItemData(counter.count(), False),
+    ItemName.diamond_red: ItemData(counter.count(), False),
+    ItemName.diamond_small: ItemData(counter.count(), False),
+    ItemName.diamond_small_red: ItemData(counter.count(), False),
+    ItemName.stat_upgrade: ItemData(counter.count(), False),
+    ItemName.stat_upgrade_damage: ItemData(counter.count(), False),
 }
 
 recovery_table: typing.Dict[str, ItemData] = {
-    ItemName.apple: ItemData(0x130010, False),
-    ItemName.orange: ItemData(0x130011, False),
-    ItemName.steak: ItemData(0x130012, False),
-    ItemName.fish: ItemData(0x130013, False),
-    ItemName.mana_1: ItemData(0x130014, False),
-    ItemName.mana_2: ItemData(0x130015, False),
+    ItemName.apple: ItemData(counter.count(), False),
+    ItemName.orange: ItemData(counter.count(), False),
+    ItemName.steak: ItemData(counter.count(), False),
+    ItemName.fish: ItemData(counter.count(), False),
+    ItemName.mana_1: ItemData(counter.count(), False),
+    ItemName.mana_2: ItemData(counter.count(), False),
 }
 
 tool_table: typing.Dict[str, ItemData] = {
-    ItemName.pickaxe: ItemData(0x130050, True),
-    ItemName.lever: ItemData(0x130051, True),
-    ItemName.pan: ItemData(0x130052, True),
-    ItemName.shovel: ItemData(0x130053, True),
+    ItemName.pickaxe: ItemData(counter.count(), True),
+    ItemName.lever: ItemData(counter.count(), True),
+    ItemName.pan: ItemData(counter.count(), True),
+    ItemName.shovel: ItemData(counter.count(), True),
 }
 
 special_table: typing.Dict[str, ItemData] = {
-    ItemName.sonic_ring: ItemData(0x130100, False),
-    ItemName.serious_health: ItemData(0x130101, False)
+    ItemName.sonic_ring: ItemData(counter.count(), False),
+    ItemName.serious_health: ItemData(counter.count(), False)
 }
 
 event_table: typing.Dict[str, ItemData] = {
