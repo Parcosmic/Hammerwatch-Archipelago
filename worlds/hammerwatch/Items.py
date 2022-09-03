@@ -1,14 +1,13 @@
 import typing
 
-from BaseClasses import Item
+from BaseClasses import Item, ItemClassification
 from Names import ItemName
 from Util import Counter
 
 
 class ItemData(typing.NamedTuple):
     code: typing.Optional[int]
-    progression: bool
-    event: bool = False
+    classification: ItemClassification
 
 
 class HammerwatchItem(Item):
@@ -17,60 +16,60 @@ class HammerwatchItem(Item):
 
 counter = Counter(0x130000)
 collectable_table: typing.Dict[str, ItemData] = {
-    ItemName.bonus_chest: ItemData(counter.count(), False),
-    ItemName.bonus_key: ItemData(counter.count(), False),
-    ItemName.chest_blue: ItemData(counter.count(), False),
-    ItemName.chest_green: ItemData(counter.count(), False),
-    ItemName.chest_purple: ItemData(counter.count(), False),
-    ItemName.chest_red: ItemData(counter.count(), False),
-    ItemName.chest_wood: ItemData(counter.count(), False),
-    ItemName.vendor_coin: ItemData(counter.count(), False),
-    ItemName.plank: ItemData(counter.count(), True),
-    ItemName.key_bronze: ItemData(counter.count(), True),
-    ItemName.key_silver: ItemData(counter.count(), True),
-    ItemName.key_gold: ItemData(counter.count(), True),
-    ItemName.mirror: ItemData(counter.count(), True),
-    ItemName.ore: ItemData(counter.count(), True),
-    ItemName.key_teleport: ItemData(counter.count(), False),
-    ItemName.ankh: ItemData(counter.count(), False),
-    ItemName.ankh_5up: ItemData(counter.count(), False),
-    ItemName.ankh_7up: ItemData(counter.count(), False),
-    ItemName.potion_damage: ItemData(counter.count(), False),
-    ItemName.potion_rejuvenation: ItemData(counter.count(), False),
-    ItemName.potion_invulnerability: ItemData(counter.count(), False),
-    ItemName.diamond: ItemData(counter.count(), False),
-    ItemName.diamond_red: ItemData(counter.count(), False),
-    ItemName.diamond_small: ItemData(counter.count(), False),
-    ItemName.diamond_small_red: ItemData(counter.count(), False),
-    ItemName.stat_upgrade: ItemData(counter.count(), False),
-    ItemName.stat_upgrade_damage: ItemData(counter.count(), False),
+    ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.chest_blue: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.chest_green: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.chest_purple: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.chest_red: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.chest_wood: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.vendor_coin: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.plank: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_silver: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_gold: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.mirror: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.ore: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_teleport: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.potion_damage: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.potion_rejuvenation: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.potion_invulnerability: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.diamond: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.diamond_red: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.diamond_small: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.diamond_small_red: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_damage: ItemData(counter.count(), ItemClassification.useful),
 }
 
 recovery_table: typing.Dict[str, ItemData] = {
-    ItemName.apple: ItemData(counter.count(), False),
-    ItemName.orange: ItemData(counter.count(), False),
-    ItemName.steak: ItemData(counter.count(), False),
-    ItemName.fish: ItemData(counter.count(), False),
-    ItemName.mana_1: ItemData(counter.count(), False),
-    ItemName.mana_2: ItemData(counter.count(), False),
+    ItemName.apple: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.orange: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.steak: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.fish: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.mana_1: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.mana_2: ItemData(counter.count(), ItemClassification.filler),
 }
 
 tool_table: typing.Dict[str, ItemData] = {
-    ItemName.pickaxe: ItemData(counter.count(), True),
-    ItemName.lever: ItemData(counter.count(), True),
-    ItemName.pan: ItemData(counter.count(), True),
-    ItemName.shovel: ItemData(counter.count(), True),
+    ItemName.pickaxe: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.lever: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.pan: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.shovel: ItemData(counter.count(), ItemClassification.progression),
 }
 
 special_table: typing.Dict[str, ItemData] = {
-    ItemName.sonic_ring: ItemData(counter.count(), False),
-    ItemName.serious_health: ItemData(counter.count(), False)
+    ItemName.sonic_ring: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
 event_table: typing.Dict[str, ItemData] = {
-    ItemName.victory: ItemData(None, True),
-    ItemName.pof_switch: ItemData(None, True),
-    ItemName.visit_temple_entrance: ItemData(None, True)
+    ItemName.victory: ItemData(None, ItemClassification.progression),
+    ItemName.pof_switch: ItemData(None, ItemClassification.progression),
+    ItemName.visit_temple_entrance: ItemData(None, ItemClassification.progression)
 }
 
 item_table: typing.Dict[str, ItemData] = {
@@ -168,8 +167,9 @@ def get_item_counts(world, player: int):
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
 
+    # If the player has selected not to randomize recovery items, set all their counts to zero
     if not world.randomize_recovery_items[player].value:
-        for recovery in recovery_table:
+        for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
 
     return item_counts_table
