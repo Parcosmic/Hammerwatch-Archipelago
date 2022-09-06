@@ -1,9 +1,9 @@
 import typing
 
 from BaseClasses import MultiWorld, Region, RegionType, Entrance
-from Items import HammerwatchItem
-from Locations import HammerwatchLocation
-from Names import LocationName, ItemName, RegionName
+from .Items import HammerwatchItem
+from .Locations import HammerwatchLocation
+from .Names import LocationName, ItemName, RegionName
 
 
 def create_regions(world, player: int, active_locations):
