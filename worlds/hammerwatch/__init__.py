@@ -1,12 +1,12 @@
 import os
 import typing
 
-from Items import HammerwatchItem, ItemData, item_table, junk_table, get_item_counts
-from Locations import HammerwatchLocation, setup_locations, all_locations
-from Regions import create_regions
-from Rules import set_rules
+from .Items import HammerwatchItem, ItemData, item_table, junk_table, get_item_counts
+from .Locations import HammerwatchLocation, setup_locations, all_locations
+from .Regions import create_regions
+from .Rules import set_rules
 
-from Names import ItemName, LocationName
+from .Names import ItemName, LocationName
 
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .Options import hammerwatch_options
@@ -35,7 +35,7 @@ class HammerwatchWorld(World):
     game: str = "Hammerwatch"
     option_definitions = hammerwatch_options
     topology_present: bool = True
-    remote_items: bool = False
+    remote_items: bool = True
     remote_start_inventory: bool = False
 
     data_version = 0
@@ -47,17 +47,11 @@ class HammerwatchWorld(World):
 
     active_location_list: typing.Dict[str, int]
 
-    def _get_slot_data(self):
-        return {
-            "active_levels": self.active_location_list,
-        }
-
-    def fill_slot_data(self) -> dict:
-        slot_data = self._get_slot_data()
-        for option_name in hammerwatch_options:
+    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+        slot_data: typing.Dict[str, object] = {}
+        for option_name in self.option_definitions:
             option = getattr(self.world, option_name)[self.player]
             slot_data[option_name] = option.value
-
         return slot_data
 
     def generate_basic(self) -> None:
