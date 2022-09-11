@@ -3,6 +3,7 @@ import typing
 from BaseClasses import Item, ItemClassification
 from .Names import ItemName
 from .Util import Counter
+from random import Random
 
 
 class ItemData(typing.NamedTuple):
@@ -16,6 +17,7 @@ class HammerwatchItem(Item):
 
 counter = Counter(0x130000)
 collectable_table: typing.Dict[str, ItemData] = {
+    ItemName.empty: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
     ItemName.chest_blue: ItemData(counter.count(), ItemClassification.filler),
@@ -23,7 +25,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.chest_purple: ItemData(counter.count(), ItemClassification.filler),
     ItemName.chest_red: ItemData(counter.count(), ItemClassification.filler),
     ItemName.chest_wood: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.vendor_coin: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.vendor_coin: ItemData(counter.count(), ItemClassification.filler),
     ItemName.plank: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_bronze: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_silver: ItemData(counter.count(), ItemClassification.progression),
@@ -43,6 +45,9 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.diamond_small_red: ItemData(counter.count(), ItemClassification.filler),
     ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_damage: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_defense: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_health: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_mana: ItemData(counter.count(), ItemClassification.useful),
 }
 
 recovery_table: typing.Dict[str, ItemData] = {
@@ -58,7 +63,9 @@ tool_table: typing.Dict[str, ItemData] = {
     ItemName.pickaxe: ItemData(counter.count(), ItemClassification.progression),
     ItemName.lever: ItemData(counter.count(), ItemClassification.progression),
     ItemName.pan: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.shovel: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.lever_fragment: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.pan_fragment: ItemData(counter.count(), ItemClassification.progression),
 }
 
 special_table: typing.Dict[str, ItemData] = {
@@ -80,10 +87,14 @@ item_table: typing.Dict[str, ItemData] = {
     **event_table
 }
 
-junk_table: typing.Dict[str, ItemData] = {
-    ItemName.apple: item_table[ItemName.apple],
-    ItemName.mana_1: item_table[ItemName.mana_1],
-}
+junk_items: typing.List[str] = [
+    ItemName.apple,
+    ItemName.mana_1,
+]
+
+trap_items: typing.List[str] = [
+
+]
 
 castle_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 227,
@@ -113,64 +124,87 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_red: 1,
     ItemName.diamond_small: 10,
     ItemName.diamond_small_red: 18,
-    ItemName.stat_upgrade: -1
+    ItemName.stat_upgrade: 0
 }
+castle_secrets = 0
 
 temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 0,  # 75
     ItemName.bonus_key: 0,  # 2
-    ItemName.chest_blue: 1,
+    ItemName.chest_blue: 2,
     ItemName.chest_green: 0,
     ItemName.chest_purple: 0,
     ItemName.chest_red: 3,
-    ItemName.chest_wood: 1,
-    ItemName.vendor_coin: 6,
-    ItemName.plank: 0,
-    ItemName.apple: 2,
-    ItemName.orange: 0,
-    ItemName.steak: 0,
-    ItemName.fish: 0,
-    ItemName.mana_1: 0,
-    ItemName.mana_2: 0,
-    ItemName.key_bronze: 0,
+    ItemName.chest_wood: 4,
+    ItemName.vendor_coin: 12,
     ItemName.key_silver: 0,
     ItemName.key_gold: 0,
     ItemName.mirror: 0,
-    ItemName.ore: 2,
-    ItemName.key_teleport: 1,
-    ItemName.ankh: 4,
+    ItemName.ore: 4,
+    ItemName.key_teleport: 2,
+    ItemName.ankh: 6,
     ItemName.ankh_5up: 0,
     ItemName.ankh_7up: 0,
     ItemName.potion_damage: 0,
     ItemName.potion_rejuvenation: 0,
     ItemName.potion_invulnerability: 0,
-    ItemName.stat_upgrade_damage: 0,
     ItemName.sonic_ring: 12,
     ItemName.serious_health: 1,
     ItemName.diamond: 0,
     ItemName.diamond_red: 0,
     ItemName.diamond_small: 0,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 5,
+    ItemName.stat_upgrade: 8,
+    ItemName.apple: 10,
+    ItemName.orange: 1,
+    ItemName.steak: 0,
+    ItemName.fish: 2,
+    ItemName.mana_1: 7,
+    ItemName.mana_2: 0,
     ItemName.pickaxe: 1,
     ItemName.lever: 1,
-    ItemName.pan: 1,
-    ItemName.shovel: 0,
+    ItemName.pan: 1
 }
-
+temple_secrets = 6
 
 def get_item_counts(world, player: int):
     item_counts_table: typing.Dict[str, int]
+    secrets: int = 0
 
     if world.map[player] == 0:  # Castle Hammerwatch
         item_counts_table = {**castle_item_counts}
+        secrets = castle_secrets
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
+        secrets = temple_secrets
+
+    # If using fragments switch the whole item out for fragments
+    if world.pan_fragments[player] > 0:
+        item_counts_table.pop(ItemName.pan)
+        item_counts_table.update({ItemName.pan_fragment: world.pan_fragments[player]})
+    if world.lever_fragments[player] > 0:
+        item_counts_table.pop(ItemName.lever)
+        item_counts_table.update({ItemName.lever_fragment: world.lever_fragments[player]})
+    if world.pickaxe_fragments[player] > 0:
+        item_counts_table.pop(ItemName.pickaxe)
+        item_counts_table.update({ItemName.pickaxe_fragment: world.pickaxe_fragments[player]})
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not world.randomize_recovery_items[player].value:
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
+
+    # Add secret items
+    random = Random()
+    random.seed(random, world.seed)
+    for s in range(secrets):
+        item = random.randint(0, 12)
+        if item < 8:
+            item_counts_table[ItemName.chest_wood] += 1
+        elif item < 12:
+            item_counts_table[ItemName.ankh] += 1
+        else:
+            item_counts_table[ItemName.stat_upgrade] += 1
 
     return item_counts_table
 
