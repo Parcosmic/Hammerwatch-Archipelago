@@ -1,7 +1,7 @@
 import os
 import typing
 
-from .Items import HammerwatchItem, ItemData, item_table, junk_table, get_item_counts
+from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, get_item_counts
 from .Locations import HammerwatchLocation, setup_locations, all_locations
 from .Regions import create_regions
 from .Rules import set_rules
@@ -77,9 +77,13 @@ class HammerwatchWorld(World):
         itempool: typing.List[Item] = []
 
         # Get the total number of locations we need to fill
-        total_required_locations = 39
+        total_required_locations = 88
+        # If random location behavior is set to vanilla we'll have fewer checks
+        if self.world.random_location_behavior[self.player].value == 1:
+            total_required_locations -= 2
         if self.world.randomize_recovery_items[self.player].value:
             total_required_locations += 2
+        total_required_locations += self.world.consumable_merchant_checks[self.player].value
 
         # Get the counts of each item we'll put in
         item_counts: typing.Dict[str, int] = get_item_counts(self.world, self.player)
@@ -100,7 +104,7 @@ class HammerwatchWorld(World):
         # Add junk items if there aren't enough items to fill the locations
         junk: int = total_required_locations - len(itempool)
         junk_pool: typing.List[Item] = []
-        for item_name in self.world.random.choices(list(junk_table.keys()), k=junk):
+        for item_name in self.world.random.choices(junk_items, k=junk):
             junk_pool += [self.create_item(item_name)]
 
         itempool += junk_pool

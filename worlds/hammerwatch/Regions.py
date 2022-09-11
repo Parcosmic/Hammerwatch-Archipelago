@@ -57,6 +57,11 @@ def create_tots_regions(world, player: int, active_locations):
             LocationName.cave3_n,
             LocationName.cave3_outside_guard,
         ]
+    cave3_main_locations += [
+        LocationName.cave3_secret_n,
+        LocationName.cave3_secret_nw,
+        LocationName.cave3_secret_s,
+    ]
     cave3_main_region = create_region(world, player, active_locations, RegionName.cave_3_main, cave3_main_locations)
 
     cave3_fall_locations = [
@@ -100,6 +105,62 @@ def create_tots_regions(world, player: int, active_locations):
     cave3_secret_region = create_region(world, player, active_locations, RegionName.cave_3_secret,
                                         cave3_secret_locations)
 
+    cave2_main_locations = [
+        LocationName.cave2_sw_room_3,
+        LocationName.cave2_below_pumps_1,
+        LocationName.cave2_below_pumps_2,
+        LocationName.cave2_double_bridge_l_1,
+        LocationName.cave2_double_bridge_l_2,
+        LocationName.cave2_e_1,
+        LocationName.cave2_e_2,
+        LocationName.cave2_nw_4,
+        LocationName.cave2_nw_5,
+        LocationName.cave2_w_miniboss_3,
+        LocationName.cave2_w_miniboss_2,
+        LocationName.cave2_w_miniboss_1,
+        LocationName.cave2_red_bridge_se_1,
+        LocationName.cave2_red_bridge_se_2,
+        LocationName.cave2_e_3,
+        LocationName.cave2_e_4,
+        LocationName.cave2_guard_n,
+        LocationName.cave2_red_bridge_2,
+        LocationName.cave2_double_bridge_m,
+        LocationName.cave2_nw_2,
+        LocationName.cave2_red_bridge_4,
+        LocationName.cave2_double_bridge_r,
+        LocationName.cave2_green_bridge,
+        LocationName.cave2_sw_room_1,
+        LocationName.cave2_guard_s,
+        LocationName.cave2_nw_3,
+        LocationName.cave2_w_miniboss_4,
+        LocationName.cave2_red_bridge_3,
+        LocationName.cave2_below_pumps_3,
+        LocationName.cave2_secret_ne,
+        LocationName.cave2_secret_w,
+        LocationName.cave2_secret_m,
+        LocationName.cave2_nw_1,
+        LocationName.cave2_sw,
+        LocationName.cave2_double_bridge_secret,
+        LocationName.cave2_sw_room_2,
+        LocationName.cave2_pumps_n,
+        LocationName.cave2_guard,
+        LocationName.cave2_red_bridge_1,
+        LocationName.cave2_sw_room_4
+    ]
+    cave2_main_region = create_region(world, player, active_locations, RegionName.cave_2_main,
+                                        cave2_main_locations)
+
+    cave2_pumps_locations = [
+        LocationName.cave2_pumps_wall_r,
+        LocationName.cave2_pumps_wall_l,
+        LocationName.cave2_water_n_r_2,
+        LocationName.cave2_water_s,
+        LocationName.cave2_water_n_r_1,
+        LocationName.cave2_water_n_l,
+    ]
+    cave2_pumps_region = create_region(world, player, active_locations, RegionName.cave_2_pumps,
+                                      cave2_pumps_locations)
+
     world.regions += [
         menu_region,
         dunes_main_region,
@@ -111,6 +172,8 @@ def create_tots_regions(world, player: int, active_locations):
         cave3_fields_region,
         cave3_portal_region,
         cave3_secret_region,
+        cave2_main_region,
+        cave2_pumps_region
     ]
 
     connect_tots_regions(world, player, active_locations)
@@ -132,6 +195,10 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.hub_main, RegionName.library)
     connect(world, player, used_names, RegionName.library, RegionName.cave_3_main)
     connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_3_fields,
+            lambda state: (state.has(ItemName.lever, player, 1)))
+
+    connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_2_main)
+    connect(world, player, used_names, RegionName.cave_2_main, RegionName.cave_2_pumps,
             lambda state: (state.has(ItemName.lever, player, 1)))
 
 
