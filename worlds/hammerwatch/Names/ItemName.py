@@ -56,5 +56,6 @@ serious_health = "Serious Health"
 
 # Event Names
 victory = "Victory"
-visit_temple_entrance = "Visit Temple Entrance"
+open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
 pof_switch = "PoF Switch"
+pof_complete = "PoF Complete"
