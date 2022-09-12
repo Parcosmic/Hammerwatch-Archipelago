@@ -404,8 +404,7 @@ def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[
     ret = Region(name, RegionType.Generic, name, player, world)
     if locations:
         for location in locations:
-            if world.randomize_recovery_items[player].value \
-                    and active_locations[location].classification == LocationClassification.Recovery:
+            if not world.randomize_recovery_items[player].value and active_locations[location].classification == LocationClassification.Recovery:
                 continue
             ret.locations.append(HammerwatchLocation(player, location, active_locations[location].code, ret))
     # if exits:

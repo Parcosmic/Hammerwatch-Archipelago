@@ -2,7 +2,7 @@ import os
 import typing
 
 from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, get_item_counts
-from .Locations import HammerwatchLocation, LocationData, LocationClassification, setup_locations, all_locations
+from .Locations import *
 from .Regions import create_regions
 from .Rules import set_rules
 
@@ -96,12 +96,20 @@ class HammerwatchWorld(World):
         itempool: typing.List[Item] = []
 
         # Get the total number of locations we need to fill
-        total_required_locations = 88
+        total_required_locations = 166
+        # if self.world.map[self.player] == 0:
+        #     total_required_locations -= len(Locations.castle_event_locations) + 1
+        # else:
+        #     total_required_locations -= len(Locations.temple_event_locations) + 1
         # If random location behavior is set to vanilla we'll have fewer checks
         if self.world.random_location_behavior[self.player].value == 1:
-            total_required_locations -= 2
-        if self.world.randomize_recovery_items[self.player].value:
-            total_required_locations += 2
+            total_required_locations -= 15
+        if not self.world.randomize_recovery_items[self.player].value:
+            recovery_locations = 0
+            for location, data in self.active_location_list.items():
+                if data.classification == LocationClassification.Recovery:
+                    recovery_locations += 1
+            total_required_locations -= recovery_locations
         total_required_locations += self.world.consumable_merchant_checks[self.player].value
 
         # Get the counts of each item we'll put in

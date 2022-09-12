@@ -156,6 +156,8 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_small: 2,
     ItemName.diamond_small_red: 0,
     ItemName.stat_upgrade: 12,
+    ItemName.stat_upgrade_damage: 1,
+    ItemName.stat_upgrade_defense: 1,
     ItemName.apple: 20,
     ItemName.orange: 4,
     ItemName.steak: 3,
