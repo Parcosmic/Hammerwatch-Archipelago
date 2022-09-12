@@ -264,8 +264,7 @@ def setup_locations(world, player: int):
     if world.map[player] == 0:  # Castle Hammerwatch
         location_table = {}
         for name, data in castle_locations.items():
-            if data.classification != LocationClassification.Recovery \
-                    or world.randomize_recovery_items[player].value:
+            if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value:
                 location_table.update({name: data})
         if world.random_location_behavior[player] == 1:
             # location_table = choose_castle_random_locations(world, player, location_table)
@@ -276,8 +275,7 @@ def setup_locations(world, player: int):
     else:  # Temple of the Sun
         location_table = {}
         for name, data in temple_locations.items():
-            if data.classification != LocationClassification.Recovery \
-                    or world.randomize_recovery_items[player].value:
+            if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value == 1:
                 location_table.update({name: data})
         if world.random_location_behavior[player] == 1:
             # location_table = choose_tots_random_locations(world, player, location_table)
