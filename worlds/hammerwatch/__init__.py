@@ -2,7 +2,7 @@ import os
 import typing
 
 from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, get_item_counts
-from .Locations import HammerwatchLocation, setup_locations, all_locations
+from .Locations import HammerwatchLocation, LocationData, LocationClassification, setup_locations, all_locations
 from .Regions import create_regions
 from .Rules import set_rules
 
@@ -43,9 +43,9 @@ class HammerwatchWorld(World):
     web = HammerwatchWeb()
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
-    location_name_to_id = all_locations
+    location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
-    active_location_list: typing.Dict[str, int]
+    active_location_list: typing.Dict[str, LocationData]
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -60,6 +60,25 @@ class HammerwatchWorld(World):
         self.world.get_location(LocationName.victory, self.player)\
             .place_locked_item(self.create_event(ItemName.victory))
         self.world.completion_condition[self.player] = lambda state: state.has(ItemName.victory, self.player)
+
+        self.world.get_location(LocationName.temple_entrance_rock, self.player)\
+            .place_locked_item(self.create_event(ItemName.open_temple_entrance_shortcut))
+
+        self.world.get_location(LocationName.hub_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.cave1_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.cave2_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.cave3_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        #self.world.get_location(LocationName.temple1_pof_switch, self.player) \
+        #    .place_locked_item(self.create_event(ItemName.pof_switch))
+        #self.world.get_location(LocationName.temple2_pof_switch, self.player) \
+        #    .place_locked_item(self.create_event(ItemName.pof_switch))
+
+        self.world.get_location(LocationName.pof_end, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_complete))
 
     def create_regions(self) -> None:
         locations = setup_locations(self.world, self.player)

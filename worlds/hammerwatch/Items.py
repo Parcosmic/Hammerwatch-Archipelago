@@ -76,7 +76,8 @@ special_table: typing.Dict[str, ItemData] = {
 event_table: typing.Dict[str, ItemData] = {
     ItemName.victory: ItemData(None, ItemClassification.progression),
     ItemName.pof_switch: ItemData(None, ItemClassification.progression),
-    ItemName.visit_temple_entrance: ItemData(None, ItemClassification.progression)
+    ItemName.pof_complete: ItemData(None, ItemClassification.progression),
+    ItemName.open_temple_entrance_shortcut: ItemData(None, ItemClassification.progression),
 }
 
 item_table: typing.Dict[str, ItemData] = {
@@ -131,19 +132,19 @@ castle_secrets = 0
 temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 0,  # 75
     ItemName.bonus_key: 0,  # 2
-    ItemName.chest_blue: 2,
-    ItemName.chest_green: 0,
+    ItemName.chest_blue: 3,
+    ItemName.chest_green: 1,
     ItemName.chest_purple: 0,
-    ItemName.chest_red: 3,
-    ItemName.chest_wood: 4,
-    ItemName.vendor_coin: 12,
+    ItemName.chest_red: 5,
+    ItemName.chest_wood: 8,
+    ItemName.vendor_coin: 19,
     ItemName.key_silver: 0,
-    ItemName.key_gold: 0,
+    ItemName.key_gold: 1,
     ItemName.mirror: 0,
-    ItemName.ore: 4,
-    ItemName.key_teleport: 2,
-    ItemName.ankh: 6,
-    ItemName.ankh_5up: 0,
+    ItemName.ore: 7,
+    ItemName.key_teleport: 3,
+    ItemName.ankh: 7,
+    ItemName.ankh_5up: 2,
     ItemName.ankh_7up: 0,
     ItemName.potion_damage: 0,
     ItemName.potion_rejuvenation: 0,
@@ -152,20 +153,20 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.serious_health: 1,
     ItemName.diamond: 0,
     ItemName.diamond_red: 0,
-    ItemName.diamond_small: 0,
+    ItemName.diamond_small: 2,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 8,
-    ItemName.apple: 10,
-    ItemName.orange: 1,
-    ItemName.steak: 0,
-    ItemName.fish: 2,
-    ItemName.mana_1: 7,
-    ItemName.mana_2: 0,
+    ItemName.stat_upgrade: 12,
+    ItemName.apple: 20,
+    ItemName.orange: 4,
+    ItemName.steak: 3,
+    ItemName.fish: 7,
+    ItemName.mana_1: 18,
+    ItemName.mana_2: 2,
     ItemName.pickaxe: 1,
     ItemName.lever: 1,
     ItemName.pan: 1
 }
-temple_secrets = 6
+temple_secrets = 13
 
 def get_item_counts(world, player: int):
     item_counts_table: typing.Dict[str, int]
