@@ -85,7 +85,7 @@ item_table: typing.Dict[str, ItemData] = {
     **recovery_table,
     **tool_table,
     **special_table,
-    **event_table
+    # **event_table
 }
 
 junk_items: typing.List[str] = [
@@ -133,17 +133,17 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 0,  # 75
     ItemName.bonus_key: 0,  # 2
     ItemName.chest_blue: 3,
-    ItemName.chest_green: 1,
+    ItemName.chest_green: 4,
     ItemName.chest_purple: 0,
-    ItemName.chest_red: 5,
-    ItemName.chest_wood: 8,
-    ItemName.vendor_coin: 19,
-    ItemName.key_silver: 0,
-    ItemName.key_gold: 1,
-    ItemName.mirror: 0,
-    ItemName.ore: 7,
-    ItemName.key_teleport: 3,
-    ItemName.ankh: 7,
+    ItemName.chest_red: 6,
+    ItemName.chest_wood: 21,
+    ItemName.vendor_coin: 26,
+    ItemName.key_silver: 4,
+    ItemName.key_gold: 3,
+    ItemName.mirror: 7,
+    ItemName.ore: 9,
+    ItemName.key_teleport: 4,
+    ItemName.ankh: 10,
     ItemName.ankh_5up: 2,
     ItemName.ankh_7up: 0,
     ItemName.potion_damage: 0,
@@ -153,22 +153,23 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.serious_health: 1,
     ItemName.diamond: 0,
     ItemName.diamond_red: 0,
-    ItemName.diamond_small: 2,
+    ItemName.diamond_small: 3,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 12,
+    ItemName.stat_upgrade: 13,
     ItemName.stat_upgrade_damage: 1,
     ItemName.stat_upgrade_defense: 1,
-    ItemName.apple: 20,
-    ItemName.orange: 4,
-    ItemName.steak: 3,
+    ItemName.apple: 33,
+    ItemName.orange: 6,
+    ItemName.steak: 5,
     ItemName.fish: 7,
-    ItemName.mana_1: 18,
+    ItemName.mana_1: 21,
     ItemName.mana_2: 2,
     ItemName.pickaxe: 1,
     ItemName.lever: 1,
     ItemName.pan: 1
 }
 temple_secrets = 13
+
 
 def get_item_counts(world, player: int):
     item_counts_table: typing.Dict[str, int]

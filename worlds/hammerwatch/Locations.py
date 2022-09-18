@@ -1,8 +1,9 @@
 import typing
 
 from BaseClasses import Location
-from .Names import LocationName
+from .Names import LocationName, ItemName
 from .Util import Counter
+from .Items import temple_item_counts
 from random import Random
 from enum import Enum
 
@@ -47,7 +48,7 @@ castle_locations: typing.Dict[str, LocationData] = {
 
 counter = Counter(0x130000)
 temple_pickup_locations: typing.Dict[str, LocationData] = {
-    LocationName.hub_field_nw: LocationData(counter.count()),
+    LocationName.hub_field_nw: LocationData(counter.count(0)),
     LocationName.hub_on_rock: LocationData(counter.count()),
     LocationName.hub_pof_reward: LocationData(counter.count()),
     LocationName.hub_west_pyramid: LocationData(counter.count()),
@@ -211,10 +212,10 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
 
     LocationName.boss1_bridge: LocationData(counter.count()),
     LocationName.boss1_guard_r_1: LocationData(counter.count(), LocationClassification.Recovery),
-    LocationName.boss1_guard_r_2: LocationData(counter.count(3), LocationClassification.Recovery),
+    LocationName.boss1_guard_r_2: LocationData(counter.count(), LocationClassification.Recovery),
     # LocationName.boss1_drop_2: LocationData(counter.count()),
     # LocationName.boss1_drop: LocationData(counter.count()),
-    LocationName.boss1_guard_l: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.boss1_guard_l: LocationData(counter.count(3), LocationClassification.Recovery),
     LocationName.boss1_bridge_n: LocationData(counter.count()),
     LocationName.boss1_secret: LocationData(counter.count(), LocationClassification.Secret),
 
@@ -222,6 +223,89 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
 
     LocationName.temple_entrance_l: LocationData(counter.count()),
     LocationName.temple_entrance_r: LocationData(counter.count()),
+
+    LocationName.t1_double_gate_behind_block: LocationData(counter.count()),
+    LocationName.t1_sw_hidden_room_3: LocationData(counter.count()),
+    LocationName.t1_telariana_ice: LocationData(counter.count()),
+    LocationName.t1_sun_turret_1: LocationData(counter.count()),
+    LocationName.t1_telariana_2: LocationData(counter.count()),
+    LocationName.t1_boulder_hallway_by_ice_turret_2: LocationData(counter.count()),
+    LocationName.t1_boulder_hallway_by_ice_turret_1: LocationData(counter.count()),
+    LocationName.t1_boulder_hallway_by_ice_turret_3: LocationData(counter.count()),
+    LocationName.t1_telariana_3: LocationData(counter.count()),
+    LocationName.t1_node_2_passage_3: LocationData(counter.count()),
+    LocationName.t1_node_2_passage_1: LocationData(counter.count()),
+    LocationName.t1_fire_trap_by_sun_turret_1: LocationData(counter.count()),
+    LocationName.t1_fire_trap_by_sun_turret_2: LocationData(counter.count()),
+    LocationName.t1_e_of_double_gate_room_4: LocationData(counter.count()),
+    LocationName.t1_e_of_double_gate_room_3: LocationData(counter.count()),
+    LocationName.t1_sw_sun_room_1: LocationData(counter.count()),
+    LocationName.t1_sw_sun_room_2: LocationData(counter.count()),
+    LocationName.t1_ice_block_chamber_ice: LocationData(counter.count()),
+    LocationName.t1_sun_turret_2: LocationData(counter.count()),
+    LocationName.t1_n_cache_by_ice_turret_5: LocationData(counter.count()),
+    LocationName.t1_s_cache_by_ice_turret_3: LocationData(counter.count()),
+    LocationName.t1_sw_cache_2: LocationData(counter.count()),
+    LocationName.t1_sw_hidden_room_4: LocationData(counter.count()),
+    LocationName.t1_sun_turret_3: LocationData(counter.count()),
+    LocationName.t1_s_bridge_4: LocationData(counter.count()),
+    LocationName.t1_s_bridge_5: LocationData(counter.count()),
+    LocationName.t1_s_bridge_6: LocationData(counter.count()),
+    LocationName.t1_n_cache_by_ice_turret_1: LocationData(counter.count()),
+    LocationName.t1_n_sunbeam_treasure_2: LocationData(counter.count()),
+    LocationName.t1_s_cache_by_ice_turret_2: LocationData(counter.count()),
+    LocationName.t1_sw_cache_1: LocationData(counter.count()),
+    LocationName.t1_sw_cache_4: LocationData(counter.count()),
+    LocationName.t1_sw_cache_5: LocationData(counter.count()),
+    LocationName.t1_ledge_after_block_trap_2: LocationData(counter.count()),
+    LocationName.t1_ice_block_chamber_3: LocationData(counter.count()),
+    LocationName.t1_ice_block_chamber_2: LocationData(counter.count()),
+    LocationName.t1_double_gate_1: LocationData(counter.count()),
+    LocationName.t1_ice_block_chamber_1: LocationData(counter.count()),
+    LocationName.t1_sun_block_hall_3: LocationData(counter.count()),
+    LocationName.t1_fire_trap_by_sun_turret_4: LocationData(counter.count()),
+    LocationName.t1_behind_bars_entrance: LocationData(counter.count()),
+    LocationName.t1_mana_drain_fire_trap: LocationData(counter.count()),
+    LocationName.t1_e_gold_beetles: LocationData(counter.count()),
+    LocationName.t1_sun_block_hall_1: LocationData(counter.count()),
+    LocationName.t1_sw_hidden_room_2: LocationData(counter.count()),
+    LocationName.t1_mana_drain_fire_trap_reward_2: LocationData(counter.count()),
+    LocationName.t1_mana_drain_fire_trap_reward_1: LocationData(counter.count()),
+    LocationName.t1_sun_block_hall_4: LocationData(counter.count()),
+    LocationName.t1_fire_trap_by_sun_turret_3: LocationData(counter.count()),
+    LocationName.t1_ledge_after_block_trap_1: LocationData(counter.count()),
+    LocationName.t1_sw_cache_3: LocationData(counter.count()),
+    LocationName.t1_n_sunbeam_treasure_3: LocationData(counter.count()),
+    LocationName.t1_boulder_hallway_by_ice_turret_4: LocationData(counter.count()),
+    LocationName.t1_ice_turret_1: LocationData(counter.count()),
+    LocationName.t1_ice_turret_2: LocationData(counter.count()),
+    LocationName.t1_above_s_bridge: LocationData(counter.count()),
+    LocationName.t1_e_of_double_gate_room_2: LocationData(counter.count()),
+    LocationName.t1_sw_corner_room: LocationData(counter.count()),
+    LocationName.t1_s_bridge_1: LocationData(counter.count()),
+    LocationName.t1_sun_block_hall_2: LocationData(counter.count()),
+    LocationName.t1_mana_drain_fire_trap_passage: LocationData(counter.count()),
+    LocationName.t1_n_sunbeam: LocationData(counter.count()),
+    LocationName.t1_n_cache_by_ice_turret_4: LocationData(counter.count()),
+    LocationName.t1_node_2_passage_2: LocationData(counter.count()),
+    LocationName.t1_double_gate_hidden: LocationData(counter.count()),
+    LocationName.t1_ice_turret_boulder_break_block: LocationData(counter.count()),
+    LocationName.t1_e_of_double_gate_room_1: LocationData(counter.count()),
+    LocationName.t1_sw_hidden_room_1: LocationData(counter.count()),
+    LocationName.t1_n_cache_by_ice_turret_2: LocationData(counter.count()),
+    LocationName.t1_n_cache_by_ice_turret_3: LocationData(counter.count()),
+    LocationName.t1_n_sunbeam_treasure_1: LocationData(counter.count()),
+    LocationName.t1_telariana_4: LocationData(counter.count()),
+    LocationName.t1_telariana_1: LocationData(counter.count()),
+    LocationName.t1_node_2_1: LocationData(counter.count()),
+    LocationName.t1_node_2_2: LocationData(counter.count()),
+    LocationName.t1_s_of_sun_turret: LocationData(counter.count()),
+    LocationName.t1_double_gate_2: LocationData(counter.count()),
+    LocationName.t1_double_gate_3: LocationData(counter.count()),
+    LocationName.t1_s_cache_by_ice_turret_1: LocationData(counter.count()),
+    LocationName.t1_s_bridge_2: LocationData(counter.count()),
+    LocationName.t1_s_bridge_3: LocationData(counter.count()),
+    LocationName.t1_telariana_5: LocationData(counter.count()),
 }
 
 temple_shop_locations: typing.Dict[str, LocationData] = {
@@ -229,32 +313,32 @@ temple_shop_locations: typing.Dict[str, LocationData] = {
 }
 
 temple_event_locations: typing.Dict[str, LocationData] = {
-    LocationName.temple_entrance_rock: LocationData(None),
-    LocationName.hub_pof_switch: LocationData(None),
-    LocationName.cave3_pof_switch: LocationData(None),
-    LocationName.cave2_pof_switch: LocationData(None),
-    LocationName.cave1_pof_switch: LocationData(None),
-    LocationName.pof_end: LocationData(None),
-    # LocationName.pof_switch: LocationData(None)
+    LocationName.ev_temple_entrance_rock: LocationData(None),
+    LocationName.ev_hub_pof_switch: LocationData(None),
+    LocationName.ev_cave3_pof_switch: LocationData(None),
+    LocationName.ev_cave2_pof_switch: LocationData(None),
+    LocationName.ev_cave1_pof_switch: LocationData(None),
+    LocationName.ev_temple1_pof_switch: LocationData(None),
+    LocationName.ev_pof_end: LocationData(None),
+    LocationName.ev_krilith_defeated: LocationData(None),
 }
 
 temple_locations: typing.Dict[str, LocationData] = {
-    **temple_pickup_locations,
-    **temple_event_locations
+    **temple_pickup_locations
 }
 
 common_event_locations: typing.Dict[str, LocationData] = {
-    LocationName.victory: LocationData(None),
+    LocationName.ev_victory: LocationData(None),
 }
 
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
     **castle_shop_locations,
-    **castle_event_locations,
+    # **castle_event_locations,
     **temple_locations,
     **temple_shop_locations,
-    **temple_event_locations,
-    **common_event_locations
+    # **temple_event_locations,
+    # **common_event_locations
 }
 
 
@@ -266,22 +350,23 @@ def setup_locations(world, player: int):
         for name, data in castle_locations.items():
             if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value:
                 location_table.update({name: data})
-        if world.random_location_behavior[player] == 1:
-            # location_table = choose_castle_random_locations(world, player, location_table)
+        if world.random_location_behavior[player] == 0:
+            location_table = choose_castle_random_locations(world, player, location_table)
             pass
-        if world.randomize_shops[player].value:
-            location_table.update({**castle_shop_locations})
+        # if world.randomize_shops[player].value:
+        #    location_table.update({**castle_shop_locations})
         location_table.update(castle_event_locations)
     else:  # Temple of the Sun
         location_table = {}
         for name, data in temple_locations.items():
-            if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value == 1:
+            if data.classification != LocationClassification.Recovery\
+                    or world.randomize_recovery_items[player].value == 1:
                 location_table.update({name: data})
-        if world.random_location_behavior[player] == 1:
-            # location_table = choose_tots_random_locations(world, player, location_table)
+        if world.random_location_behavior[player] == 0:
+            location_table = choose_tots_random_locations(world, player, location_table)
             pass
-        if world.randomize_shops[player].value:
-            location_table.update({**temple_shop_locations})
+        # if world.randomize_shops[player].value:
+        #    location_table.update({**temple_shop_locations})
         location_table.update(temple_event_locations)
 
     location_table.update(common_event_locations)
@@ -289,38 +374,163 @@ def setup_locations(world, player: int):
     return location_table
 
 
-def choose_castle_random_locations(world, player: int, location_table: typing.Dict[str, LocationData]):
+random_locations: typing.Dict[str, int] = {
+}
 
+
+def choose_castle_random_locations(world, player: int, location_table: typing.Dict[str, LocationData]):
     return location_table
 
 
 def choose_tots_random_locations(world, player: int, location_table: typing.Dict[str, LocationData]):
-    if world.random_location_behavior[player].value == 1:
-        random = Random()
-        random.seed(random, world.seed)
-        # Squire location
-        if Random.randrange(random, 6) != 0:
+    if world.random_location_behavior[player].value == 0:
+        random = Random(world.seed)
+        # Cave level 3
+        random_locations[LocationName.rloc_squire] = random.randrange(6)
+        if random_locations[LocationName.rloc_squire] != 1:
             location_table.pop(LocationName.cave3_squire)
-        # Remove all pan locations until there is only one left
-        locs = 8
-        for l in range(len(pan_locations)-1):
-            location = random.choice(pan_locations)
-            pan_locations.pop(location)
-            location_table.pop(location)
+            temple_item_counts[ItemName.stat_upgrade] -= 1
+        # Pan location
+        random_locations[LocationName.rloc_pan] = random.randrange(9)
+        pan_locations: typing.List = [
+            LocationName.cave3_nw,
+            LocationName.cave3_m,
+            LocationName.cave3_se,
+            LocationName.cave2_nw_2,
+            LocationName.cave2_red_bridge_4,
+            LocationName.cave2_double_bridge_r,
+            LocationName.cave1_n_bridges_4,
+            LocationName.cave1_double_room_l,
+            LocationName.cave1_e_3,
+        ]
+        location_table = remove_locations(location_table, pan_locations, random_locations[LocationName.rloc_pan])
+        # Cave level 2
+        random_locations[LocationName.rloc_c2_keystone] = random.randrange(5)
+        c2_keystone_locations: typing.List = [
+            LocationName.cave2_guard_s,
+            LocationName.cave2_nw_3,
+            LocationName.cave2_w_miniboss_4,
+            LocationName.cave2_red_bridge_3,
+            LocationName.cave2_below_pumps_3
+        ]
+        location_table = remove_locations(location_table, c2_keystone_locations,
+                                          random_locations[LocationName.rloc_c2_keystone])
+        random_locations[LocationName.rloc_c2_portal] = random.randrange(3)
+        if random_locations[LocationName.rloc_c2_portal] == 0:
+            location_table.pop(LocationName.cave2_nw_4)
+            location_table.pop(LocationName.cave2_nw_5)
+            temple_item_counts[ItemName.apple] -= 2
+        elif random_locations[LocationName.rloc_c2_portal] == 1:
+            location_table.pop(LocationName.cave2_pumps_n)
+            temple_item_counts[ItemName.vendor_coin] -= 1
+        # Cave level 1
+        random_locations[LocationName.rloc_c1_keystone] = random.randrange(3)
+        c1_keystone_locations: typing.List = [
+            LocationName.cave1_ne_grubs,
+            LocationName.cave1_w_by_water_2,
+            LocationName.cave1_m
+        ]
+        location_table = remove_locations(location_table, c1_keystone_locations,
+                                          random_locations[LocationName.rloc_c1_keystone])
+        random_locations[LocationName.rloc_c1_portal] = random.randrange(3)
+        if random_locations[LocationName.rloc_c1_portal] == 0:
+            location_table.pop(LocationName.cave1_n_bridges_5)
+            temple_item_counts[ItemName.chest_wood] -= 1
+        # Passage
+        random_locations[LocationName.rloc_passage_entrance] = random.randrange(2)
+        random_locations[LocationName.rloc_passage_middle] = random.randrange(5)
+        random_locations[LocationName.rloc_passage_end] = random.randrange(3)
+        # Temple level 1
+        random_locations[LocationName.rloc_t1_keystone] = random.randrange(4)
+        t1_keystone_locations: typing.List = [
+            LocationName.t1_sun_block_hall_4,
+            LocationName.t1_fire_trap_by_sun_turret_3,
+            LocationName.t1_ledge_after_block_trap_1,
+            LocationName.t1_sw_cache_3
+        ]
+        location_table = remove_locations(location_table, t1_keystone_locations,
+                                          random_locations[LocationName.rloc_t1_keystone])
+        if random_locations[LocationName.rloc_t1_keystone] == 2:  # Remove the diamond that would spawn there
+            temple_item_counts[ItemName.diamond_small] -= 1
+        random_locations[LocationName.rloc_t1_portal] = random.randrange(3)
+        if random_locations[LocationName.rloc_t1_portal] == 2:
+            location_table.pop(LocationName.t1_sun_turret_3)
+            temple_item_counts[ItemName.chest_green] -= 1
+        random_locations[LocationName.rloc_t1_silver_key_s] = random.randrange(3)
+        t1_silver_key_s_locations: typing.List = [
+            LocationName.t1_s_bridge_1,
+            LocationName.t1_above_s_bridge,
+            LocationName.t1_sw_corner_room,
+        ]
+        location_table = remove_locations(location_table, t1_silver_key_s_locations,
+                                          random_locations[LocationName.rloc_t1_silver_key_s])
+        random_locations[LocationName.rloc_t1_silver_key_n] = random.randrange(2)
+        t1_silver_key_n_locations: typing.List = [
+            LocationName.t1_n_sunbeam_treasure_3,
+            LocationName.t1_boulder_hallway_by_ice_turret_4,
+        ]
+        location_table = remove_locations(location_table, t1_silver_key_n_locations,
+                                          random_locations[LocationName.rloc_t1_silver_key_n])
+        random_locations[LocationName.rloc_t1_silver_key_ice_turret] = random.randrange(2)
+        t1_silver_key_ice_turret_locations: typing.List = [
+            LocationName.t1_ice_turret_1,
+            LocationName.t1_ice_turret_2,
+        ]
+        location_table = remove_locations(location_table, t1_silver_key_ice_turret_locations,
+                                          random_locations[LocationName.rloc_t1_silver_key_ice_turret])
+        random_locations[LocationName.rloc_t1_silver_key_funky] = random.randrange(2)
+        if random_locations[LocationName.rloc_t1_silver_key_funky] == 0:
+            location_table.pop(LocationName.t1_e_of_double_gate_room_2)
+            random_locations[LocationName.rloc_t1_ore_funky] = random.randrange(2)
+        else:
+            random_locations[LocationName.rloc_t1_ore_funky] = -1
+        if random_locations[LocationName.rloc_t1_ore_funky] != 0:
+            location_table.pop(LocationName.t1_fire_trap_by_sun_turret_4)
+        if random_locations[LocationName.rloc_t1_ore_funky] != 1:
+            location_table.pop(LocationName.t1_mana_drain_fire_trap)
+        random_locations[LocationName.rloc_t1_gold_key] = random.randrange(2)
+        t1_gold_key_locations: typing.List = [
+            LocationName.t1_n_cache_by_ice_turret_5,
+            LocationName.t1_s_cache_by_ice_turret_3,
+        ]
+        location_table = remove_locations(location_table, t1_gold_key_locations,
+                                          random_locations[LocationName.rloc_t1_gold_key])
+        random_locations[LocationName.rloc_t1_ore_e] = random.randrange(2)
+        t1_ore_e_locations: typing.List = [
+            LocationName.t1_sun_block_hall_3,
+            LocationName.t1_e_gold_beetles,
+        ]
+        location_table = remove_locations(location_table, t1_ore_e_locations,
+                                          random_locations[LocationName.rloc_t1_ore_e])
+        random_locations[LocationName.rloc_t1_mirror] = random.randrange(3)
+        t1_mirror_locations: typing.List = [
+            LocationName.t1_ledge_after_block_trap_2,
+            LocationName.t1_ice_block_chamber_3,
+            LocationName.t1_ice_block_chamber_2
+        ]
+        location_table = remove_locations(location_table, t1_mirror_locations,
+                                          random_locations[LocationName.rloc_t1_mirror])
+        random_locations[LocationName.rloc_t1_sw_hidden_room] = random.randrange(5)
+        if random_locations[LocationName.rloc_t1_sw_hidden_room] != 1:
+            location_table.pop(LocationName.t1_sw_hidden_room_1)
+            location_table.pop(LocationName.t1_sw_hidden_room_2)
+            location_table.pop(LocationName.t1_sw_hidden_room_3)
+            location_table.pop(LocationName.t1_sw_hidden_room_4)
+            temple_item_counts[ItemName.vendor_coin] -= 1
+            temple_item_counts[ItemName.stat_upgrade] -= 1
+            temple_item_counts[ItemName.ankh] -= 1
+            temple_item_counts[ItemName.chest_green] -= 1
+        random_locations[LocationName.rloc_t1_secret] = random.randrange(2)
+        random_locations[LocationName.rloc_t1_exit] = random.randrange(2)
     return location_table
 
 
-pan_locations: typing.List = [
-    LocationName.cave3_nw,
-    LocationName.cave3_m,
-    LocationName.cave3_se,
-    LocationName.cave2_nw_2,
-    LocationName.cave2_red_bridge_3,
-    LocationName.cave2_double_bridge_r,
-    LocationName.cave1_n_bridges_4,
-    LocationName.cave1_double_room_l,
-    LocationName.cave1_e_3,
-]
+def remove_locations(location_table, locations, index):
+    locations.pop(index)
+    for loc in locations:
+        location_table.pop(loc)
+    return location_table
 
 
-lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if data.code}
+lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if
+                                            data.code}
