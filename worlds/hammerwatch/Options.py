@@ -15,13 +15,11 @@ class Map(Choice):
 
 class RandomLocationBehavior(Choice):
     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
-    All Checks: All randomized locations will exist. Extra locations will add filler items to the pool
     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
     Shuffle: All randomized locations are added to the pool, then locations are randomly removed to match vanilla"""
     display_name = "Random Location Behavior"
-    option_all_checks = 0
-    option_vanilla = 1
-    option_shuffle = 2
+    option_vanilla = 0
+    option_shuffle = 1
     default = 0
 
 
@@ -40,12 +38,6 @@ class RandomizeRecoveryItems(Toggle):
     """
     display_name = "Randomize Recovery Items"
     default = True
-
-
-class RandomizeShops(Toggle):
-    """Determines if shop upgrades are shuffled into the pool."""
-    display_name = "Randomize Shops"
-    default = False
 
 
 class ConsumableMerchantChecks(Range):
@@ -114,7 +106,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "random_location_behavior": RandomLocationBehavior,
     # "randomize_bonus": RandomizeBonusChestsAndKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
-    "randomize_shops": RandomizeShops,
+    # "randomize_shops": RandomizeShops,
     "consumable_merchant_checks": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,

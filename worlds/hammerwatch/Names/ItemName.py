@@ -57,5 +57,6 @@ serious_health = "Serious Health"
 # Event Names
 victory = "Victory"
 open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
+krilith_defeated = "Krilith Defeated"
 pof_switch = "PoF Switch"
 pof_complete = "PoF Complete"

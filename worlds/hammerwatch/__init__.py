@@ -36,7 +36,8 @@ class HammerwatchWorld(World):
     option_definitions = hammerwatch_options
     topology_present: bool = True
     remote_items: bool = True
-    remote_start_inventory: bool = False
+    remote_start_inventory: bool = True
+    forced_auto_forfeit: bool = True
 
     data_version = 0
 
@@ -52,37 +53,42 @@ class HammerwatchWorld(World):
         for option_name in self.option_definitions:
             option = getattr(self.world, option_name)[self.player]
             slot_data[option_name] = option.value
+        for loc, value in random_locations.items():
+            slot_data[loc] = value
         return slot_data
 
-    def generate_basic(self) -> None:
+    def generate_early(self):
         self.active_location_list = setup_locations(self.world, self.player)
 
-        self.world.get_location(LocationName.victory, self.player)\
+    def generate_basic(self) -> None:
+        self.world.get_location(LocationName.ev_victory, self.player)\
             .place_locked_item(self.create_event(ItemName.victory))
         self.world.completion_condition[self.player] = lambda state: state.has(ItemName.victory, self.player)
 
-        self.world.get_location(LocationName.temple_entrance_rock, self.player)\
+        self.world.get_location(LocationName.ev_temple_entrance_rock, self.player)\
             .place_locked_item(self.create_event(ItemName.open_temple_entrance_shortcut))
 
-        self.world.get_location(LocationName.hub_pof_switch, self.player) \
+        self.world.get_location(LocationName.ev_hub_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.cave1_pof_switch, self.player) \
+        self.world.get_location(LocationName.ev_cave1_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.cave2_pof_switch, self.player) \
+        self.world.get_location(LocationName.ev_cave2_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.cave3_pof_switch, self.player) \
+        self.world.get_location(LocationName.ev_cave3_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.pof_switch))
-        #self.world.get_location(LocationName.temple1_pof_switch, self.player) \
-        #    .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_temple1_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
         #self.world.get_location(LocationName.temple2_pof_switch, self.player) \
         #    .place_locked_item(self.create_event(ItemName.pof_switch))
 
-        self.world.get_location(LocationName.pof_end, self.player) \
+        self.world.get_location(LocationName.ev_krilith_defeated, self.player) \
+            .place_locked_item(self.create_event(ItemName.krilith_defeated))
+
+        self.world.get_location(LocationName.ev_pof_end, self.player) \
             .place_locked_item(self.create_event(ItemName.pof_complete))
 
     def create_regions(self) -> None:
-        locations = setup_locations(self.world, self.player)
-        create_regions(self.world, self.player, locations)
+        create_regions(self.world, self.player, self.active_location_list)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
@@ -96,7 +102,7 @@ class HammerwatchWorld(World):
         itempool: typing.List[Item] = []
 
         # Get the total number of locations we need to fill
-        total_required_locations = 166
+        total_required_locations = len(self.active_location_list) - len(temple_event_locations)
         # if self.world.map[self.player] == 0:
         #     total_required_locations -= len(Locations.castle_event_locations) + 1
         # else:
