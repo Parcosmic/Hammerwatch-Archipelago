@@ -119,14 +119,14 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
                                         cave3_secret_locations)
 
     cave2_main_locations = [
-        LocationName.cave2_sw_room_3,
+        LocationName.cave2_sw_hidden_room_3,
         LocationName.cave2_red_bridge_2,
         LocationName.cave2_double_bridge_m,
         LocationName.cave2_nw_2,
         LocationName.cave2_red_bridge_4,
         LocationName.cave2_double_bridge_r,
         LocationName.cave2_green_bridge,
-        LocationName.cave2_sw_room_1,
+        LocationName.cave2_sw_hidden_room_1,
         LocationName.cave2_guard_s,
         LocationName.cave2_nw_3,
         LocationName.cave2_w_miniboss_4,
@@ -135,11 +135,11 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         LocationName.cave2_nw_1,
         LocationName.cave2_sw,
         LocationName.cave2_double_bridge_secret,
-        LocationName.cave2_sw_room_2,
+        LocationName.cave2_sw_hidden_room_2,
         LocationName.cave2_pumps_n,
         LocationName.cave2_guard,
         LocationName.cave2_red_bridge_1,
-        LocationName.cave2_sw_room_4,
+        LocationName.cave2_sw_hidden_room_4,
         LocationName.cave2_below_pumps_1,
         LocationName.cave2_below_pumps_2,
         LocationName.cave2_double_bridge_l_1,
@@ -200,17 +200,17 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     cave1_main_region = create_region(world, player, active_locations, RegionName.cave_1_main, cave1_main_locations)
 
     cave1_blue_bridge_locations = [
-        LocationName.cave1_ne_room_1,
-        LocationName.cave1_ne_room_2,
-        LocationName.cave1_ne_room_3,
-        LocationName.cave1_ne_room_4,
-        LocationName.cave1_ne_room_5,
+        LocationName.cave1_ne_hidden_room_1,
+        LocationName.cave1_ne_hidden_room_2,
+        LocationName.cave1_ne_hidden_room_3,
+        LocationName.cave1_ne_hidden_room_4,
+        LocationName.cave1_ne_hidden_room_5,
         LocationName.cave1_ne_grubs,
         LocationName.cave1_secret_tunnel_1,
         LocationName.cave1_n_bridges_1,
         LocationName.cave1_n_bridges_4,
         LocationName.cave1_n_bridges_5,
-        LocationName.cave1_secret_n_room,
+        LocationName.cave1_secret_n_hidden_room,
         LocationName.cave1_ne_1,
         LocationName.cave1_ne_2,
         LocationName.cave1_ne_3,
@@ -290,18 +290,37 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     boss1_defeated_region = create_region(world, player, active_locations, RegionName.boss_1_defeated,
                                           boss1_defeated_locations)
 
-    # TODO: Add logic for randomizing passage and discarding impossible to reach checks
     passage_entrance_locations = [
-
+        LocationName.p_ent2_secret
     ]
     passage_entrance_region = create_region(world, player, active_locations, RegionName.passage_entrance,
                                             passage_entrance_locations)
 
     passage_mid_locations = [
+        LocationName.p_mid1_1,
+        LocationName.p_mid1_2,
+        LocationName.p_mid2_1,
+        LocationName.p_mid2_2,
+        LocationName.p_mid2_3,
+        LocationName.p_mid2_4,
+        LocationName.p_mid3_secret_1,
+        LocationName.p_mid3_secret_2,
+        LocationName.p_mid3_secret_3,
+        LocationName.p_mid3_secret_4,
+        LocationName.p_mid4_1,
+        LocationName.p_mid4_2,
+        LocationName.p_mid4_3,
+        LocationName.p_mid4_4,
+        LocationName.p_mid5_1,
+        LocationName.p_mid5_2,
+        LocationName.p_mid5_secret,
     ]
     passage_mid_region = create_region(world, player, active_locations, RegionName.passage_mid, passage_mid_locations)
 
     passage_end_locations = [
+        LocationName.p_end1_secret,
+        LocationName.p_end3_1,
+        LocationName.p_end3_2,
     ]
     passage_end_region = create_region(world, player, active_locations, RegionName.passage_end, passage_end_locations)
 

@@ -51,6 +51,10 @@ pickaxe_fragment = "Pickaxe Fragment"
 sonic_ring = "Sonic Ring"
 serious_health = "Serious Health"
 
+# Special Generation stuff
+secret = "Secret"
+puzzle = "Puzzle"
+
 # Trap Items
 
 

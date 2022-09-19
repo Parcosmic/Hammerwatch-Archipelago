@@ -37,7 +37,6 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_items: bool = True
     remote_start_inventory: bool = True
-    forced_auto_forfeit: bool = True
 
     data_version = 0
 
@@ -102,14 +101,12 @@ class HammerwatchWorld(World):
         itempool: typing.List[Item] = []
 
         # Get the total number of locations we need to fill
-        total_required_locations = len(self.active_location_list) - len(temple_event_locations)
-        # if self.world.map[self.player] == 0:
-        #     total_required_locations -= len(Locations.castle_event_locations) + 1
-        # else:
-        #     total_required_locations -= len(Locations.temple_event_locations) + 1
-        # If random location behavior is set to vanilla we'll have fewer checks
-        if self.world.random_location_behavior[self.player].value == 1:
-            total_required_locations -= 15
+        total_required_locations = len(self.active_location_list)
+        if self.world.map[self.player] == 0:
+            total_required_locations -= len(castle_event_locations)
+        else:
+            total_required_locations -= len(temple_event_locations)
+
         if not self.world.randomize_recovery_items[self.player].value:
             recovery_locations = 0
             for location, data in self.active_location_list.items():
