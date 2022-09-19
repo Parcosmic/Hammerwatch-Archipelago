@@ -23,21 +23,28 @@ class RandomLocationBehavior(Choice):
     default = 0
 
 
-# class RandomizeBonusChestsAndKeys(Toggle):
-#    """
-#    Determines if bonus levels (bonus chests and keys) are shuffled into the pool. It's recommended that this is off as
-#    it adds many, many checks you won't have access to until later in the game.
-#    """
-#    display_name = "Randomize Bonus Chests and Keys"
-#    default = False
-
-
 class RandomizeRecoveryItems(Toggle):
     """
     Determines if recovery items (such as apples and mana crystals) are shuffled into the pool
     """
     display_name = "Randomize Recovery Items"
     default = True
+
+
+class RandomizeSecrets(Toggle):
+    """
+    Determines if items from secrets are shuffled into the item pool
+    """
+    display_name = "Randomize Secrets"
+    default = True
+
+
+class RandomizePuzzles(Toggle):
+    """
+    Determines if items from puzzles are shuffled into the item pool
+    """
+    display_name = "Randomize Puzzles"
+    default = False
 
 
 class ConsumableMerchantChecks(Range):
@@ -106,12 +113,14 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "random_location_behavior": RandomLocationBehavior,
     # "randomize_bonus": RandomizeBonusChestsAndKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
+    "randomize_secrets": RandomizeSecrets,
+    # "randomize_puzzles": RandomizePuzzles,
     # "randomize_shops": RandomizeShops,
     "consumable_merchant_checks": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,
     "pickaxe_fragments": PickaxeFragments,
-    "trap_item_percent": TrapItemPercentage,
+    # "trap_item_percent": TrapItemPercentage,
     "starting_life_count": StartingLifeCount,
     "death_link": DeathLink
 }

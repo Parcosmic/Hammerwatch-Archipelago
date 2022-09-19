@@ -15,9 +15,8 @@ class HammerwatchItem(Item):
     game: str = "Hammerwatch"
 
 
-counter = Counter(0x130000)
+counter = Counter(0x130000 - 1)
 collectable_table: typing.Dict[str, ItemData] = {
-    ItemName.empty: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
     ItemName.chest_blue: ItemData(counter.count(), ItemClassification.filler),
@@ -60,12 +59,12 @@ recovery_table: typing.Dict[str, ItemData] = {
 }
 
 tool_table: typing.Dict[str, ItemData] = {
-    ItemName.pickaxe: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.lever: ItemData(counter.count(), ItemClassification.progression),
     ItemName.pan: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.lever_fragment: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.lever: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.pickaxe: ItemData(counter.count(), ItemClassification.progression),
     ItemName.pan_fragment: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.lever_fragment: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression),
 }
 
 special_table: typing.Dict[str, ItemData] = {
@@ -91,6 +90,7 @@ item_table: typing.Dict[str, ItemData] = {
 junk_items: typing.List[str] = [
     ItemName.apple,
     ItemName.mana_1,
+    ItemName.diamond_small
 ]
 
 trap_items: typing.List[str] = [
@@ -125,9 +125,10 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_red: 1,
     ItemName.diamond_small: 10,
     ItemName.diamond_small_red: 18,
-    ItemName.stat_upgrade: 0
+    ItemName.stat_upgrade: 0,
+    ItemName.secret: 20,
+    ItemName.puzzle: 0
 }
-castle_secrets = 0
 
 temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 0,  # 75
@@ -136,15 +137,15 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.chest_green: 4,
     ItemName.chest_purple: 0,
     ItemName.chest_red: 6,
-    ItemName.chest_wood: 21,
-    ItemName.vendor_coin: 26,
+    ItemName.chest_wood: 24,
+    ItemName.vendor_coin: 26,  # -1 because we added the pickaxe, reset this when we include the pickaxe check
     ItemName.key_silver: 4,
     ItemName.key_gold: 3,
     ItemName.mirror: 7,
     ItemName.ore: 9,
     ItemName.key_teleport: 4,
-    ItemName.ankh: 10,
-    ItemName.ankh_5up: 2,
+    ItemName.ankh: 12,
+    ItemName.ankh_5up: 3,
     ItemName.ankh_7up: 0,
     ItemName.potion_damage: 0,
     ItemName.potion_rejuvenation: 0,
@@ -155,32 +156,33 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_red: 0,
     ItemName.diamond_small: 3,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 13,
+    ItemName.stat_upgrade: 15,
     ItemName.stat_upgrade_damage: 1,
     ItemName.stat_upgrade_defense: 1,
-    ItemName.apple: 33,
-    ItemName.orange: 6,
+    ItemName.apple: 35,
+    ItemName.orange: 7,
     ItemName.steak: 5,
     ItemName.fish: 7,
-    ItemName.mana_1: 21,
-    ItemName.mana_2: 2,
-    ItemName.pickaxe: 1,
+    ItemName.mana_1: 24,
+    ItemName.mana_2: 3,
+    ItemName.pan: 1,
     ItemName.lever: 1,
-    ItemName.pan: 1
+    ItemName.pickaxe: 1,
+    ItemName.secret: 20,
+    ItemName.puzzle: 0
 }
-temple_secrets = 13
 
 
 def get_item_counts(world, player: int):
     item_counts_table: typing.Dict[str, int]
-    secrets: int = 0
+    secrets: int
 
     if world.map[player] == 0:  # Castle Hammerwatch
         item_counts_table = {**castle_item_counts}
-        secrets = castle_secrets
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
-        secrets = temple_secrets
+
+    secrets = item_counts_table[ItemName.secret]
 
     # If using fragments switch the whole item out for fragments
     if world.pan_fragments[player] > 0:
