@@ -16,10 +16,12 @@ class Map(Choice):
 class RandomLocationBehavior(Choice):
     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
-    Shuffle: All randomized locations are added to the pool, then locations are randomly removed to match vanilla"""
+    Shuffle: All randomized locations are added to the pool, then locations are randomly removed to match vanilla
+    All Checks: All potential locations are added to the pool, adding junk items for excess locations"""
     display_name = "Random Location Behavior"
     option_vanilla = 0
     option_shuffle = 1
+    option_all_checks = 2
     default = 0
 
 
@@ -60,8 +62,8 @@ class ConsumableMerchantChecks(Range):
 
 class PanFragments(Range):
     """Separates the pan into multiple fragments that are shuffled into the item pool.
-    All fragments must be collected in order to purchase from the consumables merchant, or get checks if
-    consumable_merchant_checks is greater than 0."""
+    All fragments must be collected in order to purchase from the consumables merchant, and get consumables merchant
+    checks if consumable_merchant_checks is greater than 0."""
     display_name = "Pan Fragments"
     range_start = 0
     range_end = 5

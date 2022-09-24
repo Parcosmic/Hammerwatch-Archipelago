@@ -35,7 +35,7 @@ class HammerwatchWorld(World):
     game: str = "Hammerwatch"
     option_definitions = hammerwatch_options
     topology_present: bool = True
-    remote_items: bool = True
+    remote_items: bool = False
     remote_start_inventory: bool = True
 
     data_version = 0
@@ -64,27 +64,10 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.victory))
         self.world.completion_condition[self.player] = lambda state: state.has(ItemName.victory, self.player)
 
-        self.world.get_location(LocationName.ev_temple_entrance_rock, self.player)\
-            .place_locked_item(self.create_event(ItemName.open_temple_entrance_shortcut))
-
-        self.world.get_location(LocationName.ev_hub_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.ev_cave1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.ev_cave2_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.ev_cave3_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
-        self.world.get_location(LocationName.ev_temple1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
-        #self.world.get_location(LocationName.temple2_pof_switch, self.player) \
-        #    .place_locked_item(self.create_event(ItemName.pof_switch))
-
-        self.world.get_location(LocationName.ev_krilith_defeated, self.player) \
-            .place_locked_item(self.create_event(ItemName.krilith_defeated))
-
-        self.world.get_location(LocationName.ev_pof_end, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_complete))
+        if self.world.map[self.player] == 0:
+            pass
+        else:
+            self.place_tots_event_items()
 
     def create_regions(self) -> None:
         create_regions(self.world, self.player, self.active_location_list)
@@ -140,6 +123,57 @@ class HammerwatchWorld(World):
         itempool += junk_pool
 
         self.world.itempool += itempool
+
+    def place_tots_event_items(self):
+        self.world.get_location(LocationName.ev_temple_entrance_rock, self.player) \
+            .place_locked_item(self.create_event(ItemName.open_temple_entrance_shortcut))
+
+        # Pyramid of fear
+        self.world.get_location(LocationName.ev_hub_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_cave1_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_cave2_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_cave3_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_temple1_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+        self.world.get_location(LocationName.ev_temple2_pof_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_switch))
+
+        self.world.get_location(LocationName.ev_pof_end, self.player) \
+            .place_locked_item(self.create_event(ItemName.pof_complete))
+
+        # Krilith defeated
+        self.world.get_location(LocationName.ev_krilith_defeated, self.player) \
+            .place_locked_item(self.create_event(ItemName.krilith_defeated))
+
+        # Temple Floor 2 light bridge switches
+        self.world.get_location(LocationName.ev_t2_n_bridge_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+        self.world.get_location(LocationName.ev_t2_w_bridge_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+        self.world.get_location(LocationName.ev_t2_ne_bridge_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+        self.world.get_location(LocationName.ev_t2_se_bridge_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+        self.world.get_location(LocationName.ev_t2_sw_bridge_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+
+        # Temple solar nodes
+        self.world.get_location(LocationName.ev_t1_n_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
+        self.world.get_location(LocationName.ev_t1_s_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
+        self.world.get_location(LocationName.ev_t2_n_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
+        self.world.get_location(LocationName.ev_t2_s_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
+        self.world.get_location(LocationName.ev_t3_n_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
+        self.world.get_location(LocationName.ev_t3_s_node, self.player) \
+            .place_locked_item(self.create_event(ItemName.solar_node))
 
     def set_rules(self) -> None:
         set_rules(self.world, self.player)
