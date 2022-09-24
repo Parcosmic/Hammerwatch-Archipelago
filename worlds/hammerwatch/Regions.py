@@ -373,7 +373,8 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         LocationName.t1_mana_drain_fire_trap,
         LocationName.t1_mana_drain_fire_trap_reward_1,
         LocationName.t1_mana_drain_fire_trap_reward_2,
-        LocationName.t1_mana_drain_fire_trap_passage
+        LocationName.t1_mana_drain_fire_trap_passage,
+        LocationName.ev_t1_s_node
     ]
     t1_node_1_region = create_region(world, player, active_locations, RegionName.t1_node_1, t1_node_1_locations)
 
@@ -455,6 +456,11 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     t1_sun_block_hall_region = create_region(world, player, active_locations, RegionName.t1_sun_block_hall,
                                              t1_sun_block_hall_locations)
 
+    t1_node_2_locations = [
+        LocationName.ev_t1_n_node
+    ]
+    t1_node_2_region = create_region(world, player, active_locations, RegionName.t1_node_2, t1_node_2_locations)
+
     t1_telariana_melt_ice_locations = [
         LocationName.t1_telariana_ice
     ]
@@ -473,15 +479,145 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     boss2_defeated_locations = [
         LocationName.boss2_nw,
         LocationName.boss2_se,
-        LocationName.ev_krilith_defeated,
-        LocationName.ev_victory
+        LocationName.ev_krilith_defeated
     ]
     boss2_defeated_region = create_region(world, player, active_locations, RegionName.boss2_defeated,
                                           boss2_defeated_locations)
 
     t2_main_locations = [
+        LocationName.t2_n_of_portal,
+        LocationName.t2_s_of_portal,
+        LocationName.t2_w_spike_trap_1,
+        LocationName.t2_w_spike_trap_2,
+        LocationName.t2_nw_puzzle_cache_1,
+        LocationName.t2_nw_puzzle_cache_2,
+        LocationName.t2_nw_puzzle_cache_3,
+        LocationName.t2_nw_puzzle_cache_4,
+        LocationName.t2_nw_puzzle_cache_5,
+        LocationName.t2_nw_of_s_ice_turret,
+        LocationName.t2_w_hall_dead_end_1,
+        LocationName.t2_w_hall_dead_end_2,
+        LocationName.t2_w_hall_dead_end_3,
+        LocationName.t2_w_hall_dead_end_4,
+        LocationName.t2_w_hall_dead_end_5,
+        LocationName.t2_n_of_sw_gate_1,
+        LocationName.t2_n_of_sw_gate_2,
+        LocationName.t2_fire_trap_maze_1,
+        LocationName.t2_fire_trap_maze_2,
+        LocationName.t2_fire_trap_maze_3,
+        LocationName.t2_fire_trap_maze_4,
+        LocationName.t2_fire_trap_maze_5,
+        LocationName.t2_fire_trap_maze_6,
+        LocationName.t2_teleporter,
+        LocationName.t2_e_outside_gold_beetle_cage_1,
+        LocationName.t2_e_outside_gold_beetle_cage_2,
+        LocationName.t2_boulder_chamber_1,
+        LocationName.t2_boulder_chamber_2,
+        LocationName.t2_boulder_chamber_3,
+        LocationName.t2_boulder_chamber_4,
+        LocationName.t2_s_balcony_1,
+        LocationName.t2_s_balcony_2,
+        LocationName.t2_se_banner_chamber_1,
+        LocationName.t2_se_banner_chamber_2,
+        LocationName.t2_se_banner_chamber_3,
+        LocationName.t2_se_banner_chamber_4,
+        LocationName.t2_se_banner_chamber_5,
+        LocationName.t2_se_fireball_hall,
+        LocationName.ev_t2_ne_bridge_switch,
+        LocationName.ev_t2_se_bridge_switch,
     ]
     t2_main_region = create_region(world, player, active_locations, RegionName.t2_main, t2_main_locations)
+
+    t2_melt_ice_locations = [
+        LocationName.t2_w_ice_block_gate,
+        LocationName.t2_e_ice_block_gate,
+    ]
+    t2_melt_ice_region = create_region(world, player, active_locations, RegionName.t2_melt_ice, t2_melt_ice_locations)
+
+    t2_n_gate_locations = [
+        LocationName.t2_nw_ice_turret_1,
+        LocationName.t2_nw_ice_turret_2,
+        LocationName.t2_nw_ice_turret_3,
+        LocationName.t2_nw_ice_turret_4,
+        LocationName.t2_nw_under_block,
+        LocationName.t2_nw_gate_1,
+        LocationName.t2_nw_gate_2,
+        LocationName.t2_nw_gate_3,
+    ]
+    t2_n_gate_region = create_region(world, player, active_locations, RegionName.t2_n_gate, t2_n_gate_locations)
+
+    t2_s_gate_locations = [
+        LocationName.t2_sw_gate,
+        LocationName.t2_s_node_room_1,
+        LocationName.t2_s_node_room_2,
+        LocationName.t2_s_node_room_3,
+        LocationName.t2_s_sunbeam_1,
+        LocationName.t2_s_sunbeam_2,
+        LocationName.t2_sw_jail_1,
+        LocationName.t2_sw_jail_2,
+        LocationName.t2_left_of_pof_switch_1,
+        LocationName.t2_left_of_pof_switch_2,
+        LocationName.t2_right_of_pof_switch,
+        LocationName.ev_t2_sw_bridge_switch,
+        LocationName.ev_temple2_pof_switch,
+    ]
+    t2_s_gate_region = create_region(world, player, active_locations, RegionName.t2_s_gate, t2_s_gate_locations)
+
+    t2_n_node_locations = [
+        LocationName.t2_boulder_room_1,
+        LocationName.t2_boulder_room_2,
+        LocationName.t2_boulder_room_block,
+        LocationName.t2_mana_drain_fire_trap_1,
+        LocationName.t2_mana_drain_fire_trap_2,
+        LocationName.t2_jones_hallway,
+        LocationName.t2_gold_beetle_barricade,
+        LocationName.t2_w_gold_beetle_room_1,
+        LocationName.t2_w_gold_beetle_room_2,
+        LocationName.t2_w_gold_beetle_room_3,
+        LocationName.t2_w_gold_beetle_room_4,
+        LocationName.ev_t2_n_node,
+        LocationName.ev_t2_w_bridge_switch
+    ]
+    t2_n_node_region = create_region(world, player, active_locations, RegionName.t2_n_node, t2_n_node_locations)
+
+    t2_s_node_locations = [
+        LocationName.ev_t2_s_node
+    ]
+    t2_s_node_region = create_region(world, player, active_locations, RegionName.t2_s_node, t2_s_node_locations)
+
+    t2_ornate_locations = [
+        LocationName.ev_t2_n_bridge_switch
+    ]
+    t2_ornate_region = create_region(world, player, active_locations, RegionName.t2_ornate, t2_ornate_locations)
+
+    t2_light_bridges_locations = [
+        LocationName.t2_se_light_bridge_1,
+        LocationName.t2_se_light_bridge_2,
+        LocationName.t2_s_light_bridge_1,
+        LocationName.t2_s_light_bridge_2,
+        LocationName.t2_portal_gate,
+    ]
+    t2_light_bridges_region = create_region(world, player, active_locations, RegionName.t2_light_bridges,
+                                            t2_light_bridges_locations)
+
+    t3_main_locations = [
+        LocationName.ev_t3_n_node,
+        LocationName.ev_t3_s_node,
+        LocationName.ev_victory,
+    ]
+    t3_main_region = create_region(world, player, active_locations, RegionName.t3_main, t3_main_locations)
+
+    t2_ornate_t3_locations = [
+        LocationName.t2_floor3_cache_1,
+        LocationName.t2_floor3_cache_2,
+        LocationName.t2_floor3_cache_3,
+        LocationName.t2_floor3_cache_4,
+        LocationName.t2_floor3_cache_5,
+        LocationName.t2_floor3_cache_6,
+        LocationName.t2_floor3_cache_gate,
+    ]
+    t2_ornate_t3_region = create_region(world, player, active_locations, RegionName.t2_ornate_t3,
+                                        t2_ornate_t3_locations)
 
     world.regions += [
         menu_region,
@@ -515,6 +651,7 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         t1_main_region,
         t1_sw_cache_region,
         t1_node_1_region,
+        t1_node_2_region,
         t1_sun_turret_region,
         t1_ice_turret_region,
         t1_n_of_ice_turret_region,
@@ -525,7 +662,16 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         t1_ice_chamber_melt_ice_region,
         boss2_main_region,
         boss2_defeated_region,
-        t2_main_region
+        t2_main_region,
+        t2_melt_ice_region,
+        t2_n_gate_region,
+        t2_s_gate_region,
+        t2_n_node_region,
+        t2_s_node_region,
+        t2_ornate_region,
+        t2_light_bridges_region,
+        t2_ornate_t3_region,
+        t3_main_region
     ]
 
     connect_tots_regions(world, player, active_locations)
@@ -541,7 +687,7 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.hub_main, RegionName.cave_3_fall,
             lambda state: (state.has(ItemName.pickaxe, player)))
     # For the temple entrances in the hub
-    # connect(world, player, used_names, RegionName.hub_rocks, RegionName.temple_3_main)
+    connect(world, player, used_names, RegionName.hub_rocks, RegionName.t3_main)
     connect(world, player, used_names, RegionName.hub_main, RegionName.temple_entrance)
     connect(world, player, used_names, RegionName.hub_main, RegionName.pof_1,
             lambda state: (state.has(ItemName.pof_switch, player, 5)))
@@ -568,7 +714,6 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.cave_1_pumps, RegionName.cave_1_green_bridge)
     connect(world, player, used_names, RegionName.cave_1_green_bridge, RegionName.boss2_main)
     connect(world, player, used_names, RegionName.boss2_main, RegionName.boss2_defeated)
-    # connect(world, player, used_names, RegionName.t2_main, RegionName.cave_1_temple)
 
     connect(world, player, used_names, RegionName.cave_1_red_bridge, RegionName.boss_1_main)
     connect(world, player, used_names, RegionName.boss_1_main, RegionName.boss_1_defeated,
@@ -602,14 +747,32 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.t1_ice_turret, RegionName.t1_east,
             lambda state: (state.has(ItemName.key_gold, player, 3)))
     connect(world, player, used_names, RegionName.t1_east, RegionName.t1_sun_block_hall,
+            lambda state: (state.has(ItemName.mirror, player, 6)))
+    connect(world, player, used_names, RegionName.t1_east, RegionName.t1_node_2,
             lambda state: (state.has(ItemName.mirror, player, 7)))
     connect(world, player, used_names, RegionName.t1_east, RegionName.t1_ice_chamber_melt_ice,
             lambda state: (state.has(ItemName.krilith_defeated, player)))
-    t1_t2_room_transition = rnd.randint(0, 1)
-    connect(world, player, used_names, RegionName.t1_east, RegionName.t2_main)
 
-    # TODO: Remove this when we add full Temple Level 2
-    connect(world, player, used_names, RegionName.t2_main, RegionName.cave_3_portal)
+    connect(world, player, used_names, RegionName.t1_east, RegionName.t2_main)
+    connect(world, player, used_names, RegionName.t2_main, RegionName.t2_melt_ice,
+            lambda state: (state.has(ItemName.krilith_defeated, player)))
+    t2_key_ordering = rnd.randint(0, 1)
+    connect(world, player, used_names, RegionName.t2_main, RegionName.t2_n_gate,
+            lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering)))
+    connect(world, player, used_names, RegionName.t2_main, RegionName.t2_s_gate,
+            lambda state: (state.has(ItemName.key_silver, player, 5 - t2_key_ordering)))
+    connect(world, player, used_names, RegionName.t2_main, RegionName.t2_ornate,
+            lambda state: (state.has(ItemName.key_gold, player, 4)))
+    connect(world, player, used_names, RegionName.t2_n_gate, RegionName.t2_n_node,
+            lambda state: (state.has(ItemName.mirror, player, 10)))
+    connect(world, player, used_names, RegionName.t2_s_gate, RegionName.t2_s_node,
+            lambda state: (state.has(ItemName.mirror, player, 14)))
+    connect(world, player, used_names, RegionName.t2_main, RegionName.t2_light_bridges,
+            lambda state: (state.has(ItemName.t2_bridge_switch, player, 5)))
+    connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_3_portal)
+    connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_1_temple)
+
+    connect(world, player, used_names, RegionName.t3_main, RegionName.t2_ornate_t3)
 
 
 def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
