@@ -56,7 +56,11 @@ secret = "Secret"
 puzzle = "Puzzle"
 
 # Trap Items
-
+trap_bomb = "Bomb Trap"
+trap_mana = "Mana Drain Trap"
+trap_poison = "Poison Trap"
+trap_frost = "Frost Trap"
+trap_fire = "Fire Trap"
 
 # Event Names
 victory = "Victory"

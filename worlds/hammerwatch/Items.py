@@ -72,6 +72,14 @@ special_table: typing.Dict[str, ItemData] = {
     ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
+trap_table: typing.Dict[str, ItemData] = {
+    ItemName.trap_bomb: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_mana: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_poison: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_frost: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_fire: ItemData(counter.count(), ItemClassification.trap),
+}
+
 event_table: typing.Dict[str, ItemData] = {
     ItemName.victory: ItemData(None, ItemClassification.progression),
     ItemName.pof_switch: ItemData(None, ItemClassification.progression),
@@ -84,7 +92,7 @@ item_table: typing.Dict[str, ItemData] = {
     **recovery_table,
     **tool_table,
     **special_table,
-    # **event_table
+    **trap_table
 }
 
 junk_items: typing.List[str] = [
@@ -94,7 +102,11 @@ junk_items: typing.List[str] = [
 ]
 
 trap_items: typing.List[str] = [
-
+    ItemName.trap_bomb,
+    ItemName.trap_mana,
+    ItemName.trap_poison,
+    ItemName.trap_frost,
+    ItemName.trap_fire,
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -183,6 +195,9 @@ def get_item_counts(world, player: int):
         item_counts_table = {**temple_item_counts}
 
     secrets = item_counts_table[ItemName.secret]
+    puzzles = item_counts_table[ItemName.puzzle]
+    item_counts_table.pop(ItemName.secret)
+    item_counts_table.pop(ItemName.puzzle)
 
     # If using fragments switch the whole item out for fragments
     if world.pan_fragments[player] > 0:
@@ -201,16 +216,34 @@ def get_item_counts(world, player: int):
             item_counts_table[recovery] = 0
 
     # Add secret items
-    random = Random()
-    random.seed(random, world.seed)
-    for s in range(secrets):
-        item = random.randint(0, 12)
-        if item < 8:
-            item_counts_table[ItemName.chest_wood] += 1
-        elif item < 12:
-            item_counts_table[ItemName.ankh] += 1
-        else:
-            item_counts_table[ItemName.stat_upgrade] += 1
+    if world.randomize_secrets[player].value > 0:
+        for s in range(secrets):
+            item = world.random.randint(0, 12)
+            if item < 8:
+                item_counts_table[ItemName.chest_wood] += 1
+            elif item < 12:
+                item_counts_table[ItemName.ankh] += 1
+            else:
+                item_counts_table[ItemName.stat_upgrade] += 1
+
+    # Trap items
+    if world.trap_item_percent[player].value > 0:
+        for trap_item in trap_items:
+            item_counts_table[trap_item] = 0
+        filler_item_names: typing.List[str] = []
+        filler_items: int = 0
+        for item in item_counts_table.keys():
+            if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
+                filler_item_names.append(item)
+                filler_items += item_counts_table[item]
+        trap_item_count = int(filler_items * world.trap_item_percent[player].value / 100)
+        for t in range(trap_item_count):
+            item = trap_items[world.random.randrange(len(trap_items))]
+            item_counts_table[item] += 1
+            filler_item = filler_item_names[world.random.randrange(len(filler_item_names))]
+            item_counts_table[filler_item] -= 1
+            if item_counts_table[filler_item] == 0:
+                filler_item_names.remove(filler_item)
 
     return item_counts_table
 

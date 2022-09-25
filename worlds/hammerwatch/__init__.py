@@ -96,7 +96,7 @@ class HammerwatchWorld(World):
                 if data.classification == LocationClassification.Recovery:
                     recovery_locations += 1
             total_required_locations -= recovery_locations
-        total_required_locations += self.world.consumable_merchant_checks[self.player].value
+        # total_required_locations += self.world.consumable_merchant_checks[self.player].value
 
         # Get the counts of each item we'll put in
         item_counts: typing.Dict[str, int] = get_item_counts(self.world, self.player)
