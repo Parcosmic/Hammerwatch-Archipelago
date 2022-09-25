@@ -21,7 +21,7 @@ guide: [Basic Multiworld Setup Guide](/tutorial/Archipelago/setup/en)
 ### Where do I get a config file?
 
 The Player Settings page on the website allows you to configure your personal settings and export a config file from
-them. Player settings page: [Donkey Kong Country 3 Player Settings Page](/games/Donkey%20Kong%20Country%203/player-settings)
+them. Player settings page: [Hammerwatch Player Settings Page](/games/Donkey%20Kong%20Country%203/player-settings)
 
 ### Verifying your config file
 
