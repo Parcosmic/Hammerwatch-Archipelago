@@ -90,14 +90,6 @@ class HammerwatchWorld(World):
         else:
             total_required_locations -= len(temple_event_locations)
 
-        if not self.world.randomize_recovery_items[self.player].value:
-            recovery_locations = 0
-            for location, data in self.active_location_list.items():
-                if data.classification == LocationClassification.Recovery:
-                    recovery_locations += 1
-            total_required_locations -= recovery_locations
-        # total_required_locations += self.world.consumable_merchant_checks[self.player].value
-
         # Get the counts of each item we'll put in
         item_counts: typing.Dict[str, int] = get_item_counts(self.world, self.player)
 

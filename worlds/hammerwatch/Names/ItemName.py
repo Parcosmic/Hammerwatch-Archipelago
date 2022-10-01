@@ -57,6 +57,7 @@ puzzle = "Puzzle"
 
 # Trap Items
 trap_bomb = "Bomb Trap"
+trap_confuse = "Confuse Trap"
 trap_mana = "Mana Drain Trap"
 trap_poison = "Poison Trap"
 trap_frost = "Frost Trap"
