@@ -325,8 +325,10 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     LocationName.t1_s_bridge_2: LocationData(counter.count()),
     LocationName.t1_s_bridge_3: LocationData(counter.count()),
     LocationName.t1_telariana_5: LocationData(counter.count()),
+
     LocationName.boss2_nw: LocationData(counter.count()),
     LocationName.boss2_se: LocationData(counter.count()),
+
     LocationName.t2_nw_puzzle_cache_5: LocationData(counter.count()),
     LocationName.t2_floor3_cache_3: LocationData(counter.count()),
     LocationName.t2_fire_trap_maze_2: LocationData(counter.count()),
@@ -409,6 +411,116 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     LocationName.t2_s_light_bridge_2: LocationData(counter.count()),
     LocationName.t2_s_sunbeam_1: LocationData(counter.count()),
     LocationName.t2_sw_jail_1: LocationData(counter.count()),
+
+    LocationName.t3_boss_fall_3_2: LocationData(counter.count()),
+    LocationName.t3_n_node_1: LocationData(counter.count()),
+    LocationName.t3_n_node_2: LocationData(counter.count()),
+    LocationName.t3_s_node_cache_2: LocationData(counter.count()),
+    LocationName.t3_n_turret_1: LocationData(counter.count()),
+    LocationName.t3_boulder_block: LocationData(counter.count()),
+    LocationName.t3_e_turret_spikes: LocationData(counter.count()),
+    LocationName.t3_n_node_3: LocationData(counter.count()),
+    LocationName.t3_s_balcony_turret_2: LocationData(counter.count()),
+    LocationName.t3_s_node_cache_1: LocationData(counter.count()),
+    LocationName.t3_boss_fall_2_2: LocationData(counter.count()),
+    LocationName.t3_boss_fall_3_4: LocationData(counter.count()),
+    LocationName.t3_boss_fall_1_3: LocationData(counter.count()),
+    LocationName.t3_boss_fall_3_1: LocationData(counter.count()),
+    LocationName.t3_n_turret_2: LocationData(counter.count()),
+    LocationName.t3_m_balcony_corridor: LocationData(counter.count()),
+    LocationName.t3_s_node_cache_3: LocationData(counter.count()),
+    LocationName.t3_boss_fall_3_3: LocationData(counter.count()),
+    LocationName.t3_boss_fall_2_3: LocationData(counter.count()),
+    LocationName.t3_boss_fall_1_2: LocationData(counter.count()),
+    LocationName.t3_s_gate: LocationData(counter.count()),
+    LocationName.t3_n_node_blocks_1: LocationData(counter.count()),
+    LocationName.t3_n_node_blocks_2: LocationData(counter.count()),
+    LocationName.t3_n_node_blocks_3: LocationData(counter.count()),
+    LocationName.t3_n_node_blocks_4: LocationData(counter.count()),
+    LocationName.t3_n_node_blocks_5: LocationData(counter.count()),
+    LocationName.t3_boss_fall_2_1: LocationData(counter.count()),
+    LocationName.t3_boss_fall_1_1: LocationData(counter.count()),
+    LocationName.t3_s_balcony_turret_1: LocationData(counter.count()),
+
+    LocationName.pof_2_ne_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ne_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ne_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ne_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_6: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_ent_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_confuse_hall_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_confuse_hall_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_confuse_hall_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_confuse_hall_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_sw_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_sw_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_sw_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_2_sw_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_6: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_7: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_8: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_9: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_confuse_corner_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_confuse_corner_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_confuse_corner_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_confuse_corner_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_end_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_end_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_end_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_end_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_10: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_6: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_9: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_7: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_8: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_13: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_11: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_s_12: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_6: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_ent_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_ent_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_ent_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_ent_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_c_hall_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_6: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_9: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_8: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_10: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_11: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_sw_left_7: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_end_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_end_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_safety_room_2: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_safety_room_1: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_end_5: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_end_4: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_3_safety_room_3: LocationData(counter.count(), LocationClassification.Bonus),
+    LocationName.pof_1_n_5: LocationData(counter.count()),
+    LocationName.pof_1_ent_5: LocationData(counter.count()),
+    LocationName.pof_1_end_1: LocationData(counter.count()),
+    LocationName.pof_3_end_3: LocationData(counter.count()),
 }
 
 temple_shop_locations: typing.Dict[str, LocationData] = {
@@ -459,30 +571,48 @@ all_locations: typing.Dict[str, LocationData] = {
 
 def setup_locations(world, player: int):
     location_table: typing.Dict[str, LocationData]
+    map_locations: typing.Dict[str, LocationData]
+    bonus_locations: typing.Dict[str, LocationData] = {}
 
-    if world.map[player] == 0:  # Castle Hammerwatch
-        location_table = {}
-        for name, data in castle_locations.items():
-            if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value:
-                location_table.update({name: data})
-        if world.random_location_behavior[player] == 0:
-            location_table = choose_castle_random_locations(world, player, location_table)
-            pass
-        # if world.randomize_shops[player].value:
-        #    location_table.update({**castle_shop_locations})
+    location_table = {}
+    # Event locations
+    if world.map[player] == 0:
+        map_locations = castle_locations
         location_table.update(castle_event_locations)
-    else:  # Temple of the Sun
-        location_table = {}
-        for name, data in temple_locations.items():
-            if data.classification != LocationClassification.Recovery\
-                    or world.randomize_recovery_items[player].value == 1:
-                location_table.update({name: data})
-        if world.random_location_behavior[player] == 0:
-            location_table = choose_tots_random_locations(world, player, location_table)
-            pass
-        # if world.randomize_shops[player].value:
-        #    location_table.update({**temple_shop_locations})
+    else:
+        map_locations = temple_locations
         location_table.update(temple_event_locations)
+
+    # Add recovery locations if the setting is on, and add bonus locations to a special list for handling below
+    for name, data in map_locations.items():
+        if data.classification == LocationClassification.Bonus:
+            bonus_locations.update({name: data})
+            continue
+        if data.classification != LocationClassification.Recovery or world.randomize_recovery_items[player].value:
+            location_table.update({name: data})
+
+    # Bonus level handling
+    extra_items = 0
+    extra_items += world.pan_fragments[player].value
+    extra_items += world.lever_fragments[player].value
+    extra_items += world.pickaxe_fragments[player].value
+    if world.bonus_behavior[player].value == 1:  # Necessary
+        for i in range(extra_items):
+            loc = world.random.choice(bonus_locations.keys())
+            location_table.update({loc: bonus_locations.pop(loc)})
+    elif world.bonus_behavior[player].value == 2:  # All
+        location_table.update(bonus_locations)
+
+    # Random location behavior
+    if world.random_location_behavior[player].value == 0:  # Vanilla
+        if world.map[player] == 0:  # Castle Hammerwatch
+            location_table = choose_castle_random_locations(world, player, location_table)
+        else:  # Temple of the Sun
+            location_table = choose_tots_random_locations(world, player, location_table)
+    elif world.random_location_behavior[player].value == 1:  # Shuffle, not implemented yet
+        pass  # Randomly remove some locations, need to determine the number
+    elif world.random_location_behavior[player].value == 2:  # All checks
+        pass  # Do nothing as all locations are already added to the dict
 
     location_table.update(common_event_locations)
 
@@ -591,6 +721,8 @@ def choose_tots_random_locations(world, player: int, location_table: typing.Dict
             remove_secret(LocationName.p_end1_secret)
         if random_locations[LocationName.rloc_p_secret_7] == 0:
             remove_secret(LocationName.p_mid5_secret)
+        # Dunes
+        random_locations[LocationName.rloc_t3_entrance] = world.random.randrange(3)
         # Cave level 3
         random_locations[LocationName.rloc_squire] = world.random.randrange(6)
         if random_locations[LocationName.rloc_squire] != 1:
@@ -855,6 +987,22 @@ def choose_tots_random_locations(world, player: int, location_table: typing.Dict
             LocationName.t2_e_ice_block_gate
         ]
         location_table = keep_one_location(world, location_table, t2_pickaxe_locations, LocationName.rloc_t2_pickaxe)
+        # Temple Level 3
+        random_locations[LocationName.rloc_t3_s_beam_1] = world.random.randrange(2)
+        if random_locations[LocationName.rloc_t3_s_beam_1] == 0:
+            remove_location(LocationName.t3_n_node_blocks_1, ItemName.vendor_coin)
+        random_locations[LocationName.rloc_t3_s_beam_2] = world.random.randrange(2)
+        if random_locations[LocationName.rloc_t3_s_beam_2] == 0:
+            remove_location(LocationName.t3_n_node_blocks_2, ItemName.vendor_coin)
+        random_locations[LocationName.rloc_t3_s_beam_3] = world.random.randrange(2)
+        if random_locations[LocationName.rloc_t3_s_beam_3] == 0:
+            remove_location(LocationName.t3_n_node_blocks_3, ItemName.vendor_coin)
+        random_locations[LocationName.rloc_t3_s_beam_4] = world.random.randrange(2)
+        if random_locations[LocationName.rloc_t3_s_beam_4] == 0:
+            remove_location(LocationName.t3_n_node_blocks_4, ItemName.vendor_coin)
+        random_locations[LocationName.rloc_t3_s_beam_5] = world.random.randrange(2)
+        if random_locations[LocationName.rloc_t3_s_beam_5] == 0:
+            remove_location(LocationName.t3_n_node_blocks_5, ItemName.vendor_coin)
 
     return location_table
 

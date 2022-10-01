@@ -78,6 +78,7 @@ trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_poison: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_frost: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_fire: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
 }
 
 event_table: typing.Dict[str, ItemData] = {
@@ -107,6 +108,7 @@ trap_items: typing.List[str] = [
     ItemName.trap_poison,
     ItemName.trap_frost,
     ItemName.trap_fire,
+    ItemName.trap_confuse,
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -143,24 +145,21 @@ castle_item_counts: typing.Dict[str, int] = {
 }
 
 temple_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 0,  # 75
-    ItemName.bonus_key: 0,  # 2
-    ItemName.chest_blue: 8,
-    ItemName.chest_green: 4,
+    ItemName.bonus_chest: 75,
+    ItemName.bonus_key: 2,
+    ItemName.chest_blue: 10,
+    ItemName.chest_green: 5,
     ItemName.chest_purple: 0,
-    ItemName.chest_red: 10,
-    ItemName.chest_wood: 26,
-    ItemName.vendor_coin: 32,
+    ItemName.chest_red: 11,
+    ItemName.chest_wood: 29,
+    ItemName.vendor_coin: 43,
     ItemName.key_silver: 6,
     ItemName.key_gold: 4,
-    ItemName.mirror: 15,
+    ItemName.mirror: 20,
     ItemName.ore: 11,
-    ItemName.key_teleport: 5,
+    ItemName.key_teleport: 6,
     ItemName.ankh: 18,
-    ItemName.ankh_5up: 3,
-    ItemName.ankh_7up: 0,
-    ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 0,
+    ItemName.ankh_5up: 4,
     ItemName.potion_invulnerability: 0,
     ItemName.sonic_ring: 12,
     ItemName.serious_health: 1,
@@ -168,7 +167,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_red: 0,
     ItemName.diamond_small: 3,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 23,
+    ItemName.stat_upgrade: 29,
     ItemName.stat_upgrade_damage: 1,
     ItemName.stat_upgrade_defense: 1,
     ItemName.apple: 48,
@@ -199,14 +198,18 @@ def get_item_counts(world, player: int):
     item_counts_table.pop(ItemName.secret)
     item_counts_table.pop(ItemName.puzzle)
 
+    # Bonus check behavior - None
+    if world.bonus_behavior[player].value == 0 or world.bonus_behavior[player].value == 1:
+        item_counts_table.pop(ItemName.bonus_chest)
+
     # If using fragments switch the whole item out for fragments
-    if world.pan_fragments[player] > 0:
+    if world.pan_fragments[player].value > 0:
         item_counts_table.pop(ItemName.pan)
         item_counts_table.update({ItemName.pan_fragment: world.pan_fragments[player]})
-    if world.lever_fragments[player] > 0:
+    if world.lever_fragments[player].value > 0:
         item_counts_table.pop(ItemName.lever)
         item_counts_table.update({ItemName.lever_fragment: world.lever_fragments[player]})
-    if world.pickaxe_fragments[player] > 0:
+    if world.pickaxe_fragments[player].value > 0:
         item_counts_table.pop(ItemName.pickaxe)
         item_counts_table.update({ItemName.pickaxe_fragment: world.pickaxe_fragments[player]})
 
@@ -216,7 +219,7 @@ def get_item_counts(world, player: int):
             item_counts_table[recovery] = 0
 
     # Add secret items
-    if world.randomize_secrets[player].value > 0:
+    if world.randomize_secrets[player].value:
         for s in range(secrets):
             item = world.random.randint(0, 12)
             if item < 8:

@@ -3,7 +3,7 @@ from random import Random
 
 from BaseClasses import MultiWorld, Region, RegionType, Entrance
 from .Items import HammerwatchItem
-from .Locations import HammerwatchLocation, LocationData, LocationClassification
+from .Locations import HammerwatchLocation, LocationData, LocationClassification, random_locations
 from .Names import LocationName, ItemName, RegionName
 from .Util import Counter
 
@@ -42,21 +42,6 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     ]
     dunes_pyramid_region = create_region(world, player, active_locations, RegionName.hub_pyramid_of_fear,
                                          dunes_pyramid_locations)
-
-    pof_1_locations = [
-
-    ]
-    pof_1_region = create_region(world, player, active_locations, RegionName.pof_1, pof_1_locations)
-
-    pof_2_locations = [
-
-    ]
-    pof_2_region = create_region(world, player, active_locations, RegionName.pof_2, pof_2_locations)
-
-    pof_3_locations = [
-        LocationName.ev_pof_end
-    ]
-    pof_3_region = create_region(world, player, active_locations, RegionName.pof_3, pof_3_locations)
 
     library_region = create_region(world, player, active_locations, RegionName.library, [])
 
@@ -282,7 +267,7 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     boss1_defeated_locations = [
         LocationName.boss1_bridge,
         LocationName.boss1_bridge_n,
-        # LocationName.boss1_drop,
+        LocationName.boss1_drop,
         # LocationName.boss1_drop_2,
         LocationName.boss1_secret,
         LocationName.ev_temple_entrance_rock,
@@ -600,13 +585,6 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     t2_light_bridges_region = create_region(world, player, active_locations, RegionName.t2_light_bridges,
                                             t2_light_bridges_locations)
 
-    t3_main_locations = [
-        LocationName.ev_t3_n_node,
-        LocationName.ev_t3_s_node,
-        LocationName.ev_victory,
-    ]
-    t3_main_region = create_region(world, player, active_locations, RegionName.t3_main, t3_main_locations)
-
     t2_ornate_t3_locations = [
         LocationName.t2_floor3_cache_1,
         LocationName.t2_floor3_cache_2,
@@ -619,14 +597,207 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
     t2_ornate_t3_region = create_region(world, player, active_locations, RegionName.t2_ornate_t3,
                                         t2_ornate_t3_locations)
 
+    t3_main_locations = [
+        LocationName.t3_s_balcony_turret_1,
+        LocationName.t3_s_balcony_turret_2,
+        LocationName.t3_n_turret_1,
+        LocationName.t3_n_turret_2,
+        LocationName.t3_boulder_block,
+        LocationName.t3_e_turret_spikes,
+    ]
+    t3_main_region = create_region(world, player, active_locations, RegionName.t3_main, t3_main_locations)
+
+    t3_n_node_blocks_locations = [
+        LocationName.t3_s_gate,
+        LocationName.t3_n_node_blocks_1,
+        LocationName.t3_n_node_blocks_2,
+        LocationName.t3_n_node_blocks_3,
+        LocationName.t3_n_node_blocks_4,
+        LocationName.t3_n_node_blocks_5,
+    ]
+    t3_n_node_blocks_region = create_region(world, player, active_locations, RegionName.t3_n_node_blocks,
+                                            t3_n_node_blocks_locations)
+
+    t3_n_node_locations = [
+        LocationName.ev_t3_n_node
+    ]
+    t3_n_node_region = create_region(world, player, active_locations, RegionName.t3_n_node, t3_n_node_locations)
+
+    t3_s_node_blocks_1_locations = [
+        LocationName.t3_s_node_cache_1,
+        LocationName.t3_s_node_cache_2,
+        LocationName.t3_s_node_cache_3,
+    ]
+    t3_s_node_blocks_1_region = create_region(world, player, active_locations, RegionName.t3_s_node_blocks_1,
+                                              t3_s_node_blocks_1_locations)
+
+    t3_s_node_blocks_2_locations = [
+        LocationName.t3_m_balcony_corridor,
+    ]
+    t3_s_node_blocks_2_region = create_region(world, player, active_locations, RegionName.t3_s_node_blocks_2,
+                                              t3_s_node_blocks_2_locations)
+
+    t3_s_node_locations = [
+        LocationName.t3_n_node_1,
+        LocationName.t3_n_node_2,
+        LocationName.t3_n_node_3,
+        LocationName.ev_t3_s_node,
+    ]
+    t3_s_node_region = create_region(world, player, active_locations, RegionName.t3_s_node, t3_s_node_locations)
+
+    t3_boss_fall_1_locations = [
+        LocationName.t3_boss_fall_1_1,
+        LocationName.t3_boss_fall_1_2,
+        LocationName.t3_boss_fall_1_3,
+    ]
+    t3_boss_fall_1_region = create_region(world, player, active_locations, RegionName.t3_boss_fall_1,
+                                          t3_boss_fall_1_locations)
+
+    t3_boss_fall_2_locations = [
+        LocationName.t3_boss_fall_2_1,
+        LocationName.t3_boss_fall_2_2,
+        LocationName.t3_boss_fall_2_3,
+    ]
+    t3_boss_fall_2_region = create_region(world, player, active_locations, RegionName.t3_boss_fall_2,
+                                          t3_boss_fall_2_locations)
+
+    t3_boss_fall_3_locations = [
+        LocationName.t3_boss_fall_3_1,
+        LocationName.t3_boss_fall_3_2,
+        LocationName.t3_boss_fall_3_3,
+        LocationName.t3_boss_fall_3_4,
+    ]
+    t3_boss_fall_3_region = create_region(world, player, active_locations, RegionName.t3_boss_fall_3,
+                                          t3_boss_fall_3_locations)
+
+    pof_1_main_locations = [
+        LocationName.pof_1_ent_1,
+        LocationName.pof_1_ent_2,
+        LocationName.pof_1_ent_3,
+        LocationName.pof_1_ent_4,
+        LocationName.pof_1_ent_5,
+        LocationName.pof_1_sw_left_1,
+        LocationName.pof_1_sw_left_2,
+        LocationName.pof_1_sw_left_3,
+        LocationName.pof_1_sw_left_4,
+        LocationName.pof_1_sw_left_5,
+        LocationName.pof_1_sw_left_6,
+        LocationName.pof_1_sw_left_7,
+        LocationName.pof_1_sw_left_8,
+        LocationName.pof_1_sw_left_9,
+        LocationName.pof_1_sw_left_10,
+        LocationName.pof_1_sw_left_11,
+    ]
+    pof_1_main_region = create_region(world, player, active_locations, RegionName.pof_1_main, pof_1_main_locations)
+
+    pof_1_se_room_locations = [
+        LocationName.pof_1_s_1,
+        LocationName.pof_1_s_2,
+        LocationName.pof_1_s_3,
+        LocationName.pof_1_s_4,
+        LocationName.pof_1_s_5,
+        LocationName.pof_1_s_6,
+        LocationName.pof_1_s_7,
+        LocationName.pof_1_s_8,
+        LocationName.pof_1_s_9,
+        LocationName.pof_1_s_10,
+        LocationName.pof_1_s_11,
+        LocationName.pof_1_s_12,
+        LocationName.pof_1_s_13,
+    ]
+    pof_1_se_room_region = create_region(world, player, active_locations, RegionName.pof_1_se_room, pof_1_se_room_locations)
+
+    pof_gate_1_locations = [
+        LocationName.pof_1_confuse_corner_1,
+        LocationName.pof_1_confuse_corner_2,
+        LocationName.pof_1_confuse_corner_3,
+        LocationName.pof_1_confuse_corner_4,
+        LocationName.pof_1_c_hall_1,
+        LocationName.pof_1_c_hall_2,
+        LocationName.pof_1_c_hall_3,
+        LocationName.pof_1_c_hall_4,
+        LocationName.pof_1_c_hall_5,
+        LocationName.pof_1_c_hall_6,
+    ]
+    pof_gate_1_region = create_region(world, player, active_locations, RegionName.pof_1_gate_1, pof_gate_1_locations)
+
+    pof_1_n_room_locations = [
+        LocationName.pof_1_n_1,
+        LocationName.pof_1_n_2,
+        LocationName.pof_1_n_3,
+        LocationName.pof_1_n_4,
+        LocationName.pof_1_n_5,
+        LocationName.pof_1_n_6,
+        LocationName.pof_1_n_7,
+        LocationName.pof_1_n_8,
+        LocationName.pof_1_n_9,
+    ]
+    pof_1_n_room_region = create_region(world, player, active_locations, RegionName.pof_1_n_room, pof_1_n_room_locations)
+
+    pof_1_gate_2_locations = [
+        LocationName.pof_1_end_1,
+        LocationName.pof_1_end_2,
+        LocationName.pof_1_end_3,
+        LocationName.pof_1_end_4,
+        LocationName.pof_1_end_5,
+    ]
+    pof_1_gate_2_region = create_region(world, player, active_locations, RegionName.pof_1_gate_2,
+                                        pof_1_gate_2_locations)
+
+    pof_2_main_locations = [
+        LocationName.pof_2_ent_1,
+        LocationName.pof_2_ent_2,
+        LocationName.pof_2_ent_3,
+        LocationName.pof_2_ent_4,
+        LocationName.pof_2_ent_5,
+        LocationName.pof_2_ent_6,
+        LocationName.pof_2_confuse_hall_1,
+        LocationName.pof_2_confuse_hall_2,
+        LocationName.pof_2_confuse_hall_3,
+        LocationName.pof_2_confuse_hall_4,
+        LocationName.pof_2_sw_1,
+        LocationName.pof_2_sw_2,
+        LocationName.pof_2_sw_3,
+        LocationName.pof_2_sw_4,
+    ]
+    pof_2_main_region = create_region(world, player, active_locations, RegionName.pof_2_main, pof_2_main_locations)
+
+    pof_2_n_locations = [
+        LocationName.pof_2_ne_1,
+        LocationName.pof_2_ne_2,
+        LocationName.pof_2_ne_3,
+        LocationName.pof_2_ne_4,
+    ]
+    pof_2_n_region = create_region(world, player, active_locations, RegionName.pof_2_n, pof_2_n_locations)
+
+    pof_3_main_locations = [
+        LocationName.pof_3_safety_room_1,
+        LocationName.pof_3_safety_room_2,
+        LocationName.pof_3_safety_room_3,
+        LocationName.pof_3_end_1,
+        LocationName.pof_3_end_2,
+        LocationName.pof_3_end_3,
+        LocationName.pof_3_end_4,
+        LocationName.pof_3_end_5,
+        LocationName.ev_pof_end
+    ]
+    pof_3_main_region = create_region(world, player, active_locations, RegionName.pof_3_main, pof_3_main_locations)
+
+    b3_main_region = create_region(world, player, active_locations, RegionName.b3_main, [])
+    b3_platform_1_region = create_region(world, player, active_locations, RegionName.b3_platform_1, [])
+    b3_platform_2_region = create_region(world, player, active_locations, RegionName.b3_platform_2, [])
+    b3_platform_3_region = create_region(world, player, active_locations, RegionName.b3_platform_3, [])
+
+    b3_defeated_locations = [
+        LocationName.ev_victory
+    ]
+    b3_defeated_region = create_region(world, player, active_locations, RegionName.b3_defeated, b3_defeated_locations)
+
     world.regions += [
         menu_region,
         dunes_main_region,
         dunes_rocks_region,
         dunes_pyramid_region,
-        pof_1_region,
-        pof_2_region,
-        pof_3_region,
         library_region,
         cave3_main_region,
         cave3_fall_region,
@@ -671,7 +842,28 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         t2_ornate_region,
         t2_light_bridges_region,
         t2_ornate_t3_region,
-        t3_main_region
+        t3_main_region,
+        t3_n_node_blocks_region,
+        t3_n_node_region,
+        t3_s_node_blocks_1_region,
+        t3_s_node_blocks_2_region,
+        t3_s_node_region,
+        t3_boss_fall_1_region,
+        t3_boss_fall_2_region,
+        t3_boss_fall_3_region,
+        pof_1_main_region,
+        pof_1_se_room_region,
+        pof_gate_1_region,
+        pof_1_n_room_region,
+        pof_1_gate_2_region,
+        pof_2_main_region,
+        pof_2_n_region,
+        pof_3_main_region,
+        b3_main_region,
+        b3_platform_1_region,
+        b3_platform_2_region,
+        b3_platform_3_region,
+        b3_defeated_region,
     ]
 
     connect_tots_regions(world, player, active_locations)
@@ -679,9 +871,9 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
 
 def connect_tots_regions(world, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
-    rnd = Random(world.seed)
 
     connect(world, player, used_names, RegionName.menu, RegionName.hub_main)
+
     connect(world, player, used_names, RegionName.hub_main, RegionName.hub_rocks,
             lambda state: (state.has(ItemName.pickaxe, player)))
     connect(world, player, used_names, RegionName.hub_main, RegionName.cave_3_fall,
@@ -689,13 +881,6 @@ def connect_tots_regions(world, player: int, active_locations):
     # For the temple entrances in the hub
     connect(world, player, used_names, RegionName.hub_rocks, RegionName.t3_main)
     connect(world, player, used_names, RegionName.hub_main, RegionName.temple_entrance)
-    connect(world, player, used_names, RegionName.hub_main, RegionName.pof_1,
-            lambda state: (state.has(ItemName.pof_switch, player, 5)))
-
-    connect(world, player, used_names, RegionName.pof_1, RegionName.pof_2)
-    connect(world, player, used_names, RegionName.pof_2, RegionName.pof_3)
-    connect(world, player, used_names, RegionName.pof_3, RegionName.hub_pyramid_of_fear,
-            lambda state: (state.has(ItemName.pof_complete, player)))
 
     connect(world, player, used_names, RegionName.hub_main, RegionName.library)
     connect(world, player, used_names, RegionName.library, RegionName.cave_3_main)
@@ -739,7 +924,7 @@ def connect_tots_regions(world, player: int, active_locations):
             lambda state: (state.has(ItemName.key_gold, player, 2)))
     connect(world, player, used_names, RegionName.t1_ice_turret, RegionName.t1_telariana_melt_ice,
             lambda state: (state.has(ItemName.krilith_defeated, player)))
-    t1_key_ordering = rnd.randint(0, 1)
+    t1_key_ordering = world.random.randint(0, 1)
     connect(world, player, used_names, RegionName.t1_ice_turret, RegionName.t1_n_of_ice_turret,
             lambda state: (state.has(ItemName.key_silver, player, 3 + t1_key_ordering)))
     connect(world, player, used_names, RegionName.t1_ice_turret, RegionName.t1_s_of_ice_turret,
@@ -756,7 +941,7 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.t1_east, RegionName.t2_main)
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_melt_ice,
             lambda state: (state.has(ItemName.krilith_defeated, player)))
-    t2_key_ordering = rnd.randint(0, 1)
+    t2_key_ordering = world.random.randint(0, 1)
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_n_gate,
             lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering)))
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_s_gate,
@@ -772,7 +957,46 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_3_portal)
     connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_1_temple)
 
+    connect(world, player, used_names, RegionName.hub_main, RegionName.t3_main)
     connect(world, player, used_names, RegionName.t3_main, RegionName.t2_ornate_t3)
+    mirrors_needed_n = 14
+    mirrors_needed_s = 14
+    node_dir = world.random.randrange(2)
+    if node_dir == 0:
+        mirrors_needed_s = 17
+    else:
+        mirrors_needed_n = 17
+    connect(world, player, used_names, RegionName.t3_main, RegionName.t3_n_node_blocks,
+            lambda state: (state.has(ItemName.mirror, player, mirrors_needed_n + 2)))
+    connect(world, player, used_names, RegionName.t3_n_node_blocks, RegionName.t3_n_node,
+            lambda state: (state.has(ItemName.mirror, player, mirrors_needed_n + 3)))
+    connect(world, player, used_names, RegionName.t3_main, RegionName.t3_s_node_blocks_1,
+            lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 1)))
+    connect(world, player, used_names, RegionName.t3_s_node_blocks_1, RegionName.t3_s_node_blocks_2,
+            lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 2)))
+    connect(world, player, used_names, RegionName.t3_s_node_blocks_2, RegionName.t3_s_node,
+            lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 3)))
+
+    connect(world, player, used_names, RegionName.hub_main, RegionName.pof_1_main,
+            lambda state: (state.has(ItemName.pof_switch, player, 6)))
+    connect(world, player, used_names, RegionName.pof_1_main, RegionName.pof_1_se_room)
+    connect(world, player, used_names, RegionName.pof_1_se_room, RegionName.pof_1_gate_1,
+            lambda state: (state.has(ItemName.bonus_key, player, 1)))
+    connect(world, player, used_names, RegionName.pof_1_gate_1, RegionName.pof_1_n_room)
+    connect(world, player, used_names, RegionName.pof_1_n_room, RegionName.pof_1_gate_2,
+            lambda state: (state.has(ItemName.bonus_key, player, 2)))
+    connect(world, player, used_names, RegionName.pof_1_gate_2, RegionName.pof_2_main)
+    connect(world, player, used_names, RegionName.pof_2_main, RegionName.pof_2_n)
+    connect(world, player, used_names, RegionName.pof_2_n, RegionName.pof_3_main)
+    connect(world, player, used_names, RegionName.pof_3_main, RegionName.hub_pyramid_of_fear,
+            lambda state: (state.has(ItemName.pof_complete, player)))
+
+    connect(world, player, used_names, RegionName.hub_main, RegionName.b3_main,
+            lambda state: (state.has(ItemName.solar_node, player, 3)))
+    connect(world, player, used_names, RegionName.b3_main, RegionName.b3_platform_1)
+    connect(world, player, used_names, RegionName.b3_platform_1, RegionName.b3_platform_2)
+    connect(world, player, used_names, RegionName.b3_platform_2, RegionName.b3_platform_3)
+    connect(world, player, used_names, RegionName.b3_platform_3, RegionName.b3_defeated)
 
 
 def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
@@ -783,7 +1007,6 @@ def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[
             if location not in active_locations.keys():
                 continue
             ret.locations.append(HammerwatchLocation(player, location, active_locations[location].code, ret))
-
     return ret
 
 

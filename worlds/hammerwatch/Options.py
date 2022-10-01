@@ -16,22 +16,25 @@ class Map(Choice):
 class RandomLocationBehavior(Choice):
     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
-    Shuffle: All potential locations are added to the pool, then locations are randomly removed to match the amount of locations in vanilla
     All Checks: All potential locations are added to the pool, adding junk items for excess locations"""
     display_name = "Random Location Behavior"
     option_vanilla = 0
-    option_shuffle = 1
     option_all_checks = 2
     default = 0
 
 
-class RandomizeBonusChestsAndKeys(Toggle):
+class BonusChestLocationBehavior(Choice):
     """
-    Determines if bonus levels (bonus chests and keys) are shuffled into the pool.
-    It's recommended that this is off as it adds many, many checks you won't have access to until the end of the game.
+    Determines how bonus chest locations in bonus levels are handled
+    None: Don't include any bonus chest items/locations
+    Necessary: Include bonus level locations for each extra item in the pool
+    All: Include all bonus chest items/locations. Extra items will replace junk items as normal
     """
-    display_name = "Randomize Bonus Chests and Keys"
-    default = False
+    display_name = "Bonus Level Location Behavior"
+    option_none = 0
+    option_necessary = 1
+    option_all = 2
+    default = 1
 
 
 class RandomizeRecoveryItems(Toggle):
@@ -118,7 +121,7 @@ class DeathLink(DeathLink):
 hammerwatch_options: typing.Dict[str, type(Option)] = {
     "map": Map,
     "random_location_behavior": RandomLocationBehavior,
-    "randomize_bonus": RandomizeBonusChestsAndKeys,
+    "bonus_behavior": BonusChestLocationBehavior,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     # "randomize_puzzles": RandomizePuzzles,
