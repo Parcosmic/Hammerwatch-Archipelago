@@ -779,6 +779,9 @@ def choose_tots_random_locations(world, player: int, location_table: typing.Dict
             remove_location(LocationName.cave1_ne_hidden_room_4, ItemName.vendor_coin)
             remove_location(LocationName.cave1_ne_hidden_room_5, ItemName.chest_wood)
             remove_secret(LocationName.cave1_secret_n_hidden_room)
+            remove_location(LocationName.cave1_secret_tunnel_1, ItemName.ankh)
+            remove_location(LocationName.cave1_secret_tunnel_2, ItemName.steak)
+            remove_location(LocationName.cave1_secret_tunnel_3, ItemName.mana_2)
         # Passage
         random_locations[LocationName.rloc_passage_entrance] = world.random.randrange(2)
         if random_locations[LocationName.rloc_passage_entrance] == 0:
