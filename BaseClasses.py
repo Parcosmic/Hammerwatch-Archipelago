@@ -300,6 +300,13 @@ class MultiWorld():
     def get_file_safe_player_name(self, player: int) -> str:
         return ''.join(c for c in self.get_player_name(player) if c not in '<>:"/\\|?*')
 
+    def get_out_file_name_base(self, player: int) -> str:
+        """ the base name (without file extension) for each player's output file for a seed """
+        return f"AP_{self.seed_name}_P{player}" \
+            + (f"_{self.get_file_safe_player_name(player).replace(' ', '_')}"
+               if (self.player_name[player] != f"Player{player}")
+               else '')
+
     def initialize_regions(self, regions=None):
         for region in regions if regions else self.regions:
             region.world = self
@@ -682,14 +689,14 @@ class CollectionState():
     def sweep_for_events(self, key_only: bool = False, locations: Optional[Iterable[Location]] = None) -> None:
         if locations is None:
             locations = self.world.get_filled_locations()
-        new_locations = True
+        reachable_events = True
         # since the loop has a good chance to run more than once, only filter the events once
         locations = {location for location in locations if location.event and
                      not key_only or getattr(location.item, "locked_dungeon_item", False)}
-        while new_locations:
+        while reachable_events:
             reachable_events = {location for location in locations if location.can_reach(self)}
-            new_locations = reachable_events - self.events
-            for event in new_locations:
+            locations -= reachable_events
+            for event in reachable_events:
                 self.events.add(event)
                 assert isinstance(event.item, Item), "tried to collect Event with no Item"
                 self.collect(event.item, True, event)
