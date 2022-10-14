@@ -42,8 +42,8 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.diamond_red: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_small: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_small_red: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.stat_upgrade_damage: ItemData(counter.count(), ItemClassification.useful),
+    # ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_damage: ItemData(counter.count(2), ItemClassification.useful),
     ItemName.stat_upgrade_defense: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_health: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_mana: ItemData(counter.count(), ItemClassification.useful),
@@ -96,6 +96,13 @@ item_table: typing.Dict[str, ItemData] = {
     **trap_table
 }
 
+stat_upgrade_items: typing.List[str] = [
+    ItemName.stat_upgrade_damage,
+    ItemName.stat_upgrade_defense,
+    ItemName.stat_upgrade_health,
+    ItemName.stat_upgrade_mana,
+]
+
 junk_items: typing.List[str] = [
     ItemName.apple,
     ItemName.mana_1,
@@ -132,9 +139,9 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.potion_rejuvenation: 9,
     ItemName.potion_invulnerability: 0,
     ItemName.stat_upgrade_damage: 2,
-    ItemName.sonic_ring: 0,
-    ItemName.serious_health: 0,
-    ItemName.pickaxe: 0,
+    ItemName.stat_upgrade_defense: 1,
+    ItemName.stat_upgrade_health: 0,
+    ItemName.stat_upgrade_mana: 0,
     ItemName.diamond: 4,
     ItemName.diamond_red: 1,
     ItemName.diamond_small: 10,
@@ -167,9 +174,10 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_red: 0,
     ItemName.diamond_small: 3,
     ItemName.diamond_small_red: 0,
-    ItemName.stat_upgrade: 29,
     ItemName.stat_upgrade_damage: 1,
     ItemName.stat_upgrade_defense: 1,
+    ItemName.stat_upgrade_health: 0,
+    ItemName.stat_upgrade_mana: 0,
     ItemName.apple: 48,
     ItemName.orange: 11,
     ItemName.steak: 7,
@@ -179,6 +187,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.pan: 1,
     ItemName.lever: 1,
     ItemName.pickaxe: 1,
+    ItemName.stat_upgrade: 29,
     ItemName.secret: 20,
     ItemName.puzzle: 0
 }
@@ -193,10 +202,8 @@ def get_item_counts(world, player: int):
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
 
-    secrets = item_counts_table[ItemName.secret]
-    puzzles = item_counts_table[ItemName.puzzle]
-    item_counts_table.pop(ItemName.secret)
-    item_counts_table.pop(ItemName.puzzle)
+    secrets: int = item_counts_table.pop(ItemName.secret)
+    puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
     # Bonus check behavior - None
     if world.bonus_behavior[player].value == 0 or world.bonus_behavior[player].value == 1:
@@ -228,6 +235,12 @@ def get_item_counts(world, player: int):
                 item_counts_table[ItemName.ankh] += 1
             else:
                 item_counts_table[ItemName.stat_upgrade] += 1
+    
+    # Determine stat upgrades and add them to the pool
+    stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
+    for u in range(stat_upgrades):
+        upgrade = world.random.randrange(4)
+        item_counts_table[stat_upgrade_items[upgrade]] += 1
 
     # Trap items
     if world.trap_item_percent[player].value > 0:
