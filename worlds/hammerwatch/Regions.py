@@ -705,7 +705,8 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         LocationName.pof_1_s_12,
         LocationName.pof_1_s_13,
     ]
-    pof_1_se_room_region = create_region(world, player, active_locations, RegionName.pof_1_se_room, pof_1_se_room_locations)
+    pof_1_se_room_region = create_region(world, player, active_locations, RegionName.pof_1_se_room,
+                                         pof_1_se_room_locations)
 
     pof_gate_1_locations = [
         LocationName.pof_1_confuse_corner_1,
@@ -732,7 +733,8 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
         LocationName.pof_1_n_8,
         LocationName.pof_1_n_9,
     ]
-    pof_1_n_room_region = create_region(world, player, active_locations, RegionName.pof_1_n_room, pof_1_n_room_locations)
+    pof_1_n_room_region = create_region(world, player, active_locations, RegionName.pof_1_n_room,
+                                        pof_1_n_room_locations)
 
     pof_1_gate_2_locations = [
         LocationName.pof_1_end_1,
@@ -872,30 +874,37 @@ def create_tots_regions(world, player: int, active_locations: typing.Dict[str, L
 def connect_tots_regions(world, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
 
+    def has_pan(state):
+        return state.has(ItemName.pan, player) \
+               or state.has(ItemName.pan_fragment, player, world.pan_fragments[player].value)
+
+    def has_lever(state):
+        return state.has(ItemName.lever, player) \
+               or state.has(ItemName.lever_fragment, player, world.lever_fragments[player].value)
+
+    def has_pickaxe(state):
+        return state.has(ItemName.pickaxe, player) \
+               or state.has(ItemName.pickaxe_fragment, player, world.pickaxe_fragments[player].value)
+
     connect(world, player, used_names, RegionName.menu, RegionName.hub_main)
 
-    connect(world, player, used_names, RegionName.hub_main, RegionName.hub_rocks,
-            lambda state: (state.has(ItemName.pickaxe, player)))
-    connect(world, player, used_names, RegionName.hub_main, RegionName.cave_3_fall,
-            lambda state: (state.has(ItemName.pickaxe, player)))
+    connect(world, player, used_names, RegionName.hub_main, RegionName.hub_rocks, has_pickaxe)
+    connect(world, player, used_names, RegionName.hub_main, RegionName.cave_3_fall, has_pickaxe)
     # For the temple entrances in the hub
     connect(world, player, used_names, RegionName.hub_rocks, RegionName.t3_main)
     connect(world, player, used_names, RegionName.hub_main, RegionName.temple_entrance)
 
     connect(world, player, used_names, RegionName.hub_main, RegionName.library)
     connect(world, player, used_names, RegionName.library, RegionName.cave_3_main)
-    connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_3_fields,
-            lambda state: (state.has(ItemName.lever, player)))
+    connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_3_fields, has_lever)
 
     connect(world, player, used_names, RegionName.cave_3_main, RegionName.cave_2_main)
-    connect(world, player, used_names, RegionName.cave_2_main, RegionName.cave_2_pumps,
-            lambda state: (state.has(ItemName.lever, player)))
+    connect(world, player, used_names, RegionName.cave_2_main, RegionName.cave_2_pumps, has_lever)
 
     connect(world, player, used_names, RegionName.cave_2_main, RegionName.cave_1_main)
     connect(world, player, used_names, RegionName.cave_1_main, RegionName.cave_1_blue_bridge)
     connect(world, player, used_names, RegionName.cave_1_blue_bridge, RegionName.cave_1_red_bridge)
-    connect(world, player, used_names, RegionName.cave_1_main, RegionName.cave_1_pumps,
-            lambda state: (state.has(ItemName.lever, player)))
+    connect(world, player, used_names, RegionName.cave_1_main, RegionName.cave_1_pumps, has_lever)
     connect(world, player, used_names, RegionName.cave_1_pumps, RegionName.cave_1_green_bridge)
     connect(world, player, used_names, RegionName.cave_1_green_bridge, RegionName.boss2_main)
     connect(world, player, used_names, RegionName.boss2_main, RegionName.boss2_defeated)
@@ -943,9 +952,11 @@ def connect_tots_regions(world, player: int, active_locations):
             lambda state: (state.has(ItemName.krilith_defeated, player)))
     t2_key_ordering = world.random.randint(0, 1)
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_n_gate,
-            lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering)))
+            lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering))
+                          and (state.has(ItemName.krilith_defeated, player)))
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_s_gate,
-            lambda state: (state.has(ItemName.key_silver, player, 5 - t2_key_ordering)))
+            lambda state: (state.has(ItemName.key_silver, player, 5 - t2_key_ordering))
+                          and (state.has(ItemName.krilith_defeated, player)))
     connect(world, player, used_names, RegionName.t2_main, RegionName.t2_ornate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
     connect(world, player, used_names, RegionName.t2_n_gate, RegionName.t2_n_node,
@@ -957,7 +968,6 @@ def connect_tots_regions(world, player: int, active_locations):
     connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_3_portal)
     connect(world, player, used_names, RegionName.t2_light_bridges, RegionName.cave_1_temple)
 
-    connect(world, player, used_names, RegionName.hub_main, RegionName.t3_main)
     connect(world, player, used_names, RegionName.t3_main, RegionName.t2_ornate_t3)
     mirrors_needed_n = 14
     mirrors_needed_s = 14
@@ -992,7 +1002,7 @@ def connect_tots_regions(world, player: int, active_locations):
             lambda state: (state.has(ItemName.pof_complete, player)))
 
     connect(world, player, used_names, RegionName.hub_main, RegionName.b3_main,
-            lambda state: (state.has(ItemName.solar_node, player, 3)))
+            lambda state: (state.has(ItemName.solar_node, player, 6)))
     connect(world, player, used_names, RegionName.b3_main, RegionName.b3_platform_1)
     connect(world, player, used_names, RegionName.b3_platform_1, RegionName.b3_platform_2)
     connect(world, player, used_names, RegionName.b3_platform_2, RegionName.b3_platform_3)
@@ -1001,13 +1011,13 @@ def connect_tots_regions(world, player: int, active_locations):
 
 def create_region(world: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
                   locations: typing.List[str]) -> Region:
-    ret = Region(name, RegionType.Generic, name, player, world)
+    region = Region(name, RegionType.Generic, name, player, world)
     if locations:
         for location in locations:
             if location not in active_locations.keys():
                 continue
-            ret.locations.append(HammerwatchLocation(player, location, active_locations[location].code, ret))
-    return ret
+            region.locations.append(HammerwatchLocation(player, location, active_locations[location].code, region))
+    return region
 
 
 def connect(world: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
