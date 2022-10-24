@@ -31,7 +31,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.key_gold: ItemData(counter.count(), ItemClassification.progression),
     ItemName.mirror: ItemData(counter.count(), ItemClassification.progression),
     ItemName.ore: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.key_teleport: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.key_teleport: ItemData(counter.count(), ItemClassification.progression),
     ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
     ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
     ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.filler),
@@ -42,8 +42,8 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.diamond_red: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_small: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_small_red: ItemData(counter.count(), ItemClassification.filler),
-    # ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.stat_upgrade_damage: ItemData(counter.count(2), ItemClassification.useful),
+    ItemName.stat_upgrade: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.stat_upgrade_damage: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_defense: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_health: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_mana: ItemData(counter.count(), ItemClassification.useful),
@@ -205,20 +205,36 @@ def get_item_counts(world, player: int):
     secrets: int = item_counts_table.pop(ItemName.secret)
     puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
+    # Build filler items list
+    filler_item_names: typing.List[str] = []
+    filler_items: int = 0
+    extra_items: int = 0
+    for item in item_counts_table.keys():
+        if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
+            filler_item_names.append(item)
+            filler_items += item_counts_table[item]
+
     # Bonus check behavior - None
     if world.bonus_behavior[player].value == 0 or world.bonus_behavior[player].value == 1:
         item_counts_table.pop(ItemName.bonus_chest)
 
     # If using fragments switch the whole item out for fragments
-    if world.pan_fragments[player].value > 0:
+    if world.pan_fragments[player].value > 1:
         item_counts_table.pop(ItemName.pan)
-        item_counts_table.update({ItemName.pan_fragment: world.pan_fragments[player]})
-    if world.lever_fragments[player].value > 0:
+        item_counts_table.update({ItemName.pan_fragment: world.pan_fragments[player].value})
+        extra_items += world.pan_fragments[player].value - 1
+    if world.lever_fragments[player].value > 1:
         item_counts_table.pop(ItemName.lever)
-        item_counts_table.update({ItemName.lever_fragment: world.lever_fragments[player]})
-    if world.pickaxe_fragments[player].value > 0:
+        item_counts_table.update({ItemName.lever_fragment: world.lever_fragments[player].value})
+        extra_items += world.lever_fragments[player].value - 1
+    if world.pickaxe_fragments[player].value > 1:
         item_counts_table.pop(ItemName.pickaxe)
-        item_counts_table.update({ItemName.pickaxe_fragment: world.pickaxe_fragments[player]})
+        item_counts_table.update({ItemName.pickaxe_fragment: world.pickaxe_fragments[player].value})
+        extra_items += world.pickaxe_fragments[player].value - 1
+
+    # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
+    if world.portal_accessibility[player].value > 0:
+        item_counts_table.pop(ItemName.key_teleport)
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not world.randomize_recovery_items[player].value:
@@ -235,7 +251,7 @@ def get_item_counts(world, player: int):
                 item_counts_table[ItemName.ankh] += 1
             else:
                 item_counts_table[ItemName.stat_upgrade] += 1
-    
+
     # Determine stat upgrades and add them to the pool
     stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
     for u in range(stat_upgrades):
@@ -246,20 +262,18 @@ def get_item_counts(world, player: int):
     if world.trap_item_percent[player].value > 0:
         for trap_item in trap_items:
             item_counts_table[trap_item] = 0
-        filler_item_names: typing.List[str] = []
-        filler_items: int = 0
-        for item in item_counts_table.keys():
-            if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
-                filler_item_names.append(item)
-                filler_items += item_counts_table[item]
-        trap_item_count = int(filler_items * world.trap_item_percent[player].value / 100)
+        trap_item_count = int((filler_items - extra_items) * world.trap_item_percent[player].value / 100)
+        extra_items += trap_item_count
         for t in range(trap_item_count):
             item = trap_items[world.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
-            filler_item = filler_item_names[world.random.randrange(len(filler_item_names))]
-            item_counts_table[filler_item] -= 1
-            if item_counts_table[filler_item] == 0:
-                filler_item_names.remove(filler_item)
+
+    # For each extra item remove a filler item
+    for t in range(extra_items):
+        filler_item = filler_item_names[world.random.randrange(len(filler_item_names))]
+        item_counts_table[filler_item] -= 1
+        if item_counts_table[filler_item] == 0:
+            filler_item_names.remove(filler_item)
 
     return item_counts_table
 
