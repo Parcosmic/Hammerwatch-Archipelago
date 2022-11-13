@@ -167,7 +167,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.key_teleport: 6,
     ItemName.ankh: 18,
     ItemName.ankh_5up: 4,
-    ItemName.potion_invulnerability: 0,
+    ItemName.potion_rejuvenation: 0,
     ItemName.sonic_ring: 12,
     ItemName.serious_health: 1,
     ItemName.diamond: 0,
@@ -189,15 +189,15 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.pickaxe: 1,
     ItemName.stat_upgrade: 29,
     ItemName.secret: 20,
-    ItemName.puzzle: 0
+    ItemName.puzzle: 10
 }
 
 
-def get_item_counts(world, player: int):
+def get_item_counts(multiworld, player: int):
     item_counts_table: typing.Dict[str, int]
-    secrets: int
+    extra_items: int = 0
 
-    if world.map[player] == 0:  # Castle Hammerwatch
+    if multiworld.map[player] == 0:  # Castle Hammerwatch
         item_counts_table = {**castle_item_counts}
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
@@ -205,46 +205,37 @@ def get_item_counts(world, player: int):
     secrets: int = item_counts_table.pop(ItemName.secret)
     puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
-    # Build filler items list
-    filler_item_names: typing.List[str] = []
-    filler_items: int = 0
-    extra_items: int = 0
-    for item in item_counts_table.keys():
-        if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
-            filler_item_names.append(item)
-            filler_items += item_counts_table[item]
-
     # Bonus check behavior - None
-    if world.bonus_behavior[player].value == 0 or world.bonus_behavior[player].value == 1:
+    if multiworld.bonus_behavior[player].value == 0 or multiworld.bonus_behavior[player].value == 1:
         item_counts_table.pop(ItemName.bonus_chest)
 
     # If using fragments switch the whole item out for fragments
-    if world.pan_fragments[player].value > 1:
+    if multiworld.pan_fragments[player].value > 1:
         item_counts_table.pop(ItemName.pan)
-        item_counts_table.update({ItemName.pan_fragment: world.pan_fragments[player].value})
-        extra_items += world.pan_fragments[player].value - 1
-    if world.lever_fragments[player].value > 1:
+        item_counts_table.update({ItemName.pan_fragment: multiworld.pan_fragments[player].value})
+        extra_items += multiworld.pan_fragments[player].value - 1
+    if multiworld.lever_fragments[player].value > 1:
         item_counts_table.pop(ItemName.lever)
-        item_counts_table.update({ItemName.lever_fragment: world.lever_fragments[player].value})
-        extra_items += world.lever_fragments[player].value - 1
-    if world.pickaxe_fragments[player].value > 1:
+        item_counts_table.update({ItemName.lever_fragment: multiworld.lever_fragments[player].value})
+        extra_items += multiworld.lever_fragments[player].value - 1
+    if multiworld.pickaxe_fragments[player].value > 1:
         item_counts_table.pop(ItemName.pickaxe)
-        item_counts_table.update({ItemName.pickaxe_fragment: world.pickaxe_fragments[player].value})
-        extra_items += world.pickaxe_fragments[player].value - 1
+        item_counts_table.update({ItemName.pickaxe_fragment: multiworld.pickaxe_fragments[player].value})
+        extra_items += multiworld.pickaxe_fragments[player].value - 1
 
     # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
-    if world.portal_accessibility[player].value > 0:
+    if multiworld.portal_accessibility[player].value > 0:
         item_counts_table.pop(ItemName.key_teleport)
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
-    if not world.randomize_recovery_items[player].value:
+    if not multiworld.randomize_recovery_items[player].value:
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
 
     # Add secret items
-    if world.randomize_secrets[player].value:
+    if multiworld.randomize_secrets[player].value:
         for s in range(secrets):
-            item = world.random.randint(0, 12)
+            item = multiworld.random.randint(0, 12)
             if item < 8:
                 item_counts_table[ItemName.chest_wood] += 1
             elif item < 12:
@@ -252,25 +243,40 @@ def get_item_counts(world, player: int):
             else:
                 item_counts_table[ItemName.stat_upgrade] += 1
 
+    # Add puzzle items
+    if multiworld.randomize_puzzles[player].value:
+        item_counts_table[ItemName.chest_purple] += puzzles
+        item_counts_table[ItemName.stat_upgrade] += puzzles
+        item_counts_table[ItemName.ankh] += puzzles
+        item_counts_table[ItemName.potion_rejuvenation] += puzzles
+
     # Determine stat upgrades and add them to the pool
     stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
     for u in range(stat_upgrades):
-        upgrade = world.random.randrange(4)
+        upgrade = multiworld.random.randrange(4)
         item_counts_table[stat_upgrade_items[upgrade]] += 1
 
+    # Build filler items list
+    filler_item_names: typing.List[str] = []
+    filler_items: int = 0
+    for item in item_counts_table.keys():
+        if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
+            filler_item_names.append(item)
+            filler_items += item_counts_table[item]
+
     # Trap items
-    if world.trap_item_percent[player].value > 0:
+    if multiworld.trap_item_percent[player].value > 0:
         for trap_item in trap_items:
             item_counts_table[trap_item] = 0
-        trap_item_count = int((filler_items - extra_items) * world.trap_item_percent[player].value / 100)
+        trap_item_count = int((filler_items - extra_items) * multiworld.trap_item_percent[player].value / 100)
         extra_items += trap_item_count
         for t in range(trap_item_count):
-            item = trap_items[world.random.randrange(len(trap_items))]
+            item = trap_items[multiworld.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
 
     # For each extra item remove a filler item
     for t in range(extra_items):
-        filler_item = filler_item_names[world.random.randrange(len(filler_item_names))]
+        filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
         item_counts_table[filler_item] -= 1
         if item_counts_table[filler_item] == 0:
             filler_item_names.remove(filler_item)
@@ -278,4 +284,5 @@ def get_item_counts(world, player: int):
     return item_counts_table
 
 
+filler_items: typing.List[str] = [item_name for item_name, data in item_table.items() if data.classification.filler]
 lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
