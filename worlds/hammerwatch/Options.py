@@ -125,7 +125,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
-    # "randomize_puzzles": RandomizePuzzles,
+    "randomize_puzzles": RandomizePuzzles,
     "portal_accessibility": PortalAccessibility,
     # "randomize_shops": RandomizeShops,
     # "consumable_merchant_checks": ConsumableMerchantChecks,
