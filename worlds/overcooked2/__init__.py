@@ -49,8 +49,6 @@ class Overcooked2World(World):
     required_client_version = (0, 3, 4)
     option_definitions = overcooked_options
     topology_present: bool = False
-    remote_items: bool = True
-    remote_start_inventory: bool = False
     data_version = 2
 
     item_name_to_id = item_name_to_id
@@ -411,7 +409,7 @@ class Overcooked2World(World):
 
             # Game Modifications
             "LevelPurchaseRequirements": level_purchase_requirements,
-            "Custom66TimerScale": max(0.4, (1.0 - star_threshold_scale)),
+            "Custom66TimerScale": max(0.4, 0.25 + (1.0 - star_threshold_scale)*0.6),
 
             "CustomLevelOrder": custom_level_order,
 
