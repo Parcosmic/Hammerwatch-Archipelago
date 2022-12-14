@@ -48,8 +48,8 @@ lever_fragment = "Pumps Lever Fragment"
 pickaxe_fragment = "Pickaxe Fragment"
 
 # Special Item Names
-sonic_ring = "Sonic Ring"
-serious_health = "Serious Health"
+sonic_ring = "Gold Ring"
+serious_health = "Serious Health Upgrade"
 
 # Special Generation stuff
 secret = "Secret"
@@ -64,10 +64,13 @@ trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 
 # Event Names
-victory = "Victory"
-open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
-krilith_defeated = "Krilith Defeated"
-pof_switch = "Activate PoF Switch"
-solar_node = "Activate Solar Node"
-t2_bridge_switch = "Temple Floor 2 Bridge Switch"
-pof_complete = "PoF Complete"
+ev_victory = "Victory"
+
+ev_castle_p2_switch = "Prison Floor 2 Switch"
+
+ev_open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
+ev_krilith_defeated = "Krilith Defeated"
+ev_pof_switch = "Activate PoF Switch"
+ev_solar_node = "Activate Solar Node"
+ev_t2_bridge_switch = "Temple Floor 2 Bridge Switch"
+ev_pof_complete = "PoF Complete"

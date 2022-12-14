@@ -62,11 +62,11 @@ class HammerwatchWorld(World):
 
     def generate_basic(self) -> None:
         self.multiworld.get_location(LocationName.ev_victory, self.player) \
-            .place_locked_item(self.create_event(ItemName.victory))
-        self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemName.victory, self.player)
+            .place_locked_item(self.create_event(ItemName.ev_victory))
+        self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemName.ev_victory, self.player)
 
         if self.multiworld.map[self.player] == 0:
-            pass
+            self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
 
@@ -87,13 +87,13 @@ class HammerwatchWorld(World):
         # Get the total number of locations we need to fill
         total_required_locations = len(self.active_location_list)
         if self.multiworld.map[self.player] == 0:
-            total_required_locations -= len(castle_event_locations)
+            total_required_locations -= len(castle_event_locations) + 1
         else:
-            total_required_locations -= len(temple_event_locations)
+            total_required_locations -= len(temple_event_locations) + 1
 
-        # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
-        if self.multiworld.portal_accessibility[self.player].value > 0:
-            total_required_locations -= 6
+            # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
+            if self.multiworld.portal_accessibility[self.player].value > 0:
+                total_required_locations -= 6
 
         # Get the counts of each item we'll put in
         item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.player)
@@ -124,57 +124,68 @@ class HammerwatchWorld(World):
     def get_filler_item_name(self) -> str:
         return self.multiworld.random.choice(tuple(filler_items))
 
+    def place_castle_locked_items(self):
+        # Prison 2 Switches
+        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_ne_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
+        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_nw_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
+        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_se_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
+        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_sw_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
+
     def place_tots_locked_items(self):
         # Temple shortcut
         self.multiworld.get_location(LocationName.ev_temple_entrance_rock, self.player) \
-            .place_locked_item(self.create_event(ItemName.open_temple_entrance_shortcut))
+            .place_locked_item(self.create_event(ItemName.ev_open_temple_entrance_shortcut))
 
         # Pyramid of fear
         self.multiworld.get_location(LocationName.ev_hub_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
         self.multiworld.get_location(LocationName.ev_cave1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
         self.multiworld.get_location(LocationName.ev_cave2_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
         self.multiworld.get_location(LocationName.ev_cave3_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
         self.multiworld.get_location(LocationName.ev_temple1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
         self.multiworld.get_location(LocationName.ev_temple2_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_switch))
+            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
 
         self.multiworld.get_location(LocationName.ev_pof_end, self.player) \
-            .place_locked_item(self.create_event(ItemName.pof_complete))
+            .place_locked_item(self.create_event(ItemName.ev_pof_complete))
 
         # Krilith defeated
         self.multiworld.get_location(LocationName.ev_krilith_defeated, self.player) \
-            .place_locked_item(self.create_event(ItemName.krilith_defeated))
+            .place_locked_item(self.create_event(ItemName.ev_krilith_defeated))
 
         # Temple Floor 2 light bridge switches
         self.multiworld.get_location(LocationName.ev_t2_n_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
         self.multiworld.get_location(LocationName.ev_t2_w_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
         self.multiworld.get_location(LocationName.ev_t2_ne_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
         self.multiworld.get_location(LocationName.ev_t2_se_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
         self.multiworld.get_location(LocationName.ev_t2_sw_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.t2_bridge_switch))
+            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
 
         # Temple solar nodes
         self.multiworld.get_location(LocationName.ev_t1_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
         self.multiworld.get_location(LocationName.ev_t1_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
         self.multiworld.get_location(LocationName.ev_t2_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
         self.multiworld.get_location(LocationName.ev_t2_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
         self.multiworld.get_location(LocationName.ev_t3_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
         self.multiworld.get_location(LocationName.ev_t3_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.solar_node))
+            .place_locked_item(self.create_event(ItemName.ev_solar_node))
 
         # Portal Accessibility rune keys
         if self.multiworld.portal_accessibility[self.player].value > 0:

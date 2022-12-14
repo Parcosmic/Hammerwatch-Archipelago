@@ -10,9 +10,332 @@ from .Util import Counter
 
 def create_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
     if multiworld.map[player] == 0:
-        pass
+        create_castle_regions(multiworld, player, active_locations)
     else:
         create_tots_regions(multiworld, player, active_locations)
+
+
+def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
+    menu_region = create_region(multiworld, player, active_locations, RegionName.menu, None)
+
+    p1_start_locations = [
+        LocationName.p1_entrance_1,
+        LocationName.p1_entrance_2,
+        LocationName.p1_entrance_3,
+        LocationName.p1_entrance_4,
+        LocationName.p1_entrance_hall_1,
+        LocationName.p1_entrance_hall_2,
+        LocationName.p1_entrance_s,
+        LocationName.p1_entrance_w,
+        LocationName.p1_by_nw_bronze_gate,
+        LocationName.p1_entrance_secret,
+    ]
+    p1_start_region = create_region(multiworld, player, active_locations, RegionName.p1_start, p1_start_locations)
+
+    p1_s_locations = [
+        LocationName.p1_by_sw_bronze_gate_1,
+        LocationName.p1_by_sw_bronze_gate_2,
+        LocationName.p1_by_sw_bronze_gate_3,
+        LocationName.p1_by_sw_bronze_gate_4,
+        LocationName.p1_s_lower_hall_1,
+        LocationName.p1_s_lower_hall_2,
+        LocationName.p1_s_lower_hall_3,
+        LocationName.p1_s_lower_hall_4,
+        LocationName.p1_s_lower_hall_5,
+        LocationName.p1_s_lower_hall_6,
+        LocationName.p1_s_lower_hall_7,
+        LocationName.p1_s_lower_hall_8,
+        LocationName.p1_s_lower_hall_9,
+        LocationName.p1_s_lower_hall_10,
+        LocationName.p1_e_save_room_1,
+        LocationName.p1_e_save_room_2,
+        LocationName.p1_w_of_se_bronze_gate_1,
+        LocationName.p1_w_of_se_bronze_gate_2,
+        LocationName.p1_w_of_se_bronze_gate_3,
+        LocationName.p1_w_of_se_bronze_gate_4,
+        LocationName.p1_w_of_se_bronze_gate_5,
+        LocationName.p1_s_w_bridges_w,
+        LocationName.p1_s_of_e_save_room,
+        LocationName.p1_n_of_se_bridge,
+        LocationName.p1_w_save,
+        LocationName.p1_center_bridges_n_1,
+        LocationName.p1_center_bridges_n_2,
+        LocationName.p1_center_bridges_n_3,
+        LocationName.p1_center_bridges_s_1,
+        LocationName.p1_center_bridges_s_2,
+        LocationName.p1_center_bridges_s_3,
+        LocationName.p1_center_bridges_s_4,
+        LocationName.p1_e_secret,
+        LocationName.p1_s_secret_1,
+        LocationName.p1_s_secret_2,
+        LocationName.p1_se_bridge,
+    ]
+    p1_s_region = create_region(multiworld, player, active_locations, RegionName.p1_s, p1_s_locations)
+
+    p1_sw_bronze_gate_locations = [
+        LocationName.p1_sw_bronze_gate,
+    ]
+    p1_sw_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p1_sw_bronze_gate,
+                                             p1_sw_bronze_gate_locations)
+
+    p1_e_locations = [
+        LocationName.p1_by_exit_1,
+        LocationName.p1_by_exit_2,
+        LocationName.p1_by_exit_3,
+        LocationName.p1_by_m_bronze_gate_1,
+        LocationName.p1_by_m_bronze_gate_2,
+        LocationName.p1_by_m_bronze_gate_3,
+        LocationName.p1_by_m_bronze_gate_4,
+        LocationName.p1_by_m_bronze_gate_5,
+        LocationName.p1_by_m_bronze_gate_6,
+        LocationName.p1_e_bridges_1,
+        LocationName.p1_e_bridges_2,
+        LocationName.p1_e_bridges_3,
+        LocationName.p1_e_bridges_4,
+        LocationName.p1_e_bridges_5,
+        LocationName.p1_room_by_exit,
+        LocationName.p1_ne_arrow_traps,
+        LocationName.p1_hint_room,
+    ]
+    p1_e_region = create_region(multiworld, player, active_locations, RegionName.p1_e, p1_e_locations)
+
+    p1_m_bronze_gate_locations = [
+        LocationName.p1_m_bronze_gate,
+    ]
+    p1_m_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p1_m_bronze_gate,
+                                            p1_m_bronze_gate_locations)
+
+    p1_from_p2_locations = [
+        LocationName.p1_bars_1,
+        LocationName.p1_bars_2,
+        LocationName.p1_p2_by_shop,
+    ]
+    p1_from_p2_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p2, p1_from_p2_locations)
+
+    p1_from_p3_n_locations = [
+        LocationName.p1_p3_n_bridge,
+        LocationName.p1_p3_n_across_bridge,
+    ]
+    p1_from_p3_n_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p3_n,
+                                        p1_from_p3_n_locations)
+
+    p1_from_p3_s_locations = [
+        LocationName.p1_p3_s,
+    ]
+    p1_from_p3_s_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p3_s,
+                                        p1_from_p3_s_locations)
+
+    p2_start_locations = []
+    p2_start_region = create_region(multiworld, player, active_locations, RegionName.p2_start, p2_start_locations)
+
+    p2_m_locations = [
+        LocationName.p2_w_of_silver_gate_1,
+        LocationName.p2_w_of_silver_gate_2,
+        LocationName.p2_nw_island_s_1,
+        LocationName.p2_nw_island_s_2,
+        LocationName.p2_entrance_1,
+        LocationName.p2_entrance_2,
+        LocationName.p2_entrance_3,
+        LocationName.p2_entrance_4,
+        LocationName.p2_entrance_5,
+        LocationName.p2_w_of_gold_gate,
+        LocationName.p2_nw_island_1,
+        LocationName.p2_nw_island_2,
+        LocationName.p2_nw_island_3,
+        LocationName.p2_nw_island_4,
+        LocationName.p2_nw_island_5,
+    ]
+    p2_m_region = create_region(multiworld, player, active_locations, RegionName.p2_m, p2_m_locations)
+
+    p2_n_locations = [
+        LocationName.p2_spike_puzzle_w_1,
+        LocationName.p2_spike_puzzle_w_2,
+        LocationName.p2_spike_puzzle_e_1,
+        LocationName.p2_spike_puzzle_e_2,
+        LocationName.p2_spike_puzzle_ne_1,
+        LocationName.p2_spike_puzzle_ne_2,
+        LocationName.p2_spike_puzzle_ne_3,
+        LocationName.p2_spike_puzzle_e,
+        LocationName.p2_spike_puzzle_n_1,
+        LocationName.p2_spike_puzzle_n_2,
+    ]
+    p2_n_region = create_region(multiworld, player, active_locations, RegionName.p2_n, p2_n_locations)
+
+    p2_red_switch_locations = [
+        LocationName.p2_by_red_spikes_1,
+        LocationName.p2_by_red_spikes_2,
+        LocationName.p2_by_red_spikes_3,
+        LocationName.p2_e_save,
+        LocationName.p2_e_poker_plant_room_1,
+        LocationName.p2_e_poker_plant_room_2,
+        LocationName.p2_e_poker_plant_room_3,
+        LocationName.p2_e_poker_plant_room_4,
+        LocationName.p2_e_poker_plant_room_5,
+        LocationName.p2_e_poker_plant_room_6,
+        LocationName.p2_e_of_red_spikes_1,
+        LocationName.p2_e_of_red_spikes_2,
+        LocationName.p2_e_of_red_spikes_3,
+        LocationName.p2_e_of_red_spikes_4,
+        LocationName.p2_e_of_ne_save_1,
+        LocationName.p2_e_of_ne_save_2,
+        LocationName.p2_puzzle_1,
+        LocationName.p2_puzzle_2,
+        LocationName.p2_puzzle_3,
+        LocationName.p2_puzzle_4,
+    ]
+    p2_red_switch_region = create_region(multiworld, player, active_locations, RegionName.p2_red_switch,
+                                         p2_red_switch_locations)
+
+    p2_e_bronze_gate_locations = [
+        # Offense shop
+    ]
+    p2_e_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_e_bronze_gate,
+                                            p2_e_bronze_gate_locations)
+
+    p2_s_locations = [
+        LocationName.p2_big_bridge_1,
+        LocationName.p2_big_bridge_2,
+        LocationName.p2_big_bridge_3,
+        LocationName.p2_sequence_puzzle_reward,
+        LocationName.p2_s_arrow_traps_1,
+        LocationName.p2_s_arrow_traps_2,
+        LocationName.p2_s_arrow_traps_3,
+        LocationName.p2_e_gold_gate_room_1,
+        LocationName.p2_e_gold_gate_room_2,
+        LocationName.p2_e_gold_gate_room_3,
+        LocationName.p2_e_gold_gate_room_4,
+        LocationName.p2_e_gold_gate_room_5,
+        LocationName.p2_e_gold_gate_room_6,
+        LocationName.p2_e_gold_gate_room_7,
+        LocationName.p2_e_gold_gate_room_8,
+        LocationName.p2_e_gold_gate_room_9,
+        LocationName.p2_e_gold_gate_room_10,
+        LocationName.p2_e_gold_gate_room_11,
+        LocationName.p2_e_gold_gate_room_12,
+        LocationName.p2_e_gold_gate_room_13,
+        LocationName.p2_beetle_boss_room_1,
+        LocationName.p2_beetle_boss_room_2,
+        LocationName.p2_beetle_boss_room_3,
+        LocationName.p2_beetle_boss_room_4,
+        LocationName.p2_w_poker_plant_room_1,
+        LocationName.p2_w_poker_plant_room_2,
+        LocationName.p2_w_poker_plant_room_3,
+        LocationName.p2_s_of_w_gold_gate_1,
+        LocationName.p2_s_of_w_gold_gate_2,
+        LocationName.p2_s_of_w_gold_gate_3,
+        LocationName.p2_boss_switch,
+        LocationName.p2_beetle_boss_hidden_room_1,
+        LocationName.p2_beetle_boss_hidden_room_2,
+        LocationName.p2_toggle_spike_trap_reward_1,
+        LocationName.p2_toggle_spike_trap_reward_2,
+        LocationName.p2_toggle_spike_trap_reward_3,
+        LocationName.ev_p2_gold_gate_room_sw_switch
+    ]
+    p2_s_region = create_region(multiworld, player, active_locations, RegionName.p2_s, p2_s_locations)
+
+    p2_e_bronze_gate_2_locations = [
+        LocationName.ev_p2_gold_gate_room_ne_switch
+    ]
+    p2_e_bronze_gate_2_region = create_region(multiworld, player, active_locations, RegionName.p2_e_bronze_gate_2,
+                                              p2_e_bronze_gate_2_locations)
+
+    p2_m_bronze_gate_locations = [
+        LocationName.ev_p2_gold_gate_room_nw_switch
+    ]
+    p2_m_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_m_bronze_gate,
+                                            p2_m_bronze_gate_locations)
+
+    p2_se_bronze_gate_locations = [
+        LocationName.ev_p2_gold_gate_room_se_switch
+    ]
+    p2_se_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_se_bronze_gate,
+                                             p2_se_bronze_gate_locations)
+
+    p2_gg_room_reward_locations = [
+        LocationName.p2_e_gold_gate_room_reward_1,
+        LocationName.p2_e_gold_gate_room_reward_2,
+    ]
+    p2_gg_room_reward_region = create_region(multiworld, player, active_locations, RegionName.p2_gg_room_reward,
+                                             p2_gg_room_reward_locations)
+
+    p2_end_locations = [
+        LocationName.p2_end_1,
+        LocationName.p2_end_2,
+    ]
+    p2_end_region = create_region(multiworld, player, active_locations, RegionName.p2_end, p2_end_locations)
+
+    p3_start_locations = [
+        LocationName.ev_victory
+    ]
+    p3_start_region = create_region(multiworld, player, active_locations, RegionName.p3_start, p3_start_locations)
+
+    multiworld.regions += [
+        menu_region,
+        p1_start_region,
+        p1_s_region,
+        p1_sw_bronze_gate_region,
+        p1_e_region,
+        p1_m_bronze_gate_region,
+        p1_from_p2_region,
+        p1_from_p3_n_region,
+        p1_from_p3_s_region,
+        p2_start_region,
+        p2_m_region,
+        p2_n_region,
+        p2_red_switch_region,
+        p2_e_bronze_gate_region,
+        p2_s_region,
+        p2_e_bronze_gate_2_region,
+        p2_m_bronze_gate_region,
+        p2_se_bronze_gate_region,
+        p2_gg_room_reward_region,
+        p2_end_region,
+        p3_start_region,
+    ]
+
+    connect_castle_regions(multiworld, player, active_locations)
+
+    temp_test_region_locations(multiworld, active_locations)
+
+
+def connect_castle_regions(multiworld, player: int, active_locations):
+    used_names: typing.Dict[str, int] = {}
+
+    connect(multiworld, player, used_names, RegionName.menu, RegionName.p1_start)
+    connect(multiworld, player, used_names, RegionName.p1_start, RegionName.p1_s,
+            lambda state: (state.has(ItemName.key_bronze, player, 1)))
+    connect(multiworld, player, used_names, RegionName.p1_s, RegionName.p1_sw_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 2)))
+    connect(multiworld, player, used_names, RegionName.p1_s, RegionName.p1_e,
+            lambda state: (state.has(ItemName.key_bronze, player, 3)))
+    connect(multiworld, player, used_names, RegionName.p1_e, RegionName.p1_m_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 4)))
+    connect(multiworld, player, used_names, RegionName.p1_e, RegionName.p2_start)
+
+    connect(multiworld, player, used_names, RegionName.p2_start, RegionName.p2_m,
+            lambda state: (state.has(ItemName.key_bronze, player, 5)))
+    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p1_from_p2)
+    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p2_n,
+            lambda state: (state.has(ItemName.key_silver, player, 1)))
+    connect(multiworld, player, used_names, RegionName.p2_n, RegionName.p2_red_switch)
+    connect(multiworld, player, used_names, RegionName.p2_red_switch, RegionName.p2_e_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 6)))
+    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p2_s,
+            lambda state: (state.has(ItemName.key_gold, player, 1)))
+    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_e_bronze_gate_2,
+            lambda state: (state.has(ItemName.key_bronze, player, 7)))
+    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_m_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 8)))
+    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_se_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 9)))
+    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_gg_room_reward,
+            lambda state: (state.has(ItemName.ev_castle_p2_switch, player, 4)))
+    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_end,
+            lambda state: (state.has(ItemName.key_gold, player, 2)))
+    connect(multiworld, player, used_names, RegionName.p2_end, RegionName.p3_start)
+
+    connect(multiworld, player, used_names, RegionName.p3_start, RegionName.p1_from_p3_n)
+    connect(multiworld, player, used_names, RegionName.p3_start, RegionName.p1_from_p3_s)
 
 
 def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
@@ -922,6 +1245,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
 
     connect_tots_regions(multiworld, player, active_locations)
 
+    temp_test_region_locations(multiworld, active_locations)
+
 
 def connect_tots_regions(multiworld, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
@@ -971,7 +1296,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
 
     connect(multiworld, player, used_names, RegionName.passage_end, RegionName.temple_entrance_back)
     connect(multiworld, player, used_names, RegionName.temple_entrance_back, RegionName.temple_entrance,
-            lambda state: (state.has(ItemName.open_temple_entrance_shortcut, player)))
+            lambda state: (state.has(ItemName.ev_open_temple_entrance_shortcut, player)))
     connect(multiworld, player, used_names, RegionName.temple_entrance_back, RegionName.t1_main)
 
     connect(multiworld, player, used_names, RegionName.t1_main, RegionName.t1_sw_cache,
@@ -984,7 +1309,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, RegionName.t1_node_1, RegionName.t1_ice_turret,
             lambda state: (state.has(ItemName.key_gold, player, 2)))
     connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_telariana_melt_ice,
-            lambda state: (state.has(ItemName.krilith_defeated, player)))
+            lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
     t1_key_ordering = multiworld.random.randint(0, 1)
     connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_n_of_ice_turret,
             lambda state: (state.has(ItemName.key_silver, player, 3 + t1_key_ordering)))
@@ -997,18 +1322,18 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t1_node_2,
             lambda state: (state.has(ItemName.mirror, player, 7)))
     connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t1_ice_chamber_melt_ice,
-            lambda state: (state.has(ItemName.krilith_defeated, player)))
+            lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
 
     connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t2_main)
     connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_melt_ice,
-            lambda state: (state.has(ItemName.krilith_defeated, player)))
+            lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
     t2_key_ordering = multiworld.random.randint(0, 1)
     connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_n_gate,
             lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering))
-                          and (state.has(ItemName.krilith_defeated, player)))
+                          and (state.has(ItemName.ev_krilith_defeated, player)))
     connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_s_gate,
             lambda state: (state.has(ItemName.key_silver, player, 5 - t2_key_ordering))
-                          and (state.has(ItemName.krilith_defeated, player)))
+                          and (state.has(ItemName.ev_krilith_defeated, player)))
     connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_ornate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
     connect(multiworld, player, used_names, RegionName.t2_n_gate, RegionName.t2_n_node,
@@ -1016,7 +1341,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, RegionName.t2_s_gate, RegionName.t2_s_node,
             lambda state: (state.has(ItemName.mirror, player, 14)))
     connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_light_bridges,
-            lambda state: (state.has(ItemName.t2_bridge_switch, player, 5)))
+            lambda state: (state.has(ItemName.ev_t2_bridge_switch, player, 5)))
     connect(multiworld, player, used_names, RegionName.t2_light_bridges, RegionName.cave_3_portal)
     connect(multiworld, player, used_names, RegionName.t2_light_bridges, RegionName.cave_1_temple)
 
@@ -1040,7 +1365,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 3)))
 
     connect(multiworld, player, used_names, RegionName.hub_main, RegionName.pof_1_main,
-            lambda state: (state.has(ItemName.pof_switch, player, 6)))
+            lambda state: (state.has(ItemName.ev_pof_switch, player, 6)))
     connect(multiworld, player, used_names, RegionName.pof_1_main, RegionName.pof_1_se_room)
     connect(multiworld, player, used_names, RegionName.pof_1_se_room, RegionName.pof_1_gate_1,
             lambda state: (state.has(ItemName.bonus_key, player, 1)))
@@ -1051,14 +1376,21 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, RegionName.pof_2_main, RegionName.pof_2_n)
     connect(multiworld, player, used_names, RegionName.pof_2_n, RegionName.pof_3_main)
     connect(multiworld, player, used_names, RegionName.pof_3_main, RegionName.hub_pyramid_of_fear,
-            lambda state: (state.has(ItemName.pof_complete, player)))
+            lambda state: (state.has(ItemName.ev_pof_complete, player)))
 
     connect(multiworld, player, used_names, RegionName.hub_main, RegionName.b3_main,
-            lambda state: (state.has(ItemName.solar_node, player, 6)))
+            lambda state: (state.has(ItemName.ev_solar_node, player, 6)))
     connect(multiworld, player, used_names, RegionName.b3_main, RegionName.b3_platform_1)
     connect(multiworld, player, used_names, RegionName.b3_platform_1, RegionName.b3_platform_2)
     connect(multiworld, player, used_names, RegionName.b3_platform_2, RegionName.b3_platform_3)
     connect(multiworld, player, used_names, RegionName.b3_platform_3, RegionName.b3_defeated)
+
+    connect(multiworld, player, used_names, RegionName.b3_platform_1, RegionName.t3_boss_fall_1)
+    connect(multiworld, player, used_names, RegionName.t3_boss_fall_1, RegionName.t3_main)
+    connect(multiworld, player, used_names, RegionName.b3_platform_2, RegionName.t3_boss_fall_2)
+    connect(multiworld, player, used_names, RegionName.t3_boss_fall_2, RegionName.t3_main)
+    connect(multiworld, player, used_names, RegionName.b3_platform_3, RegionName.t3_boss_fall_3)
+    connect(multiworld, player, used_names, RegionName.t3_boss_fall_3, RegionName.t3_main)
 
 
 def create_region(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
@@ -1091,3 +1423,36 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
 
     source_region.exits.append(connection)
     connection.connect(target_region)
+
+
+def temp_test_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
+    # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
+    name_list = []
+    remaining_locs = active_locations.copy()
+    test = 0
+    for region in multiworld.regions:
+        test += len(region.locations)
+        for loc in region.locations:
+            if loc.name not in remaining_locs:
+                print(f"Location found not in active locations!!! {loc.name}")
+            remaining_locs.pop(loc.name)
+            if loc.name in name_list:
+                print(f"Duplicate location found!!! {loc.name}")
+            name_list.append(loc.name)
+    for loc_name, data in remaining_locs.items():
+        print(f"Missing location in regions!!! {loc_name} {data.code}")
+
+
+def test_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
+    # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
+    name_list = []
+    remaining_locs = active_locations.copy()
+    test = 0
+    for region in multiworld.regions:
+        test += len(region.locations)
+        for loc in region.locations:
+            assert loc.name in remaining_locs  # Location is active test
+            remaining_locs.pop(loc.name)
+            assert loc.name not in name_list  # Duplicate location test
+            name_list.append(loc.name)
+    assert len(remaining_locs) == 0  # Missing region location test

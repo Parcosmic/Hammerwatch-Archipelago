@@ -3,7 +3,7 @@ import typing
 from BaseClasses import Location
 from .Names import LocationName, ItemName
 from .Util import Counter
-from .Items import castle_item_counts, temple_item_counts
+from .Items import castle_item_counts, temple_item_counts, recovery_table
 from enum import Enum
 
 
@@ -28,8 +28,165 @@ class HammerwatchLocation(Location):
         self.event = code is None
 
 
+counter = Counter(0x131000)
 castle_pickup_locations: typing.Dict[str, LocationData] = {
+    LocationName.p1_p3_n_bridge: LocationData(counter.count(0)),
+    LocationName.p1_bars_2: LocationData(counter.count()),
+    LocationName.p1_entrance_hall_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_hall_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_exit_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_exit_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_nw_bronze_gate: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_m_bronze_gate: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_6: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_5: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_sw_bronze_gate_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_sw_bronze_gate_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_e_save_room_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_e_save_room_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_w: LocationData(counter.count()),
+    LocationName.p1_entrance_s: LocationData(counter.count()),
+    LocationName.p1_by_exit_3: LocationData(counter.count()),
+    LocationName.p1_e_bridges_4: LocationData(counter.count()),
+    LocationName.p1_w_of_se_bronze_gate_1: LocationData(counter.count()),
+    LocationName.p1_s_w_bridges_w: LocationData(counter.count()),
+    LocationName.p1_w_of_se_bronze_gate_5: LocationData(counter.count()),
+    LocationName.p1_by_sw_bronze_gate_1: LocationData(counter.count()),
+    LocationName.p1_s_of_e_save_room: LocationData(counter.count()),
+    LocationName.p1_room_by_exit: LocationData(counter.count()),
+    LocationName.p1_ne_arrow_traps: LocationData(counter.count()),
+    LocationName.p1_e_bridges_5: LocationData(counter.count()),
+    LocationName.p1_n_of_se_bridge: LocationData(counter.count()),
+    LocationName.p1_by_sw_bronze_gate_4: LocationData(counter.count()),
+    LocationName.p1_p3_s: LocationData(counter.count()),
+    LocationName.p1_bars_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_w_save: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_e_bridges_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_e_bridges_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_e_bridges_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_by_m_bronze_gate_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_n_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_n_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_n_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_s_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_s_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_s_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_center_bridges_s_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_w_of_se_bronze_gate_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_w_of_se_bronze_gate_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_w_of_se_bronze_gate_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_8: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_9: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_10: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_7: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_5: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_s_lower_hall_6: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_p2_by_shop: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p1_entrance_secret: LocationData(counter.count()),
+    LocationName.p1_e_secret: LocationData(counter.count()),
+    LocationName.p1_p3_n_across_bridge: LocationData(counter.count()),
+    LocationName.p1_s_secret_2: LocationData(counter.count()),
+    LocationName.p1_hint_room: LocationData(counter.count()),
+    LocationName.p1_se_bridge: LocationData(counter.count()),
+    LocationName.p1_sw_bronze_gate: LocationData(counter.count()),
+    LocationName.p1_s_secret_1: LocationData(counter.count()),
 
+    LocationName.p2_spike_puzzle_w_1: LocationData(counter.count()),
+    LocationName.p2_big_bridge_3: LocationData(counter.count()),
+    LocationName.p2_sequence_puzzle_reward: LocationData(counter.count()),
+    LocationName.p2_spike_puzzle_e_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_spike_puzzle_e_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_w_of_silver_gate_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_w_of_silver_gate_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_nw_island_s_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_nw_island_s_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_by_red_spikes_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_by_red_spikes_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_by_red_spikes_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_entrance_5: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_big_bridge_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_big_bridge_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_end_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_end_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_save: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_poker_plant_room_6: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_poker_plant_room_5: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_s_arrow_traps_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_s_arrow_traps_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_entrance_1: LocationData(counter.count()),
+    LocationName.p2_entrance_2: LocationData(counter.count()),
+    LocationName.p2_entrance_4: LocationData(counter.count()),
+    LocationName.p2_entrance_3: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_4: LocationData(counter.count()),
+    LocationName.p2_w_of_gold_gate: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_5: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_1: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_6: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_2: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_3: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_12: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_13: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_11: LocationData(counter.count()),
+    LocationName.p2_e_of_red_spikes_1: LocationData(counter.count()),
+    LocationName.p2_e_of_red_spikes_2: LocationData(counter.count()),
+    LocationName.p2_e_of_red_spikes_3: LocationData(counter.count()),
+    LocationName.p2_e_of_red_spikes_4: LocationData(counter.count()),
+    LocationName.p2_beetle_boss_room_1: LocationData(counter.count()),
+    LocationName.p2_beetle_boss_room_2: LocationData(counter.count()),
+    LocationName.p2_beetle_boss_room_3: LocationData(counter.count()),
+    LocationName.p2_spike_puzzle_ne_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_spike_puzzle_ne_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_spike_puzzle_ne_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_nw_island_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_nw_island_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_of_ne_save_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_of_ne_save_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_w_poker_plant_room_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_w_poker_plant_room_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_w_poker_plant_room_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_s_of_w_gold_gate_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_s_of_w_gold_gate_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_s_of_w_gold_gate_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_poker_plant_room_3: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_poker_plant_room_2: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_poker_plant_room_1: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_gold_gate_room_7: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_gold_gate_room_8: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_gold_gate_room_9: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_spike_puzzle_e: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_beetle_boss_room_4: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_e_gold_gate_room_10: LocationData(counter.count(), LocationClassification.Recovery),
+    LocationName.p2_boss_switch: LocationData(counter.count()),
+    LocationName.p2_nw_island_4: LocationData(counter.count()),
+    LocationName.p2_nw_island_3: LocationData(counter.count()),
+    LocationName.p2_nw_island_5: LocationData(counter.count()),
+    LocationName.p2_beetle_boss_hidden_room_1: LocationData(counter.count()),
+    LocationName.p2_toggle_spike_trap_reward_1: LocationData(counter.count()),
+    LocationName.p2_e_poker_plant_room_4: LocationData(counter.count()),
+    LocationName.p2_s_arrow_traps_1: LocationData(counter.count()),
+    LocationName.p2_spike_puzzle_n_2: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_reward_2: LocationData(counter.count()),
+    LocationName.p2_spike_puzzle_n_1: LocationData(counter.count()),
+    LocationName.p2_spike_puzzle_w_2: LocationData(counter.count()),
+    LocationName.p2_beetle_boss_hidden_room_2: LocationData(counter.count()),
+    LocationName.p2_toggle_spike_trap_reward_3: LocationData(counter.count()),
+    LocationName.p2_toggle_spike_trap_reward_2: LocationData(counter.count()),
+    LocationName.p2_e_gold_gate_room_reward_1: LocationData(counter.count()),
+    LocationName.p2_puzzle_1: LocationData(counter.count()),
+    LocationName.p2_puzzle_2: LocationData(counter.count()),
+    LocationName.p2_puzzle_3: LocationData(counter.count()),
+    LocationName.p2_puzzle_4: LocationData(counter.count()),
 }
 
 castle_shop_locations: typing.Dict[str, LocationData] = {
@@ -37,7 +194,10 @@ castle_shop_locations: typing.Dict[str, LocationData] = {
 }
 
 castle_event_locations: typing.Dict[str, LocationData] = {
-
+    LocationName.ev_p2_gold_gate_room_ne_switch: LocationData(None),
+    LocationName.ev_p2_gold_gate_room_nw_switch: LocationData(None),
+    LocationName.ev_p2_gold_gate_room_se_switch: LocationData(None),
+    LocationName.ev_p2_gold_gate_room_sw_switch: LocationData(None),
 }
 
 castle_locations: typing.Dict[str, LocationData] = {
@@ -625,12 +785,14 @@ def setup_locations(multiworld, player: int):
     location_table: typing.Dict[str, LocationData]
     map_locations: typing.Dict[str, LocationData]
     bonus_locations: typing.Dict[str, LocationData] = {}
+    castle = False
 
     location_table = {}
     # Event locations
     if multiworld.map[player] == 0:
         map_locations = castle_locations
         location_table.update(castle_event_locations)
+        castle = True
     else:
         map_locations = temple_locations
         location_table.update(temple_event_locations)
@@ -645,9 +807,10 @@ def setup_locations(multiworld, player: int):
 
     # Bonus level handling
     extra_items = 0
-    extra_items += multiworld.pan_fragments[player].value
-    extra_items += multiworld.lever_fragments[player].value
-    extra_items += multiworld.pickaxe_fragments[player].value
+    if not castle:
+        extra_items += multiworld.pan_fragments[player].value
+        extra_items += multiworld.lever_fragments[player].value
+        extra_items += multiworld.pickaxe_fragments[player].value
     if multiworld.bonus_behavior[player].value == 1:  # Necessary
         for i in range(extra_items):
             locations = list(bonus_locations.keys())
@@ -677,12 +840,125 @@ random_locations: typing.Dict[str, int] = {
 
 
 def choose_castle_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
+
+    def remove_location(location: str, item: str):
+        location_table.pop(location)
+        castle_item_counts[item] -= 1
+
+    def remove_secret(secret_location: str):
+        if secret_location in location_table.keys():
+            remove_location(secret_location, ItemName.secret)
+
+    def remove_puzzle_locations(base_name: str, rloc_name: str):
+        if random_locations[rloc_name] < 18:
+            remove_location(f"{base_name}4", ItemName.chest_purple)
+        if random_locations[rloc_name] < 14:
+            remove_location(f"{base_name}3", ItemName.stat_upgrade)
+        if random_locations[rloc_name] < 10:
+            remove_location(f"{base_name}2", ItemName.ankh)
+        if random_locations[rloc_name] < 1:
+            remove_location(f"{base_name}1", ItemName.potion_rejuvenation)
+
+    def randomize_puzzle(rloc_name: str):
+        pegs = 0
+        for p in range(25):
+            pegs += multiworld.random.randrange(2)
+        random_locations[rloc_name] = pegs
+
+    # Set puzzle random values
+    if multiworld.randomize_puzzles[player].value:
+        randomize_puzzle(LocationName.crloc_p2_puzzle)
+    else:
+        random_locations[LocationName.crloc_p2_puzzle] = -1
+
+    # Prison Floor 1 Locations
+    p1_bkey_1_locs: typing.List[str] = [
+        LocationName.p1_entrance_s,
+        LocationName.p1_entrance_w,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p1_bkey_1_locs, LocationName.crloc_p1_bronze_key_entrance)
+    p1_bkey_2_locs: typing.List[str] = [
+        LocationName.p1_by_sw_bronze_gate_1,
+        LocationName.p1_s_w_bridges_w,
+        LocationName.p1_by_sw_bronze_gate_4,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p1_bkey_2_locs, LocationName.crloc_p1_bronze_key_sw)
+    p1_bkey_3_locs: typing.List[str] = [
+        LocationName.p1_n_of_se_bridge,
+        LocationName.p1_s_of_e_save_room,
+        LocationName.p1_w_of_se_bronze_gate_5,
+        LocationName.p1_w_of_se_bronze_gate_1,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p1_bkey_3_locs, LocationName.crloc_p1_bronze_key_se)
+    p1_bkey_4_locs: typing.List[str] = [
+        LocationName.p1_e_bridges_5,
+        LocationName.p1_e_bridges_4,
+        LocationName.p1_ne_arrow_traps,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p1_bkey_4_locs, LocationName.crloc_p1_bronze_key_e)
+    p1_bkey_5_locs: typing.List[str] = [
+        LocationName.p1_room_by_exit,
+        LocationName.p1_by_exit_3,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p1_bkey_5_locs, LocationName.crloc_p1_bronze_key_n)
+    # Prison Floor 2
+    p2_bkey_1_locs: typing.List[str] = [
+        LocationName.p2_entrance_1,
+        LocationName.p2_entrance_2,
+        LocationName.p2_entrance_4,
+        LocationName.p2_entrance_3,
+        LocationName.p2_w_of_gold_gate,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_bkey_1_locs, LocationName.crloc_p2_bkey_1)
+    p2_bkey_2_locs: typing.List[str] = [
+        LocationName.p2_e_gold_gate_room_3,
+        LocationName.p2_e_gold_gate_room_2,
+        LocationName.p2_e_gold_gate_room_1,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_bkey_2_locs, LocationName.crloc_p2_bkey_2)
+    p2_bkey_3_locs: typing.List[str] = [
+        LocationName.p2_e_gold_gate_room_4,
+        LocationName.p2_e_gold_gate_room_5,
+        LocationName.p2_e_gold_gate_room_6,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_bkey_3_locs, LocationName.crloc_p2_bkey_3)
+    p2_bkey_4_locs: typing.List[str] = [
+        LocationName.p2_e_gold_gate_room_13,
+        LocationName.p2_e_gold_gate_room_12,
+        LocationName.p2_e_gold_gate_room_11,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_bkey_4_locs, LocationName.crloc_p2_bkey_4)
+    p2_skey_locs: typing.List[str] = [
+        LocationName.p2_nw_island_5,
+        LocationName.p2_nw_island_3,
+        LocationName.p2_nw_island_4,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_skey_locs, LocationName.crloc_p2_skey)
+    p2_gkey_1_locs: typing.List[str] = [
+        LocationName.p2_e_of_red_spikes_2,
+        LocationName.p2_e_of_red_spikes_3,
+        LocationName.p2_e_of_red_spikes_4,
+        LocationName.p2_e_of_red_spikes_1,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_gkey_1_locs, LocationName.crloc_p2_gkey_1)
+    p2_gkey_2_locs: typing.List[str] = [
+        LocationName.p2_beetle_boss_room_2,
+        LocationName.p2_beetle_boss_room_1,
+        LocationName.p2_beetle_boss_room_3,
+    ]
+    location_table = keep_one_location(multiworld, location_table, p2_gkey_2_locs, LocationName.crloc_p2_gkey_2)
+
+    # Remove puzzles
+    remove_puzzle_locations(LocationName.p2_puzzle_1[:-1], LocationName.crloc_p2_puzzle)
+
     return location_table
 
 
 def choose_tots_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
 
     def remove_location(location: str, item: str):
+        if multiworld.randomize_recovery_items[player].value == 0 and item in recovery_table.keys():
+            return
         location_table.pop(location)
         temple_item_counts[item] -= 1
 
@@ -946,7 +1222,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     for loc in mid_locations_to_remove:
         if temple_locations[loc].classification == LocationClassification.Secret:
             remove_secret(loc)
-        else:
+        elif loc in location_table:
             location_table.pop(loc)
     random_locations[LocationName.rloc_passage_end] = multiworld.random.randrange(3)
     random_locations[LocationName.rloc_p_alley] = multiworld.random.randrange(4)
@@ -1033,6 +1309,10 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         remove_location(LocationName.t1_sw_hidden_room_3, ItemName.ankh)
         remove_location(LocationName.t1_sw_hidden_room_4, ItemName.chest_green)
     random_locations[LocationName.rloc_t1_puzzle_spawn] = multiworld.random.randrange(2)
+    if random_locations[LocationName.rloc_t1_puzzle_spawn] == 0:
+        random_locations[LocationName.rloc_t1_puzzle_w] = -1
+    else:
+        random_locations[LocationName.rloc_t1_puzzle_e] = -1
     # Temple Level 2
     t2_keystone_locations: typing.List[str] = [
         LocationName.t2_nw_ice_turret_4,
