@@ -56,7 +56,7 @@ class RandomizePuzzles(Toggle):
 
 
 class PortalAccessibility(Toggle):
-    """TotS Only: Ensures rune keys will be placed on the floor they would normally appear so that portals are more easily accessible.
+    """TotS Only: Ensures rune keys will be placed locally on the floor they would normally appear so that portals are more easily accessible.
     """
     display_name = "Portal Accessibility"
     default = True

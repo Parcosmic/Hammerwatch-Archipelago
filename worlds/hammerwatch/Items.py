@@ -82,10 +82,11 @@ trap_table: typing.Dict[str, ItemData] = {
 }
 
 event_table: typing.Dict[str, ItemData] = {
-    ItemName.victory: ItemData(None, ItemClassification.progression),
-    ItemName.pof_switch: ItemData(None, ItemClassification.progression),
-    ItemName.pof_complete: ItemData(None, ItemClassification.progression),
-    ItemName.open_temple_entrance_shortcut: ItemData(None, ItemClassification.progression),
+    ItemName.ev_victory: ItemData(None, ItemClassification.progression),
+    ItemName.ev_castle_p2_switch: ItemData(None, ItemClassification.progression),
+    ItemName.ev_pof_switch: ItemData(None, ItemClassification.progression),
+    ItemName.ev_pof_complete: ItemData(None, ItemClassification.progression),
+    ItemName.ev_open_temple_entrance_shortcut: ItemData(None, ItemClassification.progression),
 }
 
 item_table: typing.Dict[str, ItemData] = {
@@ -119,36 +120,40 @@ trap_items: typing.List[str] = [
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 227,
-    ItemName.bonus_key: 18,
-    ItemName.chest_blue: 17,
-    ItemName.chest_green: 18,
-    ItemName.chest_red: 14,
-    ItemName.chest_wood: 21,
-    ItemName.vendor_coin: 61,
-    ItemName.plank: 13,
-    ItemName.key_bronze: 94,
-    ItemName.key_silver: 15,
-    ItemName.key_gold: 11,
-    ItemName.mirror: 0,
-    ItemName.ore: 0,
-    ItemName.key_teleport: 0,
-    ItemName.ankh: 32,
-    ItemName.ankh_5up: 6,
+    ItemName.bonus_chest: 0,
+    ItemName.bonus_key: 0,
+    ItemName.chest_blue: 0,
+    ItemName.chest_green: 0,
+    ItemName.chest_purple: 1,
+    ItemName.chest_red: 0,
+    ItemName.chest_wood: 7,
+    ItemName.vendor_coin: 10,
+    ItemName.plank: 2,
+    ItemName.key_bronze: 9,
+    ItemName.key_silver: 1,
+    ItemName.key_gold: 3,
+    ItemName.ankh: 6,
+    ItemName.ankh_5up: 0,
     ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 9,
+    ItemName.potion_rejuvenation: 3,
     ItemName.potion_invulnerability: 0,
-    ItemName.stat_upgrade_damage: 2,
-    ItemName.stat_upgrade_defense: 1,
+    ItemName.stat_upgrade_damage: 0,
+    ItemName.stat_upgrade_defense: 0,
     ItemName.stat_upgrade_health: 0,
     ItemName.stat_upgrade_mana: 0,
-    ItemName.diamond: 4,
-    ItemName.diamond_red: 1,
-    ItemName.diamond_small: 10,
-    ItemName.diamond_small_red: 18,
-    ItemName.stat_upgrade: 0,
-    ItemName.secret: 20,
-    ItemName.puzzle: 0
+    ItemName.apple: 35,
+    ItemName.orange: 4,
+    ItemName.steak: 0,
+    ItemName.fish: 0,
+    ItemName.mana_1: 47,
+    ItemName.mana_2: 1,
+    ItemName.diamond: 0,
+    ItemName.diamond_red: 0,
+    ItemName.diamond_small: 0,
+    ItemName.diamond_small_red: 0,
+    ItemName.stat_upgrade: 1,
+    ItemName.secret: 0,
+    ItemName.puzzle: 1
 }
 
 temple_item_counts: typing.Dict[str, int] = {
@@ -156,7 +161,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_key: 2,
     ItemName.chest_blue: 10,
     ItemName.chest_green: 5,
-    ItemName.chest_purple: 0,
+    ItemName.chest_purple: 13,
     ItemName.chest_red: 11,
     ItemName.chest_wood: 29,
     ItemName.vendor_coin: 43,
@@ -165,9 +170,9 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.mirror: 20,
     ItemName.ore: 11,
     ItemName.key_teleport: 6,
-    ItemName.ankh: 18,
+    ItemName.ankh: 31,
     ItemName.ankh_5up: 4,
-    ItemName.potion_rejuvenation: 0,
+    ItemName.potion_rejuvenation: 13,
     ItemName.sonic_ring: 12,
     ItemName.serious_health: 1,
     ItemName.diamond: 0,
@@ -187,7 +192,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.pan: 1,
     ItemName.lever: 1,
     ItemName.pickaxe: 1,
-    ItemName.stat_upgrade: 29,
+    ItemName.stat_upgrade: 43,
     ItemName.secret: 20,
     ItemName.puzzle: 10
 }
@@ -196,9 +201,11 @@ temple_item_counts: typing.Dict[str, int] = {
 def get_item_counts(multiworld, player: int):
     item_counts_table: typing.Dict[str, int]
     extra_items: int = 0
+    castle = False
 
     if multiworld.map[player] == 0:  # Castle Hammerwatch
         item_counts_table = {**castle_item_counts}
+        castle = True
     else:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
 
@@ -209,23 +216,24 @@ def get_item_counts(multiworld, player: int):
     if multiworld.bonus_behavior[player].value == 0 or multiworld.bonus_behavior[player].value == 1:
         item_counts_table.pop(ItemName.bonus_chest)
 
-    # If using fragments switch the whole item out for fragments
-    if multiworld.pan_fragments[player].value > 1:
-        item_counts_table.pop(ItemName.pan)
-        item_counts_table.update({ItemName.pan_fragment: multiworld.pan_fragments[player].value})
-        extra_items += multiworld.pan_fragments[player].value - 1
-    if multiworld.lever_fragments[player].value > 1:
-        item_counts_table.pop(ItemName.lever)
-        item_counts_table.update({ItemName.lever_fragment: multiworld.lever_fragments[player].value})
-        extra_items += multiworld.lever_fragments[player].value - 1
-    if multiworld.pickaxe_fragments[player].value > 1:
-        item_counts_table.pop(ItemName.pickaxe)
-        item_counts_table.update({ItemName.pickaxe_fragment: multiworld.pickaxe_fragments[player].value})
-        extra_items += multiworld.pickaxe_fragments[player].value - 1
+    if not castle:
+        # If using fragments switch the whole item out for fragments
+        if multiworld.pan_fragments[player].value > 1:
+            item_counts_table.pop(ItemName.pan)
+            item_counts_table.update({ItemName.pan_fragment: multiworld.pan_fragments[player].value})
+            extra_items += multiworld.pan_fragments[player].value - 1
+        if multiworld.lever_fragments[player].value > 1:
+            item_counts_table.pop(ItemName.lever)
+            item_counts_table.update({ItemName.lever_fragment: multiworld.lever_fragments[player].value})
+            extra_items += multiworld.lever_fragments[player].value - 1
+        if multiworld.pickaxe_fragments[player].value > 1:
+            item_counts_table.pop(ItemName.pickaxe)
+            item_counts_table.update({ItemName.pickaxe_fragment: multiworld.pickaxe_fragments[player].value})
+            extra_items += multiworld.pickaxe_fragments[player].value - 1
 
-    # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
-    if multiworld.portal_accessibility[player].value > 0:
-        item_counts_table.pop(ItemName.key_teleport)
+        # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
+        if multiworld.portal_accessibility[player].value > 0:
+            item_counts_table.pop(ItemName.key_teleport)
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not multiworld.randomize_recovery_items[player].value:
@@ -244,11 +252,11 @@ def get_item_counts(multiworld, player: int):
                 item_counts_table[ItemName.stat_upgrade] += 1
 
     # Add puzzle items
-    if multiworld.randomize_puzzles[player].value:
-        item_counts_table[ItemName.chest_purple] += puzzles
-        item_counts_table[ItemName.stat_upgrade] += puzzles
-        item_counts_table[ItemName.ankh] += puzzles
-        item_counts_table[ItemName.potion_rejuvenation] += puzzles
+    # if multiworld.randomize_puzzles[player].value:
+    # item_counts_table[ItemName.chest_purple] += puzzles
+    # item_counts_table[ItemName.stat_upgrade] += puzzles
+    # item_counts_table[ItemName.ankh] += puzzles
+    # item_counts_table[ItemName.potion_rejuvenation] += puzzles
 
     # Determine stat upgrades and add them to the pool
     stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
