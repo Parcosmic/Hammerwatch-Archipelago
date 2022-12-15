@@ -18,12 +18,6 @@ def create_regions(multiworld, map: Campaign, player: int, active_locations: typ
 def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
     menu_region = create_region(multiworld, player, active_locations, CastleRegionNames.menu, None)
 
-    get_planks_locations = []
-    if multiworld.goal[player].value % 10 > 0:
-        get_planks_locations.append(CastleLocationNames.ev_victory)
-    get_planks_region = create_region(multiworld, player, active_locations, CastleRegionNames.get_planks,
-                                      get_planks_locations)
-
     p1_start_locations = [
         CastleLocationNames.p1_entrance_1,
         CastleLocationNames.p1_entrance_2,
@@ -281,8 +275,14 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     b4_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b4_defeated,
                                        b4_defeated_locations)
 
-    escaped_locations = []
+    get_planks_locations = []
     if multiworld.goal[player].value == 1:
+        get_planks_locations.append(CastleLocationNames.ev_victory)
+    get_planks_region = create_region(multiworld, player, active_locations, CastleRegionNames.get_planks,
+                                      get_planks_locations)
+
+    escaped_locations = []
+    if multiworld.goal[player].value == 2:
         escaped_locations.append(CastleLocationNames.ev_victory)
     escaped_region = create_region(multiworld, player, active_locations, CastleRegionNames.escaped, escaped_locations)
 
@@ -358,10 +358,11 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p1_from_p3_s)
 
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.b4_defeated)
-    connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.escaped,
-            lambda state: (state.has(ItemName.plank, player, 12)))
 
     planks_to_win = multiworld.plank_count[player] * multiworld.plank_win_percent[player] // 100
+    connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.escaped,
+            lambda state: (state.has(ItemName.plank, player, planks_to_win)))
+
     connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 

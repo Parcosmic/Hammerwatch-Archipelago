@@ -32,7 +32,7 @@ counter = Counter(0x131000)
 castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p1_p3_n_bridge: LocationData(counter.count(0)),
     CastleLocationNames.p1_bars_2: LocationData(counter.count()),
-    CastleLocationNames.p1_entrance_hall_2: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.p1_entrance_hall_2: LocationData(counter.count(2), LocationClassification.Recovery),
     CastleLocationNames.p1_entrance_hall_1: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.p1_by_exit_1: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.p1_by_exit_2: LocationData(counter.count(), LocationClassification.Recovery),
@@ -103,7 +103,7 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p1_s_secret_1: LocationData(counter.count()),
 
     CastleLocationNames.p2_spike_puzzle_w_1: LocationData(counter.count()),
-    CastleLocationNames.p2_big_bridge_3: LocationData(counter.count()),
+    CastleLocationNames.p2_big_bridge_3: LocationData(counter.count(2)),
     CastleLocationNames.p2_sequence_puzzle_reward: LocationData(counter.count()),
     CastleLocationNames.p2_spike_puzzle_e_1: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.p2_spike_puzzle_e_2: LocationData(counter.count(), LocationClassification.Recovery),
