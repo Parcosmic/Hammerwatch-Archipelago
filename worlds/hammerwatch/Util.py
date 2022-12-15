@@ -1,4 +1,10 @@
 import typing
+from enum import Enum
+
+
+class Campaign(Enum):
+    Castle = 0
+    Temple = 1
 
 
 class Counter:

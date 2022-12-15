@@ -1,8 +1,8 @@
 import typing
 
-from BaseClasses import Item, ItemClassification
+from BaseClasses import Item, ItemClassification, MultiWorld
 from .Names import ItemName
-from .Util import Counter
+from .Util import Counter, Campaign
 from random import Random
 
 
@@ -165,6 +165,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.chest_red: 11,
     ItemName.chest_wood: 29,
     ItemName.vendor_coin: 43,
+    ItemName.plank: 0,
     ItemName.key_silver: 6,
     ItemName.key_gold: 4,
     ItemName.mirror: 20,
@@ -198,25 +199,31 @@ temple_item_counts: typing.Dict[str, int] = {
 }
 
 
-def get_item_counts(multiworld, player: int):
+def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     item_counts_table: typing.Dict[str, int]
     extra_items: int = 0
-    castle = False
 
-    if multiworld.map[player] == 0:  # Castle Hammerwatch
+    if campaign == Campaign.Castle:  # Castle Hammerwatch
         item_counts_table = {**castle_item_counts}
-        castle = True
-    else:  # Temple of the Sun
+    elif campaign == Campaign.Temple:  # Temple of the Sun
         item_counts_table = {**temple_item_counts}
 
     secrets: int = item_counts_table.pop(ItemName.secret)
     puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
+    # Strange planks
+    if multiworld.goal[player].value % 10 > 0:
+        extra_items = multiworld.plank_count[player].value - item_counts_table[ItemName.plank]
+        item_counts_table[ItemName.plank] = multiworld.plank_count[player].value
+    else:  # Remove planks from the pool, they're not needed
+        extra_items -= item_counts_table[ItemName.plank]
+        item_counts_table.pop(ItemName.plank)
+
     # Bonus check behavior - None
     if multiworld.bonus_behavior[player].value == 0 or multiworld.bonus_behavior[player].value == 1:
         item_counts_table.pop(ItemName.bonus_chest)
 
-    if not castle:
+    if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
         if multiworld.pan_fragments[player].value > 1:
             item_counts_table.pop(ItemName.pan)
@@ -235,21 +242,21 @@ def get_item_counts(multiworld, player: int):
         if multiworld.portal_accessibility[player].value > 0:
             item_counts_table.pop(ItemName.key_teleport)
 
+        # Add secret items from TotS
+        if multiworld.randomize_secrets[player].value:
+            for s in range(secrets):
+                item = multiworld.random.randint(0, 12)
+                if item < 8:
+                    item_counts_table[ItemName.chest_wood] += 1
+                elif item < 12:
+                    item_counts_table[ItemName.ankh] += 1
+                else:
+                    item_counts_table[ItemName.stat_upgrade] += 1
+
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not multiworld.randomize_recovery_items[player].value:
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
-
-    # Add secret items
-    if multiworld.randomize_secrets[player].value:
-        for s in range(secrets):
-            item = multiworld.random.randint(0, 12)
-            if item < 8:
-                item_counts_table[ItemName.chest_wood] += 1
-            elif item < 12:
-                item_counts_table[ItemName.ankh] += 1
-            else:
-                item_counts_table[ItemName.stat_upgrade] += 1
 
     # Add puzzle items
     # if multiworld.randomize_puzzles[player].value:
@@ -282,12 +289,15 @@ def get_item_counts(multiworld, player: int):
             item = trap_items[multiworld.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
 
-    # For each extra item remove a filler item
+    # For each extra item remove a filler item, or add extra items if we need more
     for t in range(extra_items):
         filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
-        item_counts_table[filler_item] -= 1
-        if item_counts_table[filler_item] == 0:
-            filler_item_names.remove(filler_item)
+        if extra_items > 1:
+            item_counts_table[filler_item] -= 1
+            if item_counts_table[filler_item] == 0:
+                filler_item_names.remove(filler_item)
+        else:
+            item_counts_table[filler_item] += 1
 
     return item_counts_table
 
