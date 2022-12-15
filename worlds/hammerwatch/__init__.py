@@ -5,8 +5,9 @@ from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items
 from .Locations import *
 from .Regions import create_regions
 from .Rules import set_rules
+from .Util import Campaign
 
-from .Names import ItemName, LocationName, RegionName
+from .Names import ItemName, TempleLocationNames, TempleRegionNames
 
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .Options import hammerwatch_options
@@ -45,6 +46,7 @@ class HammerwatchWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
+    campaign: Campaign = Campaign.Castle
     active_location_list: typing.Dict[str, LocationData]
     preplaced_items: int = 0
 
@@ -58,20 +60,25 @@ class HammerwatchWorld(World):
         return slot_data
 
     def generate_early(self):
-        self.active_location_list = setup_locations(self.multiworld, self.player)
+        # Set the map enum
+        if self.multiworld.goal[self.player] // 10 == 0:
+            self.campaign = Campaign.Castle
+        elif self.multiworld.goal[self.player] // 10 == 1:
+            self.campaign = Campaign.Temple
+        self.active_location_list = setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
-        self.multiworld.get_location(LocationName.ev_victory, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_victory))
         self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemName.ev_victory, self.player)
 
-        if self.multiworld.map[self.player] == 0:
+        if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
 
     def create_regions(self) -> None:
-        create_regions(self.multiworld, self.player, self.active_location_list)
+        create_regions(self.multiworld, self.campaign, self.player, self.active_location_list)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
@@ -86,17 +93,18 @@ class HammerwatchWorld(World):
 
         # Get the total number of locations we need to fill
         total_required_locations = len(self.active_location_list)
-        if self.multiworld.map[self.player] == 0:
-            total_required_locations -= len(castle_event_locations) + 1
-        else:
-            total_required_locations -= len(temple_event_locations) + 1
+        total_required_locations -= len(common_event_locations)
+        if self.campaign == Campaign.Castle:
+            total_required_locations -= len(castle_event_locations)
+        elif self.campaign == Campaign.Temple:
+            total_required_locations -= len(temple_event_locations)
 
             # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
             if self.multiworld.portal_accessibility[self.player].value > 0:
                 total_required_locations -= 6
 
         # Get the counts of each item we'll put in
-        item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.player)
+        item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.campaign, self.player)
 
         # Add items
         for item in item_table:
@@ -126,65 +134,65 @@ class HammerwatchWorld(World):
 
     def place_castle_locked_items(self):
         # Prison 2 Switches
-        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_ne_switch, self.player) \
+        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_ne_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_nw_switch, self.player) \
+        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_nw_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_se_switch, self.player) \
+        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_se_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(LocationName.ev_p2_gold_gate_room_sw_switch, self.player) \
+        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_sw_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
 
     def place_tots_locked_items(self):
         # Temple shortcut
-        self.multiworld.get_location(LocationName.ev_temple_entrance_rock, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_temple_entrance_rock, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_open_temple_entrance_shortcut))
 
         # Pyramid of fear
-        self.multiworld.get_location(LocationName.ev_hub_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_hub_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(LocationName.ev_cave1_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_cave1_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(LocationName.ev_cave2_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_cave2_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(LocationName.ev_cave3_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_cave3_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(LocationName.ev_temple1_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_temple1_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(LocationName.ev_temple2_pof_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_temple2_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
 
-        self.multiworld.get_location(LocationName.ev_pof_end, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_pof_end, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_complete))
 
         # Krilith defeated
-        self.multiworld.get_location(LocationName.ev_krilith_defeated, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_krilith_defeated, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_krilith_defeated))
 
         # Temple Floor 2 light bridge switches
-        self.multiworld.get_location(LocationName.ev_t2_n_bridge_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_n_bridge_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(LocationName.ev_t2_w_bridge_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_w_bridge_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(LocationName.ev_t2_ne_bridge_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_ne_bridge_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(LocationName.ev_t2_se_bridge_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_se_bridge_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(LocationName.ev_t2_sw_bridge_switch, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_sw_bridge_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
 
         # Temple solar nodes
-        self.multiworld.get_location(LocationName.ev_t1_n_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(LocationName.ev_t1_s_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t1_s_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(LocationName.ev_t2_n_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_n_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(LocationName.ev_t2_s_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t2_s_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(LocationName.ev_t3_n_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t3_n_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(LocationName.ev_t3_s_node, self.player) \
+        self.multiworld.get_location(TempleLocationNames.ev_t3_s_node, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
 
         # Portal Accessibility rune keys
@@ -196,52 +204,52 @@ class HammerwatchWorld(World):
                         if loc.name not in temple_event_locations]
 
             # Cave Level 3 Rune Key
-            c3_locs = get_region_item_locs(RegionName.cave_3_main)
+            c3_locs = get_region_item_locs(TempleRegionNames.cave_3_main)
             rune_key_locs.append(self.multiworld.random.choice(c3_locs))
 
             # Cave Level 2 Rune Key
-            c2_locs = get_region_item_locs(RegionName.cave_2_main)
+            c2_locs = get_region_item_locs(TempleRegionNames.cave_2_main)
             rune_key_locs.append(self.multiworld.random.choice(c2_locs))
 
             # Cave Level 1 Rune Key
             c1_locs = []
-            c1_locs += get_region_item_locs(RegionName.cave_1_main)
-            c1_locs += get_region_item_locs(RegionName.cave_1_blue_bridge)
-            c1_locs += get_region_item_locs(RegionName.cave_1_red_bridge)
+            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_main)
+            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_blue_bridge)
+            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_red_bridge)
             rune_key_locs.append(self.multiworld.random.choice(c1_locs))
 
             # Temple Floor 1 Rune Key
             t1_locs = []
-            t1_locs += get_region_item_locs(RegionName.t1_main)
-            t1_locs += get_region_item_locs(RegionName.t1_sw_cache)
-            t1_locs += get_region_item_locs(RegionName.t1_node_1)
-            t1_locs += get_region_item_locs(RegionName.t1_node_2)
-            t1_locs += get_region_item_locs(RegionName.t1_sun_turret)
-            t1_locs += get_region_item_locs(RegionName.t1_ice_turret)
-            t1_locs += get_region_item_locs(RegionName.t1_n_of_ice_turret)
-            t1_locs += get_region_item_locs(RegionName.t1_s_of_ice_turret)
-            t1_locs += get_region_item_locs(RegionName.t1_east)
-            t1_locs += get_region_item_locs(RegionName.t1_sun_block_hall)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_main)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_sw_cache)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_node_1)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_node_2)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_turret)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_ice_turret)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_n_of_ice_turret)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_s_of_ice_turret)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_east)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_block_hall)
             rune_key_locs.append(self.multiworld.random.choice(t1_locs))
 
             # Temple Floor 2 Rune Key
             t2_locs = []
-            t2_locs += get_region_item_locs(RegionName.t2_main)
-            t2_locs += get_region_item_locs(RegionName.t2_n_gate)
-            t2_locs += get_region_item_locs(RegionName.t2_s_gate)
-            t2_locs += get_region_item_locs(RegionName.t2_n_node)
-            t2_locs += get_region_item_locs(RegionName.t2_s_node)
-            t2_locs += get_region_item_locs(RegionName.t2_ornate)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_main)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_n_gate)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_s_gate)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_n_node)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_s_node)
+            t2_locs += get_region_item_locs(TempleRegionNames.t2_ornate)
             rune_key_locs.append(self.multiworld.random.choice(t2_locs))
 
             # Temple Floor 3 Rune Key
             t3_locs = []
-            t3_locs += get_region_item_locs(RegionName.t3_main)
-            t3_locs += get_region_item_locs(RegionName.t3_n_node_blocks)
-            t3_locs += get_region_item_locs(RegionName.t3_s_node_blocks_1)
-            t3_locs += get_region_item_locs(RegionName.t3_s_node_blocks_2)
-            t3_locs += get_region_item_locs(RegionName.t3_s_node)
-            t3_locs += get_region_item_locs(RegionName.t3_n_node)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_main)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_n_node_blocks)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node_blocks_1)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node_blocks_2)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node)
+            t3_locs += get_region_item_locs(TempleRegionNames.t3_n_node)
             rune_key_locs.append(self.multiworld.random.choice(t3_locs))
 
             for loc in rune_key_locs:

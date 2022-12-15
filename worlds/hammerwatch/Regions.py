@@ -4,270 +4,287 @@ from random import Random
 from BaseClasses import MultiWorld, Region, RegionType, Entrance
 from .Items import HammerwatchItem
 from .Locations import HammerwatchLocation, LocationData, LocationClassification, random_locations
-from .Names import LocationName, ItemName, RegionName
-from .Util import Counter
+from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames
+from .Util import Counter, Campaign
 
 
-def create_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
-    if multiworld.map[player] == 0:
+def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData]):
+    if map == Campaign.Castle:
         create_castle_regions(multiworld, player, active_locations)
     else:
         create_tots_regions(multiworld, player, active_locations)
 
 
 def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
-    menu_region = create_region(multiworld, player, active_locations, RegionName.menu, None)
+    menu_region = create_region(multiworld, player, active_locations, CastleRegionNames.menu, None)
+
+    get_planks_locations = []
+    if multiworld.goal[player].value % 10 > 0:
+        get_planks_locations.append(CastleLocationNames.ev_victory)
+    get_planks_region = create_region(multiworld, player, active_locations, CastleRegionNames.get_planks,
+                                      get_planks_locations)
 
     p1_start_locations = [
-        LocationName.p1_entrance_1,
-        LocationName.p1_entrance_2,
-        LocationName.p1_entrance_3,
-        LocationName.p1_entrance_4,
-        LocationName.p1_entrance_hall_1,
-        LocationName.p1_entrance_hall_2,
-        LocationName.p1_entrance_s,
-        LocationName.p1_entrance_w,
-        LocationName.p1_by_nw_bronze_gate,
-        LocationName.p1_entrance_secret,
+        CastleLocationNames.p1_entrance_1,
+        CastleLocationNames.p1_entrance_2,
+        CastleLocationNames.p1_entrance_3,
+        CastleLocationNames.p1_entrance_4,
+        CastleLocationNames.p1_entrance_hall_1,
+        CastleLocationNames.p1_entrance_hall_2,
+        CastleLocationNames.p1_entrance_s,
+        CastleLocationNames.p1_entrance_w,
+        CastleLocationNames.p1_by_nw_bronze_gate,
+        CastleLocationNames.p1_entrance_secret,
     ]
-    p1_start_region = create_region(multiworld, player, active_locations, RegionName.p1_start, p1_start_locations)
+    p1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_start, p1_start_locations)
 
     p1_s_locations = [
-        LocationName.p1_by_sw_bronze_gate_1,
-        LocationName.p1_by_sw_bronze_gate_2,
-        LocationName.p1_by_sw_bronze_gate_3,
-        LocationName.p1_by_sw_bronze_gate_4,
-        LocationName.p1_s_lower_hall_1,
-        LocationName.p1_s_lower_hall_2,
-        LocationName.p1_s_lower_hall_3,
-        LocationName.p1_s_lower_hall_4,
-        LocationName.p1_s_lower_hall_5,
-        LocationName.p1_s_lower_hall_6,
-        LocationName.p1_s_lower_hall_7,
-        LocationName.p1_s_lower_hall_8,
-        LocationName.p1_s_lower_hall_9,
-        LocationName.p1_s_lower_hall_10,
-        LocationName.p1_e_save_room_1,
-        LocationName.p1_e_save_room_2,
-        LocationName.p1_w_of_se_bronze_gate_1,
-        LocationName.p1_w_of_se_bronze_gate_2,
-        LocationName.p1_w_of_se_bronze_gate_3,
-        LocationName.p1_w_of_se_bronze_gate_4,
-        LocationName.p1_w_of_se_bronze_gate_5,
-        LocationName.p1_s_w_bridges_w,
-        LocationName.p1_s_of_e_save_room,
-        LocationName.p1_n_of_se_bridge,
-        LocationName.p1_w_save,
-        LocationName.p1_center_bridges_n_1,
-        LocationName.p1_center_bridges_n_2,
-        LocationName.p1_center_bridges_n_3,
-        LocationName.p1_center_bridges_s_1,
-        LocationName.p1_center_bridges_s_2,
-        LocationName.p1_center_bridges_s_3,
-        LocationName.p1_center_bridges_s_4,
-        LocationName.p1_e_secret,
-        LocationName.p1_s_secret_1,
-        LocationName.p1_s_secret_2,
-        LocationName.p1_se_bridge,
+        CastleLocationNames.p1_by_sw_bronze_gate_1,
+        CastleLocationNames.p1_by_sw_bronze_gate_2,
+        CastleLocationNames.p1_by_sw_bronze_gate_3,
+        CastleLocationNames.p1_by_sw_bronze_gate_4,
+        CastleLocationNames.p1_s_lower_hall_1,
+        CastleLocationNames.p1_s_lower_hall_2,
+        CastleLocationNames.p1_s_lower_hall_3,
+        CastleLocationNames.p1_s_lower_hall_4,
+        CastleLocationNames.p1_s_lower_hall_5,
+        CastleLocationNames.p1_s_lower_hall_6,
+        CastleLocationNames.p1_s_lower_hall_7,
+        CastleLocationNames.p1_s_lower_hall_8,
+        CastleLocationNames.p1_s_lower_hall_9,
+        CastleLocationNames.p1_s_lower_hall_10,
+        CastleLocationNames.p1_e_save_room_1,
+        CastleLocationNames.p1_e_save_room_2,
+        CastleLocationNames.p1_w_of_se_bronze_gate_1,
+        CastleLocationNames.p1_w_of_se_bronze_gate_2,
+        CastleLocationNames.p1_w_of_se_bronze_gate_3,
+        CastleLocationNames.p1_w_of_se_bronze_gate_4,
+        CastleLocationNames.p1_w_of_se_bronze_gate_5,
+        CastleLocationNames.p1_s_w_bridges_w,
+        CastleLocationNames.p1_s_of_e_save_room,
+        CastleLocationNames.p1_n_of_se_bridge,
+        CastleLocationNames.p1_w_save,
+        CastleLocationNames.p1_center_bridges_n_1,
+        CastleLocationNames.p1_center_bridges_n_2,
+        CastleLocationNames.p1_center_bridges_n_3,
+        CastleLocationNames.p1_center_bridges_s_1,
+        CastleLocationNames.p1_center_bridges_s_2,
+        CastleLocationNames.p1_center_bridges_s_3,
+        CastleLocationNames.p1_center_bridges_s_4,
+        CastleLocationNames.p1_e_secret,
+        CastleLocationNames.p1_s_secret_1,
+        CastleLocationNames.p1_s_secret_2,
+        CastleLocationNames.p1_se_bridge,
     ]
-    p1_s_region = create_region(multiworld, player, active_locations, RegionName.p1_s, p1_s_locations)
+    p1_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_s, p1_s_locations)
 
     p1_sw_bronze_gate_locations = [
-        LocationName.p1_sw_bronze_gate,
+        CastleLocationNames.p1_sw_bronze_gate,
     ]
-    p1_sw_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p1_sw_bronze_gate,
+    p1_sw_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_sw_bronze_gate,
                                              p1_sw_bronze_gate_locations)
 
     p1_e_locations = [
-        LocationName.p1_by_exit_1,
-        LocationName.p1_by_exit_2,
-        LocationName.p1_by_exit_3,
-        LocationName.p1_by_m_bronze_gate_1,
-        LocationName.p1_by_m_bronze_gate_2,
-        LocationName.p1_by_m_bronze_gate_3,
-        LocationName.p1_by_m_bronze_gate_4,
-        LocationName.p1_by_m_bronze_gate_5,
-        LocationName.p1_by_m_bronze_gate_6,
-        LocationName.p1_e_bridges_1,
-        LocationName.p1_e_bridges_2,
-        LocationName.p1_e_bridges_3,
-        LocationName.p1_e_bridges_4,
-        LocationName.p1_e_bridges_5,
-        LocationName.p1_room_by_exit,
-        LocationName.p1_ne_arrow_traps,
-        LocationName.p1_hint_room,
+        CastleLocationNames.p1_by_exit_1,
+        CastleLocationNames.p1_by_exit_2,
+        CastleLocationNames.p1_by_exit_3,
+        CastleLocationNames.p1_by_m_bronze_gate_1,
+        CastleLocationNames.p1_by_m_bronze_gate_2,
+        CastleLocationNames.p1_by_m_bronze_gate_3,
+        CastleLocationNames.p1_by_m_bronze_gate_4,
+        CastleLocationNames.p1_by_m_bronze_gate_5,
+        CastleLocationNames.p1_by_m_bronze_gate_6,
+        CastleLocationNames.p1_e_bridges_1,
+        CastleLocationNames.p1_e_bridges_2,
+        CastleLocationNames.p1_e_bridges_3,
+        CastleLocationNames.p1_e_bridges_4,
+        CastleLocationNames.p1_e_bridges_5,
+        CastleLocationNames.p1_room_by_exit,
+        CastleLocationNames.p1_ne_arrow_traps,
+        CastleLocationNames.p1_hint_room,
     ]
-    p1_e_region = create_region(multiworld, player, active_locations, RegionName.p1_e, p1_e_locations)
+    p1_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_e, p1_e_locations)
 
     p1_m_bronze_gate_locations = [
-        LocationName.p1_m_bronze_gate,
+        CastleLocationNames.p1_m_bronze_gate,
     ]
-    p1_m_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p1_m_bronze_gate,
+    p1_m_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_m_bronze_gate,
                                             p1_m_bronze_gate_locations)
 
     p1_from_p2_locations = [
-        LocationName.p1_bars_1,
-        LocationName.p1_bars_2,
-        LocationName.p1_p2_by_shop,
+        CastleLocationNames.p1_bars_1,
+        CastleLocationNames.p1_bars_2,
+        CastleLocationNames.p1_p2_by_shop,
     ]
-    p1_from_p2_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p2, p1_from_p2_locations)
+    p1_from_p2_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_from_p2, p1_from_p2_locations)
 
     p1_from_p3_n_locations = [
-        LocationName.p1_p3_n_bridge,
-        LocationName.p1_p3_n_across_bridge,
+        CastleLocationNames.p1_p3_n_bridge,
+        CastleLocationNames.p1_p3_n_across_bridge,
     ]
-    p1_from_p3_n_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p3_n,
+    p1_from_p3_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_from_p3_n,
                                         p1_from_p3_n_locations)
 
     p1_from_p3_s_locations = [
-        LocationName.p1_p3_s,
+        CastleLocationNames.p1_p3_s,
     ]
-    p1_from_p3_s_region = create_region(multiworld, player, active_locations, RegionName.p1_from_p3_s,
+    p1_from_p3_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_from_p3_s,
                                         p1_from_p3_s_locations)
 
     p2_start_locations = []
-    p2_start_region = create_region(multiworld, player, active_locations, RegionName.p2_start, p2_start_locations)
+    p2_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_start, p2_start_locations)
 
     p2_m_locations = [
-        LocationName.p2_w_of_silver_gate_1,
-        LocationName.p2_w_of_silver_gate_2,
-        LocationName.p2_nw_island_s_1,
-        LocationName.p2_nw_island_s_2,
-        LocationName.p2_entrance_1,
-        LocationName.p2_entrance_2,
-        LocationName.p2_entrance_3,
-        LocationName.p2_entrance_4,
-        LocationName.p2_entrance_5,
-        LocationName.p2_w_of_gold_gate,
-        LocationName.p2_nw_island_1,
-        LocationName.p2_nw_island_2,
-        LocationName.p2_nw_island_3,
-        LocationName.p2_nw_island_4,
-        LocationName.p2_nw_island_5,
+        CastleLocationNames.p2_w_of_silver_gate_1,
+        CastleLocationNames.p2_w_of_silver_gate_2,
+        CastleLocationNames.p2_nw_island_s_1,
+        CastleLocationNames.p2_nw_island_s_2,
+        CastleLocationNames.p2_entrance_1,
+        CastleLocationNames.p2_entrance_2,
+        CastleLocationNames.p2_entrance_3,
+        CastleLocationNames.p2_entrance_4,
+        CastleLocationNames.p2_entrance_5,
+        CastleLocationNames.p2_w_of_gold_gate,
+        CastleLocationNames.p2_nw_island_1,
+        CastleLocationNames.p2_nw_island_2,
+        CastleLocationNames.p2_nw_island_3,
+        CastleLocationNames.p2_nw_island_4,
+        CastleLocationNames.p2_nw_island_5,
     ]
-    p2_m_region = create_region(multiworld, player, active_locations, RegionName.p2_m, p2_m_locations)
+    p2_m_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_m, p2_m_locations)
 
     p2_n_locations = [
-        LocationName.p2_spike_puzzle_w_1,
-        LocationName.p2_spike_puzzle_w_2,
-        LocationName.p2_spike_puzzle_e_1,
-        LocationName.p2_spike_puzzle_e_2,
-        LocationName.p2_spike_puzzle_ne_1,
-        LocationName.p2_spike_puzzle_ne_2,
-        LocationName.p2_spike_puzzle_ne_3,
-        LocationName.p2_spike_puzzle_e,
-        LocationName.p2_spike_puzzle_n_1,
-        LocationName.p2_spike_puzzle_n_2,
+        CastleLocationNames.p2_spike_puzzle_w_1,
+        CastleLocationNames.p2_spike_puzzle_w_2,
+        CastleLocationNames.p2_spike_puzzle_e_1,
+        CastleLocationNames.p2_spike_puzzle_e_2,
+        CastleLocationNames.p2_spike_puzzle_ne_1,
+        CastleLocationNames.p2_spike_puzzle_ne_2,
+        CastleLocationNames.p2_spike_puzzle_ne_3,
+        CastleLocationNames.p2_spike_puzzle_e,
+        CastleLocationNames.p2_spike_puzzle_n_1,
+        CastleLocationNames.p2_spike_puzzle_n_2,
     ]
-    p2_n_region = create_region(multiworld, player, active_locations, RegionName.p2_n, p2_n_locations)
+    p2_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_n, p2_n_locations)
 
     p2_red_switch_locations = [
-        LocationName.p2_by_red_spikes_1,
-        LocationName.p2_by_red_spikes_2,
-        LocationName.p2_by_red_spikes_3,
-        LocationName.p2_e_save,
-        LocationName.p2_e_poker_plant_room_1,
-        LocationName.p2_e_poker_plant_room_2,
-        LocationName.p2_e_poker_plant_room_3,
-        LocationName.p2_e_poker_plant_room_4,
-        LocationName.p2_e_poker_plant_room_5,
-        LocationName.p2_e_poker_plant_room_6,
-        LocationName.p2_e_of_red_spikes_1,
-        LocationName.p2_e_of_red_spikes_2,
-        LocationName.p2_e_of_red_spikes_3,
-        LocationName.p2_e_of_red_spikes_4,
-        LocationName.p2_e_of_ne_save_1,
-        LocationName.p2_e_of_ne_save_2,
-        LocationName.p2_puzzle_1,
-        LocationName.p2_puzzle_2,
-        LocationName.p2_puzzle_3,
-        LocationName.p2_puzzle_4,
+        CastleLocationNames.p2_by_red_spikes_1,
+        CastleLocationNames.p2_by_red_spikes_2,
+        CastleLocationNames.p2_by_red_spikes_3,
+        CastleLocationNames.p2_e_save,
+        CastleLocationNames.p2_e_poker_plant_room_1,
+        CastleLocationNames.p2_e_poker_plant_room_2,
+        CastleLocationNames.p2_e_poker_plant_room_3,
+        CastleLocationNames.p2_e_poker_plant_room_4,
+        CastleLocationNames.p2_e_poker_plant_room_5,
+        CastleLocationNames.p2_e_poker_plant_room_6,
+        CastleLocationNames.p2_e_of_red_spikes_1,
+        CastleLocationNames.p2_e_of_red_spikes_2,
+        CastleLocationNames.p2_e_of_red_spikes_3,
+        CastleLocationNames.p2_e_of_red_spikes_4,
+        CastleLocationNames.p2_e_of_ne_save_1,
+        CastleLocationNames.p2_e_of_ne_save_2,
+        CastleLocationNames.p2_puzzle_1,
+        CastleLocationNames.p2_puzzle_2,
+        CastleLocationNames.p2_puzzle_3,
+        CastleLocationNames.p2_puzzle_4,
     ]
-    p2_red_switch_region = create_region(multiworld, player, active_locations, RegionName.p2_red_switch,
+    p2_red_switch_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_red_switch,
                                          p2_red_switch_locations)
 
     p2_e_bronze_gate_locations = [
         # Offense shop
     ]
-    p2_e_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_e_bronze_gate,
+    p2_e_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_e_bronze_gate,
                                             p2_e_bronze_gate_locations)
 
     p2_s_locations = [
-        LocationName.p2_big_bridge_1,
-        LocationName.p2_big_bridge_2,
-        LocationName.p2_big_bridge_3,
-        LocationName.p2_sequence_puzzle_reward,
-        LocationName.p2_s_arrow_traps_1,
-        LocationName.p2_s_arrow_traps_2,
-        LocationName.p2_s_arrow_traps_3,
-        LocationName.p2_e_gold_gate_room_1,
-        LocationName.p2_e_gold_gate_room_2,
-        LocationName.p2_e_gold_gate_room_3,
-        LocationName.p2_e_gold_gate_room_4,
-        LocationName.p2_e_gold_gate_room_5,
-        LocationName.p2_e_gold_gate_room_6,
-        LocationName.p2_e_gold_gate_room_7,
-        LocationName.p2_e_gold_gate_room_8,
-        LocationName.p2_e_gold_gate_room_9,
-        LocationName.p2_e_gold_gate_room_10,
-        LocationName.p2_e_gold_gate_room_11,
-        LocationName.p2_e_gold_gate_room_12,
-        LocationName.p2_e_gold_gate_room_13,
-        LocationName.p2_beetle_boss_room_1,
-        LocationName.p2_beetle_boss_room_2,
-        LocationName.p2_beetle_boss_room_3,
-        LocationName.p2_beetle_boss_room_4,
-        LocationName.p2_w_poker_plant_room_1,
-        LocationName.p2_w_poker_plant_room_2,
-        LocationName.p2_w_poker_plant_room_3,
-        LocationName.p2_s_of_w_gold_gate_1,
-        LocationName.p2_s_of_w_gold_gate_2,
-        LocationName.p2_s_of_w_gold_gate_3,
-        LocationName.p2_boss_switch,
-        LocationName.p2_beetle_boss_hidden_room_1,
-        LocationName.p2_beetle_boss_hidden_room_2,
-        LocationName.p2_toggle_spike_trap_reward_1,
-        LocationName.p2_toggle_spike_trap_reward_2,
-        LocationName.p2_toggle_spike_trap_reward_3,
-        LocationName.ev_p2_gold_gate_room_sw_switch
+        CastleLocationNames.p2_big_bridge_1,
+        CastleLocationNames.p2_big_bridge_2,
+        CastleLocationNames.p2_big_bridge_3,
+        CastleLocationNames.p2_sequence_puzzle_reward,
+        CastleLocationNames.p2_s_arrow_traps_1,
+        CastleLocationNames.p2_s_arrow_traps_2,
+        CastleLocationNames.p2_s_arrow_traps_3,
+        CastleLocationNames.p2_e_gold_gate_room_1,
+        CastleLocationNames.p2_e_gold_gate_room_2,
+        CastleLocationNames.p2_e_gold_gate_room_3,
+        CastleLocationNames.p2_e_gold_gate_room_4,
+        CastleLocationNames.p2_e_gold_gate_room_5,
+        CastleLocationNames.p2_e_gold_gate_room_6,
+        CastleLocationNames.p2_e_gold_gate_room_7,
+        CastleLocationNames.p2_e_gold_gate_room_8,
+        CastleLocationNames.p2_e_gold_gate_room_9,
+        CastleLocationNames.p2_e_gold_gate_room_10,
+        CastleLocationNames.p2_e_gold_gate_room_11,
+        CastleLocationNames.p2_e_gold_gate_room_12,
+        CastleLocationNames.p2_e_gold_gate_room_13,
+        CastleLocationNames.p2_beetle_boss_room_1,
+        CastleLocationNames.p2_beetle_boss_room_2,
+        CastleLocationNames.p2_beetle_boss_room_3,
+        CastleLocationNames.p2_beetle_boss_room_4,
+        CastleLocationNames.p2_w_poker_plant_room_1,
+        CastleLocationNames.p2_w_poker_plant_room_2,
+        CastleLocationNames.p2_w_poker_plant_room_3,
+        CastleLocationNames.p2_s_of_w_gold_gate_1,
+        CastleLocationNames.p2_s_of_w_gold_gate_2,
+        CastleLocationNames.p2_s_of_w_gold_gate_3,
+        CastleLocationNames.p2_boss_switch,
+        CastleLocationNames.p2_beetle_boss_hidden_room_1,
+        CastleLocationNames.p2_beetle_boss_hidden_room_2,
+        CastleLocationNames.p2_toggle_spike_trap_reward_1,
+        CastleLocationNames.p2_toggle_spike_trap_reward_2,
+        CastleLocationNames.p2_toggle_spike_trap_reward_3,
+        CastleLocationNames.ev_p2_gold_gate_room_sw_switch
     ]
-    p2_s_region = create_region(multiworld, player, active_locations, RegionName.p2_s, p2_s_locations)
+    p2_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_s, p2_s_locations)
 
     p2_e_bronze_gate_2_locations = [
-        LocationName.ev_p2_gold_gate_room_ne_switch
+        CastleLocationNames.ev_p2_gold_gate_room_ne_switch
     ]
-    p2_e_bronze_gate_2_region = create_region(multiworld, player, active_locations, RegionName.p2_e_bronze_gate_2,
+    p2_e_bronze_gate_2_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_e_bronze_gate_2,
                                               p2_e_bronze_gate_2_locations)
 
     p2_m_bronze_gate_locations = [
-        LocationName.ev_p2_gold_gate_room_nw_switch
+        CastleLocationNames.ev_p2_gold_gate_room_nw_switch
     ]
-    p2_m_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_m_bronze_gate,
+    p2_m_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_m_bronze_gate,
                                             p2_m_bronze_gate_locations)
 
     p2_se_bronze_gate_locations = [
-        LocationName.ev_p2_gold_gate_room_se_switch
+        CastleLocationNames.ev_p2_gold_gate_room_se_switch
     ]
-    p2_se_bronze_gate_region = create_region(multiworld, player, active_locations, RegionName.p2_se_bronze_gate,
+    p2_se_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_se_bronze_gate,
                                              p2_se_bronze_gate_locations)
 
     p2_gg_room_reward_locations = [
-        LocationName.p2_e_gold_gate_room_reward_1,
-        LocationName.p2_e_gold_gate_room_reward_2,
+        CastleLocationNames.p2_e_gold_gate_room_reward_1,
+        CastleLocationNames.p2_e_gold_gate_room_reward_2,
     ]
-    p2_gg_room_reward_region = create_region(multiworld, player, active_locations, RegionName.p2_gg_room_reward,
+    p2_gg_room_reward_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_gg_room_reward,
                                              p2_gg_room_reward_locations)
 
     p2_end_locations = [
-        LocationName.p2_end_1,
-        LocationName.p2_end_2,
+        CastleLocationNames.p2_end_1,
+        CastleLocationNames.p2_end_2,
     ]
-    p2_end_region = create_region(multiworld, player, active_locations, RegionName.p2_end, p2_end_locations)
+    p2_end_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_end, p2_end_locations)
 
     p3_start_locations = [
-        LocationName.ev_victory
+
     ]
-    p3_start_region = create_region(multiworld, player, active_locations, RegionName.p3_start, p3_start_locations)
+    p3_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_start, p3_start_locations)
+
+    b4_defeated_locations = []
+    if multiworld.goal[player].value == 0:
+        b4_defeated_locations.append(CastleLocationNames.ev_victory)
+    b4_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b4_defeated,
+                                       b4_defeated_locations)
+
+    escaped_locations = []
+    if multiworld.goal[player].value == 1:
+        escaped_locations.append(CastleLocationNames.ev_victory)
+    escaped_region = create_region(multiworld, player, active_locations, CastleRegionNames.escaped, escaped_locations)
 
     multiworld.regions += [
         menu_region,
@@ -291,884 +308,900 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         p2_gg_room_reward_region,
         p2_end_region,
         p3_start_region,
+        b4_defeated_region,
+        escaped_region,
+        get_planks_region
     ]
 
     connect_castle_regions(multiworld, player, active_locations)
 
-    temp_test_region_locations(multiworld, active_locations)
+    check_region_locations(multiworld, active_locations)
 
 
 def connect_castle_regions(multiworld, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
 
-    connect(multiworld, player, used_names, RegionName.menu, RegionName.p1_start)
-    connect(multiworld, player, used_names, RegionName.p1_start, RegionName.p1_s,
+    connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start)
+    connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_s,
             lambda state: (state.has(ItemName.key_bronze, player, 1)))
-    connect(multiworld, player, used_names, RegionName.p1_s, RegionName.p1_sw_bronze_gate,
+    connect(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_sw_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 2)))
-    connect(multiworld, player, used_names, RegionName.p1_s, RegionName.p1_e,
+    connect(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_e,
             lambda state: (state.has(ItemName.key_bronze, player, 3)))
-    connect(multiworld, player, used_names, RegionName.p1_e, RegionName.p1_m_bronze_gate,
+    connect(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 4)))
-    connect(multiworld, player, used_names, RegionName.p1_e, RegionName.p2_start)
+    connect(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start)
 
-    connect(multiworld, player, used_names, RegionName.p2_start, RegionName.p2_m,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
             lambda state: (state.has(ItemName.key_bronze, player, 5)))
-    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p1_from_p2)
-    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p2_n,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
             lambda state: (state.has(ItemName.key_silver, player, 1)))
-    connect(multiworld, player, used_names, RegionName.p2_n, RegionName.p2_red_switch)
-    connect(multiworld, player, used_names, RegionName.p2_red_switch, RegionName.p2_e_bronze_gate,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_red_switch)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 6)))
-    connect(multiworld, player, used_names, RegionName.p2_m, RegionName.p2_s,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
             lambda state: (state.has(ItemName.key_gold, player, 1)))
-    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_e_bronze_gate_2,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
             lambda state: (state.has(ItemName.key_bronze, player, 7)))
-    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_m_bronze_gate,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 8)))
-    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_se_bronze_gate,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_se_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 9)))
-    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_gg_room_reward,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
             lambda state: (state.has(ItemName.ev_castle_p2_switch, player, 4)))
-    connect(multiworld, player, used_names, RegionName.p2_s, RegionName.p2_end,
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
             lambda state: (state.has(ItemName.key_gold, player, 2)))
-    connect(multiworld, player, used_names, RegionName.p2_end, RegionName.p3_start)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start)
 
-    connect(multiworld, player, used_names, RegionName.p3_start, RegionName.p1_from_p3_n)
-    connect(multiworld, player, used_names, RegionName.p3_start, RegionName.p1_from_p3_s)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p1_from_p3_n)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p1_from_p3_s)
+
+    connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.b4_defeated)
+    connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.escaped,
+            lambda state: (state.has(ItemName.plank, player, 12)))
+
+    planks_to_win = multiworld.plank_count[player] * multiworld.plank_win_percent[player] // 100
+    connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
+            lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
 def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
-    menu_region = create_region(multiworld, player, active_locations, RegionName.menu, None)
+    menu_region = create_region(multiworld, player, active_locations, TempleRegionNames.menu, None)
+
+    get_planks_locations = []
+    if multiworld.goal[player].value % 10 > 0:
+        get_planks_locations.append(TempleLocationNames.ev_victory)
+    get_planks_region = create_region(multiworld, player, active_locations, TempleRegionNames.get_planks,
+                                      get_planks_locations)
 
     hub_main_locations = [
-        LocationName.hub_front_of_pof,
-        LocationName.hub_behind_temple_entrance
+        TempleLocationNames.hub_front_of_pof,
+        TempleLocationNames.hub_behind_temple_entrance
     ]
-    dunes_main_region = create_region(multiworld, player, active_locations, RegionName.hub_main, hub_main_locations)
+    dunes_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.hub_main, hub_main_locations)
 
     dunes_rocks_locations = [
-        LocationName.hub_behind_shops,
-        LocationName.hub_on_rock,
-        LocationName.hub_west_pyramid,
-        LocationName.hub_rocks_south,
-        LocationName.hub_field_south,
-        LocationName.hub_field_nw,
-        LocationName.hub_field_north,
-        LocationName.ev_hub_pof_switch
+        TempleLocationNames.hub_behind_shops,
+        TempleLocationNames.hub_on_rock,
+        TempleLocationNames.hub_west_pyramid,
+        TempleLocationNames.hub_rocks_south,
+        TempleLocationNames.hub_field_south,
+        TempleLocationNames.hub_field_nw,
+        TempleLocationNames.hub_field_north,
+        TempleLocationNames.ev_hub_pof_switch
     ]
-    dunes_rocks_region = create_region(multiworld, player, active_locations, RegionName.hub_rocks,
+    dunes_rocks_region = create_region(multiworld, player, active_locations, TempleRegionNames.hub_rocks,
                                        dunes_rocks_locations)
 
     dunes_pyramid_locations = [
-        LocationName.hub_pof_reward
+        TempleLocationNames.hub_pof_reward
     ]
-    dunes_pyramid_region = create_region(multiworld, player, active_locations, RegionName.hub_pyramid_of_fear,
+    dunes_pyramid_region = create_region(multiworld, player, active_locations, TempleRegionNames.hub_pyramid_of_fear,
                                          dunes_pyramid_locations)
 
-    library_region = create_region(multiworld, player, active_locations, RegionName.library, [])
+    library_region = create_region(multiworld, player, active_locations, TempleRegionNames.library, [])
 
     cave3_main_locations = [
-        LocationName.cave3_squire,
-        LocationName.cave3_guard,
-        LocationName.cave3_ne,
-        LocationName.cave3_nw,
-        LocationName.cave3_m,
-        LocationName.cave3_se,
-        LocationName.cave3_half_bridge,
-        LocationName.cave3_trapped_guard,
-        LocationName.cave3_n,
-        LocationName.cave3_outside_guard,
-        LocationName.cave3_secret_n,
-        LocationName.cave3_secret_nw,
-        LocationName.cave3_secret_s,
-        LocationName.c3_puzzle_1,
-        LocationName.c3_puzzle_2,
-        LocationName.c3_puzzle_3,
-        LocationName.c3_puzzle_4,
+        TempleLocationNames.cave3_squire,
+        TempleLocationNames.cave3_guard,
+        TempleLocationNames.cave3_ne,
+        TempleLocationNames.cave3_nw,
+        TempleLocationNames.cave3_m,
+        TempleLocationNames.cave3_se,
+        TempleLocationNames.cave3_half_bridge,
+        TempleLocationNames.cave3_trapped_guard,
+        TempleLocationNames.cave3_n,
+        TempleLocationNames.cave3_outside_guard,
+        TempleLocationNames.cave3_secret_n,
+        TempleLocationNames.cave3_secret_nw,
+        TempleLocationNames.cave3_secret_s,
+        TempleLocationNames.c3_puzzle_1,
+        TempleLocationNames.c3_puzzle_2,
+        TempleLocationNames.c3_puzzle_3,
+        TempleLocationNames.c3_puzzle_4,
     ]
-    cave3_main_region = create_region(multiworld, player, active_locations, RegionName.cave_3_main, cave3_main_locations)
+    cave3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_main, cave3_main_locations)
 
     cave3_fall_locations = [
-        LocationName.cave3_fall_nw,
-        LocationName.cave3_fall_ne,
-        LocationName.cave3_fall_sw,
-        LocationName.cave3_fall_se
+        TempleLocationNames.cave3_fall_nw,
+        TempleLocationNames.cave3_fall_ne,
+        TempleLocationNames.cave3_fall_sw,
+        TempleLocationNames.cave3_fall_se
     ]
-    cave3_fall_region = create_region(multiworld, player, active_locations, RegionName.cave_3_fall, cave3_fall_locations)
+    cave3_fall_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_fall, cave3_fall_locations)
 
     cave3_fields_locations = [
-        LocationName.cave3_fields_r,
-        LocationName.cave3_captain,
-        LocationName.cave3_captain_dock,
+        TempleLocationNames.cave3_fields_r,
+        TempleLocationNames.cave3_captain,
+        TempleLocationNames.cave3_captain_dock,
     ]
-    cave3_fields_region = create_region(multiworld, player, active_locations, RegionName.cave_3_fields,
+    cave3_fields_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_fields,
                                         cave3_fields_locations)
 
     cave3_portal_locations = [
-        LocationName.cave3_portal_l,
-        LocationName.cave3_portal_r,
-        LocationName.ev_cave3_pof_switch
+        TempleLocationNames.cave3_portal_l,
+        TempleLocationNames.cave3_portal_r,
+        TempleLocationNames.ev_cave3_pof_switch
     ]
-    cave3_portal_region = create_region(multiworld, player, active_locations, RegionName.cave_3_portal,
+    cave3_portal_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_portal,
                                         cave3_portal_locations)
 
     cave3_secret_locations = [
-        LocationName.cave3_secret_1,
-        LocationName.cave3_secret_2,
-        LocationName.cave3_secret_3,
-        LocationName.cave3_secret_4,
-        LocationName.cave3_secret_5,
-        LocationName.cave3_secret_6,
-        LocationName.cave3_secret_7,
-        LocationName.cave3_secret_8,
-        LocationName.cave3_secret_9,
-        LocationName.cave3_secret_10,
-        LocationName.cave3_secret_11,
-        LocationName.cave3_secret_12,
+        TempleLocationNames.cave3_secret_1,
+        TempleLocationNames.cave3_secret_2,
+        TempleLocationNames.cave3_secret_3,
+        TempleLocationNames.cave3_secret_4,
+        TempleLocationNames.cave3_secret_5,
+        TempleLocationNames.cave3_secret_6,
+        TempleLocationNames.cave3_secret_7,
+        TempleLocationNames.cave3_secret_8,
+        TempleLocationNames.cave3_secret_9,
+        TempleLocationNames.cave3_secret_10,
+        TempleLocationNames.cave3_secret_11,
+        TempleLocationNames.cave3_secret_12,
     ]
-    cave3_secret_region = create_region(multiworld, player, active_locations, RegionName.cave_3_secret,
+    cave3_secret_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_secret,
                                         cave3_secret_locations)
 
     cave2_main_locations = [
-        LocationName.cave2_sw_hidden_room_3,
-        LocationName.cave2_red_bridge_2,
-        LocationName.cave2_double_bridge_m,
-        LocationName.cave2_nw_2,
-        LocationName.cave2_red_bridge_4,
-        LocationName.cave2_double_bridge_r,
-        LocationName.cave2_green_bridge,
-        LocationName.cave2_sw_hidden_room_1,
-        LocationName.cave2_guard_s,
-        LocationName.cave2_nw_3,
-        LocationName.cave2_w_miniboss_4,
-        LocationName.cave2_red_bridge_3,
-        LocationName.cave2_below_pumps_3,
-        LocationName.cave2_nw_1,
-        LocationName.cave2_sw,
-        LocationName.cave2_double_bridge_secret,
-        LocationName.cave2_sw_hidden_room_2,
-        LocationName.cave2_pumps_n,
-        LocationName.cave2_guard,
-        LocationName.cave2_red_bridge_1,
-        LocationName.cave2_sw_hidden_room_4,
-        LocationName.cave2_below_pumps_1,
-        LocationName.cave2_below_pumps_2,
-        LocationName.cave2_double_bridge_l_1,
-        LocationName.cave2_double_bridge_l_2,
-        LocationName.cave2_e_1,
-        LocationName.cave2_e_2,
-        LocationName.cave2_nw_4,
-        LocationName.cave2_nw_5,
-        LocationName.cave2_w_miniboss_3,
-        LocationName.cave2_w_miniboss_2,
-        LocationName.cave2_w_miniboss_1,
-        LocationName.cave2_red_bridge_se_1,
-        LocationName.cave2_red_bridge_se_2,
-        LocationName.cave2_e_3,
-        LocationName.cave2_e_4,
-        LocationName.cave2_guard_n,
-        LocationName.cave2_secret_ne,
-        LocationName.cave2_secret_w,
-        LocationName.cave2_secret_m,
-        LocationName.c2_puzzle_1,
-        LocationName.c2_puzzle_2,
-        LocationName.c2_puzzle_3,
-        LocationName.c2_puzzle_4,
+        TempleLocationNames.cave2_sw_hidden_room_3,
+        TempleLocationNames.cave2_red_bridge_2,
+        TempleLocationNames.cave2_double_bridge_m,
+        TempleLocationNames.cave2_nw_2,
+        TempleLocationNames.cave2_red_bridge_4,
+        TempleLocationNames.cave2_double_bridge_r,
+        TempleLocationNames.cave2_green_bridge,
+        TempleLocationNames.cave2_sw_hidden_room_1,
+        TempleLocationNames.cave2_guard_s,
+        TempleLocationNames.cave2_nw_3,
+        TempleLocationNames.cave2_w_miniboss_4,
+        TempleLocationNames.cave2_red_bridge_3,
+        TempleLocationNames.cave2_below_pumps_3,
+        TempleLocationNames.cave2_nw_1,
+        TempleLocationNames.cave2_sw,
+        TempleLocationNames.cave2_double_bridge_secret,
+        TempleLocationNames.cave2_sw_hidden_room_2,
+        TempleLocationNames.cave2_pumps_n,
+        TempleLocationNames.cave2_guard,
+        TempleLocationNames.cave2_red_bridge_1,
+        TempleLocationNames.cave2_sw_hidden_room_4,
+        TempleLocationNames.cave2_below_pumps_1,
+        TempleLocationNames.cave2_below_pumps_2,
+        TempleLocationNames.cave2_double_bridge_l_1,
+        TempleLocationNames.cave2_double_bridge_l_2,
+        TempleLocationNames.cave2_e_1,
+        TempleLocationNames.cave2_e_2,
+        TempleLocationNames.cave2_nw_4,
+        TempleLocationNames.cave2_nw_5,
+        TempleLocationNames.cave2_w_miniboss_3,
+        TempleLocationNames.cave2_w_miniboss_2,
+        TempleLocationNames.cave2_w_miniboss_1,
+        TempleLocationNames.cave2_red_bridge_se_1,
+        TempleLocationNames.cave2_red_bridge_se_2,
+        TempleLocationNames.cave2_e_3,
+        TempleLocationNames.cave2_e_4,
+        TempleLocationNames.cave2_guard_n,
+        TempleLocationNames.cave2_secret_ne,
+        TempleLocationNames.cave2_secret_w,
+        TempleLocationNames.cave2_secret_m,
+        TempleLocationNames.c2_puzzle_1,
+        TempleLocationNames.c2_puzzle_2,
+        TempleLocationNames.c2_puzzle_3,
+        TempleLocationNames.c2_puzzle_4,
     ]
-    cave2_main_region = create_region(multiworld, player, active_locations, RegionName.cave_2_main, cave2_main_locations)
+    cave2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_2_main, cave2_main_locations)
 
     cave2_pumps_locations = [
-        LocationName.cave2_pumps_wall_r,
-        LocationName.cave2_pumps_wall_l,
-        LocationName.cave2_water_n_r_1,
-        LocationName.cave2_water_n_l,
-        LocationName.ev_cave2_pof_switch,
-        LocationName.cave2_water_n_r_2,
-        LocationName.cave2_water_s,
+        TempleLocationNames.cave2_pumps_wall_r,
+        TempleLocationNames.cave2_pumps_wall_l,
+        TempleLocationNames.cave2_water_n_r_1,
+        TempleLocationNames.cave2_water_n_l,
+        TempleLocationNames.ev_cave2_pof_switch,
+        TempleLocationNames.cave2_water_n_r_2,
+        TempleLocationNames.cave2_water_s,
     ]
-    cave2_pumps_region = create_region(multiworld, player, active_locations, RegionName.cave_2_pumps, cave2_pumps_locations)
+    cave2_pumps_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_2_pumps, cave2_pumps_locations)
 
     cave1_main_locations = [
-        LocationName.cave1_n_3,
-        LocationName.cave1_w_by_water_2,
-        LocationName.cave1_s_3,
-        LocationName.cave1_m,
-        LocationName.cave1_double_room_l,
-        LocationName.cave1_double_room_r,
-        LocationName.cave1_n_1,
-        LocationName.cave1_n_2,
-        LocationName.cave1_w_1,
-        LocationName.cave1_w_2,
-        LocationName.cave1_s_4,
-        LocationName.cave1_s_5,
-        LocationName.cave1_n_room_1,
-        LocationName.cave1_n_room_2,
-        LocationName.cave1_n_room_3,
-        LocationName.cave1_n_room_4,
-        LocationName.cave1_s_1,
-        LocationName.cave1_s_2,
-        LocationName.cave1_w_by_water_1,
-        LocationName.cave1_secret_nw,
-        LocationName.cave1_secret_w,
-        LocationName.cave1_secret_m,
-        LocationName.c1_n_puzzle_1,
-        LocationName.c1_n_puzzle_2,
-        LocationName.c1_n_puzzle_3,
-        LocationName.c1_n_puzzle_4,
+        TempleLocationNames.cave1_n_3,
+        TempleLocationNames.cave1_w_by_water_2,
+        TempleLocationNames.cave1_s_3,
+        TempleLocationNames.cave1_m,
+        TempleLocationNames.cave1_double_room_l,
+        TempleLocationNames.cave1_double_room_r,
+        TempleLocationNames.cave1_n_1,
+        TempleLocationNames.cave1_n_2,
+        TempleLocationNames.cave1_w_1,
+        TempleLocationNames.cave1_w_2,
+        TempleLocationNames.cave1_s_4,
+        TempleLocationNames.cave1_s_5,
+        TempleLocationNames.cave1_n_room_1,
+        TempleLocationNames.cave1_n_room_2,
+        TempleLocationNames.cave1_n_room_3,
+        TempleLocationNames.cave1_n_room_4,
+        TempleLocationNames.cave1_s_1,
+        TempleLocationNames.cave1_s_2,
+        TempleLocationNames.cave1_w_by_water_1,
+        TempleLocationNames.cave1_secret_nw,
+        TempleLocationNames.cave1_secret_w,
+        TempleLocationNames.cave1_secret_m,
+        TempleLocationNames.c1_n_puzzle_1,
+        TempleLocationNames.c1_n_puzzle_2,
+        TempleLocationNames.c1_n_puzzle_3,
+        TempleLocationNames.c1_n_puzzle_4,
     ]
-    cave1_main_region = create_region(multiworld, player, active_locations, RegionName.cave_1_main, cave1_main_locations)
+    cave1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_main, cave1_main_locations)
 
     cave1_blue_bridge_locations = [
-        LocationName.cave1_ne_hidden_room_1,
-        LocationName.cave1_ne_hidden_room_2,
-        LocationName.cave1_ne_hidden_room_3,
-        LocationName.cave1_ne_hidden_room_4,
-        LocationName.cave1_ne_hidden_room_5,
-        LocationName.cave1_ne_grubs,
-        LocationName.cave1_secret_tunnel_1,
-        LocationName.cave1_n_bridges_1,
-        LocationName.cave1_n_bridges_4,
-        LocationName.cave1_n_bridges_5,
-        LocationName.cave1_secret_n_hidden_room,
-        LocationName.cave1_ne_1,
-        LocationName.cave1_ne_2,
-        LocationName.cave1_ne_3,
-        LocationName.cave1_ne_4,
-        LocationName.cave1_ne_5,
-        LocationName.cave1_n_bridges_2,
-        LocationName.cave1_n_bridges_3,
-        LocationName.cave1_secret_tunnel_2,
-        LocationName.cave1_secret_tunnel_3,
-        LocationName.cave1_secret_ne,
-        LocationName.ev_cave1_pof_switch,
+        TempleLocationNames.cave1_ne_hidden_room_1,
+        TempleLocationNames.cave1_ne_hidden_room_2,
+        TempleLocationNames.cave1_ne_hidden_room_3,
+        TempleLocationNames.cave1_ne_hidden_room_4,
+        TempleLocationNames.cave1_ne_hidden_room_5,
+        TempleLocationNames.cave1_ne_grubs,
+        TempleLocationNames.cave1_secret_tunnel_1,
+        TempleLocationNames.cave1_n_bridges_1,
+        TempleLocationNames.cave1_n_bridges_4,
+        TempleLocationNames.cave1_n_bridges_5,
+        TempleLocationNames.cave1_secret_n_hidden_room,
+        TempleLocationNames.cave1_ne_1,
+        TempleLocationNames.cave1_ne_2,
+        TempleLocationNames.cave1_ne_3,
+        TempleLocationNames.cave1_ne_4,
+        TempleLocationNames.cave1_ne_5,
+        TempleLocationNames.cave1_n_bridges_2,
+        TempleLocationNames.cave1_n_bridges_3,
+        TempleLocationNames.cave1_secret_tunnel_2,
+        TempleLocationNames.cave1_secret_tunnel_3,
+        TempleLocationNames.cave1_secret_ne,
+        TempleLocationNames.ev_cave1_pof_switch,
     ]
-    cave1_blue_bridge_region = create_region(multiworld, player, active_locations, RegionName.cave_1_blue_bridge,
+    cave1_blue_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_blue_bridge,
                                              cave1_blue_bridge_locations)
 
     cave1_red_bridge_locations = [
-        LocationName.cave1_e_2,
-        LocationName.cave1_e_3,
-        LocationName.cave1_red_bridge_e,
-        LocationName.cave1_se_1,
-        LocationName.cave1_se_2,
-        LocationName.cave1_e_1,
-        LocationName.cave1_secret_e,
-        LocationName.c1_e_puzzle_1,
-        LocationName.c1_e_puzzle_2,
-        LocationName.c1_e_puzzle_3,
-        LocationName.c1_e_puzzle_4,
+        TempleLocationNames.cave1_e_2,
+        TempleLocationNames.cave1_e_3,
+        TempleLocationNames.cave1_red_bridge_e,
+        TempleLocationNames.cave1_se_1,
+        TempleLocationNames.cave1_se_2,
+        TempleLocationNames.cave1_e_1,
+        TempleLocationNames.cave1_secret_e,
+        TempleLocationNames.c1_e_puzzle_1,
+        TempleLocationNames.c1_e_puzzle_2,
+        TempleLocationNames.c1_e_puzzle_3,
+        TempleLocationNames.c1_e_puzzle_4,
     ]
-    cave1_red_bridge_region = create_region(multiworld, player, active_locations, RegionName.cave_1_red_bridge,
+    cave1_red_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_red_bridge,
                                             cave1_red_bridge_locations)
 
     cave1_green_bridge_locations = [
-        LocationName.cave1_green_bridge_1,
-        LocationName.cave1_green_bridge_2,
-        LocationName.cave1_krilith_ledge_n,
-        LocationName.cave1_krilith_ledge_e,
-        LocationName.cave1_krilith_door,
+        TempleLocationNames.cave1_green_bridge_1,
+        TempleLocationNames.cave1_green_bridge_2,
+        TempleLocationNames.cave1_krilith_ledge_n,
+        TempleLocationNames.cave1_krilith_ledge_e,
+        TempleLocationNames.cave1_krilith_door,
     ]
-    cave1_green_bridge_region = create_region(multiworld, player, active_locations, RegionName.cave_1_green_bridge,
+    cave1_green_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_green_bridge,
                                               cave1_green_bridge_locations)
 
     cave1_pumps_locations = [
-        LocationName.cave1_water_s_shore,
-        LocationName.cave1_water_s_1,
-        LocationName.cave1_water_s_2,
-        LocationName.cave1_water_s_3,
-        LocationName.cave1_water_s_4,
-        LocationName.cave1_water_s_5,
+        TempleLocationNames.cave1_water_s_shore,
+        TempleLocationNames.cave1_water_s_1,
+        TempleLocationNames.cave1_water_s_2,
+        TempleLocationNames.cave1_water_s_3,
+        TempleLocationNames.cave1_water_s_4,
+        TempleLocationNames.cave1_water_s_5,
     ]
-    cave1_pumps_region = create_region(multiworld, player, active_locations, RegionName.cave_1_pumps,
+    cave1_pumps_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_pumps,
                                        cave1_pumps_locations)
 
     cave1_temple_locations = [
-        LocationName.cave1_temple_hall_1,
-        LocationName.cave1_temple_hall_2,
-        LocationName.cave1_temple_hall_3,
-        LocationName.cave1_temple_end_2,
-        LocationName.cave1_temple_end_3,
-        LocationName.cave1_temple_end_4,
-        LocationName.cave1_temple_end_1,
+        TempleLocationNames.cave1_temple_hall_1,
+        TempleLocationNames.cave1_temple_hall_2,
+        TempleLocationNames.cave1_temple_hall_3,
+        TempleLocationNames.cave1_temple_end_2,
+        TempleLocationNames.cave1_temple_end_3,
+        TempleLocationNames.cave1_temple_end_4,
+        TempleLocationNames.cave1_temple_end_1,
     ]
-    cave1_temple_region = create_region(multiworld, player, active_locations, RegionName.cave_1_temple,
+    cave1_temple_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_temple,
                                         cave1_temple_locations)
 
     boss1_main_locations = [
-        LocationName.boss1_guard_l,
-        LocationName.boss1_guard_r_1,
-        LocationName.boss1_guard_r_2,
+        TempleLocationNames.boss1_guard_l,
+        TempleLocationNames.boss1_guard_r_1,
+        TempleLocationNames.boss1_guard_r_2,
     ]
-    boss1_main_region = create_region(multiworld, player, active_locations, RegionName.boss_1_main,
+    boss1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_main,
                                       boss1_main_locations)
 
     boss1_defeated_locations = [
-        LocationName.boss1_bridge,
-        LocationName.boss1_bridge_n,
-        LocationName.boss1_drop,
-        # LocationName.boss1_drop_2,
-        LocationName.boss1_secret,
-        LocationName.ev_temple_entrance_rock,
+        TempleLocationNames.boss1_bridge,
+        TempleLocationNames.boss1_bridge_n,
+        TempleLocationNames.boss1_drop,
+        # TempleLocationNames.boss1_drop_2,
+        TempleLocationNames.boss1_secret,
+        TempleLocationNames.ev_temple_entrance_rock,
     ]
-    boss1_defeated_region = create_region(multiworld, player, active_locations, RegionName.boss_1_defeated,
+    boss1_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_defeated,
                                           boss1_defeated_locations)
 
     passage_entrance_locations = [
-        LocationName.p_ent2_secret
+        TempleLocationNames.p_ent2_secret
     ]
-    passage_entrance_region = create_region(multiworld, player, active_locations, RegionName.passage_entrance,
+    passage_entrance_region = create_region(multiworld, player, active_locations, TempleRegionNames.passage_entrance,
                                             passage_entrance_locations)
 
     passage_mid_locations = [
-        LocationName.p_mid1_1,
-        LocationName.p_mid1_2,
-        LocationName.p_mid2_1,
-        LocationName.p_mid2_2,
-        LocationName.p_mid2_3,
-        LocationName.p_mid2_4,
-        LocationName.p_mid3_secret_1,
-        LocationName.p_mid3_secret_2,
-        LocationName.p_mid3_secret_3,
-        LocationName.p_mid3_secret_4,
-        LocationName.p_mid4_1,
-        LocationName.p_mid4_2,
-        LocationName.p_mid4_3,
-        LocationName.p_mid4_4,
-        LocationName.p_mid5_1,
-        LocationName.p_mid5_2,
-        LocationName.p_mid5_secret,
-        LocationName.p_puzzle_1,
-        LocationName.p_puzzle_2,
-        LocationName.p_puzzle_3,
-        LocationName.p_puzzle_4,
+        TempleLocationNames.p_mid1_1,
+        TempleLocationNames.p_mid1_2,
+        TempleLocationNames.p_mid2_1,
+        TempleLocationNames.p_mid2_2,
+        TempleLocationNames.p_mid2_3,
+        TempleLocationNames.p_mid2_4,
+        TempleLocationNames.p_mid3_secret_1,
+        TempleLocationNames.p_mid3_secret_2,
+        TempleLocationNames.p_mid3_secret_3,
+        TempleLocationNames.p_mid3_secret_4,
+        TempleLocationNames.p_mid4_1,
+        TempleLocationNames.p_mid4_2,
+        TempleLocationNames.p_mid4_3,
+        TempleLocationNames.p_mid4_4,
+        TempleLocationNames.p_mid5_1,
+        TempleLocationNames.p_mid5_2,
+        TempleLocationNames.p_mid5_secret,
+        TempleLocationNames.p_puzzle_1,
+        TempleLocationNames.p_puzzle_2,
+        TempleLocationNames.p_puzzle_3,
+        TempleLocationNames.p_puzzle_4,
     ]
-    passage_mid_region = create_region(multiworld, player, active_locations, RegionName.passage_mid, passage_mid_locations)
+    passage_mid_region = create_region(multiworld, player, active_locations, TempleRegionNames.passage_mid, passage_mid_locations)
 
     passage_end_locations = [
-        LocationName.p_end1_secret,
-        LocationName.p_end3_1,
-        LocationName.p_end3_2,
+        TempleLocationNames.p_end1_secret,
+        TempleLocationNames.p_end3_1,
+        TempleLocationNames.p_end3_2,
     ]
-    passage_end_region = create_region(multiworld, player, active_locations, RegionName.passage_end, passage_end_locations)
+    passage_end_region = create_region(multiworld, player, active_locations, TempleRegionNames.passage_end, passage_end_locations)
 
-    temple_entrance_region = create_region(multiworld, player, active_locations, RegionName.temple_entrance, [])
+    temple_entrance_region = create_region(multiworld, player, active_locations, TempleRegionNames.temple_entrance, [])
 
     temple_entrance_back_locations = [
-        LocationName.temple_entrance_l,
-        LocationName.temple_entrance_r,
+        TempleLocationNames.temple_entrance_l,
+        TempleLocationNames.temple_entrance_r,
     ]
-    temple_entrance_back_region = create_region(multiworld, player, active_locations, RegionName.temple_entrance_back,
+    temple_entrance_back_region = create_region(multiworld, player, active_locations, TempleRegionNames.temple_entrance_back,
                                                 temple_entrance_back_locations)
 
     t1_main_locations = [
-        LocationName.t1_above_s_bridge,
-        LocationName.t1_s_bridge_1,
-        LocationName.t1_s_bridge_2,
-        LocationName.t1_s_bridge_3,
-        LocationName.t1_s_bridge_4,
-        LocationName.t1_s_bridge_5,
-        LocationName.t1_s_bridge_6,
-        LocationName.t1_sw_sun_room_1,
-        LocationName.t1_sw_sun_room_2,
-        LocationName.t1_sw_corner_room,
-        LocationName.t1_sw_hidden_room_1,
-        LocationName.t1_sw_hidden_room_2,
-        LocationName.t1_sw_hidden_room_3,
-        LocationName.t1_sw_hidden_room_4,
-        LocationName.t1_w_puzzle_1,
-        LocationName.t1_w_puzzle_2,
-        LocationName.t1_w_puzzle_3,
-        LocationName.t1_w_puzzle_4,
+        TempleLocationNames.t1_above_s_bridge,
+        TempleLocationNames.t1_s_bridge_1,
+        TempleLocationNames.t1_s_bridge_2,
+        TempleLocationNames.t1_s_bridge_3,
+        TempleLocationNames.t1_s_bridge_4,
+        TempleLocationNames.t1_s_bridge_5,
+        TempleLocationNames.t1_s_bridge_6,
+        TempleLocationNames.t1_sw_sun_room_1,
+        TempleLocationNames.t1_sw_sun_room_2,
+        TempleLocationNames.t1_sw_corner_room,
+        TempleLocationNames.t1_sw_hidden_room_1,
+        TempleLocationNames.t1_sw_hidden_room_2,
+        TempleLocationNames.t1_sw_hidden_room_3,
+        TempleLocationNames.t1_sw_hidden_room_4,
+        TempleLocationNames.t1_w_puzzle_1,
+        TempleLocationNames.t1_w_puzzle_2,
+        TempleLocationNames.t1_w_puzzle_3,
+        TempleLocationNames.t1_w_puzzle_4,
     ]
-    t1_main_region = create_region(multiworld, player, active_locations, RegionName.t1_main, t1_main_locations)
+    t1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_main, t1_main_locations)
 
     t1_sw_cache_locations = [
-        LocationName.t1_sw_cache_1,
-        LocationName.t1_sw_cache_2,
-        LocationName.t1_sw_cache_3,
-        LocationName.t1_sw_cache_4,
-        LocationName.t1_sw_cache_5,
+        TempleLocationNames.t1_sw_cache_1,
+        TempleLocationNames.t1_sw_cache_2,
+        TempleLocationNames.t1_sw_cache_3,
+        TempleLocationNames.t1_sw_cache_4,
+        TempleLocationNames.t1_sw_cache_5,
     ]
-    t1_sw_cache_region = create_region(multiworld, player, active_locations, RegionName.t1_sw_cache, t1_sw_cache_locations)
+    t1_sw_cache_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_sw_cache, t1_sw_cache_locations)
 
     t1_node_1_locations = [
-        LocationName.t1_double_gate_1,
-        LocationName.t1_double_gate_2,
-        LocationName.t1_double_gate_3,
-        LocationName.t1_double_gate_hidden,
-        LocationName.t1_behind_bars_entrance,
-        LocationName.t1_e_of_double_gate_room_1,
-        LocationName.t1_e_of_double_gate_room_2,
-        LocationName.t1_e_of_double_gate_room_3,
-        LocationName.t1_e_of_double_gate_room_4,
-        LocationName.t1_mana_drain_fire_trap,
-        LocationName.t1_mana_drain_fire_trap_reward_1,
-        LocationName.t1_mana_drain_fire_trap_reward_2,
-        LocationName.t1_mana_drain_fire_trap_passage,
-        LocationName.ev_t1_s_node
+        TempleLocationNames.t1_double_gate_1,
+        TempleLocationNames.t1_double_gate_2,
+        TempleLocationNames.t1_double_gate_3,
+        TempleLocationNames.t1_double_gate_hidden,
+        TempleLocationNames.t1_behind_bars_entrance,
+        TempleLocationNames.t1_e_of_double_gate_room_1,
+        TempleLocationNames.t1_e_of_double_gate_room_2,
+        TempleLocationNames.t1_e_of_double_gate_room_3,
+        TempleLocationNames.t1_e_of_double_gate_room_4,
+        TempleLocationNames.t1_mana_drain_fire_trap,
+        TempleLocationNames.t1_mana_drain_fire_trap_reward_1,
+        TempleLocationNames.t1_mana_drain_fire_trap_reward_2,
+        TempleLocationNames.t1_mana_drain_fire_trap_passage,
+        TempleLocationNames.ev_t1_s_node
     ]
-    t1_node_1_region = create_region(multiworld, player, active_locations, RegionName.t1_node_1, t1_node_1_locations)
+    t1_node_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_node_1, t1_node_1_locations)
 
     t1_sun_turret_locations = [
-        LocationName.t1_double_gate_behind_block,
-        LocationName.t1_s_of_sun_turret,
-        LocationName.t1_sun_turret_1,
-        LocationName.t1_sun_turret_2,
-        LocationName.t1_sun_turret_3,
-        LocationName.t1_fire_trap_by_sun_turret_1,
-        LocationName.t1_fire_trap_by_sun_turret_2,
-        LocationName.t1_fire_trap_by_sun_turret_3,
-        LocationName.t1_fire_trap_by_sun_turret_4,
+        TempleLocationNames.t1_double_gate_behind_block,
+        TempleLocationNames.t1_s_of_sun_turret,
+        TempleLocationNames.t1_sun_turret_1,
+        TempleLocationNames.t1_sun_turret_2,
+        TempleLocationNames.t1_sun_turret_3,
+        TempleLocationNames.t1_fire_trap_by_sun_turret_1,
+        TempleLocationNames.t1_fire_trap_by_sun_turret_2,
+        TempleLocationNames.t1_fire_trap_by_sun_turret_3,
+        TempleLocationNames.t1_fire_trap_by_sun_turret_4,
     ]
-    t1_sun_turret_region = create_region(multiworld, player, active_locations, RegionName.t1_sun_turret,
+    t1_sun_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_sun_turret,
                                          t1_sun_turret_locations)
 
     t1_ice_turret_locations = [
-        LocationName.t1_ice_turret_1,
-        LocationName.t1_ice_turret_2,
-        LocationName.t1_telariana_1,
-        LocationName.t1_telariana_2,
-        LocationName.t1_telariana_3,
-        LocationName.t1_telariana_4,
-        LocationName.t1_telariana_5,
-        LocationName.t1_boulder_hallway_by_ice_turret_1,
-        LocationName.t1_boulder_hallway_by_ice_turret_2,
-        LocationName.t1_boulder_hallway_by_ice_turret_3,
-        LocationName.t1_boulder_hallway_by_ice_turret_4,
-        LocationName.t1_ice_turret_boulder_break_block,
-        LocationName.t1_n_sunbeam,
-        LocationName.t1_n_sunbeam_treasure_1,
-        LocationName.t1_n_sunbeam_treasure_2,
-        LocationName.t1_n_sunbeam_treasure_3,
+        TempleLocationNames.t1_ice_turret_1,
+        TempleLocationNames.t1_ice_turret_2,
+        TempleLocationNames.t1_telariana_1,
+        TempleLocationNames.t1_telariana_2,
+        TempleLocationNames.t1_telariana_3,
+        TempleLocationNames.t1_telariana_4,
+        TempleLocationNames.t1_telariana_5,
+        TempleLocationNames.t1_boulder_hallway_by_ice_turret_1,
+        TempleLocationNames.t1_boulder_hallway_by_ice_turret_2,
+        TempleLocationNames.t1_boulder_hallway_by_ice_turret_3,
+        TempleLocationNames.t1_boulder_hallway_by_ice_turret_4,
+        TempleLocationNames.t1_ice_turret_boulder_break_block,
+        TempleLocationNames.t1_n_sunbeam,
+        TempleLocationNames.t1_n_sunbeam_treasure_1,
+        TempleLocationNames.t1_n_sunbeam_treasure_2,
+        TempleLocationNames.t1_n_sunbeam_treasure_3,
     ]
-    t1_ice_turret_region = create_region(multiworld, player, active_locations, RegionName.t1_ice_turret,
+    t1_ice_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_ice_turret,
                                          t1_ice_turret_locations)
 
     t1_n_of_ice_turret_locations = [
-        LocationName.t1_n_cache_by_ice_turret_1,
-        LocationName.t1_n_cache_by_ice_turret_2,
-        LocationName.t1_n_cache_by_ice_turret_3,
-        LocationName.t1_n_cache_by_ice_turret_4,
-        LocationName.t1_n_cache_by_ice_turret_5,
+        TempleLocationNames.t1_n_cache_by_ice_turret_1,
+        TempleLocationNames.t1_n_cache_by_ice_turret_2,
+        TempleLocationNames.t1_n_cache_by_ice_turret_3,
+        TempleLocationNames.t1_n_cache_by_ice_turret_4,
+        TempleLocationNames.t1_n_cache_by_ice_turret_5,
     ]
-    t1_n_of_ice_turret_region = create_region(multiworld, player, active_locations, RegionName.t1_n_of_ice_turret,
+    t1_n_of_ice_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_n_of_ice_turret,
                                               t1_n_of_ice_turret_locations)
 
     t1_s_of_ice_turret_locations = [
-        LocationName.t1_s_cache_by_ice_turret_1,
-        LocationName.t1_s_cache_by_ice_turret_2,
-        LocationName.t1_s_cache_by_ice_turret_3,
+        TempleLocationNames.t1_s_cache_by_ice_turret_1,
+        TempleLocationNames.t1_s_cache_by_ice_turret_2,
+        TempleLocationNames.t1_s_cache_by_ice_turret_3,
     ]
-    t1_s_of_ice_turret_region = create_region(multiworld, player, active_locations, RegionName.t1_s_of_ice_turret,
+    t1_s_of_ice_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_s_of_ice_turret,
                                               t1_s_of_ice_turret_locations)
 
     t1_east_locations = [
-        LocationName.t1_ledge_after_block_trap_1,
-        LocationName.t1_ledge_after_block_trap_2,
-        LocationName.t1_ice_block_chamber_1,
-        LocationName.t1_ice_block_chamber_2,
-        LocationName.t1_ice_block_chamber_3,
-        LocationName.t1_node_2_1,
-        LocationName.t1_node_2_2,
-        LocationName.t1_node_2_passage_1,
-        LocationName.t1_node_2_passage_2,
-        LocationName.t1_node_2_passage_3,
-        LocationName.t1_e_gold_beetles,
-        LocationName.ev_temple1_pof_switch,
-        LocationName.t1_e_puzzle_1,
-        LocationName.t1_e_puzzle_2,
-        LocationName.t1_e_puzzle_3,
-        LocationName.t1_e_puzzle_4,
+        TempleLocationNames.t1_ledge_after_block_trap_1,
+        TempleLocationNames.t1_ledge_after_block_trap_2,
+        TempleLocationNames.t1_ice_block_chamber_1,
+        TempleLocationNames.t1_ice_block_chamber_2,
+        TempleLocationNames.t1_ice_block_chamber_3,
+        TempleLocationNames.t1_node_2_1,
+        TempleLocationNames.t1_node_2_2,
+        TempleLocationNames.t1_node_2_passage_1,
+        TempleLocationNames.t1_node_2_passage_2,
+        TempleLocationNames.t1_node_2_passage_3,
+        TempleLocationNames.t1_e_gold_beetles,
+        TempleLocationNames.ev_temple1_pof_switch,
+        TempleLocationNames.t1_e_puzzle_1,
+        TempleLocationNames.t1_e_puzzle_2,
+        TempleLocationNames.t1_e_puzzle_3,
+        TempleLocationNames.t1_e_puzzle_4,
     ]
-    t1_east_region = create_region(multiworld, player, active_locations, RegionName.t1_east, t1_east_locations)
+    t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
 
     t1_sun_block_hall_locations = [
-        LocationName.t1_sun_block_hall_1,
-        LocationName.t1_sun_block_hall_2,
-        LocationName.t1_sun_block_hall_3,
-        LocationName.t1_sun_block_hall_4,
+        TempleLocationNames.t1_sun_block_hall_1,
+        TempleLocationNames.t1_sun_block_hall_2,
+        TempleLocationNames.t1_sun_block_hall_3,
+        TempleLocationNames.t1_sun_block_hall_4,
     ]
-    t1_sun_block_hall_region = create_region(multiworld, player, active_locations, RegionName.t1_sun_block_hall,
+    t1_sun_block_hall_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_sun_block_hall,
                                              t1_sun_block_hall_locations)
 
     t1_node_2_locations = [
-        LocationName.ev_t1_n_node
+        TempleLocationNames.ev_t1_n_node
     ]
-    t1_node_2_region = create_region(multiworld, player, active_locations, RegionName.t1_node_2, t1_node_2_locations)
+    t1_node_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_node_2, t1_node_2_locations)
 
     t1_telariana_melt_ice_locations = [
-        LocationName.t1_telariana_ice
+        TempleLocationNames.t1_telariana_ice
     ]
-    t1_telariana_melt_ice_region = create_region(multiworld, player, active_locations, RegionName.t1_telariana_melt_ice,
+    t1_telariana_melt_ice_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_telariana_melt_ice,
                                                  t1_telariana_melt_ice_locations)
 
     t1_ice_chamber_melt_ice_locations = [
-        LocationName.t1_telariana_ice,
-        LocationName.t1_ice_block_chamber_ice
+        TempleLocationNames.t1_ice_block_chamber_ice
     ]
-    t1_ice_chamber_melt_ice_region = create_region(multiworld, player, active_locations, RegionName.t1_ice_chamber_melt_ice,
+    t1_ice_chamber_melt_ice_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_ice_chamber_melt_ice,
                                                    t1_ice_chamber_melt_ice_locations)
 
-    boss2_main_region = create_region(multiworld, player, active_locations, RegionName.boss2_main, [])
+    boss2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss2_main, [])
 
     boss2_defeated_locations = [
-        LocationName.boss2_nw,
-        LocationName.boss2_se,
-        LocationName.ev_krilith_defeated
+        TempleLocationNames.boss2_nw,
+        TempleLocationNames.boss2_se,
+        TempleLocationNames.ev_krilith_defeated
     ]
-    boss2_defeated_region = create_region(multiworld, player, active_locations, RegionName.boss2_defeated,
+    boss2_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss2_defeated,
                                           boss2_defeated_locations)
 
     t2_main_locations = [
-        LocationName.t2_n_of_portal,
-        LocationName.t2_s_of_portal,
-        LocationName.t2_w_spike_trap_1,
-        LocationName.t2_w_spike_trap_2,
-        LocationName.t2_nw_puzzle_cache_1,
-        LocationName.t2_nw_puzzle_cache_2,
-        LocationName.t2_nw_puzzle_cache_3,
-        LocationName.t2_nw_puzzle_cache_4,
-        LocationName.t2_nw_puzzle_cache_5,
-        LocationName.t2_nw_of_s_ice_turret,
-        LocationName.t2_w_hall_dead_end_1,
-        LocationName.t2_w_hall_dead_end_2,
-        LocationName.t2_w_hall_dead_end_3,
-        LocationName.t2_w_hall_dead_end_4,
-        LocationName.t2_w_hall_dead_end_5,
-        LocationName.t2_n_of_sw_gate_1,
-        LocationName.t2_n_of_sw_gate_2,
-        LocationName.t2_fire_trap_maze_1,
-        LocationName.t2_fire_trap_maze_2,
-        LocationName.t2_fire_trap_maze_3,
-        LocationName.t2_fire_trap_maze_4,
-        LocationName.t2_fire_trap_maze_5,
-        LocationName.t2_fire_trap_maze_6,
-        LocationName.t2_teleporter,
-        LocationName.t2_e_outside_gold_beetle_cage_1,
-        LocationName.t2_e_outside_gold_beetle_cage_2,
-        LocationName.t2_boulder_chamber_1,
-        LocationName.t2_boulder_chamber_2,
-        LocationName.t2_boulder_chamber_3,
-        LocationName.t2_boulder_chamber_4,
-        LocationName.t2_s_balcony_1,
-        LocationName.t2_s_balcony_2,
-        LocationName.t2_se_banner_chamber_1,
-        LocationName.t2_se_banner_chamber_2,
-        LocationName.t2_se_banner_chamber_3,
-        LocationName.t2_se_banner_chamber_4,
-        LocationName.t2_se_banner_chamber_5,
-        LocationName.t2_se_fireball_hall,
-        LocationName.ev_t2_ne_bridge_switch,
-        LocationName.ev_t2_se_bridge_switch,
-        LocationName.t2_nw_puzzle_1,
-        LocationName.t2_nw_puzzle_2,
-        LocationName.t2_nw_puzzle_3,
-        LocationName.t2_nw_puzzle_4,
-        LocationName.t2_e_puzzle_1,
-        LocationName.t2_e_puzzle_2,
-        LocationName.t2_e_puzzle_3,
-        LocationName.t2_e_puzzle_4,
+        TempleLocationNames.t2_n_of_portal,
+        TempleLocationNames.t2_s_of_portal,
+        TempleLocationNames.t2_w_spike_trap_1,
+        TempleLocationNames.t2_w_spike_trap_2,
+        TempleLocationNames.t2_nw_puzzle_cache_1,
+        TempleLocationNames.t2_nw_puzzle_cache_2,
+        TempleLocationNames.t2_nw_puzzle_cache_3,
+        TempleLocationNames.t2_nw_puzzle_cache_4,
+        TempleLocationNames.t2_nw_puzzle_cache_5,
+        TempleLocationNames.t2_nw_of_s_ice_turret,
+        TempleLocationNames.t2_w_hall_dead_end_1,
+        TempleLocationNames.t2_w_hall_dead_end_2,
+        TempleLocationNames.t2_w_hall_dead_end_3,
+        TempleLocationNames.t2_w_hall_dead_end_4,
+        TempleLocationNames.t2_w_hall_dead_end_5,
+        TempleLocationNames.t2_n_of_sw_gate_1,
+        TempleLocationNames.t2_n_of_sw_gate_2,
+        TempleLocationNames.t2_fire_trap_maze_1,
+        TempleLocationNames.t2_fire_trap_maze_2,
+        TempleLocationNames.t2_fire_trap_maze_3,
+        TempleLocationNames.t2_fire_trap_maze_4,
+        TempleLocationNames.t2_fire_trap_maze_5,
+        TempleLocationNames.t2_fire_trap_maze_6,
+        TempleLocationNames.t2_teleporter,
+        TempleLocationNames.t2_e_outside_gold_beetle_cage_1,
+        TempleLocationNames.t2_e_outside_gold_beetle_cage_2,
+        TempleLocationNames.t2_boulder_chamber_1,
+        TempleLocationNames.t2_boulder_chamber_2,
+        TempleLocationNames.t2_boulder_chamber_3,
+        TempleLocationNames.t2_boulder_chamber_4,
+        TempleLocationNames.t2_s_balcony_1,
+        TempleLocationNames.t2_s_balcony_2,
+        TempleLocationNames.t2_se_banner_chamber_1,
+        TempleLocationNames.t2_se_banner_chamber_2,
+        TempleLocationNames.t2_se_banner_chamber_3,
+        TempleLocationNames.t2_se_banner_chamber_4,
+        TempleLocationNames.t2_se_banner_chamber_5,
+        TempleLocationNames.t2_se_fireball_hall,
+        TempleLocationNames.ev_t2_ne_bridge_switch,
+        TempleLocationNames.ev_t2_se_bridge_switch,
+        TempleLocationNames.t2_nw_puzzle_1,
+        TempleLocationNames.t2_nw_puzzle_2,
+        TempleLocationNames.t2_nw_puzzle_3,
+        TempleLocationNames.t2_nw_puzzle_4,
+        TempleLocationNames.t2_e_puzzle_1,
+        TempleLocationNames.t2_e_puzzle_2,
+        TempleLocationNames.t2_e_puzzle_3,
+        TempleLocationNames.t2_e_puzzle_4,
     ]
-    t2_main_region = create_region(multiworld, player, active_locations, RegionName.t2_main, t2_main_locations)
+    t2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_main, t2_main_locations)
 
     t2_melt_ice_locations = [
-        LocationName.t2_w_ice_block_gate,
-        LocationName.t2_e_ice_block_gate,
+        TempleLocationNames.t2_w_ice_block_gate,
+        TempleLocationNames.t2_e_ice_block_gate,
     ]
-    t2_melt_ice_region = create_region(multiworld, player, active_locations, RegionName.t2_melt_ice, t2_melt_ice_locations)
+    t2_melt_ice_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_melt_ice, t2_melt_ice_locations)
 
     t2_n_gate_locations = [
-        LocationName.t2_nw_ice_turret_1,
-        LocationName.t2_nw_ice_turret_2,
-        LocationName.t2_nw_ice_turret_3,
-        LocationName.t2_nw_ice_turret_4,
-        LocationName.t2_nw_under_block,
-        LocationName.t2_nw_gate_1,
-        LocationName.t2_nw_gate_2,
-        LocationName.t2_nw_gate_3,
-        LocationName.t2_n_puzzle_1,
-        LocationName.t2_n_puzzle_2,
-        LocationName.t2_n_puzzle_3,
-        LocationName.t2_n_puzzle_4,
+        TempleLocationNames.t2_nw_ice_turret_1,
+        TempleLocationNames.t2_nw_ice_turret_2,
+        TempleLocationNames.t2_nw_ice_turret_3,
+        TempleLocationNames.t2_nw_ice_turret_4,
+        TempleLocationNames.t2_nw_under_block,
+        TempleLocationNames.t2_nw_gate_1,
+        TempleLocationNames.t2_nw_gate_2,
+        TempleLocationNames.t2_nw_gate_3,
+        TempleLocationNames.t2_n_puzzle_1,
+        TempleLocationNames.t2_n_puzzle_2,
+        TempleLocationNames.t2_n_puzzle_3,
+        TempleLocationNames.t2_n_puzzle_4,
     ]
-    t2_n_gate_region = create_region(multiworld, player, active_locations, RegionName.t2_n_gate, t2_n_gate_locations)
+    t2_n_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_gate, t2_n_gate_locations)
 
     t2_s_gate_locations = [
-        LocationName.t2_sw_gate,
-        LocationName.t2_s_node_room_1,
-        LocationName.t2_s_node_room_2,
-        LocationName.t2_s_node_room_3,
-        LocationName.t2_s_sunbeam_1,
-        LocationName.t2_s_sunbeam_2,
-        LocationName.t2_sw_jail_1,
-        LocationName.t2_sw_jail_2,
-        LocationName.t2_left_of_pof_switch_1,
-        LocationName.t2_left_of_pof_switch_2,
-        LocationName.t2_right_of_pof_switch,
-        LocationName.ev_t2_sw_bridge_switch,
-        LocationName.ev_temple2_pof_switch,
-        LocationName.t2_sw_puzzle_1,
-        LocationName.t2_sw_puzzle_2,
-        LocationName.t2_sw_puzzle_3,
-        LocationName.t2_sw_puzzle_4,
+        TempleLocationNames.t2_sw_gate,
+        TempleLocationNames.t2_s_node_room_1,
+        TempleLocationNames.t2_s_node_room_2,
+        TempleLocationNames.t2_s_node_room_3,
+        TempleLocationNames.t2_s_sunbeam_1,
+        TempleLocationNames.t2_s_sunbeam_2,
+        TempleLocationNames.t2_sw_jail_1,
+        TempleLocationNames.t2_sw_jail_2,
+        TempleLocationNames.t2_left_of_pof_switch_1,
+        TempleLocationNames.t2_left_of_pof_switch_2,
+        TempleLocationNames.t2_right_of_pof_switch,
+        TempleLocationNames.ev_t2_sw_bridge_switch,
+        TempleLocationNames.ev_temple2_pof_switch,
+        TempleLocationNames.t2_sw_puzzle_1,
+        TempleLocationNames.t2_sw_puzzle_2,
+        TempleLocationNames.t2_sw_puzzle_3,
+        TempleLocationNames.t2_sw_puzzle_4,
     ]
-    t2_s_gate_region = create_region(multiworld, player, active_locations, RegionName.t2_s_gate, t2_s_gate_locations)
+    t2_s_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_s_gate, t2_s_gate_locations)
 
     t2_n_node_locations = [
-        LocationName.t2_boulder_room_1,
-        LocationName.t2_boulder_room_2,
-        LocationName.t2_boulder_room_block,
-        LocationName.t2_mana_drain_fire_trap_1,
-        LocationName.t2_mana_drain_fire_trap_2,
-        LocationName.t2_jones_hallway,
-        LocationName.t2_gold_beetle_barricade,
-        LocationName.t2_w_gold_beetle_room_1,
-        LocationName.t2_w_gold_beetle_room_2,
-        LocationName.t2_w_gold_beetle_room_3,
-        LocationName.t2_w_gold_beetle_room_4,
-        LocationName.ev_t2_n_node,
-        LocationName.ev_t2_w_bridge_switch
+        TempleLocationNames.t2_boulder_room_1,
+        TempleLocationNames.t2_boulder_room_2,
+        TempleLocationNames.t2_boulder_room_block,
+        TempleLocationNames.t2_mana_drain_fire_trap_1,
+        TempleLocationNames.t2_mana_drain_fire_trap_2,
+        TempleLocationNames.t2_jones_hallway,
+        TempleLocationNames.t2_gold_beetle_barricade,
+        TempleLocationNames.t2_w_gold_beetle_room_1,
+        TempleLocationNames.t2_w_gold_beetle_room_2,
+        TempleLocationNames.t2_w_gold_beetle_room_3,
+        TempleLocationNames.t2_w_gold_beetle_room_4,
+        TempleLocationNames.ev_t2_n_node,
+        TempleLocationNames.ev_t2_w_bridge_switch
     ]
-    t2_n_node_region = create_region(multiworld, player, active_locations, RegionName.t2_n_node, t2_n_node_locations)
+    t2_n_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_node, t2_n_node_locations)
 
     t2_s_node_locations = [
-        LocationName.ev_t2_s_node
+        TempleLocationNames.ev_t2_s_node
     ]
-    t2_s_node_region = create_region(multiworld, player, active_locations, RegionName.t2_s_node, t2_s_node_locations)
+    t2_s_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_s_node, t2_s_node_locations)
 
     t2_ornate_locations = [
-        LocationName.ev_t2_n_bridge_switch
+        TempleLocationNames.ev_t2_n_bridge_switch
     ]
-    t2_ornate_region = create_region(multiworld, player, active_locations, RegionName.t2_ornate, t2_ornate_locations)
+    t2_ornate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_ornate, t2_ornate_locations)
 
     t2_light_bridges_locations = [
-        LocationName.t2_se_light_bridge_1,
-        LocationName.t2_se_light_bridge_2,
-        LocationName.t2_s_light_bridge_1,
-        LocationName.t2_s_light_bridge_2,
-        LocationName.t2_portal_gate,
+        TempleLocationNames.t2_se_light_bridge_1,
+        TempleLocationNames.t2_se_light_bridge_2,
+        TempleLocationNames.t2_s_light_bridge_1,
+        TempleLocationNames.t2_s_light_bridge_2,
+        TempleLocationNames.t2_portal_gate,
     ]
-    t2_light_bridges_region = create_region(multiworld, player, active_locations, RegionName.t2_light_bridges,
+    t2_light_bridges_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_light_bridges,
                                             t2_light_bridges_locations)
 
     t2_ornate_t3_locations = [
-        LocationName.t2_floor3_cache_1,
-        LocationName.t2_floor3_cache_2,
-        LocationName.t2_floor3_cache_3,
-        LocationName.t2_floor3_cache_4,
-        LocationName.t2_floor3_cache_5,
-        LocationName.t2_floor3_cache_6,
-        LocationName.t2_floor3_cache_gate,
+        TempleLocationNames.t2_floor3_cache_1,
+        TempleLocationNames.t2_floor3_cache_2,
+        TempleLocationNames.t2_floor3_cache_3,
+        TempleLocationNames.t2_floor3_cache_4,
+        TempleLocationNames.t2_floor3_cache_5,
+        TempleLocationNames.t2_floor3_cache_6,
+        TempleLocationNames.t2_floor3_cache_gate,
     ]
-    t2_ornate_t3_region = create_region(multiworld, player, active_locations, RegionName.t2_ornate_t3,
+    t2_ornate_t3_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_ornate_t3,
                                         t2_ornate_t3_locations)
 
     t3_main_locations = [
-        LocationName.t3_s_balcony_turret_1,
-        LocationName.t3_s_balcony_turret_2,
-        LocationName.t3_n_turret_1,
-        LocationName.t3_n_turret_2,
-        LocationName.t3_boulder_block,
-        LocationName.t3_e_turret_spikes,
-        LocationName.t3_puzzle_1,
-        LocationName.t3_puzzle_2,
-        LocationName.t3_puzzle_3,
-        LocationName.t3_puzzle_4,
+        TempleLocationNames.t3_s_balcony_turret_1,
+        TempleLocationNames.t3_s_balcony_turret_2,
+        TempleLocationNames.t3_n_turret_1,
+        TempleLocationNames.t3_n_turret_2,
+        TempleLocationNames.t3_boulder_block,
+        TempleLocationNames.t3_e_turret_spikes,
+        TempleLocationNames.t3_puzzle_1,
+        TempleLocationNames.t3_puzzle_2,
+        TempleLocationNames.t3_puzzle_3,
+        TempleLocationNames.t3_puzzle_4,
     ]
-    t3_main_region = create_region(multiworld, player, active_locations, RegionName.t3_main, t3_main_locations)
+    t3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_main, t3_main_locations)
 
     t3_n_node_blocks_locations = [
-        LocationName.t3_s_gate,
-        LocationName.t3_n_node_blocks_1,
-        LocationName.t3_n_node_blocks_2,
-        LocationName.t3_n_node_blocks_3,
-        LocationName.t3_n_node_blocks_4,
-        LocationName.t3_n_node_blocks_5,
+        TempleLocationNames.t3_s_gate,
+        TempleLocationNames.t3_n_node_blocks_1,
+        TempleLocationNames.t3_n_node_blocks_2,
+        TempleLocationNames.t3_n_node_blocks_3,
+        TempleLocationNames.t3_n_node_blocks_4,
+        TempleLocationNames.t3_n_node_blocks_5,
     ]
-    t3_n_node_blocks_region = create_region(multiworld, player, active_locations, RegionName.t3_n_node_blocks,
+    t3_n_node_blocks_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_n_node_blocks,
                                             t3_n_node_blocks_locations)
 
     t3_n_node_locations = [
-        LocationName.ev_t3_n_node
+        TempleLocationNames.ev_t3_n_node
     ]
-    t3_n_node_region = create_region(multiworld, player, active_locations, RegionName.t3_n_node, t3_n_node_locations)
+    t3_n_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_n_node, t3_n_node_locations)
 
     t3_s_node_blocks_1_locations = [
-        LocationName.t3_s_node_cache_1,
-        LocationName.t3_s_node_cache_2,
-        LocationName.t3_s_node_cache_3,
+        TempleLocationNames.t3_s_node_cache_1,
+        TempleLocationNames.t3_s_node_cache_2,
+        TempleLocationNames.t3_s_node_cache_3,
     ]
-    t3_s_node_blocks_1_region = create_region(multiworld, player, active_locations, RegionName.t3_s_node_blocks_1,
+    t3_s_node_blocks_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_s_node_blocks_1,
                                               t3_s_node_blocks_1_locations)
 
     t3_s_node_blocks_2_locations = [
-        LocationName.t3_m_balcony_corridor,
+        TempleLocationNames.t3_m_balcony_corridor,
     ]
-    t3_s_node_blocks_2_region = create_region(multiworld, player, active_locations, RegionName.t3_s_node_blocks_2,
+    t3_s_node_blocks_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_s_node_blocks_2,
                                               t3_s_node_blocks_2_locations)
 
     t3_s_node_locations = [
-        LocationName.t3_n_node_1,
-        LocationName.t3_n_node_2,
-        LocationName.t3_n_node_3,
-        LocationName.ev_t3_s_node,
+        TempleLocationNames.t3_n_node_1,
+        TempleLocationNames.t3_n_node_2,
+        TempleLocationNames.t3_n_node_3,
+        TempleLocationNames.ev_t3_s_node,
     ]
-    t3_s_node_region = create_region(multiworld, player, active_locations, RegionName.t3_s_node, t3_s_node_locations)
+    t3_s_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_s_node, t3_s_node_locations)
 
     t3_boss_fall_1_locations = [
-        LocationName.t3_boss_fall_1_1,
-        LocationName.t3_boss_fall_1_2,
-        LocationName.t3_boss_fall_1_3,
+        TempleLocationNames.t3_boss_fall_1_1,
+        TempleLocationNames.t3_boss_fall_1_2,
+        TempleLocationNames.t3_boss_fall_1_3,
     ]
-    t3_boss_fall_1_region = create_region(multiworld, player, active_locations, RegionName.t3_boss_fall_1,
+    t3_boss_fall_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_boss_fall_1,
                                           t3_boss_fall_1_locations)
 
     t3_boss_fall_2_locations = [
-        LocationName.t3_boss_fall_2_1,
-        LocationName.t3_boss_fall_2_2,
-        LocationName.t3_boss_fall_2_3,
+        TempleLocationNames.t3_boss_fall_2_1,
+        TempleLocationNames.t3_boss_fall_2_2,
+        TempleLocationNames.t3_boss_fall_2_3,
     ]
-    t3_boss_fall_2_region = create_region(multiworld, player, active_locations, RegionName.t3_boss_fall_2,
+    t3_boss_fall_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_boss_fall_2,
                                           t3_boss_fall_2_locations)
 
     t3_boss_fall_3_locations = [
-        LocationName.t3_boss_fall_3_1,
-        LocationName.t3_boss_fall_3_2,
-        LocationName.t3_boss_fall_3_3,
-        LocationName.t3_boss_fall_3_4,
+        TempleLocationNames.t3_boss_fall_3_1,
+        TempleLocationNames.t3_boss_fall_3_2,
+        TempleLocationNames.t3_boss_fall_3_3,
+        TempleLocationNames.t3_boss_fall_3_4,
     ]
-    t3_boss_fall_3_region = create_region(multiworld, player, active_locations, RegionName.t3_boss_fall_3,
+    t3_boss_fall_3_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_boss_fall_3,
                                           t3_boss_fall_3_locations)
 
     pof_1_main_locations = [
-        LocationName.pof_1_ent_1,
-        LocationName.pof_1_ent_2,
-        LocationName.pof_1_ent_3,
-        LocationName.pof_1_ent_4,
-        LocationName.pof_1_ent_5,
-        LocationName.pof_1_sw_left_1,
-        LocationName.pof_1_sw_left_2,
-        LocationName.pof_1_sw_left_3,
-        LocationName.pof_1_sw_left_4,
-        LocationName.pof_1_sw_left_5,
-        LocationName.pof_1_sw_left_6,
-        LocationName.pof_1_sw_left_7,
-        LocationName.pof_1_sw_left_8,
-        LocationName.pof_1_sw_left_9,
-        LocationName.pof_1_sw_left_10,
-        LocationName.pof_1_sw_left_11,
+        TempleLocationNames.pof_1_ent_1,
+        TempleLocationNames.pof_1_ent_2,
+        TempleLocationNames.pof_1_ent_3,
+        TempleLocationNames.pof_1_ent_4,
+        TempleLocationNames.pof_1_ent_5,
+        TempleLocationNames.pof_1_sw_left_1,
+        TempleLocationNames.pof_1_sw_left_2,
+        TempleLocationNames.pof_1_sw_left_3,
+        TempleLocationNames.pof_1_sw_left_4,
+        TempleLocationNames.pof_1_sw_left_5,
+        TempleLocationNames.pof_1_sw_left_6,
+        TempleLocationNames.pof_1_sw_left_7,
+        TempleLocationNames.pof_1_sw_left_8,
+        TempleLocationNames.pof_1_sw_left_9,
+        TempleLocationNames.pof_1_sw_left_10,
+        TempleLocationNames.pof_1_sw_left_11,
     ]
-    pof_1_main_region = create_region(multiworld, player, active_locations, RegionName.pof_1_main, pof_1_main_locations)
+    pof_1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_main, pof_1_main_locations)
 
     pof_1_se_room_locations = [
-        LocationName.pof_1_s_1,
-        LocationName.pof_1_s_2,
-        LocationName.pof_1_s_3,
-        LocationName.pof_1_s_4,
-        LocationName.pof_1_s_5,
-        LocationName.pof_1_s_6,
-        LocationName.pof_1_s_7,
-        LocationName.pof_1_s_8,
-        LocationName.pof_1_s_9,
-        LocationName.pof_1_s_10,
-        LocationName.pof_1_s_11,
-        LocationName.pof_1_s_12,
-        LocationName.pof_1_s_13,
+        TempleLocationNames.pof_1_s_1,
+        TempleLocationNames.pof_1_s_2,
+        TempleLocationNames.pof_1_s_3,
+        TempleLocationNames.pof_1_s_4,
+        TempleLocationNames.pof_1_s_5,
+        TempleLocationNames.pof_1_s_6,
+        TempleLocationNames.pof_1_s_7,
+        TempleLocationNames.pof_1_s_8,
+        TempleLocationNames.pof_1_s_9,
+        TempleLocationNames.pof_1_s_10,
+        TempleLocationNames.pof_1_s_11,
+        TempleLocationNames.pof_1_s_12,
+        TempleLocationNames.pof_1_s_13,
     ]
-    pof_1_se_room_region = create_region(multiworld, player, active_locations, RegionName.pof_1_se_room,
+    pof_1_se_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room,
                                          pof_1_se_room_locations)
 
     pof_gate_1_locations = [
-        LocationName.pof_1_confuse_corner_1,
-        LocationName.pof_1_confuse_corner_2,
-        LocationName.pof_1_confuse_corner_3,
-        LocationName.pof_1_confuse_corner_4,
-        LocationName.pof_1_c_hall_1,
-        LocationName.pof_1_c_hall_2,
-        LocationName.pof_1_c_hall_3,
-        LocationName.pof_1_c_hall_4,
-        LocationName.pof_1_c_hall_5,
-        LocationName.pof_1_c_hall_6,
+        TempleLocationNames.pof_1_confuse_corner_1,
+        TempleLocationNames.pof_1_confuse_corner_2,
+        TempleLocationNames.pof_1_confuse_corner_3,
+        TempleLocationNames.pof_1_confuse_corner_4,
+        TempleLocationNames.pof_1_c_hall_1,
+        TempleLocationNames.pof_1_c_hall_2,
+        TempleLocationNames.pof_1_c_hall_3,
+        TempleLocationNames.pof_1_c_hall_4,
+        TempleLocationNames.pof_1_c_hall_5,
+        TempleLocationNames.pof_1_c_hall_6,
     ]
-    pof_gate_1_region = create_region(multiworld, player, active_locations, RegionName.pof_1_gate_1, pof_gate_1_locations)
+    pof_gate_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_gate_1, pof_gate_1_locations)
 
     pof_1_n_room_locations = [
-        LocationName.pof_1_n_1,
-        LocationName.pof_1_n_2,
-        LocationName.pof_1_n_3,
-        LocationName.pof_1_n_4,
-        LocationName.pof_1_n_5,
-        LocationName.pof_1_n_6,
-        LocationName.pof_1_n_7,
-        LocationName.pof_1_n_8,
-        LocationName.pof_1_n_9,
+        TempleLocationNames.pof_1_n_1,
+        TempleLocationNames.pof_1_n_2,
+        TempleLocationNames.pof_1_n_3,
+        TempleLocationNames.pof_1_n_4,
+        TempleLocationNames.pof_1_n_5,
+        TempleLocationNames.pof_1_n_6,
+        TempleLocationNames.pof_1_n_7,
+        TempleLocationNames.pof_1_n_8,
+        TempleLocationNames.pof_1_n_9,
     ]
-    pof_1_n_room_region = create_region(multiworld, player, active_locations, RegionName.pof_1_n_room,
+    pof_1_n_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_n_room,
                                         pof_1_n_room_locations)
 
     pof_1_gate_2_locations = [
-        LocationName.pof_1_end_1,
-        LocationName.pof_1_end_2,
-        LocationName.pof_1_end_3,
-        LocationName.pof_1_end_4,
-        LocationName.pof_1_end_5,
+        TempleLocationNames.pof_1_end_1,
+        TempleLocationNames.pof_1_end_2,
+        TempleLocationNames.pof_1_end_3,
+        TempleLocationNames.pof_1_end_4,
+        TempleLocationNames.pof_1_end_5,
     ]
-    pof_1_gate_2_region = create_region(multiworld, player, active_locations, RegionName.pof_1_gate_2,
+    pof_1_gate_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_gate_2,
                                         pof_1_gate_2_locations)
 
     pof_2_main_locations = [
-        LocationName.pof_2_ent_1,
-        LocationName.pof_2_ent_2,
-        LocationName.pof_2_ent_3,
-        LocationName.pof_2_ent_4,
-        LocationName.pof_2_ent_5,
-        LocationName.pof_2_ent_6,
-        LocationName.pof_2_confuse_hall_1,
-        LocationName.pof_2_confuse_hall_2,
-        LocationName.pof_2_confuse_hall_3,
-        LocationName.pof_2_confuse_hall_4,
-        LocationName.pof_2_sw_1,
-        LocationName.pof_2_sw_2,
-        LocationName.pof_2_sw_3,
-        LocationName.pof_2_sw_4,
+        TempleLocationNames.pof_2_ent_1,
+        TempleLocationNames.pof_2_ent_2,
+        TempleLocationNames.pof_2_ent_3,
+        TempleLocationNames.pof_2_ent_4,
+        TempleLocationNames.pof_2_ent_5,
+        TempleLocationNames.pof_2_ent_6,
+        TempleLocationNames.pof_2_confuse_hall_1,
+        TempleLocationNames.pof_2_confuse_hall_2,
+        TempleLocationNames.pof_2_confuse_hall_3,
+        TempleLocationNames.pof_2_confuse_hall_4,
+        TempleLocationNames.pof_2_sw_1,
+        TempleLocationNames.pof_2_sw_2,
+        TempleLocationNames.pof_2_sw_3,
+        TempleLocationNames.pof_2_sw_4,
     ]
-    pof_2_main_region = create_region(multiworld, player, active_locations, RegionName.pof_2_main, pof_2_main_locations)
+    pof_2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_main, pof_2_main_locations)
 
     pof_2_n_locations = [
-        LocationName.pof_2_ne_1,
-        LocationName.pof_2_ne_2,
-        LocationName.pof_2_ne_3,
-        LocationName.pof_2_ne_4,
-        LocationName.pof_puzzle_1,
-        LocationName.pof_puzzle_2,
-        LocationName.pof_puzzle_3,
-        LocationName.pof_puzzle_4,
+        TempleLocationNames.pof_2_ne_1,
+        TempleLocationNames.pof_2_ne_2,
+        TempleLocationNames.pof_2_ne_3,
+        TempleLocationNames.pof_2_ne_4,
+        TempleLocationNames.pof_puzzle_1,
+        TempleLocationNames.pof_puzzle_2,
+        TempleLocationNames.pof_puzzle_3,
+        TempleLocationNames.pof_puzzle_4,
     ]
-    pof_2_n_region = create_region(multiworld, player, active_locations, RegionName.pof_2_n, pof_2_n_locations)
+    pof_2_n_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_n, pof_2_n_locations)
 
     pof_3_main_locations = [
-        LocationName.pof_3_safety_room_1,
-        LocationName.pof_3_safety_room_2,
-        LocationName.pof_3_safety_room_3,
-        LocationName.pof_3_end_1,
-        LocationName.pof_3_end_2,
-        LocationName.pof_3_end_3,
-        LocationName.pof_3_end_4,
-        LocationName.pof_3_end_5,
-        LocationName.ev_pof_end
+        TempleLocationNames.pof_3_safety_room_1,
+        TempleLocationNames.pof_3_safety_room_2,
+        TempleLocationNames.pof_3_safety_room_3,
+        TempleLocationNames.pof_3_end_1,
+        TempleLocationNames.pof_3_end_2,
+        TempleLocationNames.pof_3_end_3,
+        TempleLocationNames.pof_3_end_4,
+        TempleLocationNames.pof_3_end_5,
+        TempleLocationNames.ev_pof_end
     ]
-    pof_3_main_region = create_region(multiworld, player, active_locations, RegionName.pof_3_main, pof_3_main_locations)
+    pof_3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_3_main, pof_3_main_locations)
 
-    b3_main_region = create_region(multiworld, player, active_locations, RegionName.b3_main, [])
-    b3_platform_1_region = create_region(multiworld, player, active_locations, RegionName.b3_platform_1, [])
-    b3_platform_2_region = create_region(multiworld, player, active_locations, RegionName.b3_platform_2, [])
-    b3_platform_3_region = create_region(multiworld, player, active_locations, RegionName.b3_platform_3, [])
+    b3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_main, [])
+    b3_platform_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_platform_1, [])
+    b3_platform_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_platform_2, [])
+    b3_platform_3_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_platform_3, [])
 
-    b3_defeated_locations = [
-        LocationName.ev_victory
-    ]
-    b3_defeated_region = create_region(multiworld, player, active_locations, RegionName.b3_defeated, b3_defeated_locations)
+    b3_defeated_locations = []
+    if multiworld.goal[player].value == 10:
+        b3_defeated_locations.append(TempleLocationNames.ev_victory)
+    b3_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_defeated, b3_defeated_locations)
 
     multiworld.regions += [
         menu_region,
@@ -1241,11 +1274,12 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         b3_platform_2_region,
         b3_platform_3_region,
         b3_defeated_region,
+        get_planks_region
     ]
 
     connect_tots_regions(multiworld, player, active_locations)
 
-    temp_test_region_locations(multiworld, active_locations)
+    check_region_locations(multiworld, active_locations)
 
 
 def connect_tots_regions(multiworld, player: int, active_locations):
@@ -1263,89 +1297,89 @@ def connect_tots_regions(multiworld, player: int, active_locations):
         return state.has(ItemName.pickaxe, player) \
                or state.has(ItemName.pickaxe_fragment, player, multiworld.pickaxe_fragments[player].value)
 
-    connect(multiworld, player, used_names, RegionName.menu, RegionName.hub_main)
+    connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main)
 
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.hub_rocks, has_pickaxe)
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.cave_3_fall, has_pickaxe)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks, has_pickaxe)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.cave_3_fall, has_pickaxe)
     # For the temple entrances in the hub
-    connect(multiworld, player, used_names, RegionName.hub_rocks, RegionName.t3_main)
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.temple_entrance)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_rocks, TempleRegionNames.t3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.temple_entrance)
 
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.library)
-    connect(multiworld, player, used_names, RegionName.library, RegionName.cave_3_main)
-    connect(multiworld, player, used_names, RegionName.cave_3_main, RegionName.cave_3_fields, has_lever)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.library)
+    connect(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields, has_lever)
 
-    connect(multiworld, player, used_names, RegionName.cave_3_main, RegionName.cave_2_main)
-    connect(multiworld, player, used_names, RegionName.cave_2_main, RegionName.cave_2_pumps, has_lever)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_2_main)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_2_pumps, has_lever)
 
-    connect(multiworld, player, used_names, RegionName.cave_2_main, RegionName.cave_1_main)
-    connect(multiworld, player, used_names, RegionName.cave_1_main, RegionName.cave_1_blue_bridge)
-    connect(multiworld, player, used_names, RegionName.cave_1_blue_bridge, RegionName.cave_1_red_bridge)
-    connect(multiworld, player, used_names, RegionName.cave_1_main, RegionName.cave_1_pumps, has_lever)
-    connect(multiworld, player, used_names, RegionName.cave_1_pumps, RegionName.cave_1_green_bridge)
-    connect(multiworld, player, used_names, RegionName.cave_1_green_bridge, RegionName.boss2_main)
-    connect(multiworld, player, used_names, RegionName.boss2_main, RegionName.boss2_defeated)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_1_main)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge, TempleRegionNames.cave_1_red_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_pumps, has_lever)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.cave_1_green_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_green_bridge, TempleRegionNames.boss2_main)
+    connect(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated)
 
-    connect(multiworld, player, used_names, RegionName.cave_1_red_bridge, RegionName.boss_1_main)
-    connect(multiworld, player, used_names, RegionName.boss_1_main, RegionName.boss_1_defeated,
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.boss_1_main)
+    connect(multiworld, player, used_names, TempleRegionNames.boss_1_main, TempleRegionNames.boss_1_defeated,
             lambda state: (state.has(ItemName.key_gold, player, 1)))
 
-    connect(multiworld, player, used_names, RegionName.boss_1_defeated, RegionName.passage_entrance)
-    connect(multiworld, player, used_names, RegionName.passage_entrance, RegionName.passage_mid)
-    connect(multiworld, player, used_names, RegionName.passage_mid, RegionName.passage_end)
+    connect(multiworld, player, used_names, TempleRegionNames.boss_1_defeated, TempleRegionNames.passage_entrance)
+    connect(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid)
+    connect(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end)
 
-    connect(multiworld, player, used_names, RegionName.passage_end, RegionName.temple_entrance_back)
-    connect(multiworld, player, used_names, RegionName.temple_entrance_back, RegionName.temple_entrance,
+    connect(multiworld, player, used_names, TempleRegionNames.passage_end, TempleRegionNames.temple_entrance_back)
+    connect(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.temple_entrance,
             lambda state: (state.has(ItemName.ev_open_temple_entrance_shortcut, player)))
-    connect(multiworld, player, used_names, RegionName.temple_entrance_back, RegionName.t1_main)
+    connect(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main)
 
-    connect(multiworld, player, used_names, RegionName.t1_main, RegionName.t1_sw_cache,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_cache,
             lambda state: (state.has(ItemName.key_silver, player, 1)))
-    connect(multiworld, player, used_names, RegionName.t1_main, RegionName.t1_node_1,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
             lambda state: (state.has(ItemName.mirror, player, 3)))
-    connect(multiworld, player, used_names, RegionName.t1_node_1, RegionName.cave_3_secret)
-    connect(multiworld, player, used_names, RegionName.t1_node_1, RegionName.t1_sun_turret,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.cave_3_secret)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_sun_turret,
             lambda state: (state.has(ItemName.key_silver, player, 2)))
-    connect(multiworld, player, used_names, RegionName.t1_node_1, RegionName.t1_ice_turret,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_ice_turret,
             lambda state: (state.has(ItemName.key_gold, player, 2)))
-    connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_telariana_melt_ice,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telariana_melt_ice,
             lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
     t1_key_ordering = multiworld.random.randint(0, 1)
-    connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_n_of_ice_turret,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_n_of_ice_turret,
             lambda state: (state.has(ItemName.key_silver, player, 3 + t1_key_ordering)))
-    connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_s_of_ice_turret,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_s_of_ice_turret,
             lambda state: (state.has(ItemName.key_silver, player, 3 - t1_key_ordering)))
-    connect(multiworld, player, used_names, RegionName.t1_ice_turret, RegionName.t1_east,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_east,
             lambda state: (state.has(ItemName.key_gold, player, 3)))
-    connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t1_sun_block_hall,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_sun_block_hall,
             lambda state: (state.has(ItemName.mirror, player, 6)))
-    connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t1_node_2,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_node_2,
             lambda state: (state.has(ItemName.mirror, player, 7)))
-    connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t1_ice_chamber_melt_ice,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_ice_chamber_melt_ice,
             lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
 
-    connect(multiworld, player, used_names, RegionName.t1_east, RegionName.t2_main)
-    connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_melt_ice,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
             lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
     t2_key_ordering = multiworld.random.randint(0, 1)
-    connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_n_gate,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_n_gate,
             lambda state: (state.has(ItemName.key_silver, player, 5 + t2_key_ordering))
                           and (state.has(ItemName.ev_krilith_defeated, player)))
-    connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_s_gate,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_s_gate,
             lambda state: (state.has(ItemName.key_silver, player, 5 - t2_key_ordering))
                           and (state.has(ItemName.ev_krilith_defeated, player)))
-    connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_ornate,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_ornate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
-    connect(multiworld, player, used_names, RegionName.t2_n_gate, RegionName.t2_n_node,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
             lambda state: (state.has(ItemName.mirror, player, 10)))
-    connect(multiworld, player, used_names, RegionName.t2_s_gate, RegionName.t2_s_node,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
             lambda state: (state.has(ItemName.mirror, player, 14)))
-    connect(multiworld, player, used_names, RegionName.t2_main, RegionName.t2_light_bridges,
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
             lambda state: (state.has(ItemName.ev_t2_bridge_switch, player, 5)))
-    connect(multiworld, player, used_names, RegionName.t2_light_bridges, RegionName.cave_3_portal)
-    connect(multiworld, player, used_names, RegionName.t2_light_bridges, RegionName.cave_1_temple)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple)
 
-    connect(multiworld, player, used_names, RegionName.t3_main, RegionName.t2_ornate_t3)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3)
     mirrors_needed_n = 14
     mirrors_needed_s = 14
     node_dir = multiworld.random.randrange(2)
@@ -1353,44 +1387,48 @@ def connect_tots_regions(multiworld, player: int, active_locations):
         mirrors_needed_s = 17
     else:
         mirrors_needed_n = 17
-    connect(multiworld, player, used_names, RegionName.t3_main, RegionName.t3_n_node_blocks,
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_n_node_blocks,
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_n + 2)))
-    connect(multiworld, player, used_names, RegionName.t3_n_node_blocks, RegionName.t3_n_node,
+    connect(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node,
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_n + 3)))
-    connect(multiworld, player, used_names, RegionName.t3_main, RegionName.t3_s_node_blocks_1,
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_1,
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 1)))
-    connect(multiworld, player, used_names, RegionName.t3_s_node_blocks_1, RegionName.t3_s_node_blocks_2,
+    connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_1, TempleRegionNames.t3_s_node_blocks_2,
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 2)))
-    connect(multiworld, player, used_names, RegionName.t3_s_node_blocks_2, RegionName.t3_s_node,
+    connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node,
             lambda state: (state.has(ItemName.mirror, player, mirrors_needed_s + 3)))
 
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.pof_1_main,
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
             lambda state: (state.has(ItemName.ev_pof_switch, player, 6)))
-    connect(multiworld, player, used_names, RegionName.pof_1_main, RegionName.pof_1_se_room)
-    connect(multiworld, player, used_names, RegionName.pof_1_se_room, RegionName.pof_1_gate_1,
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_gate_1,
             lambda state: (state.has(ItemName.bonus_key, player, 1)))
-    connect(multiworld, player, used_names, RegionName.pof_1_gate_1, RegionName.pof_1_n_room)
-    connect(multiworld, player, used_names, RegionName.pof_1_n_room, RegionName.pof_1_gate_2,
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_n_room, TempleRegionNames.pof_1_gate_2,
             lambda state: (state.has(ItemName.bonus_key, player, 2)))
-    connect(multiworld, player, used_names, RegionName.pof_1_gate_2, RegionName.pof_2_main)
-    connect(multiworld, player, used_names, RegionName.pof_2_main, RegionName.pof_2_n)
-    connect(multiworld, player, used_names, RegionName.pof_2_n, RegionName.pof_3_main)
-    connect(multiworld, player, used_names, RegionName.pof_3_main, RegionName.hub_pyramid_of_fear,
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_3_main, TempleRegionNames.hub_pyramid_of_fear,
             lambda state: (state.has(ItemName.ev_pof_complete, player)))
 
-    connect(multiworld, player, used_names, RegionName.hub_main, RegionName.b3_main,
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
             lambda state: (state.has(ItemName.ev_solar_node, player, 6)))
-    connect(multiworld, player, used_names, RegionName.b3_main, RegionName.b3_platform_1)
-    connect(multiworld, player, used_names, RegionName.b3_platform_1, RegionName.b3_platform_2)
-    connect(multiworld, player, used_names, RegionName.b3_platform_2, RegionName.b3_platform_3)
-    connect(multiworld, player, used_names, RegionName.b3_platform_3, RegionName.b3_defeated)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_main, TempleRegionNames.b3_platform_1)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.b3_platform_2)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.b3_platform_3)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.b3_defeated)
 
-    connect(multiworld, player, used_names, RegionName.b3_platform_1, RegionName.t3_boss_fall_1)
-    connect(multiworld, player, used_names, RegionName.t3_boss_fall_1, RegionName.t3_main)
-    connect(multiworld, player, used_names, RegionName.b3_platform_2, RegionName.t3_boss_fall_2)
-    connect(multiworld, player, used_names, RegionName.t3_boss_fall_2, RegionName.t3_main)
-    connect(multiworld, player, used_names, RegionName.b3_platform_3, RegionName.t3_boss_fall_3)
-    connect(multiworld, player, used_names, RegionName.t3_boss_fall_3, RegionName.t3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.t3_boss_fall_1)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_1, TempleRegionNames.t3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.t3_boss_fall_2)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_2, TempleRegionNames.t3_main)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.t3_boss_fall_3)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_3, TempleRegionNames.t3_main)
+
+    planks_to_win = multiworld.plank_count[player] * multiworld.plank_win_percent[player] // 100
+    connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.get_planks,
+            lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
 def create_region(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
@@ -1425,7 +1463,7 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
     connection.connect(target_region)
 
 
-def temp_test_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
+def check_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
     # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
     name_list = []
     remaining_locs = active_locations.copy()
@@ -1433,26 +1471,12 @@ def temp_test_region_locations(multiworld: MultiWorld, active_locations: typing.
     for region in multiworld.regions:
         test += len(region.locations)
         for loc in region.locations:
-            if loc.name not in remaining_locs:
-                print(f"Location found not in active locations!!! {loc.name}")
-            remaining_locs.pop(loc.name)
             if loc.name in name_list:
                 print(f"Duplicate location found!!! {loc.name}")
             name_list.append(loc.name)
+            if loc.name not in remaining_locs:
+                print(f"Location found not in active locations!!! {loc.name}")
+            remaining_locs.pop(loc.name)
     for loc_name, data in remaining_locs.items():
         print(f"Missing location in regions!!! {loc_name} {data.code}")
 
-
-def test_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
-    # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
-    name_list = []
-    remaining_locs = active_locations.copy()
-    test = 0
-    for region in multiworld.regions:
-        test += len(region.locations)
-        for loc in region.locations:
-            assert loc.name in remaining_locs  # Location is active test
-            remaining_locs.pop(loc.name)
-            assert loc.name not in name_list  # Duplicate location test
-            name_list.append(loc.name)
-    assert len(remaining_locs) == 0  # Missing region location test
