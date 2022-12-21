@@ -628,7 +628,7 @@ rloc_p_secret_4 = "P Secret 4"
 rloc_p_secret_5 = "P Secret 5"
 rloc_p_secret_6 = "P Secret 6"
 rloc_p_secret_7 = "P Secret 7"
-rloc_p_alley = "P Alley"
+rloc_p_alley = "P Hidden Room"
 rloc_p_puzzle = "P Puzzle 1"
 
 rloc_t1_portal = "T1 Portal"

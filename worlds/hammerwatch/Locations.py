@@ -1191,6 +1191,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         mid_locations_to_remove.remove(TempleLocationNames.p_mid1_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid1_2)
         temple_item_counts[ItemName.chest_wood] += 2
+        random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     elif random_locations[TempleLocationNames.rloc_passage_middle] == 1:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_2)
@@ -1198,6 +1199,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_4)
         temple_item_counts[ItemName.mana_2] += 1
         temple_item_counts[ItemName.mana_1] += 3
+        random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     elif random_locations[TempleLocationNames.rloc_passage_middle] == 2:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid3_secret_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid3_secret_2)
@@ -1211,12 +1213,14 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         temple_item_counts[ItemName.ankh] += 1
         temple_item_counts[ItemName.orange] += 1
         temple_item_counts[ItemName.apple] += 2
+        random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     else:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_2)
         temple_item_counts[ItemName.chest_wood] += 1
         temple_item_counts[ItemName.stat_upgrade] += 1
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_secret)
+        random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     for loc in mid_locations_to_remove:
         if temple_locations[loc].classification == LocationClassification.Secret:
             remove_secret(loc)
@@ -1243,15 +1247,21 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         else:
             location_table.pop(loc)
     # Temple level 1
+    # Custom logic for the keystone location, as a diamond spawns in one of the spots if it doesn't appear there
     t1_keystone_locations: typing.List[str] = [
         TempleLocationNames.t1_sun_block_hall_4,
         TempleLocationNames.t1_fire_trap_by_sun_turret_3,
         TempleLocationNames.t1_ledge_after_block_trap_1,
         TempleLocationNames.t1_sw_cache_3
     ]
-    location_table = keep_one_location(multiworld, location_table, t1_keystone_locations, TempleLocationNames.rloc_t1_keystone)
+    random_locations[TempleLocationNames.rloc_t1_keystone] = multiworld.random.randrange(len(t1_keystone_locations))
+    t1_keystone_locations.pop(random_locations[TempleLocationNames.rloc_t1_keystone])
     if random_locations[TempleLocationNames.rloc_t1_keystone] == 2:  # Remove the diamond that would spawn there
         temple_item_counts[ItemName.diamond_small] -= 1
+    else:
+        t1_keystone_locations.remove(TempleLocationNames.t1_ledge_after_block_trap_1)  # Remove the diamond-filled loc
+    for loc in t1_keystone_locations:
+        location_table.pop(loc)
     random_locations[TempleLocationNames.rloc_t1_portal] = multiworld.random.randrange(3)
     if random_locations[TempleLocationNames.rloc_t1_portal] == 2:
         remove_location(TempleLocationNames.t1_sun_turret_3, ItemName.chest_green)
@@ -1308,22 +1318,22 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         remove_location(TempleLocationNames.t1_sw_hidden_room_4, ItemName.chest_green)
     random_locations[TempleLocationNames.rloc_t1_puzzle_spawn] = multiworld.random.randrange(2)
     if random_locations[TempleLocationNames.rloc_t1_puzzle_spawn] == 0:
-        random_locations[TempleLocationNames.rloc_t1_puzzle_w] = -1
-    else:
         random_locations[TempleLocationNames.rloc_t1_puzzle_e] = -1
+    else:
+        random_locations[TempleLocationNames.rloc_t1_puzzle_w] = -1
     # Temple Level 2
     t2_keystone_locations: typing.List[str] = [
-        TempleLocationNames.t2_nw_ice_turret_4,
+        TempleLocationNames.t2_se_banner_chamber_5,
+        TempleLocationNames.t2_s_balcony_2,
         TempleLocationNames.t2_s_of_portal,
         TempleLocationNames.t2_n_of_sw_gate_2,
+        TempleLocationNames.t2_nw_ice_turret_4,
         TempleLocationNames.t2_boulder_chamber_3,
         TempleLocationNames.t2_left_of_pof_switch_2,
-        TempleLocationNames.t2_s_balcony_2,
-        TempleLocationNames.t2_se_banner_chamber_5
     ]
     location_table = keep_one_location(multiworld, location_table, t2_keystone_locations, TempleLocationNames.rloc_t2_keystone)
     random_locations[TempleLocationNames.rloc_t2_portal] = multiworld.random.randrange(4)
-    if random_locations[TempleLocationNames.rloc_t2_portal] == 2:
+    if random_locations[TempleLocationNames.rloc_t2_portal] != 2:
         remove_location(TempleLocationNames.t2_teleporter, ItemName.stat_upgrade)
     random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_1] = multiworld.random.randrange(2)
     if random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_1] != 0:
@@ -1335,9 +1345,9 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_2] = multiworld.random.randrange(2)
     random_locations[TempleLocationNames.rloc_t2_jones_reward] = multiworld.random.randrange(2)
     t2_gold_key_locations: typing.List[str] = [
-        TempleLocationNames.t2_boulder_room_2,
+        TempleLocationNames.t2_right_of_pof_switch,
         TempleLocationNames.t2_sw_jail_2,
-        TempleLocationNames.t2_right_of_pof_switch
+        TempleLocationNames.t2_boulder_room_2,
     ]
     if random_locations[TempleLocationNames.rloc_t2_jones_reward] == 0:
         location_table = keep_one_location(multiworld, location_table, t2_gold_key_locations,
@@ -1347,19 +1357,19 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         for loc in t2_gold_key_locations:
             location_table.pop(loc)
     t2_silver_key_1_locations: typing.List[str] = [
-        TempleLocationNames.t2_n_of_portal,
-        TempleLocationNames.t2_nw_of_s_ice_turret,
-        TempleLocationNames.t2_w_hall_dead_end_5,
         TempleLocationNames.t2_fire_trap_maze_5,
-        TempleLocationNames.t2_fire_trap_maze_6
+        TempleLocationNames.t2_fire_trap_maze_6,
+        TempleLocationNames.t2_w_hall_dead_end_5,
+        TempleLocationNames.t2_nw_of_s_ice_turret,
+        TempleLocationNames.t2_n_of_portal,
     ]
     location_table = keep_one_location(multiworld, location_table, t2_silver_key_1_locations,
                                        TempleLocationNames.rloc_t2_silver_key_1)
     t2_silver_key_2_locations: typing.List[str] = [
-        TempleLocationNames.t2_boulder_chamber_4,
-        TempleLocationNames.t2_s_balcony_1,
+        TempleLocationNames.t2_se_fireball_hall,
         TempleLocationNames.t2_se_banner_chamber_4,
-        TempleLocationNames.t2_se_fireball_hall
+        TempleLocationNames.t2_s_balcony_1,
+        TempleLocationNames.t2_boulder_chamber_4,
     ]
     location_table = keep_one_location(multiworld, location_table, t2_silver_key_2_locations,
                                        TempleLocationNames.rloc_t2_silver_key_2)
