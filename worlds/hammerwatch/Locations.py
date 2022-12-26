@@ -945,6 +945,9 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         CastleLocationNames.p2_beetle_boss_room_3,
     ]
     location_table = keep_one_location(multiworld, location_table, p2_gkey_2_locs, CastleLocationNames.crloc_p2_gkey_2)
+    if multiworld.difficulty[player].value == 0:
+        remove_location(CastleLocationNames.p2_toggle_spike_trap_reward_2, ItemName.chest_wood)
+        remove_location(CastleLocationNames.p2_toggle_spike_trap_reward_3, ItemName.chest_wood)
 
     # Remove puzzles
     remove_puzzle_locations(CastleLocationNames.p2_puzzle_1[:-1], CastleLocationNames.crloc_p2_puzzle)
@@ -1310,12 +1313,16 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         TempleLocationNames.t1_ice_block_chamber_2
     ]
     location_table = keep_one_location(multiworld, location_table, t1_mirror_locations, TempleLocationNames.rloc_t1_mirror)
-    random_locations[TempleLocationNames.rloc_t1_sw_hidden_room] = multiworld.random.randrange(5)
-    if random_locations[TempleLocationNames.rloc_t1_sw_hidden_room] != 1:
+    # There's a 1/5 chance to potentially open the way to the hidden room
+    random_locations[TempleLocationNames.rloc_t1_sw_hidden_room_random_node] = multiworld.random.randrange(5)
+    random_locations[TempleLocationNames.rloc_t1_sw_hidden_room] = multiworld.random.randrange(2)
+    if random_locations[TempleLocationNames.rloc_t1_sw_hidden_room_random_node] != 1\
+            or random_locations[TempleLocationNames.rloc_t1_sw_hidden_room] == 1:
         remove_location(TempleLocationNames.t1_sw_hidden_room_1, ItemName.vendor_coin)
         remove_location(TempleLocationNames.t1_sw_hidden_room_2, ItemName.stat_upgrade)
         remove_location(TempleLocationNames.t1_sw_hidden_room_3, ItemName.ankh)
         remove_location(TempleLocationNames.t1_sw_hidden_room_4, ItemName.chest_green)
+        random_locations[TempleLocationNames.rloc_t1_sw_hidden_room] = 1
     random_locations[TempleLocationNames.rloc_t1_puzzle_spawn] = multiworld.random.randrange(2)
     if random_locations[TempleLocationNames.rloc_t1_puzzle_spawn] == 0:
         random_locations[TempleLocationNames.rloc_t1_puzzle_e] = -1
@@ -1336,13 +1343,24 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     if random_locations[TempleLocationNames.rloc_t2_portal] != 2:
         remove_location(TempleLocationNames.t2_teleporter, ItemName.stat_upgrade)
     random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_1] = multiworld.random.randrange(2)
-    if random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_1] != 0:
+    random_locations[TempleLocationNames.rloc_t2_w_hidden_room] = multiworld.random.randrange(2)
+    if random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_1] == 0:
+        random_locations[TempleLocationNames.rloc_t2_puzzle_e] = -1  # Turn off east puzzle
+    else:
+        random_locations[TempleLocationNames.rloc_t2_puzzle_nw] = -1
+        random_locations[TempleLocationNames.rloc_t2_w_hidden_room] = 1
+    if random_locations[TempleLocationNames.rloc_t2_w_hidden_room] != 0:
+        # Prevent items from appearing behind the west puzzle in the cache
         remove_location(TempleLocationNames.t2_nw_puzzle_cache_1, ItemName.chest_blue)
         remove_location(TempleLocationNames.t2_nw_puzzle_cache_2, ItemName.chest_blue)
         remove_location(TempleLocationNames.t2_nw_puzzle_cache_3, ItemName.vendor_coin)
         remove_location(TempleLocationNames.t2_nw_puzzle_cache_4, ItemName.stat_upgrade)
         remove_location(TempleLocationNames.t2_nw_puzzle_cache_5, ItemName.ankh)
     random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_2] = multiworld.random.randrange(2)
+    if random_locations[TempleLocationNames.rloc_t2_puzzle_spawn_2] == 0:
+        random_locations[TempleLocationNames.rloc_t2_puzzle_n] = -1
+    else:
+        random_locations[TempleLocationNames.rloc_t2_puzzle_sw] = -1
     random_locations[TempleLocationNames.rloc_t2_jones_reward] = multiworld.random.randrange(2)
     t2_gold_key_locations: typing.List[str] = [
         TempleLocationNames.t2_right_of_pof_switch,
