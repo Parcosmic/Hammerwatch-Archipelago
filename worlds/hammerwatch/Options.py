@@ -20,6 +20,28 @@ class Goal(Choice):
     default = 2
 
 
+class PlayerClass(Choice):
+    """What hero the player will play as during the campaign."""
+    display_name = "Class"
+    option_paladin = 0
+    option_wizard = 1
+    option_ranger = 2
+    option_warlock = 3
+    option_thief = 4
+    option_priest = 5
+    option_sorcerer = 6
+
+
+class Difficulty(Choice):
+    """What difficulty the game will be played on."""
+    display_name = "Difficulty"
+    option_easier = 0
+    alias_easy = 0
+    option_medium = 1
+    option_hard = 2
+    default = 1
+
+
 class RandomLocationBehavior(Choice):
     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
@@ -148,6 +170,8 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "goal": Goal,
     "plank_count": PlankCount,
     "plank_win_percent": PlankWinPercentage,
+    "player_class": PlayerClass,
+    "difficulty": Difficulty,
     "random_location_behavior": RandomLocationBehavior,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_recovery_items": RandomizeRecoveryItems,
