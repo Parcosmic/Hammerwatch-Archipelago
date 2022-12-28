@@ -213,8 +213,12 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
 
     # Strange planks
     if multiworld.goal[player].value % 10 > 0:
-        extra_items = multiworld.plank_count[player].value - item_counts_table[ItemName.plank]
-        item_counts_table[ItemName.plank] = multiworld.plank_count[player].value
+        minimum_planks = 12
+        if multiworld.goal[player].value % 10 == 1:  # Plank hunt
+            minimum_planks = multiworld.planks_required_count[player].value
+        planks_needed = max(multiworld.plank_count[player].value, minimum_planks)
+        extra_items = planks_needed - item_counts_table[ItemName.plank]
+        item_counts_table[ItemName.plank] = planks_needed
     else:  # Remove planks from the pool, they're not needed
         extra_items -= item_counts_table[ItemName.plank]
         item_counts_table.pop(ItemName.plank)
