@@ -11,7 +11,7 @@ class Goal(Choice):
     Castle Plank Hunt: Find a certain number of Strange Planks in Castle Hammerwatch
     Temple Kill ShaRand: Defeat the Sun Guardian Sha'Rand in the Temple of the Sun
     Temple Plank Hunt: Find a certain number of Strange Planks in the Temple of the Sun"""
-    display_name = "Map"
+    display_name = "Goal"
     option_castle_kill_dragon = 0
     option_castle_escape = 2
     option_castle_plank_hunt = 1  # 1 is always plank hunt
@@ -68,20 +68,22 @@ class BonusChestLocationBehavior(Choice):
 
 class PlankCount(Range):
     """Determines the amount of Strange Planks in the game
-    This option does nothing in the Kill Dragon or Kill Sha'Rand goals"""
+    If a Plank Hunt goal is chosen, the minimum value is the value of the Plank Hunt Win Count setting
+    If the Castle Escape goal is chosen, the minimum value is 12
+    This option does nothing in other goals"""
     display_name = "Number of Strange Planks"
-    range_start = 5
+    range_start = 1
     range_end = 25
     default = 12
 
 
-class PlankWinPercentage(Range):
-    """Determines the percentage of Strange Planks are needed to win the game for the Castle Escape or Plank Hunt goals
-    This option does nothing in Kill Dragon or Kill Sha'Rand goals"""
-    display_name = "Percentage of Strange Planks"
-    range_start = 20
-    range_end = 100
-    default = 100
+class PlanksRequiredCount(Range):
+    """Determines the amount of Strange Planks required to win the game for the Plank Hunt goals.
+    This option does nothing in other goals"""
+    display_name = "Planks to Win"
+    range_start = 1
+    range_end = 25
+    default = 12
 
 
 class RandomizeRecoveryItems(Toggle):
@@ -169,7 +171,7 @@ class DeathLink(DeathLink):
 hammerwatch_options: typing.Dict[str, type(Option)] = {
     "goal": Goal,
     "plank_count": PlankCount,
-    "plank_win_percent": PlankWinPercentage,
+    "planks_required_count": PlanksRequiredCount,
     "player_class": PlayerClass,
     "difficulty": Difficulty,
     "random_location_behavior": RandomLocationBehavior,

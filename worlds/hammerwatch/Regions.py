@@ -320,7 +320,7 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
 
     connect_castle_regions(multiworld, player, active_locations)
 
-    check_region_locations(multiworld, active_locations)
+    check_region_locations(multiworld, player, active_locations)
 
 
 def connect_castle_regions(multiworld, player: int, active_locations):
@@ -364,9 +364,9 @@ def connect_castle_regions(multiworld, player: int, active_locations):
 
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.b4_defeated)
 
-    planks_to_win = multiworld.plank_count[player] * multiworld.plank_win_percent[player] // 100
+    planks_to_win = multiworld.planks_required_count[player]
     connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.escaped,
-            lambda state: (state.has(ItemName.plank, player, planks_to_win)))
+            lambda state: (state.has(ItemName.plank, player, 12)))
 
     connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
@@ -1317,7 +1317,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
 
     connect_tots_regions(multiworld, player, active_locations)
 
-    check_region_locations(multiworld, active_locations)
+    check_region_locations(multiworld, player, active_locations)
 
 
 def connect_tots_regions(multiworld, player: int, active_locations):
@@ -1464,7 +1464,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.t3_boss_fall_3)
     connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_3, TempleRegionNames.t3_main)
 
-    planks_to_win = multiworld.plank_count[player] * multiworld.plank_win_percent[player] // 100
+    planks_to_win = multiworld.planks_required_count[player]
     connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.get_planks,
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
@@ -1501,12 +1501,14 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
     connection.connect(target_region)
 
 
-def check_region_locations(multiworld: MultiWorld, active_locations: typing.Dict[str, LocationData]):
+def check_region_locations(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData]):
     # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
     name_list = []
     remaining_locs = active_locations.copy()
     test = 0
     for region in multiworld.regions:
+        if region.player != player:
+            continue
         test += len(region.locations)
         for loc in region.locations:
             if loc.name in name_list:
