@@ -23,6 +23,22 @@ p2_se_bronze_gate = "Prison Floor 2 SE Bronze Gate"
 p2_end = "Prison Floor 2 End"
 
 p3_start = "Prison Floor 3 Start"
+p3_nw_n_bronze_gate = "Prison Floor 3 NW Area North Bronze Gate"
+p3_nw_s_bronze_gate = "Prison Floor 3 NW Area South Bronze Gate"
+p3_silver_gate = "Prison Floor 3 Silver Gate"
+p3_n_gold_gate = "Prison Floor 3 North Gold Gate"
+p3_bonus_return = "Prison Floor 3 Complete Bonus"
+p3_s_bronze_gate = "Prison Floor 3 South Bronze Gate"
+p3_s_gold_gate = "Prison Floor 3 South Gold Gate"
+p3_portal_from_p1 = "Prison Floor 3 Skip Boss Switch"
+
+n1_start = "Bonus 1 Start"
+
+b1_start = "Boss 1 Start"
+b1_arena = "Boss 1 Arena"
+b1_defeated = "Boss 1 Defeated"
+
+a1_start = "Armory Floor 1 Start"
 
 b4_defeated = "Dragon Defeated"
 escaped = "Escaped Castle Hammerwatch"
