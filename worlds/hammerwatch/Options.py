@@ -17,6 +17,8 @@ class Goal(Choice):
     option_castle_plank_hunt = 1  # 1 is always plank hunt
     option_temple_kill_sharand = 10
     option_temple_plank_hunt = 11
+    option_temple_pyramid_of_fear = 13
+    alias_temple_pof = 13
     default = 2
 
 
