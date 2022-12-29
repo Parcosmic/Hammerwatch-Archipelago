@@ -779,11 +779,11 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t1_ice_turret_locations = [
         TempleLocationNames.t1_ice_turret_1,
         TempleLocationNames.t1_ice_turret_2,
-        TempleLocationNames.t1_telariana_1,
-        TempleLocationNames.t1_telariana_2,
-        TempleLocationNames.t1_telariana_3,
-        TempleLocationNames.t1_telariana_4,
-        TempleLocationNames.t1_telariana_5,
+        TempleLocationNames.t1_telarian_1,
+        TempleLocationNames.t1_telarian_2,
+        TempleLocationNames.t1_telarian_3,
+        TempleLocationNames.t1_telarian_4,
+        TempleLocationNames.t1_telarian_5,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_1,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_2,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_3,
@@ -852,12 +852,12 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t1_node_2_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_node_2,
                                      t1_node_2_locations)
 
-    t1_telariana_melt_ice_locations = [
-        TempleLocationNames.t1_telariana_ice
+    t1_telarian_melt_ice_locations = [
+        TempleLocationNames.t1_telarian_ice
     ]
-    t1_telariana_melt_ice_region = create_region(multiworld, player, active_locations,
-                                                 TempleRegionNames.t1_telariana_melt_ice,
-                                                 t1_telariana_melt_ice_locations)
+    t1_telarian_melt_ice_region = create_region(multiworld, player, active_locations,
+                                                TempleRegionNames.t1_telarian_melt_ice,
+                                                t1_telarian_melt_ice_locations)
 
     t1_ice_chamber_melt_ice_locations = [
         TempleLocationNames.t1_ice_block_chamber_ice
@@ -1279,7 +1279,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t1_s_of_ice_turret_region,
         t1_east_region,
         t1_sun_block_hall_region,
-        t1_telariana_melt_ice_region,
+        t1_telarian_melt_ice_region,
         t1_ice_chamber_melt_ice_region,
         boss2_main_region,
         boss2_defeated_region,
@@ -1382,7 +1382,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_silver, player, 2)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_ice_turret,
             lambda state: (state.has(ItemName.key_gold, player, 2)))
-    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telariana_melt_ice,
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telarian_melt_ice,
             lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
     t1_key_ordering = multiworld.random.randint(0, 1)
     connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_n_of_ice_turret,

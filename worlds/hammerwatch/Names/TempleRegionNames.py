@@ -52,7 +52,7 @@ t1_n_of_ice_turret = "Temple Floor 1 North of Ice Turret"
 t1_s_of_ice_turret = "Temple Floor 1 South of Ice Turret"
 t1_east = "Temple Floor 1 East Temple"
 t1_sun_block_hall = "Temple Floor 1 Hall Behind Sun Blocks"
-t1_telariana_melt_ice = "Temple Floor 1 Telariana Ice Block"
+t1_telarian_melt_ice = "Temple Floor 1 Telarian Ice Block"
 t1_ice_chamber_melt_ice = "Temple Floor 1 Ice Block Chamber Ice Block"
 
 boss2_main = "Krilith"
