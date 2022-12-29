@@ -142,6 +142,16 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_sw_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
 
+        # Prison Boss Switches
+        self.multiworld.get_location(CastleLocationNames.ev_p1_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
+        self.multiworld.get_location(CastleLocationNames.ev_p2_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
+        self.multiworld.get_location(CastleLocationNames.ev_p3_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
+        # self.multiworld.get_location(CastleLocationNames.ev_p3_boss_switch_skip, self.player) \
+        #    .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
+
     def place_tots_locked_items(self):
         # Temple shortcut
         self.multiworld.get_location(TempleLocationNames.ev_temple_entrance_rock, self.player) \

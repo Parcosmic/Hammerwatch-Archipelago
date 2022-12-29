@@ -66,6 +66,7 @@ trap_fire = "Fire Trap"
 # Event Names
 ev_victory = "Victory"
 
+ev_castle_b1_boss_switch = "Prison Boss 1 Switch"
 ev_castle_p2_switch = "Prison Floor 2 Switch"
 
 ev_open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
