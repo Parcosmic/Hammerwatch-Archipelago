@@ -425,13 +425,13 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
 
     TempleLocationNames.t1_double_gate_behind_block: LocationData(counter.count()),
     TempleLocationNames.t1_sw_hidden_room_3: LocationData(counter.count()),
-    TempleLocationNames.t1_telariana_ice: LocationData(counter.count()),
+    TempleLocationNames.t1_telarian_ice: LocationData(counter.count()),
     TempleLocationNames.t1_sun_turret_1: LocationData(counter.count(), LocationClassification.Recovery),
-    TempleLocationNames.t1_telariana_2: LocationData(counter.count(), LocationClassification.Recovery),
+    TempleLocationNames.t1_telarian_2: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_boulder_hallway_by_ice_turret_2: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_boulder_hallway_by_ice_turret_1: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_boulder_hallway_by_ice_turret_3: LocationData(counter.count(), LocationClassification.Recovery),
-    TempleLocationNames.t1_telariana_3: LocationData(counter.count(), LocationClassification.Recovery),
+    TempleLocationNames.t1_telarian_3: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_node_2_passage_3: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_node_2_passage_1: LocationData(counter.count(), LocationClassification.Recovery),
     TempleLocationNames.t1_fire_trap_by_sun_turret_1: LocationData(counter.count(), LocationClassification.Recovery),
@@ -494,8 +494,8 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.t1_n_cache_by_ice_turret_2: LocationData(counter.count()),
     TempleLocationNames.t1_n_cache_by_ice_turret_3: LocationData(counter.count()),
     TempleLocationNames.t1_n_sunbeam_treasure_1: LocationData(counter.count()),
-    TempleLocationNames.t1_telariana_4: LocationData(counter.count()),
-    TempleLocationNames.t1_telariana_1: LocationData(counter.count()),
+    TempleLocationNames.t1_telarian_4: LocationData(counter.count()),
+    TempleLocationNames.t1_telarian_1: LocationData(counter.count()),
     TempleLocationNames.t1_node_2_1: LocationData(counter.count()),
     TempleLocationNames.t1_node_2_2: LocationData(counter.count()),
     TempleLocationNames.t1_s_of_sun_turret: LocationData(counter.count()),
@@ -504,7 +504,7 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.t1_s_cache_by_ice_turret_1: LocationData(counter.count()),
     TempleLocationNames.t1_s_bridge_2: LocationData(counter.count()),
     TempleLocationNames.t1_s_bridge_3: LocationData(counter.count()),
-    TempleLocationNames.t1_telariana_5: LocationData(counter.count()),
+    TempleLocationNames.t1_telarian_5: LocationData(counter.count()),
     TempleLocationNames.t1_w_puzzle_1: LocationData(counter.count()),
     TempleLocationNames.t1_w_puzzle_2: LocationData(counter.count()),
     TempleLocationNames.t1_w_puzzle_3: LocationData(counter.count()),
@@ -1097,6 +1097,8 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         random_locations[TempleLocationNames.rloc_pof_puzzle] = -1
     # Dunes
     random_locations[TempleLocationNames.rloc_t3_entrance] = multiworld.random.randrange(3)
+    if multiworld.goal[player].value == 13:  # Remove location after goal
+        location_table.pop(TempleLocationNames.hub_pof_reward)
     # Cave level 3
     random_locations[TempleLocationNames.rloc_squire] = multiworld.random.randrange(6)
     if random_locations[TempleLocationNames.rloc_squire] != 1:
