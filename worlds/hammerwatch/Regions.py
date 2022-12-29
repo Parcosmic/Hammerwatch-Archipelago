@@ -376,7 +376,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     menu_region = create_region(multiworld, player, active_locations, TempleRegionNames.menu, None)
 
     get_planks_locations = []
-    if multiworld.goal[player].value % 10 > 0:
+    if multiworld.goal[player].value % 10 == 1:
         get_planks_locations.append(TempleLocationNames.ev_victory)
     get_planks_region = create_region(multiworld, player, active_locations, TempleRegionNames.get_planks,
                                       get_planks_locations)
@@ -1227,6 +1227,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.pof_3_end_5,
         TempleLocationNames.ev_pof_end
     ]
+    if multiworld.goal[player].value == 13:
+        pof_3_main_locations.append(TempleLocationNames.ev_victory)
     pof_3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_3_main,
                                       pof_3_main_locations)
 

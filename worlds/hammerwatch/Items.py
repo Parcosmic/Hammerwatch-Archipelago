@@ -212,7 +212,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
     # Strange planks
-    if multiworld.goal[player].value % 10 > 0:
+    if multiworld.goal[player].value % 10 == 1 or multiworld.goal[player].value % 10 == 2:
         minimum_planks = 12
         if multiworld.goal[player].value % 10 == 1:  # Plank hunt
             minimum_planks = multiworld.planks_required_count[player].value

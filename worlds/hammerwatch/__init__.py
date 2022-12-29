@@ -36,7 +36,6 @@ class HammerwatchWorld(World):
     game: str = "Hammerwatch"
     option_definitions = hammerwatch_options
     topology_present: bool = True
-    remote_items: bool = False
     remote_start_inventory: bool = True
 
     data_version = 0
