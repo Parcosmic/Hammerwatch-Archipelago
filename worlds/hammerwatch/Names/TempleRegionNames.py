@@ -43,7 +43,7 @@ temple_entrance = "Temple Entrance"
 temple_entrance_back = "Temple Entrance Back"
 
 t1_main = "Temple Floor 1"
-t1_sw_cache = "Temple Floor 1 SW Cache"
+t1_sw_sdoor = "Temple Floor 1 SW Silver Door"
 t1_node_1 = "Temple Floor 1 Node 1 Active"
 t1_node_2 = "Temple Floor 1 Node 2 Active"
 t1_sun_turret = "Temple Floor 1 Sun Turret"

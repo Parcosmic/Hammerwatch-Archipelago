@@ -120,8 +120,8 @@ trap_items: typing.List[str] = [
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 0,
-    ItemName.bonus_key: 0,
+    ItemName.bonus_chest: 38,
+    ItemName.bonus_key: 5,
     ItemName.chest_blue: 0,
     ItemName.chest_green: 0,
     ItemName.chest_purple: 1,
@@ -135,14 +135,14 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.ankh: 10,
     ItemName.ankh_5up: 1,
     ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 4,
+    ItemName.potion_rejuvenation: 5,
     ItemName.potion_invulnerability: 0,
     ItemName.stat_upgrade_damage: 0,
     ItemName.stat_upgrade_defense: 0,
     ItemName.stat_upgrade_health: 0,
     ItemName.stat_upgrade_mana: 0,
-    ItemName.apple: 53,
-    ItemName.orange: 7,
+    ItemName.apple: 58,
+    ItemName.orange: 8,
     ItemName.steak: 1,
     ItemName.fish: 0,
     ItemName.mana_1: 67,
@@ -152,7 +152,7 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.diamond_small: 0,
     ItemName.diamond_small_red: 0,
     ItemName.stat_upgrade: 2,
-    ItemName.secret: 0,
+    ItemName.secret: 0,  # Future me please don't remove this it'll break item gen code
     ItemName.puzzle: 1
 }
 

@@ -264,7 +264,7 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     # CastleLocationNames.p3_skip_boss_switch_1: LocationData(counter.count()),
     # CastleLocationNames.p3_skip_boss_switch_3: LocationData(counter.count()),
     # CastleLocationNames.p3_skip_boss_switch_5: LocationData(counter.count()),
-    CastleLocationNames.p3_n_of_bridge_4: LocationData(counter.count(5), LocationClassification.Recovery),
+    CastleLocationNames.p3_n_of_bridge_4: LocationData(counter.count(6), LocationClassification.Recovery),
     CastleLocationNames.p3_secret_arrow_hall_2: LocationData(counter.count()),
     CastleLocationNames.p3_ne_e_4: LocationData(counter.count()),
     CastleLocationNames.p3_nw_closed_room: LocationData(counter.count()),
@@ -277,6 +277,57 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p3_sw_of_w_shop: LocationData(counter.count()),
     CastleLocationNames.p3_by_m_shop_1: LocationData(counter.count()),
     CastleLocationNames.p3_by_m_shop_2: LocationData(counter.count()),
+
+    CastleLocationNames.n1_room2_s_1: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room2_s_2: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room2_s_3: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room4_w_2: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room4_w_1: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room2_nw_room_4: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_nw_room_5: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_nw_room_2: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_nw_room_1: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_6: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_3: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_5: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_2: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_4: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_n_m_room_1: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_nw_room_6: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room2_nw_room_3: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_1: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_8: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_15: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_16: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_9: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_2: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_3: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_4: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_11: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_10: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_5: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_12: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_6: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_7: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_14: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_13: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_sealed_room_2: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_sealed_room_4: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_sealed_room_3: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_17: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_19: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_20: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room3_w_18: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room4_s_1: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room4_s_2: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room4_s_3: LocationData(counter.count(), LocationClassification.Bonus),
+    CastleLocationNames.n1_room1: LocationData(counter.count()),
+    CastleLocationNames.n1_room3_sealed_room_1: LocationData(counter.count()),
+    CastleLocationNames.n1_room2_small_box: LocationData(counter.count()),
+    CastleLocationNames.n1_entrance: LocationData(counter.count()),
+    CastleLocationNames.n1_room4_m: LocationData(counter.count()),
+    CastleLocationNames.n1_room4_e: LocationData(counter.count(), LocationClassification.Recovery),
+    CastleLocationNames.n1_room2_n_secret_room: LocationData(counter.count()),
 
     CastleLocationNames.b1_reward: LocationData(counter.count()),
     CastleLocationNames.b1_arena_1: LocationData(counter.count(), LocationClassification.Recovery),
@@ -1086,7 +1137,12 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         CastleLocationNames.p3_n_of_bridge_5,
     ]
     location_table = keep_one_location(multiworld, location_table, p3_gkey_1_locs, CastleLocationNames.crloc_p3_gkey)
-
+    # Bonus Level 1
+    remove_location(CastleLocationNames.n1_room1, ItemName.bonus_key)
+    remove_location(CastleLocationNames.n1_room3_sealed_room_1, ItemName.bonus_key)
+    remove_location(CastleLocationNames.n1_room2_small_box, ItemName.bonus_key)
+    remove_location(CastleLocationNames.n1_entrance, ItemName.bonus_key)
+    remove_location(CastleLocationNames.n1_room4_m, ItemName.bonus_key)
     # Remove puzzles
     remove_puzzle_locations(CastleLocationNames.p2_puzzle_1[:-1], CastleLocationNames.crloc_p2_puzzle)
 
@@ -1552,6 +1608,9 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     random_locations[TempleLocationNames.rloc_t3_s_beam_5] = multiworld.random.randrange(2)
     if random_locations[TempleLocationNames.rloc_t3_s_beam_5] == 0:
         remove_location(TempleLocationNames.t3_n_node_blocks_5, ItemName.vendor_coin)
+    # Pyramid of Fear
+    remove_location(TempleLocationNames.pof_1_n_5, ItemName.bonus_key)
+    remove_location(TempleLocationNames.pof_1_ent_5, ItemName.bonus_key)
     # Remove puzzle locations
     remove_puzzle_locations(TempleLocationNames.c3_puzzle_1[:-1], TempleLocationNames.rloc_c3_puzzle)
     remove_puzzle_locations(TempleLocationNames.c2_puzzle_1[:-1], TempleLocationNames.rloc_c2_puzzle)

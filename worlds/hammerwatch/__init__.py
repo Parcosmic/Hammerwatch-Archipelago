@@ -230,7 +230,7 @@ class HammerwatchWorld(World):
             # Temple Floor 1 Rune Key
             t1_locs = []
             t1_locs += get_region_item_locs(TempleRegionNames.t1_main)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_sw_cache)
+            t1_locs += get_region_item_locs(TempleRegionNames.t1_sw_sdoor)
             t1_locs += get_region_item_locs(TempleRegionNames.t1_node_1)
             t1_locs += get_region_item_locs(TempleRegionNames.t1_node_2)
             t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_turret)
