@@ -33,6 +33,10 @@ p3_s_gold_gate = "Prison Floor 3 South Gold Gate"
 p3_portal_from_p1 = "Prison Floor 3 Skip Boss Switch"
 
 n1_start = "Bonus 1 Start"
+n1_room1 = "Bonus 1 Room 1"
+n1_room2 = "Bonus 1 Room 2"
+n1_room3 = "Bonus 1 Room 3"
+n1_room4 = "Bonus 1 Room 4"
 
 b1_start = "Boss 1 Start"
 b1_arena = "Boss 1 Arena"
