@@ -260,7 +260,7 @@ def get_default_options() -> OptionsType:
             "disable_item_cheat": False,
             "location_check_points": 1,
             "hint_cost": 10,
-            "forfeit_mode": "goal",
+            "release_mode": "goal",
             "collect_mode": "disabled",
             "remaining_mode": "goal",
             "auto_shutdown": 0,
@@ -306,6 +306,9 @@ def get_default_options() -> OptionsType:
         },
         "ffr_options": {
             "display_msgs": True,
+        },
+        "lufia2ac_options": {
+            "rom_file": "Lufia II - Rise of the Sinistrals (USA).sfc",
         },
     }
     return options
