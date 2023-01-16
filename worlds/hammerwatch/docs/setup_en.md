@@ -3,29 +3,45 @@
 ## Required Software
 
 - Hammerwatch: [Hammerwatch Steam Page](https://store.steampowered.com/app/239070/Hammerwatch/)
-- [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
+- HammerwatchAP Installer: [GitHub coming soon!]
+- Archipelago: [Archipelago Releases Page](https://github.com/ArchipelagoMW/Archipelago/releases).
 
-## Installation Procedures
+## Hammerwatch Mod Installation Procedures
 
-### Windows Setup
+Download and extract the .zip file containing the installer and necessary files. Move all of these files into your
+Hammerwatch install directory and run HammerwatchAPInstaller.exe. This will create a modded exe called
+HammerwatchAP.exe. Run this to play using Archipelago, and launch the original exe to play without the mod.
 
-Idk how to set it up yet
+To uninstall the mod run APModUninstall.bat to remove all mod files.
 
-## Create a Config (.yaml) File
+## Configuring your config (.yaml) file
 
 ### What is a config file and why do I need one?
 
-See the guide on setting up a basic YAML at the Archipelago setup
-guide: [Basic Multiworld Setup Guide](/tutorial/Archipelago/setup/en)
+See the guide for info about YAML files on the Archipelago setup guide: 
+[Archipelago Setup Guide](/tutorial/Archipelago/setup/en)
 
 ### Where do I get a config file?
 
-The Player Settings page on the website allows you to configure your personal settings and export a config file from
-them. Player settings page: [Hammerwatch Player Settings Page](/games/Donkey%20Kong%20Country%203/player-settings)
+You can configure the settings for your game on the Player Settings page and export them as a config file.
+Player settings page: [Hammerwatch Player Settings Page](/games/Hammerwatch/player-settings)
 
 ### Verifying your config file
 
-If you would like to validate your config file to make sure it works, you may do so on the YAML Validator page. YAML
-validator page: [YAML Validation page](/mysterycheck)
+To make sure your config file is formatted correctly you can check it on the YAML Validation page:
+[YAML Validation page](/mysterycheck)
 
+## Joining a multiworld game
 
+1. Run HammerwatchAP.exe
+2. Select "Archipelago" on the main menu
+3. In the first field of the dialogue box enter the sever ip address together with the port (ex. archipelago.gg:38281)
+4. In the second field enter your slot name
+5. In the third field enter the server password if it has one, else leave it blank
+6. Select "OK". The first time you connect to the server the game will appear to be frozen for several seconds while
+the level is generating
+7. Once ready and connected you may select your hero's color, then select "Play" to start playing!
+
+When later reconnecting to a server you have previously played on, if a save exists for that game it will automatically 
+be loaded after selecting "OK". Alternatively, you can select an Archipelago save using "Load" on the main menu. This 
+will automatically try to connect you to the server and load the game.

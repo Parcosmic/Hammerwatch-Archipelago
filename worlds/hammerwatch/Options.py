@@ -6,11 +6,12 @@ from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, O
 class Goal(Choice):
     """Determines the goal of the seed. Some goals are specific to certain campaigns
     Options starting with "Castle" are played in the Castle Hammerwatch campaign, while "Temple" options are played in the Temple of the Sun Campaign
-    Castle Kill Dragon: Defeat the dragon at the top of Castle Hammerwatch. Escaping with your life is NOT required
-    Castle Escape: Find a certain number of Strange Planks, defeat the dragon, and escape
+    Castle Kill Dragon: Defeat the dragon at the top of Castle Hammerwatch. Escaping is NOT required
+    Castle Escape: Find at least 12 Strange Planks, defeat the dragon, and escape with your life
     Castle Plank Hunt: Find a certain number of Strange Planks in Castle Hammerwatch
     Temple Kill ShaRand: Defeat the Sun Guardian Sha'Rand in the Temple of the Sun
-    Temple Plank Hunt: Find a certain number of Strange Planks in the Temple of the Sun"""
+    Temple Plank Hunt: Find a certain number of Strange Planks in the Temple of the Sun
+    Temple Pyramid of Fear: Unlock and complete the Pyramid of Fear"""
     display_name = "Goal"
     option_castle_kill_dragon = 0
     option_castle_escape = 2
@@ -70,7 +71,7 @@ class BonusChestLocationBehavior(Choice):
 
 class PlankCount(Range):
     """Determines the amount of Strange Planks in the game
-    If a Plank Hunt goal is chosen, the minimum value is the value of the Plank Hunt Win Count setting
+    If a Plank Hunt goal is chosen, the minimum value is the value of the Planks to Win setting
     If the Castle Escape goal is chosen, the minimum value is 12
     This option does nothing in other goals"""
     display_name = "Number of Strange Planks"
