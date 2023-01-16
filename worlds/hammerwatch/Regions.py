@@ -1127,6 +1127,7 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 27)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2)
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a3_pyramids_s_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 21)))
 
