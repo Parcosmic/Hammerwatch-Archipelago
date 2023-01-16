@@ -494,8 +494,446 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
                                        b1_defeated_locs)
 
     a1_start_locs = [
+        CastleLocationNames.a1_s_save_1,
+        CastleLocationNames.a1_s_save_2,
     ]
     a1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start, a1_start_locs)
+
+    a1_e_locs = [
+        CastleLocationNames.a1_m_trellis_secret,
+        CastleLocationNames.a1_n_save_1,
+        CastleLocationNames.a1_n_save_2,
+        CastleLocationNames.a1_n_save_3,
+        CastleLocationNames.a1_n_save_4,
+        CastleLocationNames.a1_ne_top_room_1,
+        CastleLocationNames.a1_ne_top_room_2,
+        CastleLocationNames.a1_ne_top_room_3,
+        CastleLocationNames.a1_e_m_1,
+        CastleLocationNames.a1_e_m_2,
+        CastleLocationNames.a1_e_m_3,
+        CastleLocationNames.a1_n_boss_hall,
+        CastleLocationNames.a1_m_ice_tower_1,
+        CastleLocationNames.a1_m_ice_tower_2,
+        CastleLocationNames.a1_m_ice_tower_3,
+        CastleLocationNames.a1_m_ice_tower_4,
+        CastleLocationNames.a1_e_n_fireball_trap,
+        CastleLocationNames.a1_e_e_fireball_trap,
+        CastleLocationNames.a1_e_ne,
+        CastleLocationNames.a1_ne_1,
+        CastleLocationNames.a1_ne_2,
+        CastleLocationNames.a1_ne_3,
+        CastleLocationNames.a1_e_e,
+        CastleLocationNames.a1_e_se,
+        CastleLocationNames.a1_n_tp,
+        CastleLocationNames.a1_ne_ice_tower_secret
+    ]
+    a1_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e, a1_e_locs)
+
+    a1_se_cache_locs = [
+        CastleLocationNames.a1_se_cache_1,
+        CastleLocationNames.a1_se_cache_2,
+        CastleLocationNames.a1_se_cache_3,
+        CastleLocationNames.a1_se_cache_4,
+    ]
+    a1_se_cache_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_se_cache,
+                                       a1_se_cache_locs)
+
+    a1_e_ne_bgate_locs = [
+        CastleLocationNames.a1_e_ne_bgate,
+    ]
+    a1_e_ne_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e_ne_bgate,
+                                         a1_e_ne_bgate_locs)
+
+    a1_red_spikes_locs = [
+        CastleLocationNames.a1_red_spikes_1,
+        CastleLocationNames.a1_red_spikes_2,
+        CastleLocationNames.a1_red_spikes_3,
+    ]
+    a1_red_spikes_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_red_spikes,
+                                         a1_red_spikes_locs)
+
+    a1_n_bgate_locs = [
+        CastleLocationNames.a1_n_cache_1,
+        CastleLocationNames.a1_n_cache_2,
+        CastleLocationNames.a1_n_cache_3,
+        CastleLocationNames.a1_n_cache_4,
+        CastleLocationNames.a1_n_cache_5,
+        CastleLocationNames.a1_n_cache_6,
+        CastleLocationNames.a1_n_cache_7,
+        CastleLocationNames.a1_n_cache_8,
+        CastleLocationNames.a1_n_cache_9,
+    ]
+    a1_n_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_n_bgate,
+                                      a1_n_bgate_locs)
+
+    a1_w_locs = [
+        CastleLocationNames.a1_nw_left_1,
+        CastleLocationNames.a1_nw_left_2,
+        CastleLocationNames.a1_nw_left_3,
+        CastleLocationNames.a1_nw_left_4,
+        CastleLocationNames.a1_nw_left_5,
+        CastleLocationNames.a1_nw_right_1,
+        CastleLocationNames.a1_nw_right_2,
+        CastleLocationNames.a1_nw_right_3,
+        CastleLocationNames.a1_nw_right_4,
+        CastleLocationNames.a1_sw_n_1,
+        CastleLocationNames.a1_sw_n_2,
+        CastleLocationNames.a1_sw_n_3,
+        CastleLocationNames.a1_sw_w_1,
+        CastleLocationNames.a1_sw_w_2,
+        CastleLocationNames.a1_w_save_1,
+        CastleLocationNames.a1_w_save_2,
+        CastleLocationNames.a1_puzzle_1,
+        CastleLocationNames.a1_puzzle_2,
+        CastleLocationNames.a1_puzzle_3,
+        CastleLocationNames.a1_puzzle_4,
+        CastleLocationNames.ev_a1_boss_switch,
+    ]
+    a1_w_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_w, a1_w_locs)
+
+    a1_nw_bgate_locs = [
+        CastleLocationNames.a1_nw_bgate
+    ]
+    a1_nw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_nw_bgate,
+                                       a1_nw_bgate_locs)
+
+    a1_sw_spikes_locs = [
+        CastleLocationNames.a1_sw_spikes
+    ]
+    a1_sw_spikes_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_sw_spikes,
+                                        a1_sw_spikes_locs)
+
+    a1_from_a2_locs = [
+        CastleLocationNames.a1_from_a2_1,
+        CastleLocationNames.a1_from_a2_2,
+        CastleLocationNames.a1_from_a2_3,
+    ]
+    a1_from_a2_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_from_a2,
+                                      a1_from_a2_locs)
+
+    a2_start_locs = [
+        CastleLocationNames.a2_n_of_s_save_1,
+        CastleLocationNames.a2_n_of_s_save_2,
+        CastleLocationNames.a2_n_of_s_save_3,
+        CastleLocationNames.a2_n_of_s_save_4,
+        CastleLocationNames.a2_s_fire_trap_1,
+        CastleLocationNames.a2_s_fire_trap_2,
+        CastleLocationNames.a2_sw_ice_tower,
+        CastleLocationNames.a2_sw_ice_tower_tp,
+        CastleLocationNames.a2_s_ice_tower_1,
+        CastleLocationNames.a2_s_ice_tower_2,
+        CastleLocationNames.a2_s_ice_tower_3,
+        CastleLocationNames.a2_s_ice_tower_4,
+        CastleLocationNames.a2_s_ice_tower_5,
+        CastleLocationNames.a2_e_of_s_save_1,
+        CastleLocationNames.a2_e_of_s_save_2,
+        CastleLocationNames.a2_e_of_s_save_3,
+        CastleLocationNames.a2_e_of_s_save_4,
+        CastleLocationNames.a2_se_tp,
+        CastleLocationNames.a2_puzzle_1,
+        CastleLocationNames.a2_puzzle_2,
+        CastleLocationNames.a2_puzzle_3,
+        CastleLocationNames.a2_puzzle_4,
+    ]
+    a2_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_start, a2_start_locs)
+
+    a2_s_bgate_locs = [
+        CastleLocationNames.a2_s_bgate,
+    ]
+    a2_s_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_s_bgate,
+                                      a2_s_bgate_locs)
+
+    a2_ne_locs = [
+        CastleLocationNames.a2_s_of_n_save_1,
+        CastleLocationNames.a2_s_of_n_save_2,
+        CastleLocationNames.a2_s_of_n_save_3,
+        CastleLocationNames.a2_nw_ice_tower_across_1,
+        CastleLocationNames.a2_nw_ice_tower_across_2,
+        CastleLocationNames.a2_nw_ice_tower_across_3,
+        CastleLocationNames.a2_nw_ice_tower_across_4,
+        CastleLocationNames.a2_e_save_room_1,
+        CastleLocationNames.a2_e_save_room_2,
+        CastleLocationNames.a2_e_save_room_3,
+        CastleLocationNames.a2_e_save_room_4,
+        CastleLocationNames.a2_e_save_room_5,
+        CastleLocationNames.a2_e_save_room_6,
+        CastleLocationNames.a2_n_of_ne_fire_traps_1,
+        CastleLocationNames.a2_n_of_ne_fire_traps_2,
+        CastleLocationNames.a2_s_of_ne_fire_traps_1,
+        CastleLocationNames.a2_s_of_ne_fire_traps_2,
+        CastleLocationNames.a2_ne_ice_tower_1,
+        CastleLocationNames.a2_ne_ice_tower_2,
+        CastleLocationNames.a2_ne_ice_tower_3,
+        CastleLocationNames.a2_ne_ice_tower_4,
+        CastleLocationNames.a2_ne_ice_tower_5,
+        CastleLocationNames.a2_ne_ice_tower_6,
+        CastleLocationNames.a2_ne_ice_tower_7,
+        CastleLocationNames.a2_ne_ice_tower_8,
+        CastleLocationNames.a2_ne_ice_tower_9,
+        CastleLocationNames.a2_se_of_e_ice_tower_1,
+        CastleLocationNames.a2_se_of_e_ice_tower_2,
+        CastleLocationNames.a2_se_of_e_ice_tower_3,
+        CastleLocationNames.a2_ne_tp,
+        CastleLocationNames.ev_a2_boss_switch,
+    ]
+    a2_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne, a2_ne_locs)
+
+    a2_ne_l_bgate_locs = [
+        CastleLocationNames.a2_ne_l_bgate,
+    ]
+    a2_ne_l_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_l_bgate,
+                                         a2_ne_l_bgate_locs)
+
+    a2_ne_r_bgate_locs = [
+        CastleLocationNames.a2_ne_r_bgate_1,
+        CastleLocationNames.a2_ne_r_bgate_2,
+    ]
+    a2_ne_r_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_r_bgate,
+                                         a2_ne_r_bgate_locs)
+
+    a2_e_locs = [
+        CastleLocationNames.a2_e_ice_tower_1,
+        CastleLocationNames.a2_e_ice_tower_2,
+        CastleLocationNames.a2_e_ice_tower_3,
+        CastleLocationNames.a2_e_ice_tower_4,
+        CastleLocationNames.a2_e_ice_tower_5,
+        CastleLocationNames.a2_e_ice_tower_6,
+        CastleLocationNames.a2_s_of_e_bgate,
+    ]
+    a2_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_e, a2_e_locs)
+
+    a2_e_bgate_locs = [
+        CastleLocationNames.a2_e_bgate,
+    ]
+    a2_e_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_e_bgate,
+                                      a2_e_bgate_locs)
+
+    a2_nw_locs = [
+        CastleLocationNames.a2_pyramid_1,
+        CastleLocationNames.a2_pyramid_3,
+        CastleLocationNames.a2_pyramid_4,
+        CastleLocationNames.a2_nw_ice_tower,
+        CastleLocationNames.a2_by_w_a1_stair,
+    ]
+    a2_nw_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_nw, a2_nw_locs)
+
+    a2_bonus_return_locs = [
+        CastleLocationNames.a2_bonus_return,
+    ]
+    a2_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_bonus_return,
+                                           a2_bonus_return_locs)
+
+    a2_blue_spikes_locs = [
+        CastleLocationNames.a2_blue_spikes,
+        CastleLocationNames.a2_nw_tp,
+    ]
+    a2_blue_spikes_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_blue_spikes,
+                                          a2_blue_spikes_locs)
+
+    n2_start_locs = [
+        CastleLocationNames.n2_start_1,
+        CastleLocationNames.n2_start_2,
+        CastleLocationNames.n2_start_3,
+        CastleLocationNames.n2_start_4,
+    ]
+    n2_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_start, n2_start_locs)
+
+    n2_m_locs = [
+        CastleLocationNames.n2_m_m_1,
+        CastleLocationNames.n2_m_m_2,
+        CastleLocationNames.n2_m_m_3,
+        CastleLocationNames.n2_m_n,
+        CastleLocationNames.n2_m_e,
+        CastleLocationNames.n2_m_se_1,
+        CastleLocationNames.n2_m_se_2,
+        CastleLocationNames.n2_m_se_3,
+        CastleLocationNames.n2_m_se_4,
+        CastleLocationNames.n2_m_se_5,
+    ]
+    n2_m_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_m, n2_m_locs)
+
+    n2_nw_locs = [
+        CastleLocationNames.n2_nw_top_1,
+        CastleLocationNames.n2_nw_top_2,
+        CastleLocationNames.n2_nw_top_3,
+        CastleLocationNames.n2_nw_top_4,
+        CastleLocationNames.n2_nw_top_5,
+        CastleLocationNames.n2_nw_top_6,
+        CastleLocationNames.n2_nw_top_7,
+        CastleLocationNames.n2_nw_top_8,
+        CastleLocationNames.n2_nw_top_9,
+        CastleLocationNames.n2_nw_bottom_1,
+        CastleLocationNames.n2_nw_bottom_2,
+        CastleLocationNames.n2_nw_bottom_3,
+        CastleLocationNames.n2_nw_bottom_4,
+    ]
+    n2_nw_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_nw, n2_nw_locs)
+
+    n2_w_locs = [
+        CastleLocationNames.n2_w_1,
+        CastleLocationNames.n2_w_2,
+        CastleLocationNames.n2_w_3,
+        CastleLocationNames.n2_w_4,
+        CastleLocationNames.n2_w_5,
+        CastleLocationNames.n2_w_6,
+        CastleLocationNames.n2_w_7,
+        CastleLocationNames.n2_w_8,
+        CastleLocationNames.n2_w_9,
+        CastleLocationNames.n2_w_10,
+        CastleLocationNames.n2_w_11,
+        CastleLocationNames.n2_w_12,
+        CastleLocationNames.n2_w_13,
+        CastleLocationNames.n2_w_14,
+        CastleLocationNames.n2_w_15,
+    ]
+    n2_w_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_w, n2_w_locs)
+
+    n2_e_locs = [
+        CastleLocationNames.n2_e_1,
+        CastleLocationNames.n2_e_2,
+        CastleLocationNames.n2_e_3,
+        CastleLocationNames.n2_e_4,
+        CastleLocationNames.n2_e_5,
+        CastleLocationNames.n2_e_6,
+        CastleLocationNames.n2_e_7,
+        CastleLocationNames.n2_e_8,
+        CastleLocationNames.n2_e_9,
+        CastleLocationNames.n2_e_10,
+        CastleLocationNames.n2_e_11,
+        CastleLocationNames.n2_e_12,
+        CastleLocationNames.n2_e_13,
+        CastleLocationNames.n2_e_14,
+        CastleLocationNames.n2_e_15,
+    ]
+    n2_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_e, n2_e_locs)
+
+    n2_n_locs = [
+        CastleLocationNames.n2_n_1,
+        CastleLocationNames.n2_n_2,
+        CastleLocationNames.n2_n_3,
+        CastleLocationNames.n2_n_4,
+        CastleLocationNames.n2_n_5,
+        CastleLocationNames.n2_n_6,
+        CastleLocationNames.n2_n_7,
+        CastleLocationNames.n2_n_8,
+        CastleLocationNames.n2_n_9,
+        CastleLocationNames.n2_n_10,
+        CastleLocationNames.n2_n_11,
+        CastleLocationNames.n2_n_12,
+        CastleLocationNames.n2_n_13,
+        CastleLocationNames.n2_n_14,
+        CastleLocationNames.n2_n_15,
+    ]
+    n2_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_n, n2_n_locs)
+
+    n2_s_locs = [
+        CastleLocationNames.n2_s_1,
+        CastleLocationNames.n2_s_2,
+        CastleLocationNames.n2_s_3,
+        CastleLocationNames.n2_s_4,
+        CastleLocationNames.n2_s_5,
+        CastleLocationNames.n2_s_6,
+        CastleLocationNames.n2_s_7,
+        CastleLocationNames.n2_s_8,
+        CastleLocationNames.n2_s_9,
+    ]
+    n2_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_s, n2_s_locs)
+
+    n2_ne_locs = [
+        CastleLocationNames.n2_ne_1,
+        CastleLocationNames.n2_ne_2,
+        CastleLocationNames.n2_ne_3,
+        CastleLocationNames.n2_ne_4,
+    ]
+    n2_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_ne, n2_ne_locs)
+
+    a3_main_locs = [
+        CastleLocationNames.a3_s_banner_secret,
+        CastleLocationNames.a3_nw_save_2,
+        CastleLocationNames.a3_nw_save_3,
+        CastleLocationNames.a3_ne_ice_towers_1,
+        CastleLocationNames.a3_ne_ice_towers_2,
+        CastleLocationNames.a3_ne_ice_towers_3,
+        CastleLocationNames.a3_pyramids_s_1,
+        CastleLocationNames.a3_pyramids_s_2,
+        CastleLocationNames.a3_pyramids_s_3,
+        CastleLocationNames.a3_e_ice_towers_1,
+        CastleLocationNames.a3_e_ice_towers_2,
+        CastleLocationNames.a3_sw_3,
+        CastleLocationNames.a3_spike_floor_8,
+        CastleLocationNames.a3_spike_floor_15,
+        CastleLocationNames.a3_spike_floor_11,
+        CastleLocationNames.a3_spike_floor_14,
+        CastleLocationNames.a3_nw_save_1,
+        CastleLocationNames.a3_s_of_knife_puzzle,
+        CastleLocationNames.a3_fireball_hall_2,
+        CastleLocationNames.a3_pyramids_s_5,
+        CastleLocationNames.a3_pyramids_s_4,
+        CastleLocationNames.a3_e_ice_towers_3,
+        CastleLocationNames.a3_spike_floor_1,
+        CastleLocationNames.a3_secret_shop,
+        CastleLocationNames.a3_spike_floor_7,
+        CastleLocationNames.a3_spike_floor_4,
+        CastleLocationNames.a3_spike_floor_9,
+        CastleLocationNames.a3_spike_floor_13,
+        CastleLocationNames.a3_s_of_n_save_2,
+        CastleLocationNames.a3_pyramids_n_3,
+        CastleLocationNames.a3_pyramids_n_2,
+        CastleLocationNames.a3_pyramids_n_1,
+        CastleLocationNames.a3_ne_ice_towers_6,
+        CastleLocationNames.a3_ne_ice_towers_5,
+        CastleLocationNames.a3_ne_ice_towers_4,
+        CastleLocationNames.a3_pyramids_n_5,
+        CastleLocationNames.a3_pyramids_n_4,
+        CastleLocationNames.a3_pyramids_s_6,
+        CastleLocationNames.a3_pyramids_s_7,
+        CastleLocationNames.a3_sw_1,
+        CastleLocationNames.a3_sw_2,
+        CastleLocationNames.a3_se_boss_room_1,
+        CastleLocationNames.a3_se_boss_room_2,
+        CastleLocationNames.a3_spike_floor_6,
+        CastleLocationNames.a3_spike_floor_5,
+        CastleLocationNames.a3_se_boss_room_3,
+        CastleLocationNames.a3_s_of_n_save_1,
+        CastleLocationNames.a3_pyramids_e,
+        CastleLocationNames.a3_spike_floor_3,
+        CastleLocationNames.a3_spike_floor_12,
+        CastleLocationNames.a3_spike_floor_2,
+        CastleLocationNames.a3_pyramid,
+        CastleLocationNames.a3_fireball_hall_1,
+        CastleLocationNames.a3_e_of_spike_floor,
+        CastleLocationNames.a3_spike_floor_10,
+        CastleLocationNames.a3_m_tp,
+        CastleLocationNames.ev_a3_boss_switch,
+    ]
+    a3_main_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_main, a3_main_locs)
+
+    a3_knife_puzzle_reward_locs = [
+        CastleLocationNames.a3_knife_puzzle_reward_l_1,
+        CastleLocationNames.a3_knife_puzzle_reward_l_2,
+        CastleLocationNames.a3_knife_puzzle_reward_l_3,
+        CastleLocationNames.a3_knife_puzzle_reward_l_4,
+        CastleLocationNames.a3_knife_puzzle_reward_l_5,
+        CastleLocationNames.a3_knife_puzzle_reward_r,
+    ]
+    a3_knife_puzzle_reward_region = create_region(multiworld, player, active_locations,
+                                                  CastleRegionNames.a3_knife_puzzle_reward, a3_knife_puzzle_reward_locs)
+
+    a3_pyramids_s_bgate_locs = [
+        CastleLocationNames.a3_pyramids_s_bgate_tp
+    ]
+    a3_pyramids_s_bgate_region = create_region(multiworld, player, active_locations,
+                                               CastleRegionNames.a3_pyramids_s_bgate, a3_pyramids_s_bgate_locs)
+
+    b2_start_locs = [
+    ]
+    b2_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_start, b2_start_locs)
+
+    b2_defeated_locs = [
+        CastleLocationNames.b2_boss_reward
+    ]
+    b2_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_defeated,
+                                       b2_defeated_locs)
 
     b4_defeated_locations = []
     if multiworld.goal[player].value == 0:
@@ -552,6 +990,38 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         b1_arena_region,
         b1_defeated_region,
         a1_start_region,
+        a1_e_region,
+        a1_se_cache_region,
+        a1_e_ne_bgate_region,
+        a1_red_spikes_region,
+        a1_n_bgate_region,
+        a1_w_region,
+        a1_nw_bgate_region,
+        a1_sw_spikes_region,
+        a1_from_a2_region,
+        a2_start_region,
+        a2_s_bgate_region,
+        a2_ne_region,
+        a2_ne_l_bgate_region,
+        a2_ne_r_bgate_region,
+        a2_e_region,
+        a2_e_bgate_region,
+        a2_nw_region,
+        a2_bonus_return_region,
+        a2_blue_spikes_region,
+        n2_start_region,
+        n2_m_region,
+        n2_nw_region,
+        n2_n_region,
+        n2_e_region,
+        n2_s_region,
+        n2_w_region,
+        n2_ne_region,
+        a3_main_region,
+        a3_knife_puzzle_reward_region,
+        a3_pyramids_s_bgate_region,
+        b2_start_region,
+        b2_defeated_region,
         b4_defeated_region,
         escaped_region,
         get_planks_region
@@ -610,7 +1080,6 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_silver, player, 2)
                            and state.has(ItemName.key_bronze, player, 12)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.n1_start)
-    connect(multiworld, player, used_names, CastleRegionNames.p3_bonus_return, CastleRegionNames.p3_n_gold_gate)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p1_from_p3_n)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_gold_gate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
@@ -629,7 +1098,55 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.a1_start)
 
-    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b4_defeated)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_e,
+            lambda state: (state.has(ItemName.key_silver, player, 4)) and (state.has(ItemName.key_bronze, player, 21)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_se_cache,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_ne_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_red_spikes)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_n_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_w,
+            lambda state: (state.has(ItemName.key_silver, player, 4)) and (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_nw_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 31)))
+    connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes)
+
+    connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 21)))
+    connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_ne,
+            lambda state: (state.has(ItemName.key_silver, player, 4)) and (state.has(ItemName.key_bronze, player, 21)))
+    connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_l_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_r_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 27)))
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a3_pyramids_s_bgate,
+            lambda state: (state.has(ItemName.key_bronze, player, 21)))
+
+    connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_blue_spikes)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return)
+
+    connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a2_nw)
+    connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_puzzle_reward)
+
+    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
+            lambda state: (state.has(ItemName.ev_castle_b2_boss_switch, player, 3)))
+    connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_defeated)
+    connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.b4_defeated)
 
     planks_to_win = multiworld.planks_required_count[player]
     connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.escaped,
