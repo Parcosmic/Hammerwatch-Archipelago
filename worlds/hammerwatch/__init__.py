@@ -47,6 +47,7 @@ class HammerwatchWorld(World):
 
     campaign: Campaign = Campaign.Castle
     active_location_list: typing.Dict[str, LocationData]
+    item_counts: typing.Dict[str, int]
     preplaced_items: int = 0
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
@@ -64,7 +65,8 @@ class HammerwatchWorld(World):
             self.campaign = Campaign.Castle
         elif self.multiworld.goal[self.player] // 10 == 1:
             self.campaign = Campaign.Temple
-        self.active_location_list = setup_locations(self.multiworld, self.campaign, self.player)
+        # self.item_counts, extra_items = get_item_counts(self.multiworld, self.campaign, self.player)
+        self.active_location_list, self.item_counts = setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
         self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
@@ -103,12 +105,12 @@ class HammerwatchWorld(World):
                 total_required_locations -= 6
 
         # Get the counts of each item we'll put in
-        item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.campaign, self.player)
+        # item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.campaign, self.player)
 
         # Add items
         for item in item_table:
-            if item in item_counts:
-                item_names += [item] * item_counts[item]
+            if item in self.item_counts:
+                item_names += [item] * self.item_counts[item]
 
         # Exclude items if the player starts with them
         exclude = [item for item in self.multiworld.precollected_items[self.player]]
@@ -159,6 +161,14 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
         self.multiworld.get_location(CastleLocationNames.ev_a3_boss_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
+
+        # Archives Boss Switches
+        self.multiworld.get_location(CastleLocationNames.ev_r1_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
+        self.multiworld.get_location(CastleLocationNames.ev_r2_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
+        self.multiworld.get_location(CastleLocationNames.ev_r3_boss_switch, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
 
     def place_tots_locked_items(self):
         # Temple shortcut

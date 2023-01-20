@@ -19,11 +19,11 @@ counter = Counter(0x130000 - 1)
 collectable_table: typing.Dict[str, ItemData] = {
     ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.chest_blue: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.chest_green: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.chest_purple: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.chest_red: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.chest_wood: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.chest_blue: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.chest_green: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.chest_purple: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.chest_red: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.chest_wood: ItemData(counter.count(), ItemClassification.useful),
     ItemName.vendor_coin: ItemData(counter.count(), ItemClassification.filler),
     ItemName.plank: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_bronze: ItemData(counter.count(), ItemClassification.progression),
@@ -32,12 +32,12 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.mirror: ItemData(counter.count(), ItemClassification.progression),
     ItemName.ore: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_teleport: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.potion_damage: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.potion_rejuvenation: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.potion_invulnerability: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.ankh: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.potion_damage: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.potion_rejuvenation: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.potion_invulnerability: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_red: ItemData(counter.count(), ItemClassification.filler),
     ItemName.diamond_small: ItemData(counter.count(), ItemClassification.filler),
@@ -69,7 +69,7 @@ tool_table: typing.Dict[str, ItemData] = {
 
 special_table: typing.Dict[str, ItemData] = {
     ItemName.sonic_ring: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
+    ItemName.serious_health: ItemData(counter.count(), ItemClassification.useful)
 }
 
 trap_table: typing.Dict[str, ItemData] = {
@@ -124,22 +124,22 @@ trap_items: typing.List[str] = [
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 113,
-    ItemName.bonus_key: 11,
-    ItemName.chest_blue: 0,
-    ItemName.chest_green: 16,
-    ItemName.chest_purple: 1,
+    ItemName.bonus_chest: 169,
+    ItemName.bonus_key: 14,
+    ItemName.chest_blue: 9,
+    ItemName.chest_green: 17,
+    ItemName.chest_purple: 5,
     ItemName.chest_red: 0,
-    ItemName.chest_wood: 17,
-    ItemName.vendor_coin: 31,
-    ItemName.plank: 6,
-    ItemName.key_bronze: 41,
-    ItemName.key_silver: 5,
-    ItemName.key_gold: 6,
-    ItemName.ankh: 17,
-    ItemName.ankh_5up: 2,
+    ItemName.chest_wood: 20,
+    ItemName.vendor_coin: 48,
+    ItemName.plank: 9,
+    ItemName.key_bronze: 61,
+    ItemName.key_silver: 10,
+    ItemName.key_gold: 13,
+    ItemName.ankh: 24,
+    ItemName.ankh_5up: 4,
     ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 9,
+    ItemName.potion_rejuvenation: 14,
     ItemName.potion_invulnerability: 0,
     ItemName.diamond: 1,
     ItemName.diamond_red: 0,
@@ -149,15 +149,14 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.stat_upgrade_defense: 0,
     ItemName.stat_upgrade_health: 0,
     ItemName.stat_upgrade_mana: 0,
-    ItemName.apple: 104,
-    ItemName.orange: 19,
-    ItemName.steak: 3,
-    ItemName.fish: 0,
-    ItemName.mana_1: 119,
-    ItemName.mana_2: 6,
-    ItemName.stat_upgrade: 3,
+    ItemName.apple: 142,
+    ItemName.orange: 28,
+    ItemName.steak: 7,
+    ItemName.mana_1: 180,
+    ItemName.mana_2: 22,
+    ItemName.stat_upgrade: 8,
     ItemName.secret: 0,  # Future me please don't remove this it'll break item gen code
-    ItemName.puzzle: 3
+    # ItemName.puzzle: 5
 }
 
 temple_item_counts: typing.Dict[str, int] = {
@@ -199,7 +198,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.pickaxe: 1,
     ItemName.stat_upgrade: 43,
     ItemName.secret: 20,
-    ItemName.puzzle: 10
+    # ItemName.puzzle: 10
 }
 
 
@@ -213,7 +212,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
         item_counts_table = {**temple_item_counts}
 
     secrets: int = item_counts_table.pop(ItemName.secret)
-    puzzles: int = item_counts_table.pop(ItemName.puzzle)
+    # puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
     # Strange planks
     if multiworld.goal[player].value % 10 == 1 or multiworld.goal[player].value % 10 == 2:
@@ -228,8 +227,8 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
         item_counts_table.pop(ItemName.plank)
 
     # Bonus check behavior - None
-    if multiworld.bonus_behavior[player].value == 0 or multiworld.bonus_behavior[player].value == 1:
-        item_counts_table.pop(ItemName.bonus_chest)
+    if multiworld.bonus_behavior[player].value == 0:  # or multiworld.bonus_behavior[player].value == 1:
+        item_counts_table[ItemName.bonus_chest] = 0
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
@@ -297,17 +296,21 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
             item = trap_items[multiworld.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
 
+    # For Necessary we set the number of bonus chests equal to each extra item
+    if multiworld.bonus_behavior[player].value == 1:
+        item_counts_table[ItemName.bonus_chest] = extra_items
+
     # For each extra item remove a filler item, or add extra items if we need more
     for t in range(extra_items):
         filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
-        if extra_items > 1:
+        if extra_items > 0:
             item_counts_table[filler_item] -= 1
             if item_counts_table[filler_item] == 0:
                 filler_item_names.remove(filler_item)
         else:
             item_counts_table[filler_item] += 1
 
-    return item_counts_table
+    return item_counts_table, extra_items
 
 
 filler_items: typing.List[str] = [item_name for item_name, data in item_table.items() if data.classification.filler]
