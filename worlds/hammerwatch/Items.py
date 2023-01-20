@@ -2,7 +2,7 @@ import typing
 
 from BaseClasses import Item, ItemClassification, MultiWorld
 from .Names import ItemName
-from .Util import Counter, Campaign
+from .Util import *
 from random import Random
 
 
@@ -215,9 +215,10 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     # puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
     # Strange planks
-    if multiworld.goal[player].value % 10 == 1 or multiworld.goal[player].value % 10 == 2:
+    if get_goal_type(multiworld, player) == GoalType.PlankHunt \
+            or get_goal_type(multiworld, player) == GoalType.FullCompletion:
         minimum_planks = 12
-        if multiworld.goal[player].value % 10 == 1:  # Plank hunt
+        if get_goal_type(multiworld, player) == GoalType.PlankHunt:  # Plank hunt
             minimum_planks = multiworld.planks_required_count[player].value
         planks_needed = max(multiworld.plank_count[player].value, minimum_planks)
         extra_items = planks_needed - item_counts_table[ItemName.plank]
