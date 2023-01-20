@@ -70,7 +70,7 @@ ev_castle_b1_boss_switch = "Prison Boss Switch"
 ev_castle_p2_switch = "Prison Floor 2 Switch"
 ev_castle_b2_boss_switch = "Armory Boss Switch"
 ev_castle_b3_boss_switch = "Archives Boss Switch"
-ev_castle_b4_boss_switch = "Castle Boss Switch"
+ev_castle_b4_boss_switch = "Chambers Boss Switch"
 
 ev_open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
 ev_krilith_defeated = "Krilith Defeated"

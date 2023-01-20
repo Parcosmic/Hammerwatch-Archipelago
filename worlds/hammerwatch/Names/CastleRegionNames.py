@@ -93,8 +93,48 @@ b2_start = "Boss 2 Start"
 b2_defeated = "Boss 2 Defeated"
 
 r1_start = "Archives Floor 7 Start"
+r1_start_wall = "Archives Floor 7 Start In Wall"
+r1_se_wall = "Archives Floor 7 SE In Wall"
+r1_e = "Archives Floor 7 East"
+r1_e_s_bgate = "Archives Floor 7 East Southernmost Bronze Gate"
+r1_e_n_bgate = "Archives Floor 7 East North Bronze Gates"
+r1_e_sgate = "Archives Floor 7 East Silver Gate"
+r1_ne_ggate = "Archives Floor 7 East Gold Gate"
+r1_nw = "Archives Floor 7 NW"
+r1_nw_hidden = "Archives Floor 7 NW Hidden Room"
+r1_sw = "Archives Floor 7 SW"
+r1_w_sgate = "Archives Floor 7 West Silver Gate"
 
+r2_start = "Archives Floor 8 Start"
+r2_bswitch = "Archives Floor 8 Boss Switch"
+r2_m = "Archives Floor 8 Main"
+r2_nw = "Archives Floor 8 NW"
+r2_s = "Archives Floor 8 South"
+r2_e = "Archives Floor 8 East"
+r2_from_r3 = "Archives Floor 8 From Floor 9"
+
+r3_main = "Archives Floor 9 Main Area"
+r3_e_ggate = "Archives Floor 9 East Gold Gate"
+r3_w_ggate = "Archives Floor 9 West Gold Gate"
+r3_boss_switch = "Archives Floor 9 Boss Switch Room"
+r3_sw_bgate = "Archives Floor 9 Open SW Bronze Gate"
+r3_l_shop_sgate = "Archives Floor 9 South Shops Left Silver Gate"
+r3_r_shop_sgate = "Archives Floor 9 South Shops Right Silver Gate"
+
+n3_main = "Bonus 3 Main"
+n3_tp_room = "Bonus 3 Teleport Room"
+
+b3_start = "Boss 3 Start"
+b3_defeated = "Boss 3 Defeated"
+
+b4_start = "Dragon Start"
 b4_defeated = "Dragon Defeated"
+
+e1_start = "Escape Chamber Floors"
+e2_start = "Escape Archive Floors"
+e3_start = "Escape Armory Floors"
+e4_start = "Escape Prison Floors"
+
 escaped = "Escaped Castle Hammerwatch"
 
 get_planks = "Collect All Planks"
