@@ -5,7 +5,7 @@ from BaseClasses import MultiWorld, Region, RegionType, Entrance
 from .Items import HammerwatchItem
 from .Locations import HammerwatchLocation, LocationData, LocationClassification, random_locations
 from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames
-from .Util import Counter, Campaign
+from .Util import *
 
 
 def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData]):
@@ -1346,19 +1346,19 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
                                        b3_defeated_locs)
 
     b4_defeated_locations = []
-    if multiworld.goal[player].value == 0:
+    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
         b4_defeated_locations.append(CastleLocationNames.ev_victory)
     b4_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b4_defeated,
                                        b4_defeated_locations)
 
     get_planks_locations = []
-    if multiworld.goal[player].value == 1:
+    if get_goal_type(multiworld, player) == GoalType.PlankHunt:
         get_planks_locations.append(CastleLocationNames.ev_victory)
     get_planks_region = create_region(multiworld, player, active_locations, CastleRegionNames.get_planks,
                                       get_planks_locations)
 
     escaped_locations = []
-    if multiworld.goal[player].value == 2:
+    if get_goal_type(multiworld, player) == GoalType.FullCompletion:
         escaped_locations.append(CastleLocationNames.ev_victory)
     escaped_region = create_region(multiworld, player, active_locations, CastleRegionNames.escaped, escaped_locations)
 
@@ -1664,7 +1664,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     menu_region = create_region(multiworld, player, active_locations, TempleRegionNames.menu, None)
 
     get_planks_locations = []
-    if multiworld.goal[player].value % 10 == 1:
+    if get_goal_type(multiworld, player) == GoalType.PlankHunt:
         get_planks_locations.append(TempleLocationNames.ev_victory)
     get_planks_region = create_region(multiworld, player, active_locations, TempleRegionNames.get_planks,
                                       get_planks_locations)
@@ -2515,7 +2515,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.pof_3_end_5,
         TempleLocationNames.ev_pof_end
     ]
-    if multiworld.goal[player].value == 13:
+    if get_goal_type(multiworld, player) == GoalType.AltCompletion:
         pof_3_main_locations.append(TempleLocationNames.ev_victory)
     pof_3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_3_main,
                                       pof_3_main_locations)
@@ -2526,7 +2526,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     b3_platform_3_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_platform_3, [])
 
     b3_defeated_locations = []
-    if multiworld.goal[player].value == 10:
+    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
         b3_defeated_locations.append(TempleLocationNames.ev_victory)
     b3_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_defeated,
                                        b3_defeated_locations)

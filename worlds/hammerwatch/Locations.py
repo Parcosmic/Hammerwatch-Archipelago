@@ -2,7 +2,7 @@ import typing
 
 from BaseClasses import Location, MultiWorld
 from .Names import CastleLocationNames, TempleLocationNames, ItemName
-from .Util import Counter, Campaign
+from .Util import *
 from .Items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts
 from enum import Enum
 
@@ -1553,31 +1553,6 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
     return location_table, item_counts
 
 
-def add_bonus_locations(multiworld: MultiWorld, map: Campaign, player: int, extra_items: int):
-    location_table: typing.Dict[str, LocationData]
-    map_locations: typing.Dict[str, LocationData]
-    bonus_locations: typing.Dict[str, LocationData] = {}
-
-    location_table = {}
-
-    # Add recovery locations if the setting is on, and add bonus locations to a special list for handling below
-    for name, data in map_locations.items():
-        if data.classification == LocationClassification.Bonus:
-            bonus_locations.update({name: data})
-            continue
-        if data.classification != LocationClassification.Recovery or multiworld.randomize_recovery_items[player].value:
-            location_table.update({name: data})
-
-    # Bonus level handling
-    if multiworld.bonus_behavior[player].value == 1:  # Necessary
-        for i in range(extra_items):
-            loc = multiworld.random.choice(list(bonus_locations.keys()))
-            location_table.update({loc: bonus_locations.pop(loc)})
-    elif multiworld.bonus_behavior[player].value == 2:  # All
-        location_table.update(bonus_locations)
-
-    return location_table
-
 random_locations: typing.Dict[str, int] = {
 }
 
@@ -1905,7 +1880,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         random_locations[TempleLocationNames.rloc_pof_puzzle] = -1
     # Dunes
     random_locations[TempleLocationNames.rloc_t3_entrance] = multiworld.random.randrange(3)
-    if multiworld.goal[player].value == 13:  # Remove location after goal
+    if get_goal_type(multiworld, player) == GoalType.AltCompletion:  # Remove location after goal
         location_table.pop(TempleLocationNames.hub_pof_reward)
     # Cave level 3
     random_locations[TempleLocationNames.rloc_squire] = multiworld.random.randrange(6)

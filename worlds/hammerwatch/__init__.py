@@ -5,7 +5,7 @@ from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items
 from .Locations import *
 from .Regions import create_regions
 from .Rules import set_rules
-from .Util import Campaign
+from .Util import *
 
 from .Names import ItemName, TempleLocationNames, TempleRegionNames
 
@@ -60,11 +60,7 @@ class HammerwatchWorld(World):
         return slot_data
 
     def generate_early(self):
-        # Set the map enum
-        if self.multiworld.goal[self.player] // 10 == 0:
-            self.campaign = Campaign.Castle
-        elif self.multiworld.goal[self.player] // 10 == 1:
-            self.campaign = Campaign.Temple
+        self.campaign = get_campaign(self.multiworld, self.player)
         # self.item_counts, extra_items = get_item_counts(self.multiworld, self.campaign, self.player)
         self.active_location_list, self.item_counts = setup_locations(self.multiworld, self.campaign, self.player)
 
