@@ -13,8 +13,8 @@ however the player may have to travel to areas in a different order they would n
 ## What is the goal of Hammerwatch when randomized?
 
 There are a few goals that can be chosen in your YAML:
-* Defeat the dragon in the Castle Hammerwatch campaign
-* Defeat the dragon, collect 12 strange planks, and escape with your life in the Castle Hammerwatch campaign
+* Defeat Worldfire the dragon in the Castle Hammerwatch campaign
+* Defeat Worldfire, collect 12 strange planks, and escape with your life in the Castle Hammerwatch campaign
 * Defeat Sha'Rand in the Temple of the Sun campaign
 * Unlock and complete the Pyramid of fear in the Temple of the Sun campaign
 * Collect a certain number of strange planks in either campaign

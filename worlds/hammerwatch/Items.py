@@ -81,18 +81,6 @@ trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
 }
 
-event_table: typing.Dict[str, ItemData] = {
-    ItemName.ev_victory: ItemData(None, ItemClassification.progression),
-    ItemName.ev_castle_b1_boss_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_castle_b2_boss_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_castle_b3_boss_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_castle_b4_boss_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_castle_p2_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_pof_switch: ItemData(None, ItemClassification.progression),
-    ItemName.ev_pof_complete: ItemData(None, ItemClassification.progression),
-    ItemName.ev_open_temple_entrance_shortcut: ItemData(None, ItemClassification.progression),
-}
-
 item_table: typing.Dict[str, ItemData] = {
     **collectable_table,
     **recovery_table,
@@ -124,39 +112,39 @@ trap_items: typing.List[str] = [
 ]
 
 castle_item_counts: typing.Dict[str, int] = {
-    ItemName.bonus_chest: 169,
-    ItemName.bonus_key: 14,
-    ItemName.chest_blue: 9,
-    ItemName.chest_green: 17,
-    ItemName.chest_purple: 5,
-    ItemName.chest_red: 0,
-    ItemName.chest_wood: 20,
-    ItemName.vendor_coin: 48,
-    ItemName.plank: 9,
-    ItemName.key_bronze: 61,
-    ItemName.key_silver: 10,
-    ItemName.key_gold: 13,
-    ItemName.ankh: 24,
-    ItemName.ankh_5up: 4,
+    ItemName.bonus_chest: 227,
+    ItemName.bonus_key: 18,
+    ItemName.chest_blue: 15,
+    ItemName.chest_green: 18,
+    ItemName.chest_purple: 7,
+    ItemName.chest_red: 14,
+    ItemName.chest_wood: 25,
+    ItemName.vendor_coin: 63,
+    ItemName.plank: 12,
+    ItemName.key_bronze: 103,
+    ItemName.key_silver: 13,
+    ItemName.key_gold: 16,
+    ItemName.ankh: 38,
+    ItemName.ankh_5up: 6,
     ItemName.potion_damage: 0,
-    ItemName.potion_rejuvenation: 14,
+    ItemName.potion_rejuvenation: 17,
     ItemName.potion_invulnerability: 0,
-    ItemName.diamond: 1,
-    ItemName.diamond_red: 0,
-    ItemName.diamond_small: 0,
-    ItemName.diamond_small_red: 1,
+    ItemName.diamond: 4,
+    ItemName.diamond_red: 12,
+    ItemName.diamond_small: 10,
+    ItemName.diamond_small_red: 17,
     ItemName.stat_upgrade_damage: 1,
     ItemName.stat_upgrade_defense: 0,
     ItemName.stat_upgrade_health: 0,
     ItemName.stat_upgrade_mana: 0,
-    ItemName.apple: 142,
-    ItemName.orange: 28,
-    ItemName.steak: 7,
-    ItemName.mana_1: 180,
-    ItemName.mana_2: 22,
-    ItemName.stat_upgrade: 8,
+    ItemName.apple: 177,
+    ItemName.orange: 40,
+    ItemName.steak: 9,
+    ItemName.mana_1: 196,
+    ItemName.mana_2: 30,
+    ItemName.stat_upgrade: 12,
     ItemName.secret: 0,  # Future me please don't remove this it'll break item gen code
-    # ItemName.puzzle: 5
+    # ItemName.puzzle: 7
 }
 
 temple_item_counts: typing.Dict[str, int] = {
@@ -213,6 +201,9 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
 
     secrets: int = item_counts_table.pop(ItemName.secret)
     # puzzles: int = item_counts_table.pop(ItemName.puzzle)
+
+    # For now don't randomize bonus keys as there are issues doing so
+    item_counts_table.pop(ItemName.bonus_key)
 
     # Strange planks
     if get_goal_type(multiworld, player) == GoalType.PlankHunt \

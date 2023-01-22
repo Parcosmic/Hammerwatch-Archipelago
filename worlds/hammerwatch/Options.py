@@ -6,8 +6,8 @@ from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, O
 class Goal(Choice):
     """Determines the goal of the seed. Some goals are specific to certain campaigns
     Options starting with "Castle" are played in the Castle Hammerwatch campaign, while "Temple" options are played in the Temple of the Sun Campaign
-    Castle Kill Dragon: Defeat the dragon at the top of Castle Hammerwatch. Escaping is NOT required
-    Castle Escape: Find at least 12 Strange Planks, defeat the dragon, and escape with your life
+    Castle Kill Dragon: Defeat Worldfire the dragon at the top of Castle Hammerwatch. Escaping is NOT required
+    Castle Escape: Find at least 12 Strange Planks, defeat Worldfire, and escape with your life
     Castle Plank Hunt: Find a certain number of Strange Planks in Castle Hammerwatch
     Temple Kill ShaRand: Defeat the Sun Guardian Sha'Rand in the Temple of the Sun
     Temple Plank Hunt: Find a certain number of Strange Planks in the Temple of the Sun
@@ -15,6 +15,7 @@ class Goal(Choice):
     display_name = "Goal"
     # category = "Hammerwatch"
     option_castle_kill_dragon = 0
+    alias_castle_kill_worldfire = 0
     option_castle_escape = 2
     option_castle_plank_hunt = 1  # 1 is always plank hunt
     option_temple_kill_sharand = 10
