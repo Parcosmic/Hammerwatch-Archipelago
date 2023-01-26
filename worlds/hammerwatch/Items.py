@@ -202,8 +202,9 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     secrets: int = item_counts_table.pop(ItemName.secret)
     # puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
-    # For now don't randomize bonus keys as there are issues doing so
-    item_counts_table.pop(ItemName.bonus_key)
+    # Remove bonus keys from the item counts as they are placed elsewhere
+    if multiworld.randomize_bonus_keys[player] == 0:
+        item_counts_table.pop(ItemName.bonus_key)
 
     # Strange planks
     if get_goal_type(multiworld, player) == GoalType.PlankHunt \

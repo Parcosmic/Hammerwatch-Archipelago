@@ -121,6 +121,7 @@ r3_boss_switch = "Archives Floor 9 Boss Switch Room"
 r3_sw_bgate = "Archives Floor 9 Open SW Bronze Gate"
 r3_l_shop_sgate = "Archives Floor 9 South Shops Left Silver Gate"
 r3_r_shop_sgate = "Archives Floor 9 South Shops Right Silver Gate"
+r3_bonus_return = "Archives Floor 9 Bonus Return"
 
 n3_main = "Bonus 3 Main"
 n3_tp_room = "Bonus 3 Teleport Room"

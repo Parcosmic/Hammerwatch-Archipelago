@@ -467,7 +467,7 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.a2_se_tp: LocationData(counter.count(2)),
     CastleLocationNames.a2_pyramid_1: LocationData(counter.count(2)),
     CastleLocationNames.a2_ne_ice_tower_1: LocationData(counter.count(), LocationClassification.Recovery),
-    CastleLocationNames.a2_ne_tp: LocationData(counter.count()),
+    CastleLocationNames.a2_ne_tp: LocationData(counter.count(4)),
     CastleLocationNames.a2_nw_ice_tower: LocationData(counter.count()),
     CastleLocationNames.a2_ne_ice_tower_2: LocationData(counter.count()),
     CastleLocationNames.a2_e_bgate: LocationData(counter.count()),
@@ -789,8 +789,8 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.r3_s_shops_room_1: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.r3_s_shops_room_2: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.r3_boss_switch_room_2: LocationData(counter.count(), LocationClassification.Recovery),
-    CastleLocationNames.r3_e_shops_1: LocationData(counter.count()),
-    CastleLocationNames.r3_e_shops_2: LocationData(counter.count()),
+    CastleLocationNames.r3_bonus_return_1: LocationData(counter.count()),
+    CastleLocationNames.r3_bonus_return_2: LocationData(counter.count()),
     CastleLocationNames.r3_w_passage_behind_spikes: LocationData(counter.count()),
     CastleLocationNames.r3_w_passage_s_closed_room: LocationData(counter.count()),
     CastleLocationNames.r3_n_bgate_e: LocationData(counter.count()),
@@ -1842,15 +1842,20 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
             location_table.update({name: data})
 
     # Random location behavior
-    if multiworld.random_location_behavior[player].value == 0:  # Vanilla
-        if map == Campaign.Castle:  # Castle Hammerwatch
-            location_table = choose_castle_random_locations(multiworld, player, location_table)
-        elif map == Campaign.Temple:
-            location_table = choose_tots_random_locations(multiworld, player, location_table)
-    elif multiworld.random_location_behavior[player].value == 1:  # Shuffle, not implemented yet
-        pass  # Randomly remove some locations, need to determine the number
-    elif multiworld.random_location_behavior[player].value == 2:  # All checks
-        pass  # Do nothing as all locations are already added to the dict
+    # if multiworld.random_location_behavior[player].value == 0:  # Vanilla
+    #     if map == Campaign.Castle:  # Castle Hammerwatch
+    #         location_table = choose_castle_random_locations(multiworld, player, location_table)
+    #     elif map == Campaign.Temple:
+    #         location_table = choose_tots_random_locations(multiworld, player, location_table)
+    # elif multiworld.random_location_behavior[player].value == 1:  # Shuffle, not implemented yet
+    #     pass  # Randomly remove some locations, need to determine the number
+    # elif multiworld.random_location_behavior[player].value == 2:  # All checks
+    #     pass  # Do nothing as all locations are already added to the dict
+
+    if map == Campaign.Castle:  # Castle Hammerwatch
+        location_table = choose_castle_random_locations(multiworld, player, location_table)
+    elif map == Campaign.Temple:
+        location_table = choose_tots_random_locations(multiworld, player, location_table)
 
     item_counts, extra_items = get_item_counts(multiworld, map, player)
 

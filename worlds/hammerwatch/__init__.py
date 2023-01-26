@@ -92,10 +92,12 @@ class HammerwatchWorld(World):
         total_required_locations -= len(common_event_locations)
         if self.campaign == Campaign.Castle:
             total_required_locations -= len(castle_event_locations)
-            total_required_locations -= 18  # Preplaced bonus keys
+            if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+                total_required_locations -= 18  # Preplaced bonus keys
         elif self.campaign == Campaign.Temple:
             total_required_locations -= len(temple_event_locations)
-            total_required_locations -= 2  # Preplaced bonus keys
+            if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+                total_required_locations -= 2  # Preplaced bonus keys
 
             # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
             if self.multiworld.portal_accessibility[self.player].value > 0:
@@ -194,45 +196,46 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
 
         # Bonus Key Locations
-        self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n1_room3_sealed_room_1, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n1_room2_small_box, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n1_entrance, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n1_room4_e, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
+        if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+            self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n1_room3_sealed_room_1, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n1_room2_small_box, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n1_entrance, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n1_room4_e, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
 
-        self.multiworld.get_location(CastleLocationNames.n2_m_n, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n2_m_m_3, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n2_ne_4, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n2_m_e, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n2_start_1, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n2_m_se_5, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_m_n, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_m_m_3, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_ne_4, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_m_e, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_start_1, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n2_m_se_5, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
 
-        self.multiworld.get_location(CastleLocationNames.n3_exit_sw, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n3_m_cluster_5, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n3_se_cluster_5, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n3_exit_sw, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n3_m_cluster_5, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n3_se_cluster_5, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
 
-        self.multiworld.get_location(CastleLocationNames.n4_ne, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n4_by_w_room_1, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n4_by_w_room_2, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(CastleLocationNames.n4_by_exit, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n4_ne, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n4_by_w_room_1, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n4_by_w_room_2, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(CastleLocationNames.n4_by_exit, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
 
     def place_tots_locked_items(self):
         # Temple shortcut
@@ -287,10 +290,11 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
 
         # Pyramid of Fear Bonus Keys
-        self.multiworld.get_location(TempleLocationNames.pof_1_n_5, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
-        self.multiworld.get_location(TempleLocationNames.pof_1_ent_5, self.player) \
-            .place_locked_item(self.create_item(ItemName.bonus_key))
+        if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+            self.multiworld.get_location(TempleLocationNames.pof_1_n_5, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
+            self.multiworld.get_location(TempleLocationNames.pof_1_ent_5, self.player) \
+                .place_locked_item(self.create_item(ItemName.bonus_key))
 
         # Portal Accessibility rune keys
         if self.multiworld.portal_accessibility[self.player].value > 0:
