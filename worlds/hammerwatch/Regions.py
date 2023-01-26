@@ -1182,8 +1182,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.r3_sw_bgate_5,
         CastleLocationNames.r3_s_shops_room_1,
         CastleLocationNames.r3_s_shops_room_2,
-        CastleLocationNames.r3_e_shops_1,
-        CastleLocationNames.r3_e_shops_2,
         CastleLocationNames.r3_n_bgate_e,
         CastleLocationNames.r3_w_fire_floor_1,
         CastleLocationNames.r3_start,
@@ -1265,6 +1263,13 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     r3_r_shop_sgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_r_shop_sgate,
                                            r3_r_shop_sgate_locs)
+
+    r3_bonus_return_locs = [
+        CastleLocationNames.r3_bonus_return_1,
+        CastleLocationNames.r3_bonus_return_2,
+    ]
+    r3_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_bonus_return,
+                                           r3_bonus_return_locs)
 
     n3_main_locs = [
         CastleLocationNames.n3_tp_room_n_1,
@@ -1989,6 +1994,7 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         r3_boss_switch_region,
         r3_l_shop_sgate_region,
         r3_r_shop_sgate_region,
+        r3_bonus_return_region,
         n3_main_region,
         n3_tp_room_region,
         b3_start_region,
@@ -2096,17 +2102,20 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_bronze, player, 11)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_silver_gate,
             lambda state: (state.has(ItemName.key_silver, player, 2)))
-    connect(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s, None, True)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s, None,
+            True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
             lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_bronze, player, 11)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.n1_start, None, True)
-    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p1_from_p3_n, None, True)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p1_from_p3_n, None,
+            True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_gold_gate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.b1_start,
             lambda state: (state.has(ItemName.ev_castle_b1_boss_switch, player, 3)
                            and state.has(ItemName.key_gold, player, 4)
-                           and state.has(ItemName.key_bronze, player, 12)), True)
+                           and state.has(ItemName.key_bronze, player, 12)
+                           and state.has(ItemName.bonus_key, player, 5)), True)
 
     # Technically a bonus key is needed to traverse to the next room, but we aren't randomizing them for now
     connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
@@ -2180,16 +2189,16 @@ def connect_castle_regions(multiworld, player: int, active_locations):
 
     connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
             lambda state: (state.has(ItemName.ev_castle_b2_boss_switch, player, 3))
-                           and (state.has(ItemName.key_bronze, player, 41))
-                           and (state.has(ItemName.key_silver, player, 5))
-                           and (state.has(ItemName.key_gold, player, 6)), True)
+                          and (state.has(ItemName.key_bronze, player, 41))
+                          and (state.has(ItemName.key_silver, player, 5))
+                          and (state.has(ItemName.key_gold, player, 6)
+                          and state.has(ItemName.bonus_key, player, 11)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_e,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 1)))
-    connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_start_wall)
     connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_s_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 41 + 1)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_sgate,
@@ -2206,6 +2215,7 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_gold, player, 6 + 3)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_w_sgate,
             lambda state: (state.has(ItemName.key_silver, player, 5 + 2)))
+    connect(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall)
     connect(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r2_start,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 4)
                            and state.has(ItemName.key_silver, player, 5 + 2)
@@ -2226,7 +2236,6 @@ def connect_castle_regions(multiworld, player: int, active_locations):
                            and state.has(ItemName.key_silver, player, 7 + 1)
                            and state.has(ItemName.key_bronze, player, 47 + 8)), True)
 
-    connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r2_from_r3, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch)
     connect(multiworld, player, used_names, CastleRegionNames.r3_boss_switch, CastleRegionNames.n3_main, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_l_shop_sgate,
@@ -2239,12 +2248,15 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_gold, player, 11 + 2)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 55 + 6)))
+    connect(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.b3_start,
             lambda state: (state.has(ItemName.ev_castle_b3_boss_switch, player, 3)
                            and state.has(ItemName.key_silver, player, 8 + 2)
-                           and state.has(ItemName.key_bronze, player, 55 + 6)), True)
+                           and state.has(ItemName.key_bronze, player, 55 + 6)
+                           and state.has(ItemName.bonus_key, player, 14)), True)
 
     connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room, None, True)
+    connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, None, True)
     # The exit of bonus 3 leads to r3_main, there are 3 bonus keys in this level
 
     connect(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, None, True)
@@ -2307,13 +2319,13 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island, None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
-            lambda state: (state.has(ItemName.bonus_key, player, 15)))
+            lambda state: (state.has(ItemName.bonus_key, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
-            lambda state: (state.has(ItemName.bonus_key, player, 15)))
+            lambda state: (state.has(ItemName.bonus_key, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
-            lambda state: (state.has(ItemName.bonus_key, player, 15)))
+            lambda state: (state.has(ItemName.bonus_key, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
-            lambda state: (state.has(ItemName.bonus_key, player, 15)), True)
+            lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
 
     connect(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch)
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
@@ -2339,7 +2351,8 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.ev_castle_b4_boss_switch, player, 3)
                            and state.has(ItemName.key_gold, player, 16)
                            and state.has(ItemName.key_silver, player, 13)
-                           and state.has(ItemName.key_bronze, player, 103)), True)
+                           and state.has(ItemName.key_bronze, player, 103)
+                           and state.has(ItemName.bonus_key, player, 18)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated)
 
     planks_to_win = multiworld.planks_required_count[player]

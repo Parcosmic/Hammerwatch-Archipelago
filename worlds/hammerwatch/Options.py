@@ -49,15 +49,16 @@ class Difficulty(Choice):
     default = 1
 
 
-class RandomLocationBehavior(Choice):
-    """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
-    Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
-    All Checks: All potential locations are added to the pool, adding junk items for excess locations"""
-    display_name = "Random Location Behavior"
-    # category = "Generation"
-    option_vanilla = 0
-    option_all_checks = 2
-    default = 0
+# class RandomLocationBehavior(Choice):  # Yeah no this is kinda dumb
+#     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
+#     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
+#     All Checks: All potential locations are added to the pool, adding junk items for excess locations"""
+#     display_name = "Random Location Behavior"
+#     # category = "Generation"
+#     option_vanilla = 0
+#     option_all_checks = 2
+#     alias_all = 2
+#     default = 0
 
 
 class BonusChestLocationBehavior(Choice):
@@ -97,25 +98,32 @@ class PlanksRequiredCount(Range):
     default = 12
 
 
+class RandomizeBonusKeys(Toggle):
+    """Whether bonus keys are shuffled into the pool"""
+    display_name = "Randomize Bonus Keys"
+    # category = "Generation"
+    default = False
+
+
 class RandomizeRecoveryItems(Toggle):
     """Whether recovery items (such as apples and mana crystals) are shuffled into the pool"""
     display_name = "Randomize Recovery Items"
     # category = "Generation"
-    default = True
+    default = False
 
 
 class RandomizeSecrets(Toggle):
     """Whether items from secrets are shuffled into the item pool"""
     display_name = "Randomize Secrets"
     # category = "Generation"
-    default = False
+    default = True
 
 
 class RandomizePuzzles(Toggle):
     """Whether items from puzzles are shuffled into the item pool"""
     display_name = "Randomize Puzzles"
     # category = "Generation"
-    default = False
+    default = True
 
 
 class PortalAccessibility(Toggle):
@@ -195,13 +203,15 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "planks_required_count": PlanksRequiredCount,
     "player_class": PlayerClass,
     "difficulty": Difficulty,
-    "random_location_behavior": RandomLocationBehavior,
+    # "random_location_behavior": RandomLocationBehavior,
     "bonus_behavior": BonusChestLocationBehavior,
+    "randomize_bonus_keys": RandomizeBonusKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
     "portal_accessibility": PortalAccessibility,
-    # "randomize_shops": RandomizeShops,
+    # "shuffle_shops": ShuffleShops,
+    # "randomize_shop_upgrades": RandomizeShopUpgrades,
     # "consumable_merchant_checks": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,
