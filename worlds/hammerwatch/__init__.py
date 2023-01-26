@@ -205,7 +205,7 @@ class HammerwatchWorld(World):
                 .place_locked_item(self.create_item(ItemName.bonus_key))
             self.multiworld.get_location(CastleLocationNames.n1_entrance, self.player) \
                 .place_locked_item(self.create_item(ItemName.bonus_key))
-            self.multiworld.get_location(CastleLocationNames.n1_room4_e, self.player) \
+            self.multiworld.get_location(CastleLocationNames.n1_room4_m, self.player) \
                 .place_locked_item(self.create_item(ItemName.bonus_key))
 
             self.multiworld.get_location(CastleLocationNames.n2_m_n, self.player) \

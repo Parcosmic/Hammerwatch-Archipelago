@@ -2192,7 +2192,7 @@ def connect_castle_regions(multiworld, player: int, active_locations):
                           and (state.has(ItemName.key_bronze, player, 41))
                           and (state.has(ItemName.key_silver, player, 5))
                           and (state.has(ItemName.key_gold, player, 6)
-                          and state.has(ItemName.bonus_key, player, 11)), True)
+                               and state.has(ItemName.bonus_key, player, 11)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, None, True)

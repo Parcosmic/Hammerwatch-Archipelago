@@ -26,6 +26,7 @@ class HammerwatchLocation(Location):
     def __init__(self, player: int, name: str = '', code: int = None, parent=None):
         super().__init__(player, name, code, parent)
         self.event = code is None
+        self.show_in_spoiler = code is not None
 
 
 counter = Counter(0x131000)
