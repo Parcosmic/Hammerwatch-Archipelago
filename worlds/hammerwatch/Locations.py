@@ -2,6 +2,7 @@ import typing
 
 from BaseClasses import Location, MultiWorld
 from .Names import CastleLocationNames, TempleLocationNames, ItemName
+from .Options import BonusChestLocationBehavior, Difficulty
 from .Util import *
 from .Items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts
 from enum import Enum
@@ -1834,23 +1835,23 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
         map_locations = get_temple_locations(multiworld, player, temple_locations)
         location_table.update(temple_event_locations)
 
-    # Add recovery locations if the setting is on, and add bonus locations to a special list for handling below
+    # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
     for name, data in map_locations.items():
         if data.classification == LocationClassification.Bonus:
             bonus_locations.update({name: data})
             continue
-        if data.classification != LocationClassification.Recovery or multiworld.randomize_recovery_items[player].value:
+        if data.classification != LocationClassification.Recovery or multiworld.randomize_recovery_items[player]:
             location_table.update({name: data})
 
     # Random location behavior
-    # if multiworld.random_location_behavior[player].value == 0:  # Vanilla
+    # if multiworld.random_location_behavior[player] == 0:  # Vanilla
     #     if map == Campaign.Castle:  # Castle Hammerwatch
     #         location_table = choose_castle_random_locations(multiworld, player, location_table)
     #     elif map == Campaign.Temple:
     #         location_table = choose_tots_random_locations(multiworld, player, location_table)
-    # elif multiworld.random_location_behavior[player].value == 1:  # Shuffle, not implemented yet
+    # elif multiworld.random_location_behavior[player] == 1:  # Shuffle, not implemented yet
     #     pass  # Randomly remove some locations, need to determine the number
-    # elif multiworld.random_location_behavior[player].value == 2:  # All checks
+    # elif multiworld.random_location_behavior[player] == 2:  # All checks
     #     pass  # Do nothing as all locations are already added to the dict
 
     if map == Campaign.Castle:  # Castle Hammerwatch
@@ -1861,11 +1862,11 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
     item_counts, extra_items = get_item_counts(multiworld, map, player)
 
     # Bonus level handling
-    if multiworld.bonus_behavior[player].value == 1:  # Necessary
+    if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_necessary:  # Necessary
         for i in range(extra_items):
             loc = multiworld.random.choice(list(bonus_locations.keys()))
             location_table.update({loc: bonus_locations.pop(loc)})
-    elif multiworld.bonus_behavior[player].value == 2:  # All
+    elif multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_all:  # All
         location_table.update(bonus_locations)
 
     location_table.update(common_event_locations)
@@ -1923,7 +1924,7 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
             remove_location(f"{base_name}1", ItemName.potion_rejuvenation)
 
     # Set puzzle random values
-    if multiworld.randomize_puzzles[player].value:
+    if multiworld.randomize_puzzles[player]:
         randomize_puzzle(multiworld, CastleLocationNames.crloc_p2_puzzle)
         randomize_puzzle(multiworld, CastleLocationNames.crloc_a1_puzzle)
         randomize_puzzle(multiworld, CastleLocationNames.crloc_a2_puzzle)
@@ -2016,7 +2017,7 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         CastleLocationNames.p2_beetle_boss_room_3,
     ]
     location_table = keep_one_location(multiworld, location_table, p2_gkey_2_locs, CastleLocationNames.crloc_p2_gkey_2)
-    if multiworld.difficulty[player].value == 0:
+    if multiworld.difficulty[player] == Difficulty.option_easier:
         remove_location(CastleLocationNames.p2_toggle_spike_trap_reward_2, ItemName.chest_wood)
         remove_location(CastleLocationNames.p2_toggle_spike_trap_reward_3, ItemName.chest_wood)
     # Prison Floor 3
@@ -2071,7 +2072,7 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
 def choose_tots_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
 
     def remove_location(location: str, item: str):
-        if multiworld.randomize_recovery_items[player].value == 0 and item in recovery_table.keys():
+        if not multiworld.randomize_recovery_items[player] and item in recovery_table.keys():
             return
         location_table.pop(location)
         temple_item_counts[item] -= 1
@@ -2091,7 +2092,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
             remove_location(f"{base_name}1", ItemName.potion_rejuvenation)
 
     # Secrets
-    if multiworld.randomize_secrets[player].value:
+    if multiworld.randomize_secrets[player]:
         random_locations[TempleLocationNames.rloc_c3_secret_n] = multiworld.random.randrange(2)
         random_locations[TempleLocationNames.rloc_c3_secret_nw] = multiworld.random.randrange(2)
         random_locations[TempleLocationNames.rloc_c3_secret_s] = multiworld.random.randrange(2)
@@ -2174,7 +2175,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     if random_locations[TempleLocationNames.rloc_p_secret_7] == 0:
         remove_secret(TempleLocationNames.p_mid5_secret)
     # Set puzzle random values
-    if multiworld.randomize_puzzles[player].value:
+    if multiworld.randomize_puzzles[player]:
         randomize_puzzle(multiworld, TempleLocationNames.rloc_c3_puzzle)
         randomize_puzzle(multiworld, TempleLocationNames.rloc_c2_puzzle)
         randomize_puzzle(multiworld, TempleLocationNames.rloc_c1_puzzle_n)

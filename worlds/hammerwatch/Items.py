@@ -1,9 +1,10 @@
 import typing
 
 from BaseClasses import Item, ItemClassification, MultiWorld
+from . import Options
 from .Names import ItemName
+from .Options import BonusChestLocationBehavior
 from .Util import *
-from random import Random
 
 
 class ItemData(typing.NamedTuple):
@@ -211,8 +212,8 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
             or get_goal_type(multiworld, player) == GoalType.FullCompletion:
         minimum_planks = 12
         if get_goal_type(multiworld, player) == GoalType.PlankHunt:  # Plank hunt
-            minimum_planks = multiworld.planks_required_count[player].value
-        planks_needed = max(multiworld.plank_count[player].value, minimum_planks)
+            minimum_planks = multiworld.planks_required_count[player]
+        planks_needed = max(multiworld.plank_count[player], minimum_planks)
         extra_items = planks_needed - item_counts_table[ItemName.plank]
         item_counts_table[ItemName.plank] = planks_needed
     else:  # Remove planks from the pool, they're not needed
@@ -220,30 +221,30 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
         item_counts_table.pop(ItemName.plank)
 
     # Bonus check behavior - None
-    if multiworld.bonus_behavior[player].value == 0:  # or multiworld.bonus_behavior[player].value == 1:
+    if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_none:
         item_counts_table[ItemName.bonus_chest] = 0
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
-        if multiworld.pan_fragments[player].value > 1:
+        if multiworld.pan_fragments[player] > 1:
             item_counts_table.pop(ItemName.pan)
-            item_counts_table.update({ItemName.pan_fragment: multiworld.pan_fragments[player].value})
-            extra_items += multiworld.pan_fragments[player].value - 1
-        if multiworld.lever_fragments[player].value > 1:
+            item_counts_table.update({ItemName.pan_fragment: multiworld.pan_fragments[player]})
+            extra_items += multiworld.pan_fragments[player] - 1
+        if multiworld.lever_fragments[player] > 1:
             item_counts_table.pop(ItemName.lever)
-            item_counts_table.update({ItemName.lever_fragment: multiworld.lever_fragments[player].value})
-            extra_items += multiworld.lever_fragments[player].value - 1
-        if multiworld.pickaxe_fragments[player].value > 1:
+            item_counts_table.update({ItemName.lever_fragment: multiworld.lever_fragments[player]})
+            extra_items += multiworld.lever_fragments[player] - 1
+        if multiworld.pickaxe_fragments[player] > 1:
             item_counts_table.pop(ItemName.pickaxe)
-            item_counts_table.update({ItemName.pickaxe_fragment: multiworld.pickaxe_fragments[player].value})
-            extra_items += multiworld.pickaxe_fragments[player].value - 1
+            item_counts_table.update({ItemName.pickaxe_fragment: multiworld.pickaxe_fragments[player]})
+            extra_items += multiworld.pickaxe_fragments[player] - 1
 
         # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
-        if multiworld.portal_accessibility[player].value > 0:
+        if multiworld.portal_accessibility[player]:
             item_counts_table.pop(ItemName.key_teleport)
 
         # Add secret items from TotS
-        if multiworld.randomize_secrets[player].value:
+        if multiworld.randomize_secrets[player]:
             for s in range(secrets):
                 item = multiworld.random.randint(0, 12)
                 if item < 8:
@@ -254,12 +255,12 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
                     item_counts_table[ItemName.stat_upgrade] += 1
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
-    if not multiworld.randomize_recovery_items[player].value:
+    if not multiworld.randomize_recovery_items[player]:
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
 
     # Add puzzle items
-    # if multiworld.randomize_puzzles[player].value:
+    # if multiworld.randomize_puzzles[player]:
     # item_counts_table[ItemName.chest_purple] += puzzles
     # item_counts_table[ItemName.stat_upgrade] += puzzles
     # item_counts_table[ItemName.ankh] += puzzles
@@ -280,17 +281,17 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
             filler_items += item_counts_table[item]
 
     # Trap items
-    if multiworld.trap_item_percent[player].value > 0:
+    if multiworld.trap_item_percent[player] > 0:
         for trap_item in trap_items:
             item_counts_table[trap_item] = 0
-        trap_item_count = int((filler_items - extra_items) * multiworld.trap_item_percent[player].value / 100)
+        trap_item_count = int((filler_items - extra_items) * multiworld.trap_item_percent[player] / 100)
         extra_items += trap_item_count
         for t in range(trap_item_count):
             item = trap_items[multiworld.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
 
     # For Necessary we set the number of bonus chests equal to each extra item
-    if multiworld.bonus_behavior[player].value == 1:
+    if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_necessary:
         item_counts_table[ItemName.bonus_chest] = extra_items
 
     # For each extra item remove a filler item, or add extra items if we need more
