@@ -25,8 +25,8 @@ class Counter:
 
 
 def get_campaign(multiworld: MultiWorld, player: int) -> Campaign:
-    return Campaign(multiworld.goal[player].value // 10)
+    return Campaign(multiworld.goal[player] // 10)
 
 
 def get_goal_type(multiworld: MultiWorld, player: int) -> GoalType:
-    return GoalType(multiworld.goal[player].value % 10)
+    return GoalType(multiworld.goal[player] % 10)

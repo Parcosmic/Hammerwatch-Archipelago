@@ -2192,7 +2192,7 @@ def connect_castle_regions(multiworld, player: int, active_locations):
                           and (state.has(ItemName.key_bronze, player, 41))
                           and (state.has(ItemName.key_silver, player, 5))
                           and (state.has(ItemName.key_gold, player, 6)
-                               and state.has(ItemName.bonus_key, player, 11)), True)
+                          and state.has(ItemName.bonus_key, player, 11)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, None, True)
@@ -3322,15 +3322,15 @@ def connect_tots_regions(multiworld, player: int, active_locations):
 
     def has_pan(state):
         return state.has(ItemName.pan, player) \
-               or state.has(ItemName.pan_fragment, player, multiworld.pan_fragments[player].value)
+               or state.has(ItemName.pan_fragment, player, multiworld.pan_fragments[player])
 
     def has_lever(state):
         return state.has(ItemName.lever, player) \
-               or state.has(ItemName.lever_fragment, player, multiworld.lever_fragments[player].value)
+               or state.has(ItemName.lever_fragment, player, multiworld.lever_fragments[player])
 
     def has_pickaxe(state):
         return state.has(ItemName.pickaxe, player) \
-               or state.has(ItemName.pickaxe_fragment, player, multiworld.pickaxe_fragments[player].value)
+               or state.has(ItemName.pickaxe_fragment, player, multiworld.pickaxe_fragments[player])
 
     connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main)
 
@@ -3427,11 +3427,11 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
             lambda state: (state.has(ItemName.ev_pof_switch, player, 6)))
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room)
-    connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_gate_1)
-    # lambda state: (state.has(ItemName.bonus_key, player, 1)))
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_gate_1,
+            lambda state: (state.has(ItemName.bonus_key, player, 1)))
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room)
-    connect(multiworld, player, used_names, TempleRegionNames.pof_1_n_room, TempleRegionNames.pof_1_gate_2)
-    # lambda state: (state.has(ItemName.bonus_key, player, 2)))
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_n_room, TempleRegionNames.pof_1_gate_2,
+            lambda state: (state.has(ItemName.bonus_key, player, 2)))
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main)
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n)
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_3_main)

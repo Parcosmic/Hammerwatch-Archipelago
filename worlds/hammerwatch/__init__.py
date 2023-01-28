@@ -10,7 +10,7 @@ from .Util import *
 from .Names import ItemName, TempleLocationNames, TempleRegionNames
 
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
-from .Options import hammerwatch_options
+from .Options import *
 from ..AutoWorld import World, WebWorld
 
 
@@ -92,15 +92,15 @@ class HammerwatchWorld(World):
         total_required_locations -= len(common_event_locations)
         if self.campaign == Campaign.Castle:
             total_required_locations -= len(castle_event_locations)
-            if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+            if not self.multiworld.randomize_bonus_keys[self.player]:
                 total_required_locations -= 18  # Preplaced bonus keys
         elif self.campaign == Campaign.Temple:
             total_required_locations -= len(temple_event_locations)
-            if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+            if not self.multiworld.randomize_bonus_keys[self.player]:
                 total_required_locations -= 2  # Preplaced bonus keys
 
             # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
-            if self.multiworld.portal_accessibility[self.player].value > 0:
+            if self.multiworld.portal_accessibility[self.player]:
                 total_required_locations -= 6
 
         # Get the counts of each item we'll put in
@@ -196,7 +196,7 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
 
         # Bonus Key Locations
-        if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+        if not self.multiworld.randomize_bonus_keys[self.player]:
             self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
                 .place_locked_item(self.create_item(ItemName.bonus_key))
             self.multiworld.get_location(CastleLocationNames.n1_room3_sealed_room_1, self.player) \
@@ -290,14 +290,14 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
 
         # Pyramid of Fear Bonus Keys
-        if self.multiworld.randomize_bonus_keys[self.player].value == 0:
+        if not self.multiworld.randomize_bonus_keys[self.player]:
             self.multiworld.get_location(TempleLocationNames.pof_1_n_5, self.player) \
                 .place_locked_item(self.create_item(ItemName.bonus_key))
             self.multiworld.get_location(TempleLocationNames.pof_1_ent_5, self.player) \
                 .place_locked_item(self.create_item(ItemName.bonus_key))
 
         # Portal Accessibility rune keys
-        if self.multiworld.portal_accessibility[self.player].value > 0:
+        if self.multiworld.portal_accessibility[self.player]:
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
