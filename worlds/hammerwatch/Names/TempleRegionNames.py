@@ -12,9 +12,11 @@ pof_1_n_room = "Pyramid of Fear Level 1 North Room"
 pof_1_gate_2 = "Pyramid of Fear Level 1 Exit Room"
 pof_2_main = "Pyramid of Fear Level 2 Main Area"
 pof_2_n = "Pyramid of Fear Level 2 North Area"
+pof_2_exit = "Pyramid of Fear Level 2 Exit"
 pof_3_main = "Pyramid of Fear Level 3"
 
 library = "Library"
+library_lobby = "Library Lobby"
 
 cave_3_main = "Cave Level 3"
 cave_3_fall = "Cave Level 3 Fall from Surface"

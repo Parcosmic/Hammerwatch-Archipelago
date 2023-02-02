@@ -256,6 +256,10 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(TempleLocationNames.ev_temple2_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
 
+        self.multiworld.get_location(TempleLocationNames.ev_pof_1_unlock_exit, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_pof_1_unlock_exit))
+        self.multiworld.get_location(TempleLocationNames.ev_pof_2_unlock_exit, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_pof_2_unlock_exit))
         self.multiworld.get_location(TempleLocationNames.ev_pof_end, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_complete))
 

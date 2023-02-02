@@ -1798,6 +1798,8 @@ temple_event_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.ev_t2_s_node: LocationData(None),
     TempleLocationNames.ev_t3_n_node: LocationData(None),
     TempleLocationNames.ev_t3_s_node: LocationData(None),
+    TempleLocationNames.ev_pof_1_unlock_exit: LocationData(None),
+    TempleLocationNames.ev_pof_2_unlock_exit: LocationData(None),
     TempleLocationNames.ev_pof_end: LocationData(None),
     TempleLocationNames.ev_krilith_defeated: LocationData(None),
 }
