@@ -28,14 +28,14 @@ cave3_secret_n = "Cave Level 3 North Secret Room"
 cave3_secret_nw = "Cave Level 3 NW Secret Room"
 cave3_secret_s = "Cave Level 3 South Secret Room"
 
-cave3_fall_nw = "Cave Level 3 Fall NW"
-cave3_fall_ne = "Cave Level 3 Fall NE"
-cave3_fall_sw = "Cave Level 3 Fall SW"
-cave3_fall_se = "Cave Level 3 Fall SE"
+cave3_fall_nw = "Cave Level 3 Dunes Fall Top Left"
+cave3_fall_ne = "Cave Level 3 Dunes Fall Top Right"
+cave3_fall_sw = "Cave Level 3 Dunes Fall Bottom Left"
+cave3_fall_se = "Cave Level 3 Dunes Fall Bottom Right"
 
 cave3_fields_r = "Cave Level 3 Fields East"
-cave3_captain = "Cave Level 3 Captain"
-cave3_captain_dock = "Cave Level 3 Captain Dock"
+cave3_captain = "Cave Level 3 Sun Dock Bottom"
+cave3_captain_dock = "Cave Level 3 Sun Dock Top"
 
 cave3_portal_puzzle = "Cave Level 3 Portal Puzzle"  #
 cave3_portal_l = "Cave Level 3 Portal Left"
@@ -692,6 +692,8 @@ ev_t2_w_bridge_switch = "Temple Level 2 West Bridge Switch"
 ev_t2_sw_bridge_switch = "Temple Level 2 SW Bridge Switch"
 ev_t2_se_bridge_switch = "Temple Level 2 SE Bridge Switch"
 ev_t2_ne_bridge_switch = "Temple Level 2 NE Bridge Switch"
+ev_pof_1_unlock_exit = "PoF Level 1 Unlock Exit"
+ev_pof_2_unlock_exit = "PoF Level 2 Unlock Exit"
 ev_pof_end = "Pyramid of Fear End"
 
 # Shared Event Locations
