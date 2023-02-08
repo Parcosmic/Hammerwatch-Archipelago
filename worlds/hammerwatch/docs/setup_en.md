@@ -3,7 +3,7 @@
 ## Required Software
 
 - Hammerwatch: [Hammerwatch Steam Page](https://store.steampowered.com/app/239070/Hammerwatch/)
-- HammerwatchAP Installer: [GitHub coming soon!]
+- HammerwatchAP Installer: [Download link coming soon!]
 - Archipelago: [Archipelago Releases Page](https://github.com/ArchipelagoMW/Archipelago/releases).
 
 ## Hammerwatch Mod Installation Procedures
@@ -39,7 +39,7 @@ To make sure your config file is formatted correctly you can check it on the YAM
 4. In the second field enter your slot name
 5. In the third field enter the server password if it has one, else leave it blank
 6. Select "OK". The first time you connect to the server the game will appear to be frozen for several seconds while
-the level is generating
+the level is generating as a couple console boxes open and close
 7. Once ready and connected you may select your hero's color, then select "Play" to start playing!
 
 When later reconnecting to a server you have previously played on, if a save exists for that game it will automatically 
