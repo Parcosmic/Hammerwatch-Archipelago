@@ -14,14 +14,14 @@ however the player may have to travel to areas in a different order they would n
 
 There are a few goals that can be chosen in your YAML:
 * Defeat Worldfire the dragon in the Castle Hammerwatch campaign
-* Defeat Worldfire, collect 12 strange planks, and escape with your life in the Castle Hammerwatch campaign
+* Defeat Worldfire and collect 12 strange planks, then escape with your life in the Castle Hammerwatch campaign
 * Defeat Sha'Rand in the Temple of the Sun campaign
 * Unlock and complete the Pyramid of fear in the Temple of the Sun campaign
 * Collect a certain number of strange planks in either campaign
 
 ## What items and locations get shuffled?
 
-All pickups/valuables are shuffled except for coin piles, pots, crates, bushes, and bonus keys. Recovery items 
+All pickups/valuables are shuffled except for coin piles, pots, crates, and bushes. Recovery items 
 (apples, mana crystals, etc.) and bonus chests are by default not shuffled due to the sheer number of junk items added 
 to the pool, but this behavior can be toggled in the YAML. 
 Items from secrets and puzzles can also be included in the pool.
