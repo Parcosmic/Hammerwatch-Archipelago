@@ -27,15 +27,15 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.chest_wood: ItemData(counter.count(), ItemClassification.useful),
     ItemName.vendor_coin: ItemData(counter.count(), ItemClassification.filler),
     ItemName.plank: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.key_bronze: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     ItemName.key_silver: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_gold: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.mirror: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.mirror: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     ItemName.ore: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_teleport: ItemData(counter.count(), ItemClassification.progression),
-    ItemName.ankh: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.filler),
     ItemName.potion_damage: ItemData(counter.count(), ItemClassification.filler),
     ItemName.potion_rejuvenation: ItemData(counter.count(), ItemClassification.filler),
     ItemName.potion_invulnerability: ItemData(counter.count(), ItemClassification.filler),
@@ -70,7 +70,7 @@ tool_table: typing.Dict[str, ItemData] = {
 
 special_table: typing.Dict[str, ItemData] = {
     ItemName.sonic_ring: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.serious_health: ItemData(counter.count(), ItemClassification.useful)
+    ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
 trap_table: typing.Dict[str, ItemData] = {
