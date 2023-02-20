@@ -25,19 +25,6 @@ class Goal(Choice):
     default = 2
 
 
-class PlayerClass(Choice):
-    """What hero the player will play as during the campaign."""
-    display_name = "Class"
-    # category = "Hammerwatch"
-    option_paladin = 0
-    option_wizard = 1
-    option_ranger = 2
-    option_warlock = 3
-    option_thief = 4
-    option_priest = 5
-    option_sorcerer = 6
-
-
 class Difficulty(Choice):
     """What difficulty the game will be played on."""
     display_name = "Difficulty"
@@ -47,18 +34,6 @@ class Difficulty(Choice):
     option_medium = 1
     option_hard = 2
     default = 1
-
-
-# class RandomLocationBehavior(Choice):  # Yeah no this is kinda dumb
-#     """Determines how certain items that are randomized in Vanilla are handled in the Archipelago randomizer
-#     Vanilla: Random locations behave as vanilla, and will only exist if an item is randomly placed there normally
-#     All Checks: All potential locations are added to the pool, adding junk items for excess locations"""
-#     display_name = "Random Location Behavior"
-#     # category = "Generation"
-#     option_vanilla = 0
-#     option_all_checks = 2
-#     alias_all = 2
-#     default = 0
 
 
 class BonusChestLocationBehavior(Choice):
@@ -126,8 +101,15 @@ class RandomizePuzzles(Toggle):
     default = True
 
 
+class ShuffleShops(Toggle):
+    """Shuffles the shop vendors around so that they may be different from their normal locations"""
+    display_name = "Shop Shuffle"
+    # category = "Generation"
+    default = False
+
+
 class PortalAccessibility(Toggle):
-    """TotS Only: Ensures rune keys will be placed locally on the floor they would normally appear so that portals are more easily accessible
+    """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are more easily accessible
     """
     display_name = "Portal Accessibility"
     # category = "Generation"
@@ -135,7 +117,7 @@ class PortalAccessibility(Toggle):
 
 
 class ConsumableMerchantChecks(Range):
-    """TotS Only: Add a number of checks that you can receive from the consumable merchant after giving them the pan
+    """(TotS only) Add a number of checks that you can receive from the consumable merchant after giving them the pan
     These get given out one by one after you reach specific milestones in the game"""
     display_name = "Consumable Merchant Checks"
     # category = "Hammerwatch"
@@ -145,7 +127,7 @@ class ConsumableMerchantChecks(Range):
 
 
 class PanFragments(Range):
-    """TotS Only: If greater than 1 separates the pan into multiple fragments that are shuffled into the item pool
+    """(TotS only) If greater than 1 separates the pan into multiple fragments that are shuffled into the item pool
     All fragments must be collected in order to purchase from the consumables merchant"""
     display_name = "Pan Fragments"
     # category = "Hammerwatch"
@@ -155,7 +137,7 @@ class PanFragments(Range):
 
 
 class LeverFragments(Range):
-    """TotS Only: If greater than 1 separates the pumps lever into multiple fragments that are shuffled into the item pool
+    """(TotS only) If greater than 1 separates the pumps lever into multiple fragments that are shuffled into the item pool
     All fragments must be collected in order to turn on the pumps"""
     display_name = "Pumps Lever Fragments"
     # category = "Hammerwatch"
@@ -165,7 +147,7 @@ class LeverFragments(Range):
 
 
 class PickaxeFragments(Range):
-    """TotS Only: If greater than 1 separates the pickaxe into multiple fragments that are shuffled into the item pool
+    """(TotS only) If greater than 1 separates the pickaxe into multiple fragments that are shuffled into the item pool
     All fragments must be collected in order to break the rocks outside the temple"""
     display_name = "Pickaxe Fragments"
     # category = "Hammerwatch"
@@ -184,16 +166,16 @@ class TrapItemPercentage(Range):
 
 
 class StartingLifeCount(Range):
-    """How many extra lives to start the game with"""
+    """How many extra lives each player will start the game with"""
     display_name = "Starting Life Count"
     # category = "Hammerwatch"
     range_start = 0
     range_end = 99
-    default = 1
+    default = 2
 
 
 class DeathLink(DeathLink):
-    """When you die, everyone dies. Of course the reverse is true too"""
+    """When anybody dies, everyone dies. This also applies to all multiplayer players within a single game"""
     display_name = "Death Link"
 
 
@@ -201,17 +183,14 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "goal": Goal,
     "plank_count": PlankCount,
     "planks_required_count": PlanksRequiredCount,
-    "player_class": PlayerClass,
     "difficulty": Difficulty,
-    # "random_location_behavior": RandomLocationBehavior,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_bonus_keys": RandomizeBonusKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
     "portal_accessibility": PortalAccessibility,
-    # "shuffle_shops": ShuffleShops,
-    # "randomize_shop_upgrades": RandomizeShopUpgrades,
+    "shop_shuffle": ShuffleShops,
     # "consumable_merchant_checks": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,

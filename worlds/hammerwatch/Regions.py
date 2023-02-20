@@ -2056,8 +2056,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
 
     connect_castle_regions(multiworld, player, active_locations)
 
-    check_region_locations(multiworld, player, active_locations)
-
 
 def connect_castle_regions(multiworld, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
@@ -3324,8 +3322,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
 
     connect_tots_regions(multiworld, player, active_locations)
 
-    check_region_locations(multiworld, player, active_locations)
-
 
 def connect_tots_regions(multiworld, player: int, active_locations):
     used_names: typing.Dict[str, int] = {}
@@ -3522,7 +3518,6 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
 
 
 def check_region_locations(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData]):
-    # Duplicate location testing because I sometimes add stuff late at night and forget to check it >:|
     name_list = []
     remaining_locs = active_locations.copy()
     test = 0
@@ -3531,9 +3526,6 @@ def check_region_locations(multiworld: MultiWorld, player: int, active_locations
             continue
         test += len(region.locations)
         for loc in region.locations:
-            if loc.name in name_list:
-                print(f"Duplicate location found!!! {loc.name}")
-                continue
             name_list.append(loc.name)
             if loc.name not in remaining_locs:
                 print(f"Location found not in active locations!!! {loc.name}")

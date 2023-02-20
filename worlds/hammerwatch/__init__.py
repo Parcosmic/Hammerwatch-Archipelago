@@ -48,6 +48,7 @@ class HammerwatchWorld(World):
     campaign: Campaign = Campaign.Castle
     active_location_list: typing.Dict[str, LocationData]
     item_counts: typing.Dict[str, int]
+    shop_locations: typing.Dict[str, str]
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -55,6 +56,8 @@ class HammerwatchWorld(World):
             option = getattr(self.multiworld, option_name)[self.player]
             slot_data[option_name] = option.value
         for loc, value in random_locations.items():
+            slot_data[loc] = value
+        for loc, value in self.shop_locations.items():
             slot_data[loc] = value
         return slot_data
 
@@ -72,6 +75,87 @@ class HammerwatchWorld(World):
             self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
+
+        # Shop shuffle
+        if self.multiworld.shop_shuffle[self.player] > 0:
+            if self.campaign == Campaign.Castle:
+                shop_counts = {
+                    "Combo": [1, 2, 2, 3, 4, 4, 5],
+                    "Offense": [1, 1, 2, 3, 3, 4, 5],
+                    "Defense": [1, 2, 3, 4, 5],
+                    "Vitality": [1, 2, 3, 4, 4, 5],
+                    "Consumables": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                }
+                self.shop_locations = {
+                    CastleLocationNames.shop_p1_combo: "",
+                    CastleLocationNames.shop_p1_misc: "",
+                    CastleLocationNames.shop_p2_off: "",
+                    CastleLocationNames.shop_p2_combo: "",
+                    CastleLocationNames.shop_p3_power: "",
+                    CastleLocationNames.shop_p3_off: "",
+                    CastleLocationNames.shop_p3_def: "",
+                    CastleLocationNames.shop_p3_combo: "",
+                    CastleLocationNames.shop_p3_misc: "",
+                    CastleLocationNames.shop_b1_power: "",
+                    CastleLocationNames.shop_a1_power: "",
+                    CastleLocationNames.shop_a1_combo: "",
+                    CastleLocationNames.shop_a1_misc: "",
+                    CastleLocationNames.shop_a1_off: "",
+                    CastleLocationNames.shop_a1_def: "",
+                    CastleLocationNames.shop_a3_power: "",
+                    CastleLocationNames.shop_b2_power: "",
+                    CastleLocationNames.shop_r1_power: "",
+                    CastleLocationNames.shop_r1_misc: "",
+                    CastleLocationNames.shop_r2_combo: "",
+                    CastleLocationNames.shop_r2_off: "",
+                    CastleLocationNames.shop_r3_misc: "",
+                    CastleLocationNames.shop_r3_def: "",
+                    CastleLocationNames.shop_r3_power: "",
+                    CastleLocationNames.shop_r3_off: "",
+                    CastleLocationNames.shop_r3_combo: "",
+                    CastleLocationNames.shop_b3_power: "",
+                    CastleLocationNames.shop_c1_power: "",
+                    CastleLocationNames.shop_c2_power: "",
+                    CastleLocationNames.shop_c2_combo: "",
+                    CastleLocationNames.shop_c2_off: "",
+                    CastleLocationNames.shop_c2_def: "",
+                    CastleLocationNames.shop_c2_misc: "",
+                    CastleLocationNames.shop_c3_power: "",
+                    CastleLocationNames.shop_c2_off_2: "",
+                    CastleLocationNames.shop_c2_def_2: "",
+                }
+
+                for loc in self.shop_locations.keys():
+                    shop_type = self.multiworld.random.choice(list(shop_counts.keys()))
+                    tier = shop_counts[shop_type][0]
+                    shop_counts[shop_type].remove(tier)
+                    if len(shop_counts[shop_type]) == 0:
+                        shop_counts.pop(shop_type)
+                    if tier > 0:
+                        self.shop_locations[loc] = f"{shop_type} Level {tier}"
+                    else:
+                        self.shop_locations[loc] = f"{shop_type}"
+            else:
+                shop_counts = {
+                    "Combo": 1,
+                    "Offense": 1,
+                    "Defense": 1,
+                    "Vitality": 1,
+                }
+                self.shop_locations = {
+                    TempleLocationNames.shop_combo: "",
+                    TempleLocationNames.shop_misc: "",
+                    TempleLocationNames.shop_off: "",
+                    TempleLocationNames.shop_def: "",
+                }
+                remaining_shops = []
+                for shop_type in shop_counts.keys():
+                    for s in range(shop_counts[shop_type]):
+                        remaining_shops.append(shop_type)
+
+                for loc in self.shop_locations.keys():
+                    self.shop_locations[loc] = self.multiworld.random.choice(remaining_shops)
+                    remaining_shops.remove(self.shop_locations[loc])
 
     def create_regions(self) -> None:
         create_regions(self.multiworld, self.campaign, self.player, self.active_location_list)
@@ -362,3 +446,9 @@ class HammerwatchWorld(World):
 
     def set_rules(self) -> None:
         set_rules(self.multiworld, self.player)
+
+    def write_spoiler(self, spoiler_handle) -> None:
+        if self.multiworld.shop_shuffle[self.player] > 0:
+            spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
+            for loc, shop in self.shop_locations.items():
+                spoiler_handle.write(f"\n{loc}: {shop}")

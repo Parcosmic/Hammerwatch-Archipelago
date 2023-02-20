@@ -672,6 +672,11 @@ rloc_t3_puzzle = "Temple 3 Puzzle 1"
 
 rloc_pof_puzzle = "POF Puzzle 1"
 
+shop_combo = "Combo Shop"
+shop_misc = "Vitality Shop"
+shop_off = "Offense Shop"
+shop_def = "Defense Shop"
+
 # Event locations
 ev_hub_pof_switch = "Dunes PoF Switch"
 ev_cave1_pof_switch = "Cave Level 1 PoF Switch"
