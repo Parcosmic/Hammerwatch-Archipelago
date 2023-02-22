@@ -1,7 +1,8 @@
 import os
 import typing
 
-from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, get_item_counts, filler_items
+from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, keyring_table, get_item_counts, \
+    filler_items
 from .Locations import *
 from .Regions import create_regions
 from .Rules import set_rules
@@ -187,8 +188,14 @@ class HammerwatchWorld(World):
             if self.multiworld.portal_accessibility[self.player]:
                 total_required_locations -= 6
 
-        # Get the counts of each item we'll put in
-        # item_counts: typing.Dict[str, int] = get_item_counts(self.multiworld, self.campaign, self.player)
+        # Consolidate bronze keys into keyrings
+        if self.campaign == Campaign.Castle:
+            bronze_keyrings = int(
+                self.item_counts[ItemName.key_bronze] * self.multiworld.bronze_keyring_percent[self.player] / 100
+                / keyring_table[ItemName.keyring_bronze][1])
+            if bronze_keyrings > 0:
+                self.item_counts[ItemName.keyring_bronze] = bronze_keyrings
+                self.item_counts[ItemName.key_bronze] -= bronze_keyrings * keyring_table[ItemName.keyring_bronze][1]
 
         # Add items
         for item in item_table:
@@ -212,6 +219,20 @@ class HammerwatchWorld(World):
         itempool += junk_pool
 
         self.multiworld.itempool += itempool
+
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        prog = super(HammerwatchWorld, self).collect(state, item)
+        if item.name in keyring_table.keys():
+            state.prog_items[keyring_table[item.name][0], self.player] += keyring_table[item.name][1]
+        return prog
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        prog = super(HammerwatchWorld, self).remove(state, item)
+        if item.name in keyring_table.keys():
+            state.prog_items[keyring_table[item.name][0], self.player] -= keyring_table[item.name][1]
+            if state.prog_items[keyring_table[item.name][0], self.player] <= 0:
+                del state.prog_items[keyring_table[item.name][0], self.player]
+        return prog
 
     def get_filler_item_name(self) -> str:
         return self.multiworld.random.choice(tuple(filler_items))
@@ -442,7 +463,8 @@ class HammerwatchWorld(World):
             rune_key_locs.append(self.multiworld.random.choice(t3_locs))
 
             for loc in rune_key_locs:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_teleport))
+                self.multiworld.get_location(loc, self.player).place_locked_item(
+                    self.create_item(ItemName.key_teleport))
 
     def set_rules(self) -> None:
         set_rules(self.multiworld, self.player)

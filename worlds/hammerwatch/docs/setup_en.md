@@ -38,10 +38,17 @@ To make sure your config file is formatted correctly you can check it on the YAM
 3. In the first field of the dialogue box enter the sever ip address together with the port (ex. archipelago.gg:38281)
 4. In the second field enter your slot name
 5. In the third field enter the server password if it has one, else leave it blank
-6. Select "OK". The first time you connect to the server the game will appear to be frozen for several seconds while
-the level is generating as a couple console boxes open and close
-7. Once ready and connected you may select your hero's color, then select "Play" to start playing!
+6. Select "OK". After you have been connected verify that the correct information is shown on the main menu
+7. Navigate the menus to set up playing the game as normal (note: selecting "Single" on the main menu will redirect
+you to the Archipelago-specific menu)
+8. After the level has generated you may select your hero's color, then select "Play" to start playing!
 
 When later reconnecting to a server you have previously played on, if a save exists for that game it will automatically 
 be loaded after selecting "OK". Alternatively, you can select an Archipelago save using "Load" on the main menu. This 
 will automatically try to connect you to the server and load the game.
+
+## Playing multiplayer (co-op)
+
+Playing together in the same game is supported in the Archipelago randomizer. However, all clients playing together
+should be connected to the same slot in Archipelago. Other than that, the procedure for playing multiplayer is the same
+as in the vanilla game.
