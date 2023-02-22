@@ -108,6 +108,15 @@ class ShuffleShops(Toggle):
     default = False
 
 
+class BronzeKeyringPercent(Range):
+    """(Castle only) What percentage of bronze keys get converted into bronze keyrings, which contain 5 keys each"""
+    display_name = "Bronze Keyring Percent"
+    # category = "Generation"
+    range_start = 0
+    range_end = 100
+    default = 0
+
+
 class PortalAccessibility(Toggle):
     """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are more easily accessible
     """
@@ -117,9 +126,9 @@ class PortalAccessibility(Toggle):
 
 
 class ConsumableMerchantChecks(Range):
-    """(TotS only) Add a number of checks that you can receive from the consumable merchant after giving them the pan
-    These get given out one by one after you reach specific milestones in the game"""
-    display_name = "Consumable Merchant Checks"
+    """(TotS only) Add a number of locations to the consumables vendor after giving them the pan
+    Items in these locations get given out one by one after you reach specific milestones in the game"""
+    display_name = "Consumables Vendor Locations"
     # category = "Hammerwatch"
     range_start = 0
     range_end = 10
@@ -184,14 +193,15 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "plank_count": PlankCount,
     "planks_required_count": PlanksRequiredCount,
     "difficulty": Difficulty,
+    "shop_shuffle": ShuffleShops,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_bonus_keys": RandomizeBonusKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
+    "bronze_keyring_percent": BronzeKeyringPercent,
     "portal_accessibility": PortalAccessibility,
-    "shop_shuffle": ShuffleShops,
-    # "consumable_merchant_checks": ConsumableMerchantChecks,
+    # "consumables_vendor_locations": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,
     "pickaxe_fragments": PickaxeFragments,

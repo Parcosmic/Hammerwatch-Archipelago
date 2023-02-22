@@ -31,7 +31,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.key_silver: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_gold: ItemData(counter.count(), ItemClassification.progression),
     ItemName.mirror: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
-    ItemName.ore: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.ore: ItemData(counter.count(), ItemClassification.useful),
     ItemName.key_teleport: ItemData(counter.count(), ItemClassification.progression),
     ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
     ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
@@ -73,6 +73,14 @@ special_table: typing.Dict[str, ItemData] = {
     ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
+custom_table: typing.Dict[str, ItemData] = {
+    ItemName.keyring_bronze: ItemData(counter.count(), ItemClassification.progression),
+    # ItemName.keyring_silver: ItemData(counter.count(), ItemClassification.progression),
+    # ItemName.keyring_gold: ItemData(counter.count(), ItemClassification.progression),
+    # ItemName.keyring_bonus: ItemData(counter.count(), ItemClassification.progression),
+}
+
+counter = Counter(0x130100 - 1)
 trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_bomb: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_mana: ItemData(counter.count(), ItemClassification.trap),
@@ -87,6 +95,7 @@ item_table: typing.Dict[str, ItemData] = {
     **recovery_table,
     **tool_table,
     **special_table,
+    **custom_table,
     **trap_table
 }
 
@@ -99,8 +108,21 @@ stat_upgrade_items: typing.List[str] = [
 
 junk_items: typing.List[str] = [
     ItemName.apple,
+    ItemName.orange,
+    ItemName.steak,
+    ItemName.fish,
     ItemName.mana_1,
-    ItemName.diamond_small
+    ItemName.mana_2,
+    ItemName.diamond_small,
+    ItemName.diamond,
+    ItemName.diamond_small_red,
+    ItemName.diamond_red,
+    ItemName.bonus_chest,
+    ItemName.ankh,
+    ItemName.potion_damage,
+    ItemName.potion_rejuvenation,
+    ItemName.potion_invulnerability,
+    ItemName.vendor_coin,
 ]
 
 trap_items: typing.List[str] = [
@@ -111,6 +133,13 @@ trap_items: typing.List[str] = [
     ItemName.trap_fire,
     ItemName.trap_confuse,
 ]
+
+keyring_table: typing.Dict[str, typing.Tuple[str, int]] = {
+    ItemName.keyring_bronze: (ItemName.key_bronze, 5),
+    ItemName.keyring_silver: (ItemName.key_silver, 3),
+    ItemName.keyring_gold: (ItemName.key_gold, 3),
+    ItemName.keyring_bonus: (ItemName.bonus_key, 3),
+}
 
 castle_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 227,

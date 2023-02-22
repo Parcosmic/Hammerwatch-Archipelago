@@ -31,7 +31,7 @@ you to collect all the fragments to get the full item. This makes it so you pote
 multiworld to progress more in your own game. This feature can be configured in the YAML.
 
 Hammerwatch in vanilla already implements some item randomization, and these rules are taken into account when
-determining which locations can have items. This behavior can be adjusted in the YAML.
+determining which locations can have items.
 
 ## What does another world's item look like in Hammerwatch?
 
@@ -49,3 +49,10 @@ chest it is automatically broken open on delivery.
 Items that can't be picked up can be walked on to notify the server that you have found the item. 
 This prevents you from having to damage yourself or use a skill in order to collect the check and potentially get 
 hint points!
+
+## What are bronze keyrings?
+
+Bronze keyrings are a custom item created for the Castle Hammerwatch campaign. Because there are so many bronze keys
+(over 100!) the purpose of keyrings is to make receiving bronze keys feel more meaningful. This also prevents
+progression balancing from frontloading all other worlds with progression items because the Castle world needs so many
+right off the bat!

@@ -1208,16 +1208,16 @@ crloc_p3_bkey_3 = "Prison 3 Bronze Key 3"
 crloc_p3_skey = "Prison 3 Silver Key 1"
 crloc_p3_gkey = "Prison 3 Gold Key 1"
 
-crloc_a1_puzzle = "Armory 1 Puzzle 1"
+crloc_a1_puzzle = "Armory 4 Puzzle 1"
 
-crloc_a2_puzzle = "Armory 2 Puzzle 1"
+crloc_a2_puzzle = "Armory 5 Puzzle 1"
 
-crloc_r1_puzzle = "Archives 1 Puzzle 1"
-crloc_r2_puzzle = "Archives 2 Puzzle 1"
+crloc_r1_puzzle = "Archives 7 Puzzle 1"
+crloc_r2_puzzle = "Archives 8 Puzzle 1"
 
 crloc_ps_puzzle = "Prison Return Puzzle 1"
 
-crloc_c2_puzzle = "Chambers 2 Puzzle 1"
+crloc_c2_puzzle = "Chambers 11 Puzzle 1"
 
 shop_p1_combo = "Prison 1 Combo Shop"
 shop_p1_misc = "Prison 1 Vitality Shop"
