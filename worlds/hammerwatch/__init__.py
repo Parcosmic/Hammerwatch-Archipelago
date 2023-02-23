@@ -188,15 +188,6 @@ class HammerwatchWorld(World):
             if self.multiworld.portal_accessibility[self.player]:
                 total_required_locations -= 6
 
-        # Consolidate bronze keys into keyrings
-        if self.campaign == Campaign.Castle:
-            bronze_keyrings = int(
-                self.item_counts[ItemName.key_bronze] * self.multiworld.bronze_keyring_percent[self.player] / 100
-                / keyring_table[ItemName.keyring_bronze][1])
-            if bronze_keyrings > 0:
-                self.item_counts[ItemName.keyring_bronze] = bronze_keyrings
-                self.item_counts[ItemName.key_bronze] -= bronze_keyrings * keyring_table[ItemName.keyring_bronze][1]
-
         # Add items
         for item in item_table:
             if item in self.item_counts:

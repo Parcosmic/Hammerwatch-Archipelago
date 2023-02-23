@@ -1,7 +1,7 @@
 import typing
 from random import Random
 
-from BaseClasses import MultiWorld, Region, RegionType, Entrance
+from BaseClasses import MultiWorld, Region, Entrance
 from .Items import HammerwatchItem
 from .Locations import HammerwatchLocation, LocationData, LocationClassification, random_locations
 from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames
@@ -2105,6 +2105,8 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
             lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_bronze, player, 11)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.n1_start, None, True)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_bronze_gate,
+            lambda state: (state.has(ItemName.key_bronze, player, 12)), False)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p1_from_p3_n, None,
             True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_gold_gate,
@@ -3487,7 +3489,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
 
 def create_region(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
                   locations: typing.List[str]) -> Region:
-    region = Region(name, RegionType.Generic, name, player, multiworld)
+    region = Region(name, player, multiworld)
     if locations:
         for location in locations:
             if location not in active_locations.keys():
@@ -3515,20 +3517,3 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
 
     source_region.exits.append(connection)
     connection.connect(target_region)
-
-
-def check_region_locations(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData]):
-    name_list = []
-    remaining_locs = active_locations.copy()
-    test = 0
-    for region in multiworld.regions:
-        if region.player != player:
-            continue
-        test += len(region.locations)
-        for loc in region.locations:
-            name_list.append(loc.name)
-            if loc.name not in remaining_locs:
-                print(f"Location found not in active locations!!! {loc.name}")
-            remaining_locs.pop(loc.name)
-    for loc_name, data in remaining_locs.items():
-        print(f"Missing location in regions!!! {loc_name} {data.code}")

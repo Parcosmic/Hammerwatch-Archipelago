@@ -253,6 +253,16 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_none:
         item_counts_table[ItemName.bonus_chest] = 0
 
+    # Consolidate bronze keys into keyrings
+    if campaign == Campaign.Castle:
+        bronze_keyrings = int(
+            item_counts_table[ItemName.key_bronze] * multiworld.bronze_keyring_percent[player] / 100
+            / keyring_table[ItemName.keyring_bronze][1])
+        if bronze_keyrings > 0:
+            item_counts_table[ItemName.keyring_bronze] = bronze_keyrings
+            item_counts_table[ItemName.key_bronze] -= bronze_keyrings * keyring_table[ItemName.keyring_bronze][1]
+            extra_items += bronze_keyrings * keyring_table[ItemName.keyring_bronze][1] - bronze_keyrings
+
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
         if multiworld.pan_fragments[player] > 1:
