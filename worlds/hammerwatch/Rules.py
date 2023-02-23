@@ -10,7 +10,7 @@ def set_rules(multiworld: MultiWorld, player: int):
     multiworld.completion_condition[player] = lambda state: state.has(ItemName.ev_victory, player)
 
     if get_campaign(multiworld, player) == Campaign.Castle \
-            and get_goal_type(multiworld, player) != GoalType.KillFinalBoss:
+            and get_goal_type(multiworld, player) == GoalType.FullCompletion:
         add_rule(multiworld.get_entrance(CastleRegionNames.b4_start, player),
                  lambda state: state.has(ItemName.plank, player, 12))
         # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, player),
