@@ -1,7 +1,7 @@
 import os
 import typing
 
-from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, keyring_table, get_item_counts, \
+from .Items import HammerwatchItem, ItemData, item_table, junk_items, trap_items, big_key_table, get_item_counts, \
     filler_items
 from .Locations import *
 from .Regions import create_regions
@@ -213,16 +213,16 @@ class HammerwatchWorld(World):
 
     def collect(self, state: "CollectionState", item: "Item") -> bool:
         prog = super(HammerwatchWorld, self).collect(state, item)
-        if item.name in keyring_table.keys():
-            state.prog_items[keyring_table[item.name][0], self.player] += keyring_table[item.name][1]
+        if item.name in big_key_table.keys():
+            state.prog_items[big_key_table[item.name][0], self.player] += big_key_table[item.name][1]
         return prog
 
     def remove(self, state: "CollectionState", item: "Item") -> bool:
         prog = super(HammerwatchWorld, self).remove(state, item)
-        if item.name in keyring_table.keys():
-            state.prog_items[keyring_table[item.name][0], self.player] -= keyring_table[item.name][1]
-            if state.prog_items[keyring_table[item.name][0], self.player] <= 0:
-                del state.prog_items[keyring_table[item.name][0], self.player]
+        if item.name in big_key_table.keys():
+            state.prog_items[big_key_table[item.name][0], self.player] -= big_key_table[item.name][1]
+            if state.prog_items[big_key_table[item.name][0], self.player] <= 0:
+                del state.prog_items[big_key_table[item.name][0], self.player]
         return prog
 
     def get_filler_item_name(self) -> str:

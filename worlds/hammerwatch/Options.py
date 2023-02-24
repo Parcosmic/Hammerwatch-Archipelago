@@ -108,9 +108,10 @@ class ShuffleShops(Toggle):
     default = False
 
 
-class BronzeKeyringPercent(Range):
-    """(Castle only) What percentage of bronze keys get converted into bronze keyrings, which contain 5 keys each"""
-    display_name = "Bronze Keyring Percent"
+class BigBronzeKeyPercent(Range):
+    """(Castle only) What percentage of bronze keys get converted into big bronze keys, which contain 5 bronze keys each
+    """
+    display_name = "Big Bronze Key Conversion Percent"
     # category = "Generation"
     range_start = 0
     range_end = 100
@@ -199,7 +200,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
-    "bronze_keyring_percent": BronzeKeyringPercent,
+    "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
     # "consumables_vendor_locations": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
