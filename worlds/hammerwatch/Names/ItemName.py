@@ -52,10 +52,7 @@ sonic_ring = "Gold Ring"
 serious_health = "Serious Health Upgrade"
 
 # Custom Item Names
-keyring_bronze = "Bronze Keyring (5)"
-keyring_silver = "Silver Keyring (3)"
-keyring_gold = "Gold Keyring (3)"
-keyring_bonus = "Bonus Keyring (3)"
+key_bronze_big = "Big Bronze Key"
 
 # Special Generation stuff
 secret = "Secret"

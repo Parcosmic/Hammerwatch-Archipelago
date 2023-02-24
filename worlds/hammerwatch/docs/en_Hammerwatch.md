@@ -50,9 +50,8 @@ Items that can't be picked up can be walked on to notify the server that you hav
 This prevents you from having to damage yourself or use a skill in order to collect the check and potentially get 
 hint points!
 
-## What are bronze keyrings?
+## What are big bronze keys?
 
-Bronze keyrings are a custom item created for the Castle Hammerwatch campaign. Because there are so many bronze keys
-(over 100!) the purpose of keyrings is to make receiving bronze keys feel more meaningful. This also prevents
-progression balancing from frontloading all other worlds with progression items because the Castle world needs so many
-right off the bat!
+Big bronze keys are custom items created for the Castle Hammerwatch campaign. When picked up they act as 5 bronze keys.
+They exist as an option to reduce the massive amount of required progression items in the item pool and to make
+receiving bronze keys feel more meaningful.

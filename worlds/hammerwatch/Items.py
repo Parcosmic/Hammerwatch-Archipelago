@@ -74,10 +74,7 @@ special_table: typing.Dict[str, ItemData] = {
 }
 
 custom_table: typing.Dict[str, ItemData] = {
-    ItemName.keyring_bronze: ItemData(counter.count(), ItemClassification.progression),
-    # ItemName.keyring_silver: ItemData(counter.count(), ItemClassification.progression),
-    # ItemName.keyring_gold: ItemData(counter.count(), ItemClassification.progression),
-    # ItemName.keyring_bonus: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
 }
 
 counter = Counter(0x130100 - 1)
@@ -134,11 +131,8 @@ trap_items: typing.List[str] = [
     ItemName.trap_confuse,
 ]
 
-keyring_table: typing.Dict[str, typing.Tuple[str, int]] = {
-    ItemName.keyring_bronze: (ItemName.key_bronze, 5),
-    ItemName.keyring_silver: (ItemName.key_silver, 3),
-    ItemName.keyring_gold: (ItemName.key_gold, 3),
-    ItemName.keyring_bonus: (ItemName.bonus_key, 3),
+big_key_table: typing.Dict[str, typing.Tuple[str, int]] = {
+    ItemName.key_bronze_big: (ItemName.key_bronze, 5),
 }
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -256,12 +250,12 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
     # Consolidate bronze keys into keyrings
     if campaign == Campaign.Castle:
         bronze_keyrings = int(
-            item_counts_table[ItemName.key_bronze] * multiworld.bronze_keyring_percent[player] / 100
-            / keyring_table[ItemName.keyring_bronze][1])
+            item_counts_table[ItemName.key_bronze] * multiworld.big_bronze_key_percent[player] / 100
+            / big_key_table[ItemName.key_bronze_big][1])
         if bronze_keyrings > 0:
-            item_counts_table[ItemName.keyring_bronze] = bronze_keyrings
-            item_counts_table[ItemName.key_bronze] -= bronze_keyrings * keyring_table[ItemName.keyring_bronze][1]
-            extra_items += bronze_keyrings * keyring_table[ItemName.keyring_bronze][1] - bronze_keyrings
+            item_counts_table[ItemName.key_bronze_big] = bronze_keyrings
+            item_counts_table[ItemName.key_bronze] -= bronze_keyrings * big_key_table[ItemName.key_bronze_big][1]
+            extra_items += bronze_keyrings * big_key_table[ItemName.key_bronze_big][1] - bronze_keyrings
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
