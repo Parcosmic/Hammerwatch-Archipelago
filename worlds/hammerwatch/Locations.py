@@ -14,6 +14,7 @@ class LocationClassification(Enum):
     Secret = 2
     Bonus = 3
     Shop = 4
+    EnemyLoot = 5
 
 
 class LocationData(typing.NamedTuple):
@@ -1207,6 +1208,131 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.e4_main: LocationData(counter.count(15), LocationClassification.Recovery),
 }
 
+castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
+    CastleLocationNames.p2_miniboss_tick_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p2_miniboss_tick_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p2_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p2_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_miniboss_tick_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_miniboss_tick_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.p3_tower_plant_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_miniboss_skeleton_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_miniboss_skeleton_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a1_tower_ice_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_miniboss_skeleton_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_miniboss_skeleton_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a2_tower_ice_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_miniboss_skeleton_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_miniboss_skeleton_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.a3_tower_ice_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r1_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r1_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r1_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r1_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_miniboss_eye_w_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_miniboss_eye_w_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_miniboss_eye_e_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_miniboss_eye_e_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r2_tower_plant_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_n_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_n_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_e_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_e_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_s_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_miniboss_eye_s_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.r3_tower_plant_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_miniboss_lich_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c1_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_ne_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_ne_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_n_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_n_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_m_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_miniboss_lich_m_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_plant_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c2_tower_ice_11: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_miniboss_lich_e_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_miniboss_lich_e_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_miniboss_lich_sw_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_miniboss_lich_sw_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_plant_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.c3_tower_ice_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.b4_miniboss_lich_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.b4_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+}
+
 castle_shop_locations: typing.Dict[str, LocationData] = {
 
 }
@@ -1775,6 +1901,107 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.pof_puzzle_4: LocationData(counter.count()),
 }
 
+temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
+    TempleLocationNames.c3_miniboss_tick_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_miniboss_tick_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c3_tower_plant_small_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_maggot_w_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_maggot_w_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_maggot_s_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_maggot_s_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_tick_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_miniboss_tick_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_11: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_12: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_13: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_14: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_15: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_16: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_17: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_18: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_19: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_20: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_21: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_22: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c2_tower_plant_small_23: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_maggot_s_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_maggot_s_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_maggot_ne_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_maggot_ne_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_tick_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_miniboss_tick_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_7: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_11: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_12: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_13: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.c1_tower_plant_small_14: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_key: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.p_tower_plant_small_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t1_miniboss_mummy: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t1_tower_fire: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t1_tower_ice: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_w: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_e: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_fire: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_mana_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_mana_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_tower_mana_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_fire_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_fire_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_ice_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_mana_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t3_tower_mana_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b3_tower_fire_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b3_tower_fire_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b3_tower_fire_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
+}
+
 temple_shop_locations: typing.Dict[str, LocationData] = {
 
 }
@@ -1815,9 +2042,11 @@ common_event_locations: typing.Dict[str, LocationData] = {
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
     **castle_shop_locations,
+    **castle_enemy_loot_locations,
     # **castle_event_locations,
     **temple_locations,
     **temple_shop_locations,
+    **temple_enemy_loot_locations,
     # **temple_event_locations,
     # **common_event_locations
 }
@@ -1826,24 +2055,27 @@ all_locations: typing.Dict[str, LocationData] = {
 def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
     location_table: typing.Dict[str, LocationData]
     map_locations: typing.Dict[str, LocationData]
+    item_counts: typing.Dict[str, int] = {}
     bonus_locations: typing.Dict[str, LocationData] = {}
 
     location_table = {}
     # Event locations
     if map == Campaign.Castle:
+        item_counts.update(castle_item_counts)
         map_locations = get_castle_locations(multiworld, player, castle_locations)
         location_table.update(castle_event_locations)
     else:  # Need a default case for this else tests will complain
+        item_counts.update(temple_item_counts)
         map_locations = get_temple_locations(multiworld, player, temple_locations)
         location_table.update(temple_event_locations)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
     for name, data in map_locations.items():
         if data.classification == LocationClassification.Bonus:
-            bonus_locations.update({name: data})
+            bonus_locations[name] = data
             continue
         if data.classification != LocationClassification.Recovery or multiworld.randomize_recovery_items[player]:
-            location_table.update({name: data})
+            location_table[name] = data
 
     # Random location behavior
     # if multiworld.random_location_behavior[player] == 0:  # Vanilla
@@ -1857,11 +2089,11 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
     #     pass  # Do nothing as all locations are already added to the dict
 
     if map == Campaign.Castle:  # Castle Hammerwatch
-        location_table = choose_castle_random_locations(multiworld, player, location_table)
+        location_table, item_counts = choose_castle_random_locations(multiworld, player, location_table, item_counts)
     elif map == Campaign.Temple:
-        location_table = choose_tots_random_locations(multiworld, player, location_table)
+        location_table, item_counts = choose_tots_random_locations(multiworld, player, location_table, item_counts)
 
-    item_counts, extra_items = get_item_counts(multiworld, map, player)
+    item_counts, extra_items = get_item_counts(multiworld, map, player, item_counts)
 
     # Bonus level handling
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_necessary:  # Necessary
@@ -1881,39 +2113,25 @@ random_locations: typing.Dict[str, int] = {
 
 
 def get_castle_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
-    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_1, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_2, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_3, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_4, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_5, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_6, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_7, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_8, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_9, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_10, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.b4_plank_11, ItemName.diamond_red)
-        remove_castle_location(location_table, CastleLocationNames.e2_entrance, ItemName.apple)
-        remove_castle_location(location_table, CastleLocationNames.e2_end, ItemName.apple)
-        remove_castle_location(location_table, CastleLocationNames.e3_entrance_1, ItemName.apple)
-        remove_castle_location(location_table, CastleLocationNames.e3_entrance_2, ItemName.apple)
-        remove_castle_location(location_table, CastleLocationNames.e4_main, ItemName.apple)
+    if multiworld.randomize_enemy_loot[player] > 0:
+        location_table.update(castle_enemy_loot_locations)
 
     return location_table
 
 
 def get_temple_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
-    if get_goal_type(multiworld, player) == GoalType.AltCompletion:
-        remove_temple_location(location_table, TempleLocationNames.hub_pof_reward, ItemName.ankh)
+    if multiworld.randomize_enemy_loot[player] > 0:
+        location_table.update(temple_enemy_loot_locations)
 
     return location_table
 
 
-def choose_castle_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
+def choose_castle_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData],
+                                   item_counts: typing.Dict[str, int]):
 
     def remove_location(location: str, item: str):
         location_table.pop(location)
-        castle_item_counts[item] -= 1
+        item_counts[item] -= 1
 
     def remove_puzzle_locations(base_name: str, rloc_name: str):
         if random_locations[rloc_name] < 18:
@@ -1942,6 +2160,25 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         random_locations[CastleLocationNames.crloc_r2_puzzle] = -1
         random_locations[CastleLocationNames.crloc_ps_puzzle] = -1
         random_locations[CastleLocationNames.crloc_c2_puzzle] = -1
+
+    # Goal stuff
+    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
+        remove_location(CastleLocationNames.b4_plank_1, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_2, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_3, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_4, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_5, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_6, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_7, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_8, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_9, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_10, ItemName.diamond_red)
+        remove_location(CastleLocationNames.b4_plank_11, ItemName.diamond_red)
+        remove_location(CastleLocationNames.e2_entrance, ItemName.apple)
+        remove_location(CastleLocationNames.e2_end, ItemName.apple)
+        remove_location(CastleLocationNames.e3_entrance_1, ItemName.apple)
+        remove_location(CastleLocationNames.e3_entrance_2, ItemName.apple)
+        remove_location(CastleLocationNames.e4_main, ItemName.apple)
 
     # Prison Floor 1 Locations
     p1_bkey_1_locs: typing.List[str] = [
@@ -2067,17 +2304,137 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
     remove_puzzle_locations(CastleLocationNames.a2_puzzle_1[:-1], CastleLocationNames.crloc_a2_puzzle)
     remove_puzzle_locations(CastleLocationNames.r1_puzzle_1[:-1], CastleLocationNames.crloc_r1_puzzle)
     remove_puzzle_locations(CastleLocationNames.r2_puzzle_1[:-1], CastleLocationNames.crloc_r2_puzzle)
+    # Enemy loot locations
+    if multiworld.randomize_enemy_loot[player]:
+        flower_locs = [
+            CastleLocationNames.p2_tower_plant_1,
+            CastleLocationNames.p2_tower_plant_2,
+            CastleLocationNames.p3_tower_plant_1,
+            CastleLocationNames.p3_tower_plant_2,
+            CastleLocationNames.p3_tower_plant_3,
+            CastleLocationNames.p3_tower_plant_4,
+            CastleLocationNames.p3_tower_plant_5,
+            CastleLocationNames.p3_tower_plant_6,
+            CastleLocationNames.p3_tower_plant_7,
+            CastleLocationNames.p3_tower_plant_8,
+        ]
+        flower_loot_chances = [
+            (0.01, ItemName.vendor_coin),
+            (0.20, ItemName.stat_upgrade)
+        ]
+        for loc in flower_locs:
+            item = roll_for_item(multiworld, flower_loot_chances)
+            if item is None:
+                remove_location(loc, ItemName.loot_flower)
+            else:
+                item_counts[item] += 1
+        tower_locs = [
+            CastleLocationNames.a1_tower_ice_1,
+            CastleLocationNames.a1_tower_ice_2,
+            CastleLocationNames.a1_tower_ice_3,
+            CastleLocationNames.a1_tower_ice_4,
+            CastleLocationNames.a2_tower_ice_1,
+            CastleLocationNames.a2_tower_ice_2,
+            CastleLocationNames.a2_tower_ice_3,
+            CastleLocationNames.a2_tower_ice_4,
+            CastleLocationNames.a2_tower_ice_5,
+            CastleLocationNames.a2_tower_ice_6,
+            CastleLocationNames.a3_tower_ice_1,
+            CastleLocationNames.a3_tower_ice_2,
+            CastleLocationNames.a3_tower_ice_3,
+            CastleLocationNames.a3_tower_ice_4,
+            CastleLocationNames.a3_tower_ice_5,
+            CastleLocationNames.a3_tower_ice_6,
+            CastleLocationNames.a3_tower_ice_7,
+            CastleLocationNames.a3_tower_ice_8,
+            CastleLocationNames.a3_tower_ice_9,
+            CastleLocationNames.r1_tower_plant_1,
+            CastleLocationNames.r1_tower_plant_2,
+            CastleLocationNames.r1_tower_plant_3,
+            CastleLocationNames.r1_tower_plant_4,
+            CastleLocationNames.r2_tower_plant_1,
+            CastleLocationNames.r2_tower_plant_2,
+            CastleLocationNames.r2_tower_plant_3,
+            CastleLocationNames.r2_tower_plant_4,
+            CastleLocationNames.r2_tower_plant_5,
+            CastleLocationNames.r3_tower_plant_1,
+            CastleLocationNames.r3_tower_plant_2,
+            CastleLocationNames.r3_tower_plant_3,
+            CastleLocationNames.r3_tower_plant_4,
+            CastleLocationNames.r3_tower_plant_5,
+            CastleLocationNames.r3_tower_plant_6,
+            CastleLocationNames.r3_tower_plant_7,
+            CastleLocationNames.r3_tower_plant_8,
+            CastleLocationNames.r3_tower_plant_9,
+            CastleLocationNames.r3_tower_plant_10,
+            CastleLocationNames.c1_tower_plant_1,
+            CastleLocationNames.c1_tower_plant_2,
+            CastleLocationNames.c2_tower_plant_1,
+            CastleLocationNames.c2_tower_plant_2,
+            CastleLocationNames.c2_tower_plant_3,
+            CastleLocationNames.c2_tower_plant_4,
+            CastleLocationNames.c2_tower_plant_5,
+            CastleLocationNames.c2_tower_plant_6,
+            CastleLocationNames.c2_tower_plant_7,
+            CastleLocationNames.c2_tower_plant_8,
+            CastleLocationNames.c3_tower_plant_1,
+            CastleLocationNames.c3_tower_plant_2,
+            CastleLocationNames.c3_tower_plant_3,
+            CastleLocationNames.c3_tower_plant_4,
+            CastleLocationNames.c3_tower_plant_5,
+            CastleLocationNames.c3_tower_plant_6,
+            CastleLocationNames.c1_tower_ice_1,
+            CastleLocationNames.c1_tower_ice_2,
+            CastleLocationNames.c1_tower_ice_3,
+            CastleLocationNames.c2_tower_ice_1,
+            CastleLocationNames.c2_tower_ice_2,
+            CastleLocationNames.c2_tower_ice_3,
+            CastleLocationNames.c2_tower_ice_4,
+            CastleLocationNames.c2_tower_ice_5,
+            CastleLocationNames.c2_tower_ice_6,
+            CastleLocationNames.c2_tower_ice_7,
+            CastleLocationNames.c2_tower_ice_8,
+            CastleLocationNames.c2_tower_ice_9,
+            CastleLocationNames.c2_tower_ice_10,
+            CastleLocationNames.c2_tower_ice_11,
+            CastleLocationNames.c3_tower_ice_1,
+            CastleLocationNames.c3_tower_ice_2,
+            CastleLocationNames.c3_tower_ice_3,
+            CastleLocationNames.c3_tower_ice_4,
+            CastleLocationNames.c3_tower_ice_5,
+            CastleLocationNames.c3_tower_ice_6,
+            CastleLocationNames.c3_tower_ice_7,
+            CastleLocationNames.c3_tower_ice_8,
+            CastleLocationNames.c3_tower_ice_9,
+            CastleLocationNames.c3_tower_ice_10,
+        ]
+        tower_loot_chances = [
+            (0.05, ItemName.vendor_coin),
+            (0.20, ItemName.stat_upgrade)
+        ]
+        for loc in tower_locs:
+            item = roll_for_item(multiworld, tower_loot_chances)
+            if item is None:
+                remove_location(loc, ItemName.loot_tower)
+            else:
+                item_counts[item] += 1
+    else:
+        item_counts[ItemName.vendor_coin] -= 17
+        item_counts.pop(ItemName.miniboss_stat_upgrade)
+    item_counts.pop(ItemName.loot_tower)
+    item_counts.pop(ItemName.loot_flower)
 
-    return location_table
+    return location_table, item_counts
 
 
-def choose_tots_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData]):
+def choose_tots_random_locations(multiworld, player: int, location_table: typing.Dict[str, LocationData],
+                                 item_counts: typing.Dict[str, int]):
 
     def remove_location(location: str, item: str):
         if not multiworld.randomize_recovery_items[player] and item in recovery_table.keys():
             return
         location_table.pop(location)
-        temple_item_counts[item] -= 1
+        item_counts[item] -= 1
 
     def remove_secret(secret_location: str):
         if secret_location in location_table.keys():
@@ -2205,6 +2562,9 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         random_locations[TempleLocationNames.rloc_t2_puzzle_sw] = -1
         random_locations[TempleLocationNames.rloc_t3_puzzle] = -1
         random_locations[TempleLocationNames.rloc_pof_puzzle] = -1
+    # Goal stuff
+    if get_goal_type(multiworld, player) == GoalType.AltCompletion:
+        remove_location(TempleLocationNames.hub_pof_reward, ItemName.ankh)
     # Dunes
     random_locations[TempleLocationNames.rloc_t3_entrance] = multiworld.random.randrange(3)
     # Cave level 3
@@ -2293,25 +2653,25 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         TempleLocationNames.p_mid5_2,
         TempleLocationNames.p_mid5_secret,
     ]
-    temple_item_counts[ItemName.ankh] -= 2
-    temple_item_counts[ItemName.apple] -= 2
-    temple_item_counts[ItemName.mana_2] -= 1
-    temple_item_counts[ItemName.mana_1] -= 3
-    temple_item_counts[ItemName.orange] -= 1
-    temple_item_counts[ItemName.stat_upgrade] -= 2
-    temple_item_counts[ItemName.chest_wood] -= 3
+    item_counts[ItemName.ankh] -= 2
+    item_counts[ItemName.apple] -= 2
+    item_counts[ItemName.mana_2] -= 1
+    item_counts[ItemName.mana_1] -= 3
+    item_counts[ItemName.orange] -= 1
+    item_counts[ItemName.stat_upgrade] -= 2
+    item_counts[ItemName.chest_wood] -= 3
     if random_locations[TempleLocationNames.rloc_passage_middle] == 0:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid1_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid1_2)
-        temple_item_counts[ItemName.chest_wood] += 2
+        item_counts[ItemName.chest_wood] += 2
         random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     elif random_locations[TempleLocationNames.rloc_passage_middle] == 1:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_2)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_3)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid2_4)
-        temple_item_counts[ItemName.mana_2] += 1
-        temple_item_counts[ItemName.mana_1] += 3
+        item_counts[ItemName.mana_2] += 1
+        item_counts[ItemName.mana_1] += 3
         random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     elif random_locations[TempleLocationNames.rloc_passage_middle] == 2:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid3_secret_1)
@@ -2323,15 +2683,15 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_2)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_3)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_4)
-        temple_item_counts[ItemName.ankh] += 1
-        temple_item_counts[ItemName.orange] += 1
-        temple_item_counts[ItemName.apple] += 2
+        item_counts[ItemName.ankh] += 1
+        item_counts[ItemName.orange] += 1
+        item_counts[ItemName.apple] += 2
         random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     else:
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_1)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_2)
-        temple_item_counts[ItemName.chest_wood] += 1
-        temple_item_counts[ItemName.stat_upgrade] += 1
+        item_counts[ItemName.chest_wood] += 1
+        item_counts[ItemName.stat_upgrade] += 1
         mid_locations_to_remove.remove(TempleLocationNames.p_mid5_secret)
         random_locations[TempleLocationNames.rloc_p_puzzle] = -1
     for loc in mid_locations_to_remove:
@@ -2352,8 +2712,8 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
             and random_locations[TempleLocationNames.rloc_p_alley] < 2:
         end_locations_to_remove.remove(TempleLocationNames.p_end3_1)
         end_locations_to_remove.remove(TempleLocationNames.p_end3_2)
-        temple_item_counts[ItemName.ankh] += 1
-        temple_item_counts[ItemName.stat_upgrade] += 1
+        item_counts[ItemName.ankh] += 1
+        item_counts[ItemName.stat_upgrade] += 1
     for loc in end_locations_to_remove:
         if temple_locations[loc].classification == LocationClassification.Secret:
             remove_secret(loc)
@@ -2370,7 +2730,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     random_locations[TempleLocationNames.rloc_t1_keystone] = multiworld.random.randrange(len(t1_keystone_locations))
     t1_keystone_locations.pop(random_locations[TempleLocationNames.rloc_t1_keystone])
     if random_locations[TempleLocationNames.rloc_t1_keystone] == 2:  # Remove the diamond that would spawn there
-        temple_item_counts[ItemName.diamond_small] -= 1
+        item_counts[ItemName.diamond_small] -= 1
     else:
         t1_keystone_locations.remove(TempleLocationNames.t1_ledge_after_block_trap_1)  # Remove the diamond-filled loc
     for loc in t1_keystone_locations:
@@ -2481,7 +2841,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         location_table = keep_one_location(multiworld, location_table, t2_gold_key_locations,
                                            TempleLocationNames.rloc_t2_gold_key)
     else:
-        temple_item_counts[ItemName.stat_upgrade] -= 1
+        item_counts[ItemName.stat_upgrade] -= 1
         for loc in t2_gold_key_locations:
             location_table.pop(loc)
     t2_silver_key_1_locations: typing.List[str] = [
@@ -2536,18 +2896,143 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     remove_puzzle_locations(TempleLocationNames.t2_sw_puzzle_1[:-1], TempleLocationNames.rloc_t2_puzzle_sw)
     remove_puzzle_locations(TempleLocationNames.t3_puzzle_1[:-1], TempleLocationNames.rloc_t3_puzzle)
     remove_puzzle_locations(TempleLocationNames.pof_puzzle_1[:-1], TempleLocationNames.rloc_pof_puzzle)
+    # Enemy loot locations
+    if multiworld.randomize_enemy_loot[player]:
+        flower_locs = [
+            TempleLocationNames.c3_tower_plant,
+            TempleLocationNames.c2_tower_plant_1,
+            TempleLocationNames.c2_tower_plant_2,
+            TempleLocationNames.c2_tower_plant_3,
+            TempleLocationNames.c1_tower_plant_1,
+            TempleLocationNames.c1_tower_plant_2,
+            TempleLocationNames.c1_tower_plant_3,
+            TempleLocationNames.c1_tower_plant_4,
+        ]
+        flower_loot_chances = [
+            (0.01, ItemName.vendor_coin),
+            (0.20, ItemName.stat_upgrade)
+        ]
+        for loc in flower_locs:
+            item = roll_for_item(multiworld, flower_loot_chances)
+            if item is None:
+                remove_location(loc, ItemName.loot_flower)
+            else:
+                item_counts[item] += 1
+        mini_flower_locs = [
+            TempleLocationNames.c3_tower_plant_small_1,
+            TempleLocationNames.c3_tower_plant_small_2,
+            TempleLocationNames.c3_tower_plant_small_3,
+            TempleLocationNames.c3_tower_plant_small_4,
+            TempleLocationNames.c3_tower_plant_small_5,
+            TempleLocationNames.c3_tower_plant_small_6,
+            TempleLocationNames.c3_tower_plant_small_7,
+            TempleLocationNames.c3_tower_plant_small_8,
+            TempleLocationNames.c2_tower_plant_small_1,
+            TempleLocationNames.c2_tower_plant_small_2,
+            TempleLocationNames.c2_tower_plant_small_3,
+            TempleLocationNames.c2_tower_plant_small_4,
+            TempleLocationNames.c2_tower_plant_small_5,
+            TempleLocationNames.c2_tower_plant_small_6,
+            TempleLocationNames.c2_tower_plant_small_7,
+            TempleLocationNames.c2_tower_plant_small_8,
+            TempleLocationNames.c2_tower_plant_small_9,
+            TempleLocationNames.c2_tower_plant_small_10,
+            TempleLocationNames.c2_tower_plant_small_11,
+            TempleLocationNames.c2_tower_plant_small_12,
+            TempleLocationNames.c2_tower_plant_small_13,
+            TempleLocationNames.c2_tower_plant_small_14,
+            TempleLocationNames.c2_tower_plant_small_15,
+            TempleLocationNames.c2_tower_plant_small_16,
+            TempleLocationNames.c2_tower_plant_small_17,
+            TempleLocationNames.c2_tower_plant_small_18,
+            TempleLocationNames.c2_tower_plant_small_19,
+            TempleLocationNames.c2_tower_plant_small_20,
+            TempleLocationNames.c2_tower_plant_small_21,
+            TempleLocationNames.c2_tower_plant_small_22,
+            TempleLocationNames.c2_tower_plant_small_23,
+            TempleLocationNames.c1_tower_plant_small_1,
+            TempleLocationNames.c1_tower_plant_small_2,
+            TempleLocationNames.c1_tower_plant_small_3,
+            TempleLocationNames.c1_tower_plant_small_4,
+            TempleLocationNames.c1_tower_plant_small_5,
+            TempleLocationNames.c1_tower_plant_small_6,
+            TempleLocationNames.c1_tower_plant_small_7,
+            TempleLocationNames.c1_tower_plant_small_8,
+            TempleLocationNames.c1_tower_plant_small_9,
+            TempleLocationNames.c1_tower_plant_small_10,
+            TempleLocationNames.c1_tower_plant_small_11,
+            TempleLocationNames.c1_tower_plant_small_12,
+            TempleLocationNames.c1_tower_plant_small_13,
+            TempleLocationNames.c1_tower_plant_small_14,
+            TempleLocationNames.p_tower_plant_small_1,
+            TempleLocationNames.p_tower_plant_small_2,
+            TempleLocationNames.p_tower_plant_small_3,
+            TempleLocationNames.p_tower_plant_small_4,
+            TempleLocationNames.p_tower_plant_small_5,
+            TempleLocationNames.p_tower_plant_small_6,
+        ]
+        mini_flower_loot_chances = [
+            (0.05, ItemName.vendor_coin),
+            (0.25, ItemName.valuable_6)
+        ]
+        for loc in mini_flower_locs:
+            item = roll_for_item(multiworld, mini_flower_loot_chances)
+            if item is None:
+                remove_location(loc, ItemName.loot_mini_flower)
+            else:
+                item_counts[item] += 1
+        tower_locs = [
+            TempleLocationNames.t1_tower_fire,
+            TempleLocationNames.t1_tower_ice,
+            TempleLocationNames.t2_tower_fire,
+            TempleLocationNames.t2_tower_ice_1,
+            TempleLocationNames.t2_tower_ice_2,
+            TempleLocationNames.t2_tower_ice_3,
+            TempleLocationNames.t2_tower_mana_1,
+            TempleLocationNames.t2_tower_mana_2,
+            TempleLocationNames.t2_tower_mana_3,
+            TempleLocationNames.t3_tower_fire_1,
+            TempleLocationNames.t3_tower_fire_2,
+            TempleLocationNames.t3_tower_ice_1,
+            TempleLocationNames.t3_tower_ice_2,
+            TempleLocationNames.t3_tower_ice_3,
+            TempleLocationNames.t3_tower_mana_1,
+            TempleLocationNames.t3_tower_mana_2,
+            TempleLocationNames.b3_tower_fire_1,
+            TempleLocationNames.b3_tower_fire_2,
+            TempleLocationNames.b3_tower_fire_3,
+        ]
+        tower_loot_chances = [
+            (0.05, ItemName.vendor_coin),
+            (0.20, ItemName.stat_upgrade)
+        ]
+        for loc in tower_locs:
+            item = roll_for_item(multiworld, tower_loot_chances)
+            if item is None:
+                remove_location(loc, ItemName.loot_tower)
+            else:
+                item_counts[item] += 1
+        # Sand shark locations
+        if multiworld.random.random() >= 0.1:
+            location_table.pop(TempleLocationNames.b1_boss_worm_1)
+        else:
+            item_counts[ItemName.stat_upgrade] += 1
+        if multiworld.random.random() >= 0.05:
+            location_table.pop(TempleLocationNames.b1_boss_worm_2)
+        else:
+            item_counts[ItemName.steak] += 1
+    else:
+        item_counts.pop(ItemName.miniboss_stat_upgrade)
+    item_counts.pop(ItemName.loot_tower)
+    item_counts.pop(ItemName.loot_flower)
+    item_counts.pop(ItemName.loot_mini_flower)
 
-    return location_table
+    return location_table, item_counts
 
 
-def remove_castle_location(location_table, location: str, item: str):
+def remove_location_with_item(location_table, location: str, item: str, item_counts: typing.Dict[str, int]):
     location_table.pop(location)
-    castle_item_counts[item] -= 1
-
-
-def remove_temple_location(location_table, location: str, item: str):
-    location_table.pop(location)
-    temple_item_counts[item] -= 1
+    item_counts[item] -= 1
 
 
 def randomize_puzzle(multiworld: MultiWorld, rloc_name: str):
@@ -2564,6 +3049,15 @@ def keep_one_location(multiworld, location_table: typing.Dict[str, LocationData]
     for loc in locations:
         location_table.pop(loc)
     return location_table
+
+
+def roll_for_item(multiworld, loot_chances: typing.List[typing.Tuple[float, str]]):
+    rnd = multiworld.random.random()
+    for item in loot_chances:
+        rnd -= item[0]
+        if rnd < 0:
+            return item[1]
+    return None
 
 
 lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if

@@ -78,6 +78,7 @@ class HammerwatchWorld(World):
             self.place_tots_locked_items()
 
         # Shop shuffle
+        self.shop_locations = {}
         if self.multiworld.shop_shuffle[self.player] > 0:
             if self.campaign == Campaign.Castle:
                 shop_counts = {

@@ -48,6 +48,15 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.stat_upgrade_defense: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_health: ItemData(counter.count(), ItemClassification.useful),
     ItemName.stat_upgrade_mana: ItemData(counter.count(), ItemClassification.useful),
+    ItemName.valuable_1: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_2: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_3: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_4: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_5: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_6: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_7: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_8: ItemData(counter.count(), ItemClassification.filler),
+    ItemName.valuable_9: ItemData(counter.count(), ItemClassification.filler),
 }
 
 recovery_table: typing.Dict[str, ItemData] = {
@@ -73,10 +82,6 @@ special_table: typing.Dict[str, ItemData] = {
     ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
-custom_table: typing.Dict[str, ItemData] = {
-    ItemName.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
-}
-
 counter = Counter(0x130100 - 1)
 trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_bomb: ItemData(counter.count(), ItemClassification.trap),
@@ -85,6 +90,11 @@ trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_frost: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_fire: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
+}
+
+counter = Counter(0x130200 - 1)
+custom_table: typing.Dict[str, ItemData] = {
+    ItemName.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
 }
 
 item_table: typing.Dict[str, ItemData] = {
@@ -143,7 +153,7 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.chest_purple: 7,
     ItemName.chest_red: 14,
     ItemName.chest_wood: 25,
-    ItemName.vendor_coin: 63,
+    ItemName.vendor_coin: 80,
     ItemName.plank: 12,
     ItemName.key_bronze: 103,
     ItemName.key_silver: 13,
@@ -168,7 +178,10 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.mana_2: 30,
     ItemName.stat_upgrade: 12,
     ItemName.secret: 0,  # Future me please don't remove this it'll break item gen code
-    # ItemName.puzzle: 7
+    # ItemName.puzzle: 7,
+    ItemName.miniboss_stat_upgrade: 17,
+    ItemName.loot_tower: 45,
+    ItemName.loot_flower: 43,
 }
 
 temple_item_counts: typing.Dict[str, int] = {
@@ -179,7 +192,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.chest_purple: 13,
     ItemName.chest_red: 11,
     ItemName.chest_wood: 29,
-    ItemName.vendor_coin: 43,
+    ItemName.vendor_coin: 50,
     ItemName.plank: 0,
     ItemName.key_silver: 6,
     ItemName.key_gold: 4,
@@ -199,6 +212,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.stat_upgrade_defense: 1,
     ItemName.stat_upgrade_health: 0,
     ItemName.stat_upgrade_mana: 0,
+    ItemName.valuable_6: 0,
     ItemName.apple: 48,
     ItemName.orange: 11,
     ItemName.steak: 7,
@@ -211,17 +225,15 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.stat_upgrade: 43,
     ItemName.secret: 20,
     # ItemName.puzzle: 10
+    ItemName.miniboss_stat_upgrade: 10,
+    ItemName.loot_tower: 19,
+    ItemName.loot_flower: 8,
+    ItemName.loot_mini_flower: 51,
 }
 
 
-def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
-    item_counts_table: typing.Dict[str, int]
+def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, item_counts_table: typing.Dict[str, int]):
     extra_items: int = 0
-
-    if campaign == Campaign.Castle:  # Castle Hammerwatch
-        item_counts_table = {**castle_item_counts}
-    elif campaign == Campaign.Temple:  # Temple of the Sun
-        item_counts_table = {**temple_item_counts}
 
     secrets: int = item_counts_table.pop(ItemName.secret)
     # puzzles: int = item_counts_table.pop(ItemName.puzzle)
@@ -292,6 +304,19 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
 
+    # Enemy loot
+    if multiworld.randomize_enemy_loot[player]:
+        miniboss_stat_upgrade_chances = [
+            (0.3, ItemName.stat_upgrade_health),
+            (0.3, ItemName.stat_upgrade_mana),
+            (0.3, ItemName.stat_upgrade_damage),
+            (0.1, ItemName.stat_upgrade_defense),
+        ]
+        miniboss_upgrades = item_counts_table.pop(ItemName.miniboss_stat_upgrade)
+        for i in range(miniboss_upgrades):
+            item = roll_for_item(multiworld, miniboss_stat_upgrade_chances)
+            item_counts_table[item] += 1
+
     # Add puzzle items
     # if multiworld.randomize_puzzles[player]:
     # item_counts_table[ItemName.chest_purple] += puzzles
@@ -338,6 +363,15 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int):
             item_counts_table[filler_item] += 1
 
     return item_counts_table, extra_items
+
+
+def roll_for_item(multiworld, loot_chances: typing.List[typing.Tuple[float, str]]):
+    rnd = multiworld.random.random()
+    for item in loot_chances:
+        rnd -= item[0]
+        if rnd < 0:
+            return item[1]
+    return None
 
 
 filler_items: typing.List[str] = [item_name for item_name, data in item_table.items() if data.classification.filler]

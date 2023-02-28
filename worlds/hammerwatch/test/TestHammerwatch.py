@@ -14,6 +14,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_recovery_items": Options.RandomizeRecoveryItems.option_true,
             "randomize_secrets": Options.RandomizeSecrets.option_true,
             "randomize_puzzles": Options.RandomizePuzzles.option_true,
+            "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_true,
         },
         "Temple max locations": {
             "goal": Options.Goal.option_temple_kill_sharand,
@@ -22,6 +23,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_recovery_items": Options.RandomizeRecoveryItems.option_true,
             "randomize_secrets": Options.RandomizeSecrets.option_true,
             "randomize_puzzles": Options.RandomizePuzzles.option_true,
+            "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_true,
         },
         "Castle min locations": {
             "goal": Options.Goal.option_castle_plank_hunt,
@@ -30,6 +32,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_recovery_items": Options.RandomizeRecoveryItems.option_false,
             "randomize_secrets": Options.RandomizeSecrets.option_false,
             "randomize_puzzles": Options.RandomizePuzzles.option_false,
+            "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
         },
         "Temple min locations": {
             "goal": Options.Goal.option_temple_plank_hunt,
@@ -38,6 +41,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_recovery_items": Options.RandomizeRecoveryItems.option_false,
             "randomize_secrets": Options.RandomizeSecrets.option_false,
             "randomize_puzzles": Options.RandomizePuzzles.option_false,
+            "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
         },
     }
 

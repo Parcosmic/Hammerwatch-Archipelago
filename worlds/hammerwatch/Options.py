@@ -91,14 +91,21 @@ class RandomizeSecrets(Toggle):
     """Whether items from secrets are shuffled into the item pool"""
     display_name = "Randomize Secrets"
     # category = "Generation"
-    default = True
+    default = False
 
 
 class RandomizePuzzles(Toggle):
     """Whether items from puzzles are shuffled into the item pool"""
     display_name = "Randomize Puzzles"
     # category = "Generation"
-    default = True
+    default = False
+
+
+class RandomizeEnemyLoot(Toggle):
+    """Whether items dropped by minibosses and towers are shuffled into the item pool"""
+    display_name = "Randomize Major Enemy Loot"
+    # category = "Generation"
+    default = False
 
 
 class ShuffleShops(Toggle):
@@ -119,7 +126,8 @@ class BigBronzeKeyPercent(Range):
 
 
 class PortalAccessibility(Toggle):
-    """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are more easily accessible
+    """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are
+    more easily accessible
     """
     display_name = "Portal Accessibility"
     # category = "Generation"
@@ -200,6 +208,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
+    "randomize_enemy_loot": RandomizeEnemyLoot,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
     # "consumables_vendor_locations": ConsumableMerchantChecks,
