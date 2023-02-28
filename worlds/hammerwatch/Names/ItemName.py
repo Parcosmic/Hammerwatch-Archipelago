@@ -37,6 +37,15 @@ diamond = "Diamond"
 diamond_red = "Red Diamond"
 diamond_small = "Small Diamond"
 diamond_small_red = "Small Red Diamond"
+valuable_1 = "Copper Coin"
+valuable_2 = "Copper Coins"
+valuable_3 = "Copper Coin Pile"
+valuable_4 = "Silver Coin"
+valuable_5 = "Silver Coins"
+valuable_6 = "Silver Coin Pile"
+valuable_7 = "Gold Coin"
+valuable_8 = "Gold Coins"
+valuable_9 = "Gold Coin Pile"
 
 # Quest Item Names
 pan = "Frying Pan"
@@ -57,6 +66,10 @@ key_bronze_big = "Big Bronze Key"
 # Special Generation stuff
 secret = "Secret"
 puzzle = "Puzzle"
+miniboss_stat_upgrade = "Miniboss Stat Upgrade"
+loot_tower = "Tower Loot"
+loot_flower = "Flower Loot"
+loot_mini_flower = "Mini Flower Loot"
 
 # Trap Items
 trap_bomb = "Bomb Trap"
