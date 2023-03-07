@@ -36,8 +36,8 @@ cave_1_green_bridge = "Cave Level 1 Activate Green Bridge"
 cave_1_pumps = "Cave Level 1 Activate Pumps"
 cave_1_temple = "Cave Level 1 Temple"
 
-boss_1_main = "Sand Sharks"
-boss_1_defeated = "Sand Sharks Defeated"
+boss_1_main = "Dune Sharks"
+boss_1_defeated = "Dune Sharks Defeated"
 
 passage_entrance = "Passage Entrance"
 passage_mid = "Passage Middle"

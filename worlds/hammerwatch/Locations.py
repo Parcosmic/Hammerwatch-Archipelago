@@ -1969,8 +1969,14 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.c1_tower_plant_small_12: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.c1_tower_plant_small_13: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.c1_tower_plant_small_14: LocationData(counter.count(), LocationClassification.EnemyLoot),
-    TempleLocationNames.b1_boss_worm_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
-    TempleLocationNames.b1_boss_worm_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_1_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_1_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_2_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_2_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_3_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_3_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_4_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.b1_boss_worm_4_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.b1_boss_worm_key: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.p_tower_plant_small_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.p_tower_plant_small_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
@@ -2174,11 +2180,12 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         remove_location(CastleLocationNames.b4_plank_9, ItemName.diamond_red)
         remove_location(CastleLocationNames.b4_plank_10, ItemName.diamond_red)
         remove_location(CastleLocationNames.b4_plank_11, ItemName.diamond_red)
-        remove_location(CastleLocationNames.e2_entrance, ItemName.apple)
-        remove_location(CastleLocationNames.e2_end, ItemName.apple)
-        remove_location(CastleLocationNames.e3_entrance_1, ItemName.apple)
-        remove_location(CastleLocationNames.e3_entrance_2, ItemName.apple)
-        remove_location(CastleLocationNames.e4_main, ItemName.apple)
+        if multiworld.randomize_recovery_items[player]:
+            remove_location(CastleLocationNames.e2_entrance, ItemName.apple)
+            remove_location(CastleLocationNames.e2_end, ItemName.apple)
+            remove_location(CastleLocationNames.e3_entrance_1, ItemName.apple)
+            remove_location(CastleLocationNames.e3_entrance_2, ItemName.apple)
+            remove_location(CastleLocationNames.e4_main, ItemName.apple)
 
     # Prison Floor 1 Locations
     p1_bkey_1_locs: typing.List[str] = [
@@ -3012,16 +3019,31 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
                 remove_location(loc, ItemName.loot_tower)
             else:
                 item_counts[item] += 1
-        # Sand shark locations
-        if multiworld.random.random() >= 0.1:
-            location_table.pop(TempleLocationNames.b1_boss_worm_1)
-        else:
-            item_counts[ItemName.stat_upgrade] += 1
-        if multiworld.random.random() >= 0.05:
-            location_table.pop(TempleLocationNames.b1_boss_worm_2)
-        else:
-            item_counts[ItemName.steak] += 1
+        # Dune shark locations
+        dune_shark_upgrade_locs = [
+            TempleLocationNames.b1_boss_worm_1_1,
+            TempleLocationNames.b1_boss_worm_2_1,
+            TempleLocationNames.b1_boss_worm_3_1,
+            TempleLocationNames.b1_boss_worm_4_1,
+        ]
+        for loc in dune_shark_upgrade_locs:
+            if multiworld.random.random() >= 0.1:
+                location_table.pop(loc)
+            else:
+                item_counts[ItemName.stat_upgrade] += 1
+        dune_shark_steak_locs = [
+            TempleLocationNames.b1_boss_worm_1_2,
+            TempleLocationNames.b1_boss_worm_2_2,
+            TempleLocationNames.b1_boss_worm_3_2,
+            TempleLocationNames.b1_boss_worm_4_2,
+        ]
+        for loc in dune_shark_steak_locs:
+            if multiworld.random.random() >= 0.05:
+                location_table.pop(loc)
+            else:
+                item_counts[ItemName.steak] += 1
     else:
+        item_counts[ItemName.vendor_coin] -= 7
         item_counts.pop(ItemName.miniboss_stat_upgrade)
     item_counts.pop(ItemName.loot_tower)
     item_counts.pop(ItemName.loot_flower)

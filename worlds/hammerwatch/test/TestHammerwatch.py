@@ -43,6 +43,12 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_puzzles": Options.RandomizePuzzles.option_false,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
         },
+        "Castle kill final boss goal": {
+            "goal": Options.Goal.option_castle_kill_dragon,
+        },
+        "Temple complete Pyramid of Fear": {
+            "goal": Options.Goal.option_temple_pyramid_of_fear,
+        },
     }
 
     def testOptions(self):
