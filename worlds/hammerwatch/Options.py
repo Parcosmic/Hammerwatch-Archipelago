@@ -116,7 +116,7 @@ class ShuffleShops(Toggle):
 
 
 class BigBronzeKeyPercent(Range):
-    """(Castle only) What percentage of bronze keys get converted into big bronze keys, which contain 5 bronze keys each
+    """(Castle only) What percentage of bronze keys get converted into big bronze keys, which act as 5 bronze keys each
     """
     display_name = "Big Bronze Key Conversion Percent"
     # category = "Generation"

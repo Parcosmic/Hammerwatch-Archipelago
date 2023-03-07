@@ -2848,8 +2848,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     boss1_defeated_locations = [
         TempleLocationNames.boss1_bridge,
         TempleLocationNames.boss1_bridge_n,
-        TempleLocationNames.b1_boss_worm_1,
-        TempleLocationNames.b1_boss_worm_2,
+        TempleLocationNames.b1_boss_worm_1_1,
+        TempleLocationNames.b1_boss_worm_1_2,
+        TempleLocationNames.b1_boss_worm_2_1,
+        TempleLocationNames.b1_boss_worm_2_2,
+        TempleLocationNames.b1_boss_worm_3_1,
+        TempleLocationNames.b1_boss_worm_3_2,
+        TempleLocationNames.b1_boss_worm_4_1,
+        TempleLocationNames.b1_boss_worm_4_2,
         TempleLocationNames.b1_boss_worm_key,
         TempleLocationNames.boss1_secret,
         TempleLocationNames.ev_temple_entrance_rock,
@@ -3632,7 +3638,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_sdoor,
             lambda state: (state.has(ItemName.key_silver, player, 1)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
-            lambda state: (state.has(ItemName.mirror, player, 3)))
+            lambda state: (state.has(ItemName.mirror, player, 9)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.cave_3_secret, None, True)
     connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_sun_turret,
             lambda state: (state.has(ItemName.key_silver, player, 2)))
@@ -3647,9 +3653,9 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_east,
             lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_silver, player, 4)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_sun_block_hall,
-            lambda state: (state.has(ItemName.mirror, player, 6)))
+            lambda state: (state.has(ItemName.mirror, player, 12)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_node_2,
-            lambda state: (state.has(ItemName.mirror, player, 7)))
+            lambda state: (state.has(ItemName.mirror, player, 13)))
     connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_ice_chamber_melt_ice,
             lambda state: (state.has(ItemName.ev_krilith_defeated, player)))
 
@@ -3666,9 +3672,9 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_ornate,
             lambda state: (state.has(ItemName.key_gold, player, 4)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
-            lambda state: (state.has(ItemName.mirror, player, 10)))
+            lambda state: (state.has(ItemName.mirror, player, 16)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
-            lambda state: (state.has(ItemName.mirror, player, 14)))
+            lambda state: (state.has(ItemName.mirror, player, 20)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
             lambda state: (state.has(ItemName.ev_t2_bridge_switch, player, 5)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal, None,
@@ -3707,8 +3713,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
 
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
             lambda state: (state.has(ItemName.ev_solar_node, player, 6)
-                           and state.has(ItemName.key_teleport, player, 6)
-                           and state.has(ItemName.ore, player, 11)), True)
+                           and state.has(ItemName.key_teleport, player, 6)), True)
     connect(multiworld, player, used_names, TempleRegionNames.b3_main, TempleRegionNames.b3_platform_1)
     connect(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.b3_platform_2)
     connect(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.b3_platform_3)
