@@ -115,6 +115,14 @@ class ShuffleShops(Toggle):
     default = False
 
 
+class ActSpecificKeys(Toggle):
+    """(Castle only) Separates keys into versions that can only be used on a specific act. Turning this setting off
+    makes logic a lot more lax so it can be possible to softlock if some doors are skipped"""
+    display_name = "Act Specific Keys"
+    # category = "Generation"
+    default = True
+
+
 class BigBronzeKeyPercent(Range):
     """(Castle only) What percentage of bronze keys get converted into big bronze keys, which act as 3 bronze keys each
     """
@@ -217,6 +225,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
     "randomize_enemy_loot": RandomizeEnemyLoot,
+    # "act_specific_keys": ActSpecificKeys,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
     "no_sunbeam_damage": NoSunbeamDamage,
