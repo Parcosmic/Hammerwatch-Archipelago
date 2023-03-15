@@ -2197,18 +2197,19 @@ def connect_castle_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.key_bronze, player, 5)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
-            lambda state: (state.has(ItemName.key_silver, player, 1) and state.has(ItemName.key_bronze, player, 5)))
+            lambda state: (state.has(ItemName.key_silver, player, 13) and state.has(ItemName.key_bronze, player, 5)))
+    # 2 silver on floor
     connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_red_switch)
     connect(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 6)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))  # 12 on floor
     connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
             lambda state: (state.has(ItemName.key_gold, player, 1) and state.has(ItemName.key_bronze, player, 6)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
-            lambda state: (state.has(ItemName.key_bronze, player, 7)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 8)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_se_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 9)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
             lambda state: (state.has(ItemName.ev_castle_p2_switch, player, 4)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
@@ -2217,18 +2218,18 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start, None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_n_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 11)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_s_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 11)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_silver_gate,
-            lambda state: (state.has(ItemName.key_silver, player, 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))  # 2 on floor
     connect(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s, None,
             True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
             lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_bronze, player, 11)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.n1_start, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_bronze_gate,
-            lambda state: (state.has(ItemName.key_bronze, player, 12)), False)
+            lambda state: (state.has(ItemName.key_bronze, player, 103)), False)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p1_from_p3_n, None,
             True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_gold_gate,
@@ -2239,17 +2240,24 @@ def connect_castle_regions(multiworld, player: int, active_locations):
                            and state.has(ItemName.key_bronze, player, 12)
                            and state.has(ItemName.bonus_key, player, 5)), True)
 
-    # Technically a bonus key is needed to traverse to the next room, but we aren't randomizing them for now
-    connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
-            lambda state: (state.has(ItemName.bonus_key, player, 1)))
-    connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
-            lambda state: (state.has(ItemName.bonus_key, player, 2)))
-    connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
-            lambda state: (state.has(ItemName.bonus_key, player, 3)))
-    connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room4,
-            lambda state: (state.has(ItemName.bonus_key, player, 4)))
-    connect(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
-            lambda state: (state.has(ItemName.bonus_key, player, 5)), True)
+    if multiworld.randomize_bonus_keys[player]:
+        connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
+                lambda state: (state.has(ItemName.bonus_key, player, 14)))  # Start at 1
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
+                lambda state: (state.has(ItemName.bonus_key, player, 15)))
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
+                lambda state: (state.has(ItemName.bonus_key, player, 16)))
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room4,
+                lambda state: (state.has(ItemName.bonus_key, player, 17)))
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+    else:
+        connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3)
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room4)
+        connect(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
+                None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.b1_start, CastleRegionNames.b1_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated)
@@ -2260,51 +2268,62 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_se_cache,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_ne_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_red_spikes)
     connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_n_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_w,
-            lambda state: (state.has(ItemName.key_silver, player, 4)) and (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_silver, player, 5)) and (state.has(ItemName.key_bronze, player, 34)))
     connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_nw_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 35)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes)
 
     connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 22)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_ne,
-            lambda state: (state.has(ItemName.key_silver, player, 4)) and (state.has(ItemName.key_bronze, player, 23)))
+            lambda state: (state.has(ItemName.key_silver, player, 5)) and (state.has(ItemName.key_bronze, player, 23)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_l_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_r_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e)
     connect(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 34)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a3_pyramids_s_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 23)), True)
+            lambda state: (state.has(ItemName.key_bronze, player, 103)), True)
 
-    connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
-            lambda state: (state.has(ItemName.bonus_key, player, 6)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)))
-    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
-    connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_blue_spikes,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)), True)
-    connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return,
-            lambda state: (state.has(ItemName.bonus_key, player, 11)), True)
+    if multiworld.randomize_bonus_keys[player]:
+        connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
+                lambda state: (state.has(ItemName.bonus_key, player, 13)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_blue_spikes,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return,
+                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+    else:
+        connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_blue_spikes, None, True)
+        connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return, None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a2_nw, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_puzzle_reward)
@@ -2322,21 +2341,21 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_e,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 1)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_s_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 41 + 1)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_sgate,
-            lambda state: (state.has(ItemName.key_silver, player, 5 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall)
     connect(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 41 + 2)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_ne_ggate,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 2)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw,
-            lambda state: (state.has(ItemName.key_bronze, player, 41 + 4)))
+            lambda state: (state.has(ItemName.key_bronze, player, 41 + 4)))  # Symbolic gate
     connect(multiworld, player, used_names, CastleRegionNames.r1_nw, CastleRegionNames.r1_nw_hidden)
     connect(multiworld, player, used_names, CastleRegionNames.r1_nw_hidden, CastleRegionNames.r1_sw,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 3)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_w_sgate,
-            lambda state: (state.has(ItemName.key_silver, player, 5 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall)
     connect(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r2_start,
             lambda state: (state.has(ItemName.key_gold, player, 6 + 4)
@@ -2350,9 +2369,9 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m)
     connect(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_e)
     connect(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_nw,
-            lambda state: (state.has(ItemName.key_bronze, player, 47 + 1)))
+            lambda state: (state.has(ItemName.key_bronze, player, 61)))
     connect(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_s,
-            lambda state: (state.has(ItemName.key_silver, player, 7 + 1)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r3_main,
             lambda state: (state.has(ItemName.key_gold, player, 10 + 1)
                            and state.has(ItemName.key_silver, player, 7 + 1)
@@ -2361,25 +2380,25 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch)
     connect(multiworld, player, used_names, CastleRegionNames.r3_boss_switch, CastleRegionNames.n3_main, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_l_shop_sgate,
-            lambda state: (state.has(ItemName.key_silver, player, 8 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_r_shop_sgate,
-            lambda state: (state.has(ItemName.key_silver, player, 8 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_e_ggate,
-            lambda state: (state.has(ItemName.key_gold, player, 11 + 2)))
+            lambda state: (state.has(ItemName.key_gold, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_w_ggate,
-            lambda state: (state.has(ItemName.key_gold, player, 11 + 2)))
+            lambda state: (state.has(ItemName.key_gold, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 55 + 6)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.b3_start,
             lambda state: (state.has(ItemName.ev_castle_b3_boss_switch, player, 3)
-                           and state.has(ItemName.key_silver, player, 8 + 2)
-                           and state.has(ItemName.key_bronze, player, 55 + 6)
+                           and state.has(ItemName.key_silver, player, 10)
+                           and state.has(ItemName.key_bronze, player, 61)
                            and state.has(ItemName.bonus_key, player, 14)), True)
 
     connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room, None, True)
-    connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, None, True)
-    # The exit of bonus 3 leads to r3_main, there are 3 bonus keys in this level
+    connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return,
+            lambda state: (state.has(ItemName.bonus_key, player, 14)), True)  # Symbolic gate
 
     connect(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
@@ -2388,20 +2407,20 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes)
     connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes)
     connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_shop,
-            lambda state: (state.has(ItemName.key_bronze, player, 61 + 6)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_w,
             lambda state: (state.has(ItemName.key_gold, player, 13 + 1)
                            and state.has(ItemName.key_bronze, player, 61 + 6)))
     connect(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_sgate,
-            lambda state: (state.has(ItemName.key_silver, player, 10 + 1)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs)
     connect(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
             None, True)
     connect(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_s_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 61 + 11)))
+            lambda state: (state.has(ItemName.key_bronze, player, 102)))
     connect(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_ledge,
-            lambda state: (state.has(ItemName.key_bronze, player, 61 + 12)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main,
             lambda state: (state.has(ItemName.key_bronze, player, 61 + 12)
                            and state.has(ItemName.key_silver, player, 10 + 1)))
@@ -2412,15 +2431,15 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes)
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes)
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_1,
-            lambda state: (state.has(ItemName.key_silver, player, 11 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_w_shops_3, CastleRegionNames.c2_w_shops_2,
-            lambda state: (state.has(ItemName.key_silver, player, 11 + 2)))
+            lambda state: (state.has(ItemName.key_silver, player, 13)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_3,
-            lambda state: (state.has(ItemName.key_bronze, player, 73 + 16)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_1,
-            lambda state: (state.has(ItemName.key_bronze, player, 73 + 16)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_2,
-            lambda state: (state.has(ItemName.key_bronze, player, 73 + 16)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n,
             lambda state: (state.has(ItemName.key_gold, player, 14 + 1)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.n4_main, None, True)
@@ -2431,12 +2450,12 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_main,
             lambda state: (state.has(ItemName.ev_castle_c2_n_shops_switch, player)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start,
-            lambda state: (state.has(ItemName.key_gold, player, 14 + 1)
-                           and state.has(ItemName.key_silver, player, 11 + 2)
+            lambda state: (state.has(ItemName.key_gold, player, 16)
+                           and state.has(ItemName.key_silver, player, 13)
                            and state.has(ItemName.key_bronze, player, 73 + 16)), True)
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw,
-            lambda state: (state.has(ItemName.key_gold, player, 14 + 1)
-                           and state.has(ItemName.key_silver, player, 11 + 2)
+            lambda state: (state.has(ItemName.key_gold, player, 16)
+                           and state.has(ItemName.key_silver, player, 13)
                            and state.has(ItemName.key_bronze, player, 73 + 16)), True)
     connect(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island, None, True)
 
@@ -2453,9 +2472,9 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
             lambda state: (state.has(ItemName.ev_castle_c3_rspikes_switch, player)))
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_s_bgate,
-            lambda state: (state.has(ItemName.key_bronze, player, 89 + 14)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_shop,
-            lambda state: (state.has(ItemName.key_bronze, player, 89 + 14)))
+            lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_wall)
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_tp)
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_nw,

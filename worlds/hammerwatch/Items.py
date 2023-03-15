@@ -95,6 +95,26 @@ trap_table: typing.Dict[str, ItemData] = {
 counter = Counter(0x130200 - 1)
 custom_table: typing.Dict[str, ItemData] = {
     ItemName.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_prison: ItemData(counter.count(4), ItemClassification.progression),
+    ItemName.key_silver_prison: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_gold_prison: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bonus_prison: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_armory: ItemData(counter.count(4), ItemClassification.progression),
+    ItemName.key_silver_armory: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_gold_armory: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bonus_armory: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_archives: ItemData(counter.count(4), ItemClassification.progression),
+    ItemName.key_silver_archives: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_gold_archives: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bonus_archives: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_chambers: ItemData(counter.count(4), ItemClassification.progression),
+    ItemName.key_silver_chambers: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_gold_chambers: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bonus_chambers: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_big_prison: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_big_armory: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_big_archives: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bronze_big_chambers: ItemData(counter.count(), ItemClassification.progression),
 }
 
 item_table: typing.Dict[str, ItemData] = {
@@ -182,6 +202,22 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.miniboss_stat_upgrade: 17,
     ItemName.loot_tower: 45,
     ItemName.loot_flower: 43,
+    # ItemName.key_bronze_prison: 12,
+    # ItemName.key_silver_prison: 2,
+    # ItemName.key_gold_prison: 4,
+    # ItemName.key_bonus_prison: 5,
+    # ItemName.key_bronze_armory: 29,
+    # ItemName.key_silver_armory: 3,
+    # ItemName.key_gold_armory: 2,
+    # ItemName.key_bonus_armory: 6,
+    # ItemName.key_bronze_archives: 20,
+    # ItemName.key_silver_archives: 5,
+    # ItemName.key_gold_archives: 7,
+    # ItemName.key_bonus_archives: 3,
+    # ItemName.key_bronze_chambers: 42,
+    # ItemName.key_silver_chambers: 3,
+    # ItemName.key_gold_chambers: 3,
+    # ItemName.key_bonus_chambers: 4,
 }
 
 temple_item_counts: typing.Dict[str, int] = {
