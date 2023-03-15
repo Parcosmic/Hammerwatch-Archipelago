@@ -116,7 +116,7 @@ class ShuffleShops(Toggle):
 
 
 class BigBronzeKeyPercent(Range):
-    """(Castle only) What percentage of bronze keys get converted into big bronze keys, which act as 5 bronze keys each
+    """(Castle only) What percentage of bronze keys get converted into big bronze keys, which act as 3 bronze keys each
     """
     display_name = "Big Bronze Key Conversion Percent"
     # category = "Generation"
@@ -132,6 +132,14 @@ class PortalAccessibility(Toggle):
     display_name = "Portal Accessibility"
     # category = "Generation"
     default = True
+
+
+class NoSunbeamDamage(Toggle):
+    """(TotS only) Disables sunbeam damage, removing much of the long and awkward backtracking inside the temple
+    """
+    display_name = "Pleasant Sunbeams"
+    # category = "Hammerwatch"
+    default = False
 
 
 class ConsumableMerchantChecks(Range):
@@ -211,6 +219,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_enemy_loot": RandomizeEnemyLoot,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
+    "no_sunbeam_damage": NoSunbeamDamage,
     # "consumables_vendor_locations": ConsumableMerchantChecks,
     "pan_fragments": PanFragments,
     "lever_fragments": LeverFragments,

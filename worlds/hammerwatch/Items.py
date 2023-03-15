@@ -142,7 +142,7 @@ trap_items: typing.List[str] = [
 ]
 
 big_key_table: typing.Dict[str, typing.Tuple[str, int]] = {
-    ItemName.key_bronze_big: (ItemName.key_bronze, 5),
+    ItemName.key_bronze_big: (ItemName.key_bronze, 3),
 }
 
 castle_item_counts: typing.Dict[str, int] = {
