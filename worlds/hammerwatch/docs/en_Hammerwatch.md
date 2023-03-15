@@ -52,6 +52,6 @@ hint points!
 
 ## What are big bronze keys?
 
-Big bronze keys are custom items created for the Castle Hammerwatch campaign. When picked up they act as 5 bronze keys.
+Big bronze keys are custom items created for the Castle Hammerwatch campaign. When picked up they act as 3 bronze keys.
 They exist as an option to reduce the massive amount of required progression items in the item pool and to make
 receiving bronze keys feel more meaningful.
