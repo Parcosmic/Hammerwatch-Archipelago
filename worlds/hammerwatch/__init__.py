@@ -86,7 +86,7 @@ class HammerwatchWorld(World):
                     "Offense": [1, 1, 2, 3, 3, 4, 5],
                     "Defense": [1, 2, 3, 4, 5],
                     "Vitality": [1, 2, 3, 4, 4, 5],
-                    "Consumables": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+                    "Powerup": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
                 }
                 self.shop_locations = {
                     CastleLocationNames.shop_p1_combo: "",
@@ -129,8 +129,7 @@ class HammerwatchWorld(World):
 
                 for loc in self.shop_locations.keys():
                     shop_type = self.multiworld.random.choice(list(shop_counts.keys()))
-                    tier = shop_counts[shop_type][0]
-                    shop_counts[shop_type].remove(tier)
+                    tier = shop_counts[shop_type].pop(0)
                     if len(shop_counts[shop_type]) == 0:
                         shop_counts.pop(shop_type)
                     if tier > 0:

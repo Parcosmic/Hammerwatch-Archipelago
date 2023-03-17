@@ -1329,6 +1329,8 @@ castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.c3_tower_ice_8: LocationData(counter.count(), LocationClassification.EnemyLoot),
     CastleLocationNames.c3_tower_ice_9: LocationData(counter.count(), LocationClassification.EnemyLoot),
     CastleLocationNames.c3_tower_ice_10: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.b2_boss: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    CastleLocationNames.b3_boss: LocationData(counter.count(), LocationClassification.EnemyLoot),
     CastleLocationNames.b4_miniboss_lich_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
     CastleLocationNames.b4_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
