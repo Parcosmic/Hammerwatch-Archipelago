@@ -973,7 +973,8 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     b2_arena_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_arena, b2_arena_locs)
 
     b2_defeated_locs = [
-        CastleLocationNames.b2_boss_reward
+        CastleLocationNames.b2_boss,
+        CastleLocationNames.b2_boss_reward,
     ]
     b2_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_defeated,
                                        b2_defeated_locs)
@@ -1421,6 +1422,7 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     b3_arena_region = create_region(multiworld, player, active_locations, CastleRegionNames.b3_arena, b3_arena_locs)
 
     b3_defeated_locs = [
+        CastleLocationNames.b3_boss,
         CastleLocationNames.b3_reward,
     ]
     b3_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b3_defeated,

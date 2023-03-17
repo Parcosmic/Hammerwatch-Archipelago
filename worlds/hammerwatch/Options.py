@@ -115,12 +115,27 @@ class ShuffleShops(Toggle):
     default = False
 
 
+class FragileBreakables(Toggle):
+    """Makes breakables such as pots or crates break when walked into"""
+    display_name = "Fragile Breakables"
+    # category = "QoL"
+    default = True
+
+
+class ExploreSpeed(Toggle):
+    """After 10 seconds without taking damage, attacking, or being near enemies you can press the back button to gain a
+    large speed boost. Makes backtracking much quicker and more bearable"""
+    display_name = "Explore Speed"
+    # category = "QoL"
+    default = True
+
+
 class ActSpecificKeys(Toggle):
-    """(Castle only) Separates keys into versions that can only be used on a specific act. Turning this setting off
-    makes logic a lot more lax so it can be possible to softlock if some doors are skipped"""
+    """(Castle only) Separates keys into versions that can only be used on a specific act. Mainly improves hinting for
+    keys, as with generic keys you could hint for a gold key at the end of the seed that you can't get"""
     display_name = "Act Specific Keys"
     # category = "Generation"
-    default = True
+    default = False
 
 
 class BigBronzeKeyPercent(Range):
@@ -226,6 +241,8 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_puzzles": RandomizePuzzles,
     "randomize_enemy_loot": RandomizeEnemyLoot,
     # "act_specific_keys": ActSpecificKeys,
+    "fragile_breakables": FragileBreakables,
+    "explore_speed": ExploreSpeed,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
     "no_sunbeam_damage": NoSunbeamDamage,
