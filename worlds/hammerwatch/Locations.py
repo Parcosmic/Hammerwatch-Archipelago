@@ -2223,8 +2223,8 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
     p2_bkey_1_locs: typing.List[str] = [
         CastleLocationNames.p2_entrance_1,
         CastleLocationNames.p2_entrance_2,
-        CastleLocationNames.p2_entrance_4,
         CastleLocationNames.p2_entrance_3,
+        CastleLocationNames.p2_entrance_4,
         CastleLocationNames.p2_w_of_gold_gate,
     ]
     location_table = keep_one_location(multiworld, location_table, p2_bkey_1_locs, CastleLocationNames.crloc_p2_bkey_1)
