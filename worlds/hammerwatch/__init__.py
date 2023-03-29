@@ -39,7 +39,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    data_version = 0
+    data_version = 1
 
     web = HammerwatchWeb()
 
