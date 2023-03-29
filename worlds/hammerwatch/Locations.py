@@ -4,7 +4,7 @@ from BaseClasses import Location, MultiWorld
 from .Names import CastleLocationNames, TempleLocationNames, ItemName
 from .Options import BonusChestLocationBehavior, Difficulty
 from .Util import *
-from .Items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts
+from .Items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
 from enum import Enum
 
 
@@ -31,7 +31,7 @@ class HammerwatchLocation(Location):
         self.show_in_spoiler = code is not None
 
 
-counter = Counter(0x131000)
+counter = Counter(id_start + 0x1000)
 castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p1_p3_n_bridge: LocationData(counter.count(0)),
     CastleLocationNames.p1_bars_2: LocationData(counter.count()),
@@ -1373,7 +1373,7 @@ castle_locations: typing.Dict[str, LocationData] = {
     **castle_event_locations
 }
 
-counter = Counter(0x130000)
+counter = Counter(id_start)
 temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.hub_field_nw: LocationData(counter.count(0)),
     TempleLocationNames.hub_on_rock: LocationData(counter.count()),

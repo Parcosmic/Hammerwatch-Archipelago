@@ -16,7 +16,9 @@ class HammerwatchItem(Item):
     game: str = "Hammerwatch"
 
 
-counter = Counter(0x130000 - 1)
+id_start = 0x110000
+
+counter = Counter(id_start - 1)
 collectable_table: typing.Dict[str, ItemData] = {
     ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
     ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
@@ -82,7 +84,7 @@ special_table: typing.Dict[str, ItemData] = {
     ItemName.serious_health: ItemData(counter.count(), ItemClassification.filler)
 }
 
-counter = Counter(0x130100 - 1)
+counter = Counter(id_start + 0x100 - 1)
 trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_bomb: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_mana: ItemData(counter.count(), ItemClassification.trap),
@@ -92,7 +94,7 @@ trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
 }
 
-counter = Counter(0x130200 - 1)
+counter = Counter(id_start + 0x200 - 1)
 custom_table: typing.Dict[str, ItemData] = {
     ItemName.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
     ItemName.key_bronze_prison: ItemData(counter.count(4), ItemClassification.progression),
