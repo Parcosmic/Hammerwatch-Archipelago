@@ -1612,7 +1612,7 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.t1_sun_turret_2: LocationData(counter.count()),
     TempleLocationNames.t1_n_cache_by_ice_turret_5: LocationData(counter.count()),
     TempleLocationNames.t1_s_cache_by_ice_turret_3: LocationData(counter.count()),
-    TempleLocationNames.t1_sw_cache_2: LocationData(counter.count()),
+    TempleLocationNames.t1_sw_sdoor_2: LocationData(counter.count()),
     TempleLocationNames.t1_sw_hidden_room_4: LocationData(counter.count()),
     TempleLocationNames.t1_sun_turret_3: LocationData(counter.count()),
     TempleLocationNames.t1_s_bridge_4: LocationData(counter.count(), LocationClassification.Recovery),
@@ -1621,9 +1621,9 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.t1_n_cache_by_ice_turret_1: LocationData(counter.count()),
     TempleLocationNames.t1_n_sunbeam_treasure_2: LocationData(counter.count()),
     TempleLocationNames.t1_s_cache_by_ice_turret_2: LocationData(counter.count()),
-    TempleLocationNames.t1_sw_cache_1: LocationData(counter.count()),
-    TempleLocationNames.t1_sw_cache_4: LocationData(counter.count()),
-    TempleLocationNames.t1_sw_cache_5: LocationData(counter.count()),
+    TempleLocationNames.t1_sw_sdoor_1: LocationData(counter.count()),
+    TempleLocationNames.t1_sw_sdoor_4: LocationData(counter.count()),
+    TempleLocationNames.t1_sw_sdoor_5: LocationData(counter.count()),
     TempleLocationNames.t1_ledge_after_block_trap_2: LocationData(counter.count()),
     TempleLocationNames.t1_ice_block_chamber_3: LocationData(counter.count()),
     TempleLocationNames.t1_ice_block_chamber_2: LocationData(counter.count()),
@@ -1641,7 +1641,7 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.t1_sun_block_hall_4: LocationData(counter.count()),
     TempleLocationNames.t1_fire_trap_by_sun_turret_3: LocationData(counter.count()),
     TempleLocationNames.t1_ledge_after_block_trap_1: LocationData(counter.count()),
-    TempleLocationNames.t1_sw_cache_3: LocationData(counter.count()),
+    TempleLocationNames.t1_sw_sdoor_3: LocationData(counter.count()),
     TempleLocationNames.t1_n_sunbeam_treasure_3: LocationData(counter.count()),
     TempleLocationNames.t1_boulder_hallway_by_ice_turret_4: LocationData(counter.count()),
     TempleLocationNames.t1_ice_turret_1: LocationData(counter.count()),
@@ -2734,7 +2734,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         TempleLocationNames.t1_sun_block_hall_4,
         TempleLocationNames.t1_fire_trap_by_sun_turret_3,
         TempleLocationNames.t1_ledge_after_block_trap_1,
-        TempleLocationNames.t1_sw_cache_3
+        TempleLocationNames.t1_sw_sdoor_3
     ]
     random_locations[TempleLocationNames.rloc_t1_keystone] = multiworld.random.randrange(len(t1_keystone_locations))
     t1_keystone_locations.pop(random_locations[TempleLocationNames.rloc_t1_keystone])

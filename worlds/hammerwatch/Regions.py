@@ -2963,11 +2963,11 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_main, t1_main_locations)
 
     t1_sw_sdoor_locations = [
-        TempleLocationNames.t1_sw_cache_1,
-        TempleLocationNames.t1_sw_cache_2,
-        TempleLocationNames.t1_sw_cache_3,
-        TempleLocationNames.t1_sw_cache_4,
-        TempleLocationNames.t1_sw_cache_5,
+        TempleLocationNames.t1_sw_sdoor_1,
+        TempleLocationNames.t1_sw_sdoor_2,
+        TempleLocationNames.t1_sw_sdoor_3,
+        TempleLocationNames.t1_sw_sdoor_4,
+        TempleLocationNames.t1_sw_sdoor_5,
     ]
     t1_sw_cache_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_sw_sdoor,
                                        t1_sw_sdoor_locations)
