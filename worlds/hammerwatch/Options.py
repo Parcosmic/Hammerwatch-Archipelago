@@ -88,8 +88,10 @@ class RandomizeRecoveryItems(Toggle):
 
 
 class RandomizeSecrets(Toggle):
-    """Whether items from secrets are shuffled into the item pool"""
-    display_name = "Randomize Secrets"
+    """
+    (TotS only) Whether items from random secrets (small rooms with cracked walls in the cave levels) are shuffled into the item pool
+    """
+    display_name = "Randomize Random Secrets"
     # category = "Generation"
     default = False
 
