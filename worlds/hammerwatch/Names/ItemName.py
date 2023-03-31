@@ -1,4 +1,6 @@
 # Item Names
+import typing
+
 empty = "Empty"
 bonus_chest = "Bonus Chest"
 bonus_key = "Bonus Key"
@@ -121,3 +123,106 @@ ev_t2_bridge_switch = "Temple Floor 2 Bridge Switch"
 ev_pof_1_unlock_exit = "PoF Level 1 Unlock Exit"
 ev_pof_2_unlock_exit = "PoF Level 2 Unlock Exit"
 ev_pof_complete = "PoF Complete"
+
+# group names
+group_chests = "Chests"
+group_keys = "Keys"
+group_ankhs = "Ankhs"
+group_potions = "Potions"
+group_diamonds = "Diamonds"
+group_upgrades = "Stat Upgrades"
+group_coins = "Coins"
+group_recovery = "Recovery Items"
+group_tools = "Tools"
+group_traps = "Traps"
+
+item_groups: typing.Dict[str, typing.Set[str]] = {
+    group_chests: {
+        bonus_chest,
+        chest_blue,
+        chest_green,
+        chest_purple,
+        chest_red,
+        chest_wood,
+    },
+    group_keys: {
+        bonus_key,
+        key_bronze,
+        key_silver,
+        key_gold,
+        key_bonus_prison,
+        key_bonus_armory,
+        key_bonus_archives,
+        key_bonus_chambers,
+        key_bronze_prison,
+        key_bronze_armory,
+        key_bronze_archives,
+        key_bronze_chambers,
+        key_silver_prison,
+        key_silver_armory,
+        key_silver_archives,
+        key_silver_chambers,
+        key_gold_prison,
+        key_gold_armory,
+        key_gold_archives,
+        key_gold_chambers,
+    },
+    group_ankhs: {
+        ankh,
+        ankh_5up,
+        ankh_7up,
+    },
+    group_potions: {
+        potion_damage,
+        potion_rejuvenation,
+        potion_invulnerability,
+    },
+    group_diamonds: {
+        diamond,
+        diamond_red,
+        diamond_small,
+        diamond_small_red,
+    },
+    group_upgrades: {
+        stat_upgrade,
+        stat_upgrade_damage,
+        stat_upgrade_defense,
+        stat_upgrade_health,
+        stat_upgrade_mana,
+    },
+    group_coins: {
+        valuable_1,
+        valuable_2,
+        valuable_3,
+        valuable_4,
+        valuable_5,
+        valuable_6,
+        valuable_7,
+        valuable_8,
+        valuable_9,
+    },
+    group_recovery: {
+        apple,
+        orange,
+        steak,
+        fish,
+        mana_1,
+        mana_2,
+    },
+    group_tools: {
+        pan,
+        lever,
+        pickaxe,
+        pan_fragment,
+        lever_fragment,
+        pickaxe_fragment,
+    },
+    group_traps: {
+        trap_bomb,
+        trap_mana,
+        trap_poison,
+        trap_frost,
+        trap_fire,
+        trap_confuse,
+    },
+}

@@ -283,12 +283,12 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     # Strange planks
     if get_goal_type(multiworld, player) == GoalType.PlankHunt \
             or get_goal_type(multiworld, player) == GoalType.FullCompletion:
-        minimum_planks = 12
+        planks_to_win = 12
         if get_goal_type(multiworld, player) == GoalType.PlankHunt:  # Plank hunt
-            minimum_planks = multiworld.planks_required_count[player]
-        planks_needed = max(multiworld.plank_count[player], minimum_planks)
-        extra_items = planks_needed - item_counts_table[ItemName.plank]
-        item_counts_table[ItemName.plank] = planks_needed
+            planks_to_win = multiworld.planks_required_count[player]
+        total_planks = int(planks_to_win * multiworld.extra_plank_percent[player] / 100)
+        extra_items = total_planks - item_counts_table[ItemName.plank]
+        item_counts_table[ItemName.plank] = total_planks
     else:  # Remove planks from the pool, they're not needed
         extra_items -= item_counts_table[ItemName.plank]
         item_counts_table.pop(ItemName.plank)
