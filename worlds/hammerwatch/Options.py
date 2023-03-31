@@ -73,6 +73,21 @@ class PlanksRequiredCount(Range):
     default = 12
 
 
+class ExtraPlankPercent(Range):
+    """
+    Determines the percentage of extra Strange Planks in the item pool
+    For the Castle Escape goal, the required planks count is 12
+    For the Plank Hunt goals, the required planks count is determined by the Planks to Win setting
+    Formula: Total Planks = required planks * Extra Plank Percentage / 100
+    This option does nothing in other goals
+    """
+    display_name = "Extra Plank Percentage"
+    # category = "Hammerwatch"
+    range_start = 100
+    range_end = 200
+    default = 100
+
+
 class RandomizeBonusKeys(Toggle):
     """Whether bonus keys are shuffled into the pool"""
     display_name = "Randomize Bonus Keys"
@@ -232,8 +247,9 @@ class DeathLink(DeathLink):
 
 hammerwatch_options: typing.Dict[str, type(Option)] = {
     "goal": Goal,
-    "plank_count": PlankCount,
+    # "plank_count": PlankCount,
     "planks_required_count": PlanksRequiredCount,
+    "extra_plank_percent": ExtraPlankPercent,
     "difficulty": Difficulty,
     "shop_shuffle": ShuffleShops,
     "bonus_behavior": BonusChestLocationBehavior,

@@ -46,6 +46,8 @@ class HammerwatchWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
+    item_name_groups = ItemName.item_groups
+
     campaign: Campaign = Campaign.Castle
     active_location_list: typing.Dict[str, LocationData]
     item_counts: typing.Dict[str, int]
