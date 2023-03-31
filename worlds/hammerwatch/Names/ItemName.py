@@ -150,6 +150,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         key_bronze,
         key_silver,
         key_gold,
+        key_bronze_big,
         key_bonus_prison,
         key_bonus_armory,
         key_bonus_archives,
@@ -166,6 +167,10 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         key_gold_armory,
         key_gold_archives,
         key_gold_chambers,
+        key_bronze_big_prison,
+        key_bronze_big_armory,
+        key_bronze_big_archives,
+        key_bronze_big_chambers,
     },
     group_ankhs: {
         ankh,
