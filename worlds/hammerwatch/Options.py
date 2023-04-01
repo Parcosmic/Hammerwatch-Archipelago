@@ -57,7 +57,7 @@ class PlankCount(Range):
     If the Castle Escape goal is chosen, the minimum value is 12
     This option does nothing in other goals"""
     display_name = "Number of Strange Planks"
-    # category = "Hammerwatch"
+    # category = "Generation"
     range_start = 1
     range_end = 25
     default = 12
@@ -67,7 +67,7 @@ class PlanksRequiredCount(Range):
     """Determines the amount of Strange Planks required to win the game for the Plank Hunt goals.
     This option does nothing in other goals"""
     display_name = "Planks to Win"
-    # category = "Hammerwatch"
+    # category = "Generation"
     range_start = 1
     range_end = 25
     default = 12
@@ -78,14 +78,14 @@ class ExtraPlankPercent(Range):
     Determines the percentage of extra Strange Planks in the item pool
     For the Castle Escape goal, the required planks count is 12
     For the Plank Hunt goals, the required planks count is determined by the Planks to Win setting
-    Formula: Total Planks = required planks * Extra Plank Percentage / 100
+    Formula: Total Planks = required planks * (1 + Extra Plank Percentage / 100)
     This option does nothing in other goals
     """
     display_name = "Extra Plank Percentage"
-    # category = "Hammerwatch"
-    range_start = 100
-    range_end = 200
-    default = 100
+    # category = "Generation"
+    range_start = 0
+    range_end = 100
+    default = 0
 
 
 class RandomizeBonusKeys(Toggle):
@@ -145,6 +145,17 @@ class ExploreSpeed(Toggle):
     display_name = "Explore Speed"
     # category = "QoL"
     default = True
+
+
+class ExtraKeysPercent(Range):
+    """
+    Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
+    """
+    display_name = "Extra Keys Percentage"
+    # category = "Generation"
+    range_start = 0
+    range_end = 50
+    default = 0
 
 
 class ActSpecificKeys(Toggle):
@@ -261,6 +272,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     # "act_specific_keys": ActSpecificKeys,
     "fragile_breakables": FragileBreakables,
     "explore_speed": ExploreSpeed,
+    "extra_keys_percent": ExtraKeysPercent,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
     "no_sunbeam_damage": NoSunbeamDamage,

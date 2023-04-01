@@ -286,12 +286,27 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         planks_to_win = 12
         if get_goal_type(multiworld, player) == GoalType.PlankHunt:  # Plank hunt
             planks_to_win = multiworld.planks_required_count[player]
-        total_planks = int(planks_to_win * multiworld.extra_plank_percent[player] / 100)
+        total_planks = planks_to_win + int(planks_to_win * multiworld.extra_plank_percent[player] / 100)
         extra_items = total_planks - item_counts_table[ItemName.plank]
         item_counts_table[ItemName.plank] = total_planks
     else:  # Remove planks from the pool, they're not needed
         extra_items -= item_counts_table[ItemName.plank]
         item_counts_table.pop(ItemName.plank)
+
+    # Extra keys
+    # if multiworld.act_specific_keys[player]:
+    #    pass
+    # else:
+    extra_skeys = int(item_counts_table[ItemName.key_silver] * multiworld.extra_keys_percent[player] / 100)
+    extra_gkeys = int(item_counts_table[ItemName.key_gold] * multiworld.extra_keys_percent[player] / 100)
+    item_counts_table[ItemName.key_silver] += extra_skeys
+    item_counts_table[ItemName.key_gold] += extra_gkeys
+    extra_items += extra_skeys
+    extra_items += extra_gkeys
+    if get_campaign(multiworld, player) == Campaign.Temple:
+        extra_mirrors = int(item_counts_table[ItemName.mirror] * multiworld.extra_keys_percent[player] / 100)
+        item_counts_table[ItemName.mirror] += extra_mirrors
+        extra_items += extra_mirrors
 
     # Bonus check behavior - None
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_none:
