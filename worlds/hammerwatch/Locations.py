@@ -2661,6 +2661,12 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         TempleLocationNames.p_mid5_1,
         TempleLocationNames.p_mid5_2,
         TempleLocationNames.p_mid5_secret,
+        TempleLocationNames.p_tower_plant_small_1,
+        TempleLocationNames.p_tower_plant_small_2,
+        TempleLocationNames.p_tower_plant_small_3,
+        TempleLocationNames.p_tower_plant_small_4,
+        TempleLocationNames.p_tower_plant_small_5,
+        TempleLocationNames.p_tower_plant_small_6,
     ]
     item_counts[ItemName.ankh] -= 2
     item_counts[ItemName.apple] -= 2
@@ -2692,6 +2698,12 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_2)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_3)
         mid_locations_to_remove.remove(TempleLocationNames.p_mid4_4)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_1)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_2)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_3)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_4)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_5)
+        mid_locations_to_remove.remove(TempleLocationNames.p_tower_plant_small_6)
         item_counts[ItemName.ankh] += 1
         item_counts[ItemName.orange] += 1
         item_counts[ItemName.apple] += 2
@@ -2987,7 +2999,8 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         for loc in mini_flower_locs:
             item = roll_for_item(multiworld, mini_flower_loot_chances)
             if item is None:
-                remove_location(loc, ItemName.loot_mini_flower)
+                if loc in location_table.keys():
+                    remove_location(loc, ItemName.loot_mini_flower)
             else:
                 item_counts[item] += 1
         tower_locs = [
