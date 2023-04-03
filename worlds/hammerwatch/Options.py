@@ -26,7 +26,7 @@ class Goal(Choice):
 
 
 class Difficulty(Choice):
-    """What difficulty the game will be played on."""
+    """What difficulty the game will be played on"""
     display_name = "Difficulty"
     # category = "Hammerwatch"
     option_easier = 0
@@ -37,12 +37,10 @@ class Difficulty(Choice):
 
 
 class BonusChestLocationBehavior(Choice):
-    """
-    Determines how bonus chest locations in bonus levels are handled
+    """Determines how bonus chest locations in bonus levels are handled
     None: Don't include any bonus chest items/locations
     Necessary: Include bonus level locations for each extra item in the pool
-    All: Include all bonus chest items/locations. Extra items will replace junk items as normal
-    """
+    All: Include all bonus chest items/locations. Extra items will replace junk items as normal"""
     display_name = "Bonus Level Location Behavior"
     # category = "Generation"
     option_none = 0
@@ -74,13 +72,11 @@ class PlanksRequiredCount(Range):
 
 
 class ExtraPlankPercent(Range):
-    """
-    Determines the percentage of extra Strange Planks in the item pool
+    """Determines the percentage of extra Strange Planks in the item pool
     For the Castle Escape goal, the required planks count is 12
     For the Plank Hunt goals, the required planks count is determined by the Planks to Win setting
     Formula: Total Planks = required planks * (1 + Extra Plank Percentage / 100)
-    This option does nothing in other goals
-    """
+    This option does nothing in other goals"""
     display_name = "Extra Plank Percentage"
     # category = "Generation"
     range_start = 0
@@ -103,8 +99,7 @@ class RandomizeRecoveryItems(Toggle):
 
 
 class RandomizeSecrets(Toggle):
-    """
-    (TotS only) Whether items from random secrets (small rooms with cracked walls in the cave levels) are shuffled into the item pool
+    """(TotS only) Whether items from random secrets (small rooms with cracked walls in the cave levels) are shuffled into the item pool
     """
     display_name = "Randomize Random Secrets"
     # category = "Generation"
@@ -112,7 +107,7 @@ class RandomizeSecrets(Toggle):
 
 
 class RandomizePuzzles(Toggle):
-    """Whether items from puzzles are shuffled into the item pool"""
+    """Whether items from peg puzzles are shuffled into the item pool"""
     display_name = "Randomize Puzzles"
     # category = "Generation"
     default = False
@@ -127,29 +122,13 @@ class RandomizeEnemyLoot(Toggle):
 
 class ShuffleShops(Toggle):
     """Shuffles the shop vendors around so that they may be different from their normal locations"""
-    display_name = "Shop Shuffle"
+    display_name = "Shop Location Shuffle"
     # category = "Generation"
     default = False
 
 
-class FragileBreakables(Toggle):
-    """Makes breakables such as pots or crates break when walked into"""
-    display_name = "Fragile Breakables"
-    # category = "QoL"
-    default = True
-
-
-class ExploreSpeed(Toggle):
-    """After 10 seconds without taking damage, attacking, or being near enemies you can press the back button to gain a
-    large speed boost. Makes backtracking much quicker and more bearable"""
-    display_name = "Explore Speed"
-    # category = "QoL"
-    default = True
-
-
 class ExtraKeysPercent(Range):
-    """
-    Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
+    """Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
     """
     display_name = "Extra Keys Percentage"
     # category = "Generation"
@@ -178,23 +157,21 @@ class BigBronzeKeyPercent(Range):
 
 class PortalAccessibility(Toggle):
     """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are
-    more easily accessible
-    """
+    more easily accessible"""
     display_name = "Portal Accessibility"
     # category = "Generation"
     default = True
 
 
 class NoSunbeamDamage(Toggle):
-    """(TotS only) Disables sunbeam damage, removing much of the long and awkward backtracking inside the temple
-    """
+    """(TotS only) Disables sunbeam damage, removing much of the long and awkward backtracking inside the temple"""
     display_name = "Pleasant Sunbeams"
-    # category = "Hammerwatch"
+    # category = "QoL"
     default = False
 
 
 class ConsumableMerchantChecks(Range):
-    """(TotS only) Add a number of locations to the consumables vendor after giving them the pan
+    """(TotS only) Add a number of locations to the powerup vendor after giving them the frying pan
     Items in these locations get given out one by one after you reach specific milestones in the game"""
     display_name = "Consumables Vendor Locations"
     # category = "Hammerwatch"
@@ -270,8 +247,6 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_puzzles": RandomizePuzzles,
     "randomize_enemy_loot": RandomizeEnemyLoot,
     # "act_specific_keys": ActSpecificKeys,
-    "fragile_breakables": FragileBreakables,
-    "explore_speed": ExploreSpeed,
     "extra_keys_percent": ExtraKeysPercent,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "portal_accessibility": PortalAccessibility,
