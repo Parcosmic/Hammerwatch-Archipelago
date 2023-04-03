@@ -2190,7 +2190,9 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
             remove_location(CastleLocationNames.e4_main, ItemName.apple)
 
     # Shortcut teleporter
-    if not multiworld.shortcut_teleporter[player]:
+    if multiworld.shortcut_teleporter[player]:
+        remove_location(CastleLocationNames.p2_by_boss_switch, ItemName.potion_rejuvenation)
+    else:
         remove_location(CastleLocationNames.p3_skip_boss_switch_1, ItemName.diamond_small)
         remove_location(CastleLocationNames.p3_skip_boss_switch_2, ItemName.diamond)
         remove_location(CastleLocationNames.p3_skip_boss_switch_3, ItemName.diamond_small)
