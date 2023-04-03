@@ -155,6 +155,15 @@ class BigBronzeKeyPercent(Range):
     default = 0
 
 
+class ShortcutTeleporter(Toggle):
+    """(Castle only) Enables the use of the shortcut teleporter at the beginning of the game. This allows early access
+    to Prison Floor 3 before the bronze gate, preventing a potential early BK
+    A return portal will also be placed so that the first two floors can be fully completed"""
+    display_name = "Enable Shortcut Teleporter"
+    # category = "Generation"
+    default = False
+
+
 class PortalAccessibility(Toggle):
     """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are
     more easily accessible"""
@@ -249,6 +258,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     # "act_specific_keys": ActSpecificKeys,
     "extra_keys_percent": ExtraKeysPercent,
     "big_bronze_key_percent": BigBronzeKeyPercent,
+    "shortcut_teleporter": ShortcutTeleporter,
     "portal_accessibility": PortalAccessibility,
     "no_sunbeam_damage": NoSunbeamDamage,
     # "consumables_vendor_locations": ConsumableMerchantChecks,
