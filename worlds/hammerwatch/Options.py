@@ -156,10 +156,10 @@ class BigBronzeKeyPercent(Range):
 
 
 class ShortcutTeleporter(Toggle):
-    """(Castle only) Enables the use of the shortcut teleporter at the beginning of the game. This allows early access
+    """(Castle only) Enables the use of the shortcut portal at the beginning of the game. This allows early access
     to Prison Floor 3 before the bronze gate, preventing a potential early BK
     A return portal will also be placed so that the first two floors can be fully completed"""
-    display_name = "Enable Shortcut Teleporter"
+    display_name = "Enable Shortcut Portal"
     # category = "Generation"
     default = False
 
