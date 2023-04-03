@@ -15,6 +15,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_secrets": Options.RandomizeSecrets.option_true,
             "randomize_puzzles": Options.RandomizePuzzles.option_true,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_true,
+            "shortcut_teleporter": Options.ShortcutTeleporter.option_true,
         },
         "Temple max locations": {
             "goal": Options.Goal.option_temple_kill_sharand,

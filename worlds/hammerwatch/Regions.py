@@ -407,18 +407,18 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     p3_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_bonus_return,
                                            p3_bonus_return_locs)
 
-    p3_portal_from_p1_locs = [
-        CastleLocationNames.p3_skip_boss_switch_1,
-        CastleLocationNames.p3_skip_boss_switch_2,
-        CastleLocationNames.p3_skip_boss_switch_3,
-        CastleLocationNames.p3_skip_boss_switch_4,
-        CastleLocationNames.p3_skip_boss_switch_5,
-        CastleLocationNames.p3_skip_boss_switch_6,
-        CastleLocationNames.ev_p3_boss_switch_skip,
-    ]
-    p3_portal_from_p1_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_portal_from_p1,
-                                             p3_portal_from_p1_locs)
-    # Don't add this region yet until I can figure out a good way to deal with this
+    if multiworld.shortcut_teleporter[player]:
+        p3_portal_from_p1_locs = [
+            CastleLocationNames.p3_skip_boss_switch_1,
+            CastleLocationNames.p3_skip_boss_switch_2,
+            CastleLocationNames.p3_skip_boss_switch_3,
+            CastleLocationNames.p3_skip_boss_switch_4,
+            CastleLocationNames.p3_skip_boss_switch_5,
+            CastleLocationNames.p3_skip_boss_switch_6,
+        ]
+        p3_portal_from_p1_region = create_region(multiworld, player, active_locations,
+                                                 CastleRegionNames.p3_portal_from_p1, p3_portal_from_p1_locs)
+        multiworld.regions.append(p3_portal_from_p1_region)
 
     n1_start_locs = [
         CastleLocationNames.n1_entrance
@@ -2194,6 +2194,14 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 4)))
     connect(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, None, True)
+    shortcut_ggate_keys = 0
+    if multiworld.shortcut_teleporter[player]:
+        shortcut_ggate_keys = 16 - 3
+        connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p3_portal_from_p1, None,
+                True)
+        connect(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1, CastleRegionNames.p3_n_gold_gate)
+        connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_start,
+                lambda state: (state.has(ItemName.key_gold, player, shortcut_ggate_keys + 3)))
 
     connect(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
             lambda state: (state.has(ItemName.key_bronze, player, 5)))
@@ -2205,7 +2213,8 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 103)))  # 12 on floor
     connect(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
-            lambda state: (state.has(ItemName.key_gold, player, 1) and state.has(ItemName.key_bronze, player, 6)))
+            lambda state: (state.has(ItemName.key_gold, player, shortcut_ggate_keys + 1)
+                           and state.has(ItemName.key_bronze, player, 6)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
             lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
@@ -2215,7 +2224,8 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
             lambda state: (state.has(ItemName.ev_castle_p2_switch, player, 4)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
-            lambda state: (state.has(ItemName.key_gold, player, 2) and state.has(ItemName.key_bronze, player, 9)
+            lambda state: (state.has(ItemName.key_gold, player, shortcut_ggate_keys + 2)
+                           and state.has(ItemName.key_bronze, player, 9)
                            and state.has(ItemName.key_silver, player, 1)))
     connect(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start, None, True)
 
@@ -2228,7 +2238,8 @@ def connect_castle_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s, None,
             True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
-            lambda state: (state.has(ItemName.key_gold, player, 3) and state.has(ItemName.key_bronze, player, 11)))
+            lambda state: (state.has(ItemName.key_gold, player, shortcut_ggate_keys + 3)
+                           and state.has(ItemName.key_bronze, player, 11)))
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.n1_start, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_bronze_gate,
             lambda state: (state.has(ItemName.key_bronze, player, 103)), False)

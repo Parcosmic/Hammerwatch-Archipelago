@@ -224,8 +224,8 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p3_arrow_hall_1: LocationData(counter.count()),
     CastleLocationNames.p3_se_m_2: LocationData(counter.count()),
     CastleLocationNames.p3_se_cross_hall_se: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_2: LocationData(counter.count()),
-    CastleLocationNames.p3_w_of_w_poker: LocationData(counter.count(2)),
+    CastleLocationNames.p3_skip_boss_switch_2: LocationData(counter.count()),
+    CastleLocationNames.p3_w_of_w_poker: LocationData(counter.count()),
     CastleLocationNames.p3_nw_of_bridge: LocationData(counter.count()),
     CastleLocationNames.p3_n_of_bridge_5: LocationData(counter.count()),
     CastleLocationNames.p3_s_of_w_poker: LocationData(counter.count()),
@@ -262,12 +262,12 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.p3_nw_sw_1: LocationData(counter.count()),
     CastleLocationNames.p3_nw_sw_2: LocationData(counter.count()),
     CastleLocationNames.p3_nw_se: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_6: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_4: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_1: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_3: LocationData(counter.count()),
-    # CastleLocationNames.p3_skip_boss_switch_5: LocationData(counter.count()),
-    CastleLocationNames.p3_n_of_bridge_4: LocationData(counter.count(6), LocationClassification.Recovery),
+    CastleLocationNames.p3_skip_boss_switch_6: LocationData(counter.count()),
+    CastleLocationNames.p3_skip_boss_switch_4: LocationData(counter.count()),
+    CastleLocationNames.p3_skip_boss_switch_1: LocationData(counter.count()),
+    CastleLocationNames.p3_skip_boss_switch_3: LocationData(counter.count()),
+    CastleLocationNames.p3_skip_boss_switch_5: LocationData(counter.count()),
+    CastleLocationNames.p3_n_of_bridge_4: LocationData(counter.count(), LocationClassification.Recovery),
     CastleLocationNames.p3_secret_arrow_hall_2: LocationData(counter.count()),
     CastleLocationNames.p3_ne_e_4: LocationData(counter.count()),
     CastleLocationNames.p3_nw_closed_room: LocationData(counter.count()),
@@ -2188,6 +2188,15 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
             remove_location(CastleLocationNames.e3_entrance_1, ItemName.apple)
             remove_location(CastleLocationNames.e3_entrance_2, ItemName.apple)
             remove_location(CastleLocationNames.e4_main, ItemName.apple)
+
+    # Shortcut teleporter
+    if not multiworld.shortcut_teleporter[player]:
+        remove_location(CastleLocationNames.p3_skip_boss_switch_1, ItemName.diamond_small)
+        remove_location(CastleLocationNames.p3_skip_boss_switch_2, ItemName.diamond)
+        remove_location(CastleLocationNames.p3_skip_boss_switch_3, ItemName.diamond_small)
+        remove_location(CastleLocationNames.p3_skip_boss_switch_4, ItemName.diamond_small)
+        remove_location(CastleLocationNames.p3_skip_boss_switch_5, ItemName.diamond_small_red)
+        remove_location(CastleLocationNames.p3_skip_boss_switch_6, ItemName.diamond_small)
 
     # Prison Floor 1 Locations
     p1_bkey_1_locs: typing.List[str] = [
