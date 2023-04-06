@@ -2324,6 +2324,8 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
     remove_puzzle_locations(CastleLocationNames.a2_puzzle_1[:-1], CastleLocationNames.crloc_a2_puzzle)
     remove_puzzle_locations(CastleLocationNames.r1_puzzle_1[:-1], CastleLocationNames.crloc_r1_puzzle)
     remove_puzzle_locations(CastleLocationNames.r2_puzzle_1[:-1], CastleLocationNames.crloc_r2_puzzle)
+    remove_puzzle_locations(CastleLocationNames.pstart_puzzle_1[:-1], CastleLocationNames.crloc_ps_puzzle)
+    remove_puzzle_locations(CastleLocationNames.c2_puzzle_1[:-1], CastleLocationNames.crloc_c2_puzzle)
     # Enemy loot locations
     if multiworld.randomize_enemy_loot[player]:
         flower_locs = [
