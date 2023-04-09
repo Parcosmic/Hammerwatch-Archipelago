@@ -39,6 +39,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
+    hw_client_version = "0.7"
     data_version = 2
 
     web = HammerwatchWeb()
@@ -62,6 +63,7 @@ class HammerwatchWorld(World):
             slot_data[loc] = value
         for loc, value in self.shop_locations.items():
             slot_data[loc] = value
+        slot_data["Hammerwatch Mod Version"] = self.hw_client_version
         return slot_data
 
     def generate_early(self):
