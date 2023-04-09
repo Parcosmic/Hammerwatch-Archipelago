@@ -101,6 +101,7 @@ trap_mana = "Mana Drain Trap"
 trap_poison = "Poison Trap"
 trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
+trap_banner = "Banner Trap"
 
 # Event Names
 ev_victory = "Victory"

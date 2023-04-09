@@ -92,6 +92,7 @@ trap_table: typing.Dict[str, ItemData] = {
     ItemName.trap_frost: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_fire: ItemData(counter.count(), ItemClassification.trap),
     ItemName.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
+    ItemName.trap_banner: ItemData(counter.count(), ItemClassification.trap),
 }
 
 counter = Counter(id_start + 0x200 - 1)
@@ -161,6 +162,7 @@ trap_items: typing.List[str] = [
     ItemName.trap_frost,
     ItemName.trap_fire,
     ItemName.trap_confuse,
+    ItemName.trap_banner,
 ]
 
 big_key_table: typing.Dict[str, typing.Tuple[str, int]] = {
