@@ -338,6 +338,28 @@ class HammerwatchWorld(World):
                 .place_locked_item(self.create_item(ItemName.bonus_key))
 
     def place_tots_locked_items(self):
+        # Portal event items/locations
+        def portal_rule(state) -> bool:
+            return state.has(ItemName.key_teleport, 6)
+        c1_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c1_portal, self.player)
+        # c1_portal_loc.access_rule = portal_rule
+        c1_portal_loc.place_locked_item(self.create_event(ItemName.ev_c1_portal))
+        c2_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c2_portal, self.player)
+        # c2_portal_loc.access_rule = portal_rule
+        c2_portal_loc.place_locked_item(self.create_event(ItemName.ev_c2_portal))
+        c3_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c3_portal, self.player)
+        # c3_portal_loc.access_rule = portal_rule
+        c3_portal_loc.place_locked_item(self.create_event(ItemName.ev_c3_portal))
+        t1_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t1_portal, self.player)
+        # t1_portal_loc.access_rule = portal_rule
+        t1_portal_loc.place_locked_item(self.create_event(ItemName.ev_t1_portal))
+        t2_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t2_portal, self.player)
+        # t2_portal_loc.access_rule = portal_rule
+        t2_portal_loc.place_locked_item(self.create_event(ItemName.ev_t2_portal))
+        t3_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t3_portal, self.player)
+        # t3_portal_loc.access_rule = portal_rule
+        t3_portal_loc.place_locked_item(self.create_event(ItemName.ev_t3_portal))
+
         # Temple shortcut
         self.multiworld.get_location(TempleLocationNames.ev_temple_entrance_rock, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_open_temple_entrance_shortcut))
@@ -367,17 +389,20 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(TempleLocationNames.ev_krilith_defeated, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_krilith_defeated))
 
+        # Temple Floor 2 buttons
+        self.multiworld.get_location(TempleLocationNames.btn_t2_floor_blue, self.player) \
+            .place_locked_item(self.create_event(ItemName.btn_t2_blue_spikes))
         # Temple Floor 2 light bridge switches
-        self.multiworld.get_location(TempleLocationNames.ev_t2_n_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_w_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_ne_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_se_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_sw_bridge_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_bridge_switch))
+        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_n, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
+        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_w, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
+        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_e, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
+        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_se, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
+        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_sw, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
 
         # Temple solar nodes
         self.multiworld.get_location(TempleLocationNames.ev_t1_n_node, self.player) \
@@ -462,7 +487,7 @@ class HammerwatchWorld(World):
                     self.create_item(ItemName.key_teleport))
 
     def set_rules(self) -> None:
-        set_rules(self.multiworld, self.player)
+        set_rules(self.multiworld, self.player, self.item_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.multiworld.shop_shuffle[self.player] > 0:
