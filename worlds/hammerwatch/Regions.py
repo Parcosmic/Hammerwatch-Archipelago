@@ -8,11 +8,38 @@ from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleReg
 from .Util import *
 
 
+class DoorType(Enum):
+    Bronze = 0
+    Silver = 1
+    Gold = 2
+    Bonus = 3
+
+
+class HWEntrance(Entrance):
+    visited = False
+    pass_item: str
+    item_count: int
+    items_consumed: bool
+    level_exit: bool
+
+    downstream_count: int = 0
+
+    def __init__(self, player: int, name: str = "", parent: Region = None, pass_item: str = None, item_count=0,
+                 items_consumed=True, level_exit: bool = False):
+        super().__init__(player, name, parent)
+        self.pass_item = pass_item
+        self.item_count = item_count
+        self.items_consumed = items_consumed
+        self.level_exit = level_exit
+
+
 def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData]):
     if map == Campaign.Castle:
         create_castle_regions(multiworld, player, active_locations)
+        connect_castle_regions(multiworld, player)
     else:
         create_tots_regions(multiworld, player, active_locations)
+        connect_tots_regions_generic(multiworld, player)
 
 
 def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
@@ -2178,10 +2205,8 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         get_planks_region
     ]
 
-    connect_castle_regions(multiworld, player, active_locations)
 
-
-def connect_castle_regions(multiworld, player: int, active_locations):
+def connect_castle_regions(multiworld, player: int):
     used_names: typing.Dict[str, int] = {}
 
     connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start)
@@ -2346,7 +2371,7 @@ def connect_castle_regions(multiworld, player: int, active_locations):
                           and (state.has(ItemName.key_bronze, player, 41))
                           and (state.has(ItemName.key_silver, player, 5))
                           and (state.has(ItemName.key_gold, player, 6)
-                          and state.has(ItemName.bonus_key, player, 11)), True)
+                               and state.has(ItemName.bonus_key, player, 11)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, None, True)
@@ -2565,11 +2590,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave3_ne,
         TempleLocationNames.cave3_nw,
         TempleLocationNames.cave3_m,
-        TempleLocationNames.cave3_se,
         TempleLocationNames.cave3_half_bridge,
-        TempleLocationNames.cave3_trapped_guard,
         TempleLocationNames.cave3_n,
-        TempleLocationNames.cave3_outside_guard,
         TempleLocationNames.cave3_secret_n,
         TempleLocationNames.cave3_secret_nw,
         TempleLocationNames.cave3_secret_s,
@@ -2579,18 +2601,26 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.c3_puzzle_4,
         TempleLocationNames.c3_miniboss_tick_1,
         TempleLocationNames.c3_miniboss_tick_2,
-        TempleLocationNames.c3_tower_plant,
         TempleLocationNames.c3_tower_plant_small_1,
         TempleLocationNames.c3_tower_plant_small_2,
         TempleLocationNames.c3_tower_plant_small_3,
         TempleLocationNames.c3_tower_plant_small_4,
         TempleLocationNames.c3_tower_plant_small_5,
         TempleLocationNames.c3_tower_plant_small_6,
-        TempleLocationNames.c3_tower_plant_small_7,
-        TempleLocationNames.c3_tower_plant_small_8,
     ]
     cave3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_main,
                                       cave3_main_locations)
+
+    c3_e_locs = [
+        TempleLocationNames.cave3_outside_guard,
+        TempleLocationNames.cave3_se,
+        TempleLocationNames.cave3_trapped_guard,
+        TempleLocationNames.c3_tower_plant,
+        TempleLocationNames.c3_tower_plant_small_7,
+        TempleLocationNames.c3_tower_plant_small_8,
+        TempleLocationNames.ev_c3_portal,
+    ]
+    c3_e_region = create_region(multiworld, player, active_locations, TempleRegionNames.c3_e, c3_e_locs)
 
     cave3_fall_locations = [
         TempleLocationNames.cave3_fall_nw,
@@ -2602,12 +2632,17 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                       cave3_fall_locations)
 
     cave3_fields_locations = [
-        TempleLocationNames.cave3_fields_r,
         TempleLocationNames.cave3_captain,
         TempleLocationNames.cave3_captain_dock,
     ]
     cave3_fields_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_fields,
                                         cave3_fields_locations)
+
+    c3_e_water_locs = [
+        TempleLocationNames.cave3_fields_r,
+    ]
+    c3_e_water_region = create_region(multiworld, player, active_locations, TempleRegionNames.c3_e_water,
+                                      c3_e_water_locs)
 
     cave3_portal_locations = [
         TempleLocationNames.cave3_portal_l,
@@ -2635,10 +2670,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                         cave3_secret_locations)
 
     cave2_main_locations = [
-        TempleLocationNames.cave2_double_bridge_m,
         TempleLocationNames.cave2_nw_2,
         TempleLocationNames.cave2_double_bridge_r,
-        TempleLocationNames.cave2_green_bridge,
         TempleLocationNames.cave2_guard_s,
         TempleLocationNames.cave2_nw_3,
         TempleLocationNames.cave2_w_miniboss_4,
@@ -2648,8 +2681,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave2_guard,
         TempleLocationNames.cave2_below_pumps_1,
         TempleLocationNames.cave2_below_pumps_2,
-        TempleLocationNames.cave2_double_bridge_l_1,
-        TempleLocationNames.cave2_double_bridge_l_2,
         TempleLocationNames.cave2_e_1,
         TempleLocationNames.cave2_e_2,
         TempleLocationNames.cave2_nw_4,
@@ -2663,7 +2694,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave2_e_4,
         TempleLocationNames.cave2_guard_n,
         TempleLocationNames.cave2_secret_ne,
-        TempleLocationNames.cave2_secret_w,
         TempleLocationNames.cave2_secret_m,
         TempleLocationNames.c2_miniboss_maggot_w_1,
         TempleLocationNames.c2_miniboss_maggot_w_2,
@@ -2690,6 +2720,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.c2_tower_plant_small_20,
         TempleLocationNames.c2_tower_plant_small_21,
         TempleLocationNames.c2_tower_plant_small_23,
+        TempleLocationNames.ev_c2_portal,
     ]
     cave2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_2_main,
                                       cave2_main_locations)
@@ -2716,12 +2747,27 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                             cave_2_red_bridge_locations)
 
     cave_2_green_bridge_locations = [
+        TempleLocationNames.cave2_green_bridge,
+    ]
+    cave2_green_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_green_bridge,
+                                              cave_2_green_bridge_locations)
+
+    c2_double_bridge_locs = [
+        TempleLocationNames.cave2_double_bridge_m,
+    ]
+    c2_double_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_double_bridge,
+                                            c2_double_bridge_locs)
+
+    c2_sw_locs = [
         TempleLocationNames.cave2_sw_hidden_room_1,
         TempleLocationNames.cave2_sw_hidden_room_2,
         TempleLocationNames.cave2_sw_hidden_room_3,
         TempleLocationNames.cave2_sw_hidden_room_4,
+        TempleLocationNames.cave2_double_bridge_l_1,
+        TempleLocationNames.cave2_double_bridge_l_2,
         TempleLocationNames.cave2_sw,
         TempleLocationNames.cave2_double_bridge_secret,
+        TempleLocationNames.cave2_secret_w,
         TempleLocationNames.c2_puzzle_1,
         TempleLocationNames.c2_puzzle_2,
         TempleLocationNames.c2_puzzle_3,
@@ -2734,8 +2780,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.c2_tower_plant_small_19,
         TempleLocationNames.c2_tower_plant_small_22,
     ]
-    cave2_green_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_green_bridge,
-                                              cave_2_green_bridge_locations)
+    c2_sw_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_sw, c2_sw_locs)
 
     cave1_main_locations = [
         TempleLocationNames.cave1_n_3,
@@ -2787,7 +2832,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave1_ne_hidden_room_4,
         TempleLocationNames.cave1_ne_hidden_room_5,
         TempleLocationNames.cave1_ne_grubs,
-        TempleLocationNames.cave1_secret_tunnel_1,
         TempleLocationNames.cave1_n_bridges_1,
         TempleLocationNames.cave1_n_bridges_4,
         TempleLocationNames.cave1_n_bridges_5,
@@ -2799,8 +2843,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave1_ne_5,
         TempleLocationNames.cave1_n_bridges_2,
         TempleLocationNames.cave1_n_bridges_3,
-        TempleLocationNames.cave1_secret_tunnel_2,
-        TempleLocationNames.cave1_secret_tunnel_3,
         TempleLocationNames.cave1_secret_ne,
         TempleLocationNames.c1_miniboss_maggot_ne_1,
         TempleLocationNames.c1_miniboss_maggot_ne_2,
@@ -2818,6 +2860,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     cave1_blue_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_blue_bridge,
                                              cave1_blue_bridge_locations)
+
+    c1_secret_hall_locs = [
+        TempleLocationNames.cave1_secret_tunnel_1,
+        TempleLocationNames.cave1_secret_tunnel_2,
+        TempleLocationNames.cave1_secret_tunnel_3,
+    ]
+    c1_secret_hall_region = create_region(multiworld, player, active_locations, TempleRegionNames.c1_secret_hall,
+                                          c1_secret_hall_locs)
 
     cave1_red_bridge_locations = [
         TempleLocationNames.cave1_e_2,
@@ -2868,18 +2918,26 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     cave1_temple_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_temple,
                                         cave1_temple_locations)
+    # Dynamically place portal event location
+    c1_portal_loc = HammerwatchLocation(player, TempleLocationNames.ev_c1_portal)
+    if random_locations[TempleLocationNames.rloc_c1_portal] == 1:
+        cave1_main_region.locations.append(c1_portal_loc)
+        c1_portal_loc.parent_region = cave1_main_region
+    else:
+        cave1_blue_bridge_region.locations.append(c1_portal_loc)
+        c1_portal_loc.parent_region = cave1_blue_bridge_region
 
-    boss1_main_locations = [
+    boss1_entrance_locations = [
         TempleLocationNames.boss1_guard_l,
         TempleLocationNames.boss1_guard_r_1,
         TempleLocationNames.boss1_guard_r_2,
     ]
-    boss1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_main,
-                                      boss1_main_locations)
+    boss1_entrance_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_entrance,
+                                          boss1_entrance_locations)
+
+    boss1_arena_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_arena, [])
 
     boss1_defeated_locations = [
-        TempleLocationNames.boss1_bridge,
-        TempleLocationNames.boss1_bridge_n,
         TempleLocationNames.b1_boss_worm_1_1,
         TempleLocationNames.b1_boss_worm_1_2,
         TempleLocationNames.b1_boss_worm_2_1,
@@ -2889,11 +2947,16 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.b1_boss_worm_4_1,
         TempleLocationNames.b1_boss_worm_4_2,
         TempleLocationNames.b1_boss_worm_key,
-        TempleLocationNames.boss1_secret,
-        TempleLocationNames.ev_temple_entrance_rock,
     ]
     boss1_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_defeated,
                                           boss1_defeated_locations)
+
+    b1_back_locs = [
+        TempleLocationNames.boss1_bridge,
+        TempleLocationNames.boss1_bridge_n,
+        TempleLocationNames.boss1_secret,
+    ]
+    b1_back_region = create_region(multiworld, player, active_locations, TempleRegionNames.b1_back, b1_back_locs)
 
     passage_entrance_locations = [
         TempleLocationNames.p_ent2_secret
@@ -2946,6 +3009,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     temple_entrance_back_locations = [
         TempleLocationNames.temple_entrance_l,
         TempleLocationNames.temple_entrance_r,
+        TempleLocationNames.ev_temple_entrance_rock,
     ]
     temple_entrance_back_region = create_region(multiworld, player, active_locations,
                                                 TempleRegionNames.temple_entrance_back,
@@ -3020,11 +3084,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t1_ice_turret_locations = [
         TempleLocationNames.t1_ice_turret_1,
         TempleLocationNames.t1_ice_turret_2,
-        TempleLocationNames.t1_telarian_1,
-        TempleLocationNames.t1_telarian_2,
-        TempleLocationNames.t1_telarian_3,
-        TempleLocationNames.t1_telarian_4,
-        TempleLocationNames.t1_telarian_5,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_1,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_2,
         TempleLocationNames.t1_boulder_hallway_by_ice_turret_3,
@@ -3038,6 +3097,16 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     t1_ice_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_ice_turret,
                                          t1_ice_turret_locations)
+
+    t1_telarian_locs = [
+        TempleLocationNames.t1_telarian_1,
+        TempleLocationNames.t1_telarian_2,
+        TempleLocationNames.t1_telarian_3,
+        TempleLocationNames.t1_telarian_4,
+        TempleLocationNames.t1_telarian_5,
+    ]
+    t1_telarian_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_telarian,
+                                       t1_telarian_locs)
 
     t1_n_of_ice_turret_locations = [
         TempleLocationNames.t1_n_cache_by_ice_turret_1,
@@ -3070,7 +3139,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_node_2_passage_1,
         TempleLocationNames.t1_node_2_passage_2,
         TempleLocationNames.t1_node_2_passage_3,
-        TempleLocationNames.t1_e_gold_beetles,
         TempleLocationNames.ev_temple1_pof_switch,
         TempleLocationNames.t1_e_puzzle_1,
         TempleLocationNames.t1_e_puzzle_2,
@@ -3079,6 +3147,11 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_miniboss_mummy,
     ]
     t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
+
+    t1_jail_e_locs = [
+        TempleLocationNames.t1_e_gold_beetles,
+    ]
+    t1_jail_e_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_jail_e, t1_jail_e_locs)
 
     t1_sun_block_hall_locations = [
         TempleLocationNames.t1_sun_block_hall_1,
@@ -3108,6 +3181,17 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t1_ice_chamber_melt_ice_region = create_region(multiworld, player, active_locations,
                                                    TempleRegionNames.t1_ice_chamber_melt_ice,
                                                    t1_ice_chamber_melt_ice_locations)
+    # Dynamically place portal event location
+    t1_portal_loc = HammerwatchLocation(player, TempleLocationNames.ev_t1_portal)
+    if random_locations[TempleLocationNames.rloc_t1_portal] == 0:
+        t1_east_region.locations.append(t1_portal_loc)
+        t1_portal_loc.parent_region = t1_east_region
+    elif random_locations[TempleLocationNames.rloc_t1_portal] == 1:
+        t1_ice_turret_region.locations.append(t1_portal_loc)
+        t1_portal_loc.parent_region = t1_ice_turret_region
+    else:
+        t1_sun_turret_region.locations.append(t1_portal_loc)
+        t1_portal_loc.parent_region = t1_sun_turret_region
 
     boss2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss2_main, [])
 
@@ -3158,8 +3242,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_se_banner_chamber_4,
         TempleLocationNames.t2_se_banner_chamber_5,
         TempleLocationNames.t2_se_fireball_hall,
-        TempleLocationNames.ev_t2_ne_bridge_switch,
-        TempleLocationNames.ev_t2_se_bridge_switch,
+        TempleLocationNames.btn_t2_rune_e,
+        TempleLocationNames.btn_t2_rune_se,
         TempleLocationNames.t2_nw_puzzle_1,
         TempleLocationNames.t2_nw_puzzle_2,
         TempleLocationNames.t2_nw_puzzle_3,
@@ -3178,11 +3262,21 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_main, t2_main_locations)
 
     t2_melt_ice_locations = [
-        TempleLocationNames.t2_w_ice_block_gate,
-        TempleLocationNames.t2_e_ice_block_gate,
     ]
     t2_melt_ice_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_melt_ice,
                                        t2_melt_ice_locations)
+
+    t2_w_ice_gate_locs = [
+        TempleLocationNames.t2_w_ice_block_gate,
+    ]
+    t2_w_ice_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_w_ice_gate,
+                                         t2_w_ice_gate_locs)
+
+    t2_e_ice_gate_locs = [
+        TempleLocationNames.t2_e_ice_block_gate,
+    ]
+    t2_e_ice_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_e_ice_gate,
+                                         t2_e_ice_gate_locs)
 
     t2_n_gate_locations = [
         TempleLocationNames.t2_nw_ice_turret_1,
@@ -3190,8 +3284,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_nw_ice_turret_3,
         TempleLocationNames.t2_nw_ice_turret_4,
         TempleLocationNames.t2_nw_under_block,
-        TempleLocationNames.t2_nw_gate_1,
-        TempleLocationNames.t2_nw_gate_2,
         TempleLocationNames.t2_nw_gate_3,
         TempleLocationNames.t2_n_puzzle_1,
         TempleLocationNames.t2_n_puzzle_2,
@@ -3203,8 +3295,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t2_n_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_gate,
                                      t2_n_gate_locations)
 
+    t2_nw_button_gate_locs = [
+        TempleLocationNames.t2_nw_gate_1,
+        TempleLocationNames.t2_nw_gate_2,
+    ]
+    t2_nw_button_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_nw_button_gate,
+                                             t2_nw_button_gate_locs)
+
     t2_s_gate_locations = [
-        TempleLocationNames.t2_sw_gate,
         TempleLocationNames.t2_s_node_room_1,
         TempleLocationNames.t2_s_node_room_2,
         TempleLocationNames.t2_s_node_room_3,
@@ -3212,37 +3310,45 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_s_sunbeam_2,
         TempleLocationNames.t2_sw_jail_1,
         TempleLocationNames.t2_sw_jail_2,
-        TempleLocationNames.t2_left_of_pof_switch_1,
-        TempleLocationNames.t2_left_of_pof_switch_2,
-        TempleLocationNames.t2_right_of_pof_switch,
-        TempleLocationNames.ev_t2_sw_bridge_switch,
+        TempleLocationNames.btn_t2_rune_sw,
         TempleLocationNames.ev_temple2_pof_switch,
         TempleLocationNames.t2_sw_puzzle_1,
         TempleLocationNames.t2_sw_puzzle_2,
         TempleLocationNames.t2_sw_puzzle_3,
         TempleLocationNames.t2_sw_puzzle_4,
         TempleLocationNames.t2_tower_mana_3,
+        TempleLocationNames.btn_t2_floor_blue,
     ]
     t2_s_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_s_gate,
                                      t2_s_gate_locations)
 
     t2_n_node_locations = [
-        TempleLocationNames.t2_boulder_room_1,
-        TempleLocationNames.t2_boulder_room_2,
-        TempleLocationNames.t2_boulder_room_block,
-        TempleLocationNames.t2_mana_drain_fire_trap_1,
-        TempleLocationNames.t2_mana_drain_fire_trap_2,
-        TempleLocationNames.t2_jones_hallway,
-        TempleLocationNames.t2_gold_beetle_barricade,
-        TempleLocationNames.t2_w_gold_beetle_room_1,
-        TempleLocationNames.t2_w_gold_beetle_room_2,
-        TempleLocationNames.t2_w_gold_beetle_room_3,
-        TempleLocationNames.t2_w_gold_beetle_room_4,
         TempleLocationNames.ev_t2_n_node,
-        TempleLocationNames.ev_t2_w_bridge_switch
     ]
     t2_n_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_node,
                                      t2_n_node_locations)
+
+    t2_boulder_room_locs = [
+        TempleLocationNames.t2_boulder_room_1,
+        TempleLocationNames.t2_boulder_room_2,
+        TempleLocationNames.t2_boulder_room_block,
+        TempleLocationNames.btn_t2_rune_w
+    ]
+    t2_boulder_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_boulder_room,
+                                           t2_boulder_room_locs)
+
+    t2_n_hidden_hall_locs = [
+        TempleLocationNames.t2_mana_drain_fire_trap_1,
+        TempleLocationNames.t2_mana_drain_fire_trap_2,
+    ]
+    t2_n_hidden_hall_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_hidden_hall,
+                                            t2_n_hidden_hall_locs)
+
+    t2_jones_hall_locs = [
+        TempleLocationNames.t2_jones_hallway,
+    ]
+    t2_jones_hall_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_jones_hall,
+                                         t2_jones_hall_locs)
 
     t2_s_node_locations = [
         TempleLocationNames.ev_t2_s_node
@@ -3250,8 +3356,40 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t2_s_node_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_s_node,
                                      t2_s_node_locations)
 
+    t2_jail_sw_locs = [
+        TempleLocationNames.t2_gold_beetle_barricade,
+        TempleLocationNames.t2_w_gold_beetle_room_1,
+        TempleLocationNames.t2_w_gold_beetle_room_2,
+        TempleLocationNames.t2_w_gold_beetle_room_3,
+        TempleLocationNames.t2_w_gold_beetle_room_4,
+    ]
+    t2_jail_sw_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_jail_sw,
+                                      t2_jail_sw_locs)
+
+    t2_sdoor_gate_locs = [
+        TempleLocationNames.t2_sw_gate,
+    ]
+    t2_sdoor_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_sdoor_gate,
+                                         t2_sdoor_gate_locs)
+
+    t2_pof_locs = [
+        TempleLocationNames.t2_left_of_pof_switch_1,
+        TempleLocationNames.t2_left_of_pof_switch_2,
+    ]
+    t2_pof_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_pof, t2_pof_locs)
+
+    t2_pof_spikes_locs = [
+        TempleLocationNames.t2_right_of_pof_switch
+    ]
+    t2_pof_spikes_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_pof_spikes,
+                                         t2_pof_spikes_locs)
+
+    t2_jail_s_locs = [
+    ]
+    t2_jail_s_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_jail_s, t2_jail_s_locs)
+
     t2_ornate_locations = [
-        TempleLocationNames.ev_t2_n_bridge_switch
+        TempleLocationNames.btn_t2_rune_n
     ]
     t2_ornate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_ornate,
                                      t2_ornate_locations)
@@ -3261,10 +3399,15 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_se_light_bridge_2,
         TempleLocationNames.t2_s_light_bridge_1,
         TempleLocationNames.t2_s_light_bridge_2,
-        TempleLocationNames.t2_portal_gate,
     ]
     t2_light_bridges_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_light_bridges,
                                             t2_light_bridges_locations)
+
+    t2_portal_gate_locs = [
+        TempleLocationNames.t2_portal_gate,
+    ]
+    t2_portal_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_portal_gate,
+                                          t2_portal_gate_locs)
 
     t2_ornate_t3_locations = [
         TempleLocationNames.t2_floor3_cache_1,
@@ -3273,10 +3416,30 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_floor3_cache_4,
         TempleLocationNames.t2_floor3_cache_5,
         TempleLocationNames.t2_floor3_cache_6,
-        TempleLocationNames.t2_floor3_cache_gate,
     ]
     t2_ornate_t3_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_ornate_t3,
                                         t2_ornate_t3_locations)
+
+    t2_ornate_gate_locs = [
+        TempleLocationNames.t2_floor3_cache_gate,
+    ]
+    t2_ornate_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_ornate_gate,
+                                          t2_ornate_gate_locs)
+
+    # Dynamically place portal event location
+    t2_portal_loc = HammerwatchLocation(player, TempleLocationNames.ev_t2_portal)
+    if random_locations[TempleLocationNames.rloc_t2_portal] == 0:
+        t2_main_region.locations.append(t2_portal_loc)
+        t2_portal_loc.parent_region = t2_main_region
+    elif random_locations[TempleLocationNames.rloc_t2_portal] == 1:
+        t2_s_gate_region.locations.append(t2_portal_loc)
+        t2_portal_loc.parent_region = t2_s_gate_region
+    elif random_locations[TempleLocationNames.rloc_t2_portal] == 2:
+        t2_main_region.locations.append(t2_portal_loc)
+        t2_portal_loc.parent_region = t2_main_region
+    else:
+        t2_n_gate_region.locations.append(t2_portal_loc)
+        t2_portal_loc.parent_region = t2_n_gate_region
 
     t3_main_locations = [
         TempleLocationNames.t3_s_balcony_turret_1,
@@ -3285,30 +3448,41 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t3_n_turret_2,
         TempleLocationNames.t3_boulder_block,
         TempleLocationNames.t3_e_turret_spikes,
-        TempleLocationNames.t3_puzzle_1,
-        TempleLocationNames.t3_puzzle_2,
-        TempleLocationNames.t3_puzzle_3,
-        TempleLocationNames.t3_puzzle_4,
         TempleLocationNames.t3_tower_fire_1,
         TempleLocationNames.t3_tower_fire_2,
         TempleLocationNames.t3_tower_ice_1,
         TempleLocationNames.t3_tower_mana_1,
         TempleLocationNames.t3_tower_mana_2,
+        TempleLocationNames.ev_t3_portal,
     ]
     t3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_main, t3_main_locations)
 
-    t3_n_node_blocks_locations = [
+    t3_blockade_s_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_blockade_s, [])
+
+    t3_s_gate_locs = [
         TempleLocationNames.t3_s_gate,
+    ]
+    t3_s_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_s_gate, t3_s_gate_locs)
+
+    t3_n_node_blocks_locations = [
         TempleLocationNames.t3_n_node_blocks_1,
         TempleLocationNames.t3_n_node_blocks_2,
         TempleLocationNames.t3_n_node_blocks_3,
         TempleLocationNames.t3_n_node_blocks_4,
         TempleLocationNames.t3_n_node_blocks_5,
-        TempleLocationNames.t3_tower_ice_2,
-        TempleLocationNames.t3_tower_ice_3,
     ]
     t3_n_node_blocks_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_n_node_blocks,
                                             t3_n_node_blocks_locations)
+
+    t3_gates_locs = [
+        TempleLocationNames.t3_tower_ice_2,
+        TempleLocationNames.t3_tower_ice_3,
+        TempleLocationNames.t3_puzzle_1,
+        TempleLocationNames.t3_puzzle_2,
+        TempleLocationNames.t3_puzzle_3,
+        TempleLocationNames.t3_puzzle_4,
+    ]
+    t3_gates_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_gates, t3_gates_locs)
 
     t3_n_node_locations = [
         TempleLocationNames.ev_t3_n_node
@@ -3388,6 +3562,11 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                       pof_1_main_locations)
 
     pof_1_se_room_locations = [
+    ]
+    pof_1_se_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room,
+                                         pof_1_se_room_locations)
+
+    pof_1_se_room_top_locs = [
         TempleLocationNames.pof_1_s_1,
         TempleLocationNames.pof_1_s_2,
         TempleLocationNames.pof_1_s_3,
@@ -3402,20 +3581,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.pof_1_s_12,
         TempleLocationNames.pof_1_s_13,
     ]
-    pof_1_se_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room,
-                                         pof_1_se_room_locations)
+    pof_1_se_room_top_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room_top,
+                                             pof_1_se_room_top_locs)
 
     pof_gate_1_locations = [
         TempleLocationNames.pof_1_confuse_corner_1,
         TempleLocationNames.pof_1_confuse_corner_2,
         TempleLocationNames.pof_1_confuse_corner_3,
         TempleLocationNames.pof_1_confuse_corner_4,
-        TempleLocationNames.pof_1_c_hall_1,
-        TempleLocationNames.pof_1_c_hall_2,
-        TempleLocationNames.pof_1_c_hall_3,
-        TempleLocationNames.pof_1_c_hall_4,
-        TempleLocationNames.pof_1_c_hall_5,
-        TempleLocationNames.pof_1_c_hall_6,
     ]
     pof_gate_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_gate_1,
                                       pof_gate_1_locations)
@@ -3434,6 +3607,17 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     pof_1_n_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_n_room,
                                         pof_1_n_room_locations)
+
+    pof_1_exit_hall_locs = [
+        TempleLocationNames.pof_1_c_hall_1,
+        TempleLocationNames.pof_1_c_hall_2,
+        TempleLocationNames.pof_1_c_hall_3,
+        TempleLocationNames.pof_1_c_hall_4,
+        TempleLocationNames.pof_1_c_hall_5,
+        TempleLocationNames.pof_1_c_hall_6,
+    ]
+    pof_1_exit_hall_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_exit_hall,
+                                           pof_1_exit_hall_locs)
 
     pof_1_gate_2_locations = [
         TempleLocationNames.pof_1_end_1,
@@ -3469,23 +3653,33 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.pof_2_ne_2,
         TempleLocationNames.pof_2_ne_3,
         TempleLocationNames.pof_2_ne_4,
+    ]
+    pof_2_n_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_n, pof_2_n_locations)
+
+    pof_2_puzzle_locs = [
         TempleLocationNames.pof_puzzle_1,
         TempleLocationNames.pof_puzzle_2,
         TempleLocationNames.pof_puzzle_3,
         TempleLocationNames.pof_puzzle_4,
         TempleLocationNames.ev_pof_2_unlock_exit
     ]
-    pof_2_n_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_n, pof_2_n_locations)
+    pof_2_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_puzzle,
+                                        pof_2_puzzle_locs)
 
     pof_2_exit_locations = [
     ]
     pof_2_exit_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_exit,
                                       pof_2_exit_locations)
 
-    pof_3_main_locations = [
+    pof_3_start_locs = [
         TempleLocationNames.pof_3_safety_room_1,
         TempleLocationNames.pof_3_safety_room_2,
         TempleLocationNames.pof_3_safety_room_3,
+    ]
+    pof_3_start_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_3_start,
+                                       pof_3_start_locs)
+
+    pof_3_main_locations = [
         TempleLocationNames.pof_3_end_1,
         TempleLocationNames.pof_3_end_2,
         TempleLocationNames.pof_3_end_3,
@@ -3529,21 +3723,28 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         library_region,
         library_lobby_region,
         cave3_main_region,
+        c3_e_region,
         cave3_fall_region,
         cave3_fields_region,
+        c3_e_water_region,
         cave3_portal_region,
         cave3_secret_region,
         cave2_main_region,
         cave2_red_bridge_region,
         cave2_green_bridge_region,
+        c2_double_bridge_region,
+        c2_sw_region,
         cave2_pumps_region,
         cave1_main_region,
         cave1_blue_bridge_region,
+        c1_secret_hall_region,
         cave1_red_bridge_region,
         cave1_green_bridge_region,
         cave1_pumps_region,
         cave1_temple_region,
-        boss1_main_region,
+        boss1_entrance_region,
+        boss1_arena_region,
+        b1_back_region,
         boss1_defeated_region,
         passage_entrance_region,
         passage_mid_region,
@@ -3556,9 +3757,11 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t1_node_2_region,
         t1_sun_turret_region,
         t1_ice_turret_region,
+        t1_telarian_region,
         t1_n_of_ice_turret_region,
         t1_s_of_ice_turret_region,
         t1_east_region,
+        t1_jail_e_region,
         t1_sun_block_hall_region,
         t1_telarian_melt_ice_region,
         t1_ice_chamber_melt_ice_region,
@@ -3566,15 +3769,31 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         boss2_defeated_region,
         t2_main_region,
         t2_melt_ice_region,
+        t2_w_ice_gate_region,
+        t2_e_ice_gate_region,
         t2_n_gate_region,
+        t2_nw_button_gate_region,
         t2_s_gate_region,
         t2_n_node_region,
+        t2_boulder_room_region,
+        t2_n_hidden_hall_region,
+        t2_jones_hall_region,
         t2_s_node_region,
+        t2_jail_sw_region,
+        t2_sdoor_gate_region,
+        t2_pof_region,
+        t2_pof_spikes_region,
+        t2_jail_s_region,
         t2_ornate_region,
         t2_light_bridges_region,
+        t2_portal_gate_region,
         t2_ornate_t3_region,
+        t2_ornate_gate_region,
         t3_main_region,
+        t3_blockade_s_region,
+        t3_s_gate_region,
         t3_n_node_blocks_region,
+        t3_gates_region,
         t3_n_node_region,
         t3_s_node_blocks_1_region,
         t3_s_node_blocks_2_region,
@@ -3584,12 +3803,16 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t3_boss_fall_3_region,
         pof_1_main_region,
         pof_1_se_room_region,
+        pof_1_se_room_top_region,
         pof_gate_1_region,
         pof_1_n_room_region,
+        pof_1_exit_hall_region,
         pof_1_gate_2_region,
         pof_2_main_region,
         pof_2_n_region,
+        pof_2_puzzle_region,
         pof_2_exit_region,
+        pof_3_start_region,
         pof_3_main_region,
         b3_main_region,
         b3_platform_1_region,
@@ -3599,10 +3822,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         get_planks_region
     ]
 
-    connect_tots_regions(multiworld, player, active_locations)
 
-
-def connect_tots_regions(multiworld, player: int, active_locations):
+def connect_tots_regions(multiworld, player: int):
     used_names: typing.Dict[str, int] = {}
 
     def has_pan(state):
@@ -3649,9 +3870,9 @@ def connect_tots_regions(multiworld, player: int, active_locations):
             True)
     connect(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated)
 
-    connect(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.boss_1_main,
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.boss_1_entrance,
             lambda state: state.has(ItemName.key_teleport, player, 3), True)
-    connect(multiworld, player, used_names, TempleRegionNames.boss_1_main, TempleRegionNames.boss_1_defeated,
+    connect(multiworld, player, used_names, TempleRegionNames.boss_1_entrance, TempleRegionNames.boss_1_defeated,
             lambda state: (state.has(ItemName.key_gold, player, 1)))
 
     connect(multiworld, player, used_names, TempleRegionNames.boss_1_defeated, TempleRegionNames.passage_entrance, None,
@@ -3708,7 +3929,7 @@ def connect_tots_regions(multiworld, player: int, active_locations):
     connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
             lambda state: (state.has(ItemName.mirror, player, 20)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
-            lambda state: (state.has(ItemName.ev_t2_bridge_switch, player, 5)))
+            lambda state: (state.has(ItemName.ev_t2_rune_switch, player, 5)))
     connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal, None,
             True)
     connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple, None,
@@ -3766,6 +3987,266 @@ def connect_tots_regions(multiworld, player: int, active_locations):
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
+def connect_tots_regions_generic(multiworld, player: int):
+    used_names: typing.Dict[str, int] = {}
+
+    def has_pan(state):
+        return state.has(ItemName.pan, player) \
+               or state.has(ItemName.pan_fragment, player, multiworld.pan_fragments[player])
+
+    def has_lever(state):
+        return state.has(ItemName.lever, player) \
+               or state.has(ItemName.lever_fragment, player, multiworld.lever_fragments[player])
+
+    def has_pickaxe(state):
+        return state.has(ItemName.pickaxe, player) \
+               or state.has(ItemName.pickaxe_fragment, player, multiworld.pickaxe_fragments[player])
+
+    pan_item = ItemName.pan
+    lever_item = ItemName.lever
+    pickaxe_item = ItemName.pickaxe
+    pan_item_count = multiworld.pan_fragments[player]
+    lever_item_count = multiworld.lever_fragments[player]
+    pickaxe_item_count = multiworld.pickaxe_fragments[player]
+    if pan_item_count > 1:
+        pan_item = ItemName.pan_fragment
+    if lever_item_count > 1:
+        lever_item = ItemName.lever_fragment
+    if pickaxe_item_count > 1:
+        pickaxe_item = ItemName.pickaxe_fragment
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
+                    False, True, pickaxe_item, pickaxe_item_count, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_rocks, TempleRegionNames.cave_3_fall,
+                    True, False)
+    # For the temple entrances in the hub
+    t3_entrance = TempleRegionNames.t3_main
+    if random_locations[TempleLocationNames.rloc_t3_entrance] == 2:
+        t3_entrance = TempleRegionNames.t3_blockade_s
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_rocks, t3_entrance,
+                    True, True, ItemName.key_teleport, 5, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.temple_entrance, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_pyramid_of_fear,
+                    False, True, ItemName.ev_pof_complete, 1, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.library_lobby, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.library_lobby, TempleRegionNames.library, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main,
+                    True, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields,
+                    False, True, lever_item, lever_item_count, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
+                    False, True, lever_item, lever_item_count, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,
+                    True, True, ItemName.key_teleport, 1, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_2_pumps,
+                    False, True, lever_item, lever_item_count, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_red_bridge)
+    # Requires red switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_green_bridge)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_sw)
+    # Both require green switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_double_bridge)
+    # connect_generic(multiworld, player, used_names, TempleRegionNames.c2_double_bridge, TempleRegionNames.cave_2_main)
+    # Both require double bridge switch
+    # connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_2_main)
+    # Requires lower bridge switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_1_main,
+                    True, True, ItemName.key_teleport, 2, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge)
+    # Requires blue switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
+                    TempleRegionNames.cave_1_red_bridge)  # Requires red switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
+                    TempleRegionNames.c1_secret_hall)
+    # Requires wall switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_pumps,
+                    False, True, lever_item, lever_item_count, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_pumps,
+                    TempleRegionNames.cave_1_green_bridge)
+    # Symbolic connection, requires green switch which is underwater
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.boss2_main,
+                    True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated,
+                    False, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge,
+                    TempleRegionNames.boss_1_entrance, True, True, ItemName.key_teleport, 3, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.boss_1_entrance, TempleRegionNames.boss_1_arena,
+                    True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.boss_1_arena, TempleRegionNames.boss_1_defeated)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.boss_1_arena, TempleRegionNames.b1_back,
+                    False, True, ItemName.key_gold)
+    # connect_generic(multiworld, player, used_names, TempleRegionNames.b1_back, TempleRegionNames.boss_1_entrance)
+    # Requires boss 1 bridge switch
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b1_back,
+                    TempleRegionNames.passage_entrance, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid,
+                    True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end, True)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_end,
+                    TempleRegionNames.temple_entrance_back, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back,
+                    TempleRegionNames.temple_entrance, False, True, ItemName.ev_open_temple_entrance_shortcut, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main,
+                    True)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_sdoor,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
+                    False, True, ItemName.mirror, 3)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.cave_3_secret, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_sun_turret,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_ice_turret,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telarian)
+    # Requires telarian button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
+                    TempleRegionNames.t1_telarian_melt_ice, False, True, ItemName.ev_krilith_defeated, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
+                    TempleRegionNames.t1_n_of_ice_turret, False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
+                    TempleRegionNames.t1_s_of_ice_turret, False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_east,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_sun_block_hall,
+                    False, True, ItemName.mirror, 3)
+    # TODO: Problems with logic when entering from east, gotta figure out a better solution for this eventually
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_sun_block_hall, TempleRegionNames.t1_node_2,
+                    False, True, ItemName.mirror, 2)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east,
+                    TempleRegionNames.t1_ice_chamber_melt_ice, False, True, ItemName.ev_krilith_defeated, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_jail_e)
+    # Requires east jail button
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
+                    False, True, ItemName.ev_krilith_defeated, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_w_ice_gate)
+    # Requires west ice gate button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_e_ice_gate)
+    # Requires east ice gate button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_n_gate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_s_gate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sdoor_gate)
+    # Requires south door gate button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_ornate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_ornate, TempleRegionNames.t2_ornate_gate,
+                    False, False)
+    # Requires east ornate wall button. Note we make this one-way because you have to access the other side to cross
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_ornate_t3, TempleRegionNames.t2_ornate_gate,
+                    False, False)
+    # Requires west ornate wall button. Note we make this one-way because you have to access the other side to cross
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
+                    False, True, ItemName.mirror, 3)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_nw_button_gate)
+    # Requires nw gate button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_node, TempleRegionNames.t2_boulder_room)
+    # From north gate, requires north node button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_boulder_room, TempleRegionNames.t2_jail_sw,
+                    False, True, ItemName.btn_t2_blue_spikes, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_boulder_room,
+                    TempleRegionNames.t2_n_hidden_hall)
+    # Requires hidden hall button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_hidden_hall, TempleRegionNames.t2_jones_hall)
+    # Requires jones hall button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
+                    False, True, ItemName.mirror, 4)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_node, TempleRegionNames.t2_pof)
+    # Technically you only need 3 mirrors to get here, but this is safer logic
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_pof, TempleRegionNames.t2_jail_s)
+    # Requires pof wall button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_jail_s, TempleRegionNames.t2_pof_spikes)
+    # Requires pof south jail wall button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
+                    False, True, ItemName.ev_t2_rune_switch, 5, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges,
+                    TempleRegionNames.t2_portal_gate)
+    # Requires portal floor switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal,
+                    True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple,
+                    True)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_blockade_s, TempleRegionNames.t3_s_gate)
+    # Requires south gate button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_gate, TempleRegionNames.t3_main,
+                    False, False)
+    # One-way because we need to hit the button first!
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_n_node_blocks,
+                    False, True, ItemName.mirror, 20, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_blockade_s)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_gates)
+    # Requires gates button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node,
+                    False, True, ItemName.mirror, 20, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_1,
+                    False, True, ItemName.mirror, 2)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_1,
+                    TempleRegionNames.t3_s_node_blocks_2, False, True, ItemName.mirror, 1)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
+                    True, True, ItemName.ev_pof_switch, 6, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_se_room,
+                    TempleRegionNames.pof_1_se_room_top)
+    # Requires bonus panel
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_se_room_top, TempleRegionNames.pof_1_gate_1,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room,
+                    True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_exit_hall,
+                    False, True, ItemName.ev_pof_1_unlock_exit, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_exit_hall, TempleRegionNames.pof_1_gate_2,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle)
+    # Requires bonus panel
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_exit,
+                    False, True, ItemName.ev_pof_2_unlock_exit, 1, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_exit, TempleRegionNames.pof_3_start, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_3_start, TempleRegionNames.pof_3_main)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_3_main, TempleRegionNames.hub_main,
+                    True, False)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
+                    True, True, ItemName.ev_solar_node, 6, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_main, TempleRegionNames.b3_platform_1)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.b3_platform_2)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.b3_platform_3)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.b3_defeated)
+
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.t3_boss_fall_1,
+                    True, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_1, TempleRegionNames.t3_main)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.t3_boss_fall_2,
+                    True, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_2, TempleRegionNames.t3_main)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.t3_boss_fall_3,
+                    True, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_3, TempleRegionNames.t3_main)
+
+    planks_to_win = multiworld.planks_required_count[player]
+    connect_generic(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.get_planks,
+                    False, False, ItemName.plank, planks_to_win, False)
+
+
 def create_region(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
                   locations: typing.List[str]) -> Region:
     region = Region(name, player, multiworld)
@@ -3789,10 +4270,32 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
         used_names[target] += 1
         name = target + (' ' * used_names[target])
 
-    connection = Entrance(player, name, source_region)
+    connection = HWEntrance(player, name, source_region, None, 0, level_exit)
 
     if rule:
         connection.access_rule = rule
 
     source_region.exits.append(connection)
     connection.connect(target_region)
+
+
+def connect_generic(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
+                    level_exit=False, two_way=True, pass_item: str = None, item_count=1, items_consumed=True):
+    source_region = multiworld.get_region(source, player)
+    target_region = multiworld.get_region(target, player)
+
+    if target not in used_names:
+        used_names[target] = 1
+        forward_name = target
+    else:
+        used_names[target] += 1
+        forward_name = target + (' ' * used_names[target])
+
+    connection = HWEntrance(player, forward_name, source_region, pass_item, item_count, items_consumed, level_exit)
+
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    if two_way:
+        connect_generic(multiworld, player, used_names, target, source, level_exit, False, pass_item, item_count,
+                        items_consumed)
