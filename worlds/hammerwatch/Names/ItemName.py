@@ -103,19 +103,25 @@ trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 trap_banner = "Banner Trap"
 
-# Event Names
+# Event/Button Names
 ev_victory = "Victory"
 
+btnc_p1_floor = "Prison Floor 1 Open Passage"
 ev_castle_p2_switch = "Prison Floor 2 Switch"
-ev_castle_c2_n_shops_switch = "Chambers Floor 11 North Shops Switch"
-ev_castle_c2_n_tp_button = "Chambers Floor 11 North Teleport Button"
-ev_castle_c3_rspikes_switch = "Chambers Floor 12 Red Spikes Switch"
-ev_castle_c3_sw_hidden_switch = "Chambers Floor 12 SW Hidden Hall Switch"
+btnc_n1_cache_n = "Bonus 1 Open North Treasure Rooms"
+btnc_n1_cache_ne = "Bonus 1 Open NE Treasure Room"
+btnc_n1_hall_top = "Bonus 1 Open Top of East Hall"
+btnc_n1_hall_bottom = "Bonus 1 Open Bottom of East Hall"
+btnc_a2_blue_spikes = "Armory Floor 5 Deactivate Blue Spikes"
+ev_castle_c2_n_shops_switch = "Chambers Floor 11 Open North Shops Area"
+btnc_c2_n_wall = "Chambers Floor 11 Open North Wall"
+ev_castle_c3_rspikes_switch = "Chambers Floor 12 Deactivate Red Spikes"
+ev_castle_c3_sw_hidden_switch = "Chambers Floor 12 Open SW Hidden Hall"
 ev_castle_b1_boss_switch = "Prison Boss Switch"
 ev_castle_b2_boss_switch = "Armory Boss Switch"
 ev_castle_b3_boss_switch = "Archives Boss Switch"
 ev_castle_b4_boss_switch = "Chambers Boss Switch"
-
+# Temple
 ev_c1_portal = "Cave Level 1 Activate Portal"
 ev_c2_portal = "Cave Level 2 Activate Portal"
 ev_c3_portal = "Cave Level 3 Activate Portal"
@@ -237,5 +243,6 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_frost,
         trap_fire,
         trap_confuse,
+        trap_banner,
     },
 }

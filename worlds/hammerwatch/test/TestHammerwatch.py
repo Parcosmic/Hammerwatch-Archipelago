@@ -66,7 +66,10 @@ class TestHammerwatch(HammerwatchTestBase):
         default_plank_hunt_test = HammerwatchTestBase()
         default_plank_hunt_test.options = default_plank_hunt_options
         default_plank_hunt_test.world_setup()
-        default_plank_hunt_test.assertAccessDependency([CastleLocationNames.ev_victory], [[ItemName.plank] * 12])
+        default_plank_hunt_test.assertBeatable(False)
+        default_plank_hunt_test.collect_by_name([ItemName.plank] * 12)
+        default_plank_hunt_test.assertBeatable(True)
+        # default_plank_hunt_test.assertAccessDependency([CastleLocationNames.ev_victory], [[ItemName.plank] * 12])
 
     def testPlankHuntDouble(self):
         double_planks_options = {
@@ -77,7 +80,9 @@ class TestHammerwatch(HammerwatchTestBase):
         double_planks_test = HammerwatchTestBase()
         double_planks_test.options = double_planks_options
         double_planks_test.world_setup()
-        double_planks_test.assertAccessDependency([CastleLocationNames.ev_victory], [[ItemName.plank] * 24])
+        double_planks_test.assertBeatable(False)
+        double_planks_test.collect_by_name([ItemName.plank] * 24)
+        double_planks_test.assertBeatable(True)
 
     def testPlankHuntNotEnough(self):
         not_enough_planks_options = {
@@ -88,7 +93,9 @@ class TestHammerwatch(HammerwatchTestBase):
         not_enough_planks_test = HammerwatchTestBase()
         not_enough_planks_test.options = not_enough_planks_options
         not_enough_planks_test.world_setup()
-        not_enough_planks_test.assertAccessDependency([CastleLocationNames.ev_victory], [[ItemName.plank] * 24])
+        not_enough_planks_test.assertBeatable(False)
+        not_enough_planks_test.collect_by_name([ItemName.plank] * 24)
+        not_enough_planks_test.assertBeatable(True)
 
     def testPlankHuntExtra(self):
         extra_planks_options = {
@@ -99,5 +106,7 @@ class TestHammerwatch(HammerwatchTestBase):
         extra_planks_test = HammerwatchTestBase()
         extra_planks_test.options = extra_planks_options
         extra_planks_test.world_setup()
-        extra_planks_test.assertAccessDependency([CastleLocationNames.ev_victory], [[ItemName.plank] * 12])
+        extra_planks_test.assertBeatable(False)
+        extra_planks_test.collect_by_name([ItemName.plank] * 12)
+        extra_planks_test.assertBeatable(True)
 

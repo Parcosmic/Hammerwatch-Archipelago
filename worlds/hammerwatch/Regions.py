@@ -36,7 +36,7 @@ class HWEntrance(Entrance):
 def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData]):
     if map == Campaign.Castle:
         create_castle_regions(multiworld, player, active_locations)
-        connect_castle_regions(multiworld, player)
+        connect_castle_regions_generic(multiworld, player)
     else:
         create_tots_regions(multiworld, player, active_locations)
         connect_tots_regions_generic(multiworld, player)
@@ -46,6 +46,13 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     menu_region = create_region(multiworld, player, active_locations, CastleRegionNames.menu, None)
 
     p1_start_locations = [
+        CastleLocationNames.p1_by_nw_bronze_gate,
+        CastleLocationNames.btn_p1_floor,
+    ]
+    p1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_start,
+                                    p1_start_locations)
+
+    p1_nw_locs = [
         CastleLocationNames.p1_entrance_1,
         CastleLocationNames.p1_entrance_2,
         CastleLocationNames.p1_entrance_3,
@@ -54,11 +61,9 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p1_entrance_hall_2,
         CastleLocationNames.p1_entrance_s,
         CastleLocationNames.p1_entrance_w,
-        CastleLocationNames.p1_by_nw_bronze_gate,
         CastleLocationNames.p1_entrance_secret,
     ]
-    p1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_start,
-                                    p1_start_locations)
+    p1_nw_region = create_region(multiworld, player, active_locations, CastleRegionNames.p1_nw, p1_nw_locs)
 
     p1_s_locations = [
         CastleLocationNames.p1_by_sw_bronze_gate_1,
@@ -178,26 +183,47 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     p2_m_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_m, p2_m_locations)
 
+    p2_p1_return_locs = [
+    ]
+    p2_p1_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_p1_return,
+                                        p2_p1_return_locs)
+
     p2_n_locations = [
-        CastleLocationNames.p2_spike_puzzle_w_1,
-        CastleLocationNames.p2_spike_puzzle_w_2,
         CastleLocationNames.p2_spike_puzzle_e_1,
         CastleLocationNames.p2_spike_puzzle_e_2,
         CastleLocationNames.p2_spike_puzzle_ne_1,
         CastleLocationNames.p2_spike_puzzle_ne_2,
         CastleLocationNames.p2_spike_puzzle_ne_3,
         CastleLocationNames.p2_spike_puzzle_e,
-        CastleLocationNames.p2_spike_puzzle_n_1,
-        CastleLocationNames.p2_spike_puzzle_n_2,
-        CastleLocationNames.p2_tower_plant_2,
     ]
     p2_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_n, p2_n_locations)
+
+    p2_spike_puzzle_bottom_locs = [
+    ]
+    p2_spike_puzzle_bottom_region = create_region(multiworld, player, active_locations,
+                                                  CastleRegionNames.p2_spike_puzzle_bottom,
+                                                  p2_spike_puzzle_bottom_locs)
+
+    p2_spike_puzzle_left_locs = [
+        CastleLocationNames.p2_spike_puzzle_w_1,
+        CastleLocationNames.p2_spike_puzzle_w_2,
+    ]
+    p2_spike_puzzle_left_region = create_region(multiworld, player, active_locations,
+                                                CastleRegionNames.p2_spike_puzzle_left,
+                                                p2_spike_puzzle_left_locs)
+
+    p2_spike_puzzle_top_locs = [
+        CastleLocationNames.p2_spike_puzzle_n_1,
+        CastleLocationNames.p2_spike_puzzle_n_2,
+    ]
+    p2_spike_puzzle_top_region = create_region(multiworld, player, active_locations,
+                                               CastleRegionNames.p2_spike_puzzle_top,
+                                               p2_spike_puzzle_top_locs)
 
     p2_red_switch_locations = [
         CastleLocationNames.p2_by_red_spikes_1,
         CastleLocationNames.p2_by_red_spikes_2,
         CastleLocationNames.p2_by_red_spikes_3,
-        CastleLocationNames.p2_e_save,
         CastleLocationNames.p2_e_poker_plant_room_1,
         CastleLocationNames.p2_e_poker_plant_room_2,
         CastleLocationNames.p2_e_poker_plant_room_3,
@@ -210,13 +236,18 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p2_e_of_red_spikes_4,
         CastleLocationNames.p2_e_of_ne_save_1,
         CastleLocationNames.p2_e_of_ne_save_2,
+        CastleLocationNames.p2_tower_plant_2,
+    ]
+    p2_red_switch_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_red_switch,
+                                         p2_red_switch_locations)
+
+    p2_puzzle_locs = [
         CastleLocationNames.p2_puzzle_1,
         CastleLocationNames.p2_puzzle_2,
         CastleLocationNames.p2_puzzle_3,
         CastleLocationNames.p2_puzzle_4,
     ]
-    p2_red_switch_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_red_switch,
-                                         p2_red_switch_locations)
+    p2_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_puzzle, p2_puzzle_locs)
 
     p2_e_bronze_gate_locations = [
         # Offense shop
@@ -224,11 +255,15 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     p2_e_bronze_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_e_bronze_gate,
                                             p2_e_bronze_gate_locations)
 
+    p2_e_save_locs = [
+        CastleLocationNames.p2_e_save,
+    ]
+    p2_e_save_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_e_save, p2_e_save_locs)
+
     p2_s_locations = [
         CastleLocationNames.p2_big_bridge_1,
         CastleLocationNames.p2_big_bridge_2,
         CastleLocationNames.p2_big_bridge_3,
-        CastleLocationNames.p2_sequence_puzzle_reward,
         CastleLocationNames.p2_s_arrow_traps_1,
         CastleLocationNames.p2_s_arrow_traps_2,
         CastleLocationNames.p2_s_arrow_traps_3,
@@ -256,8 +291,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p2_s_of_w_gold_gate_2,
         CastleLocationNames.p2_s_of_w_gold_gate_3,
         CastleLocationNames.p2_by_boss_switch,
-        CastleLocationNames.p2_beetle_boss_hidden_room_1,
-        CastleLocationNames.p2_beetle_boss_hidden_room_2,
         CastleLocationNames.p2_toggle_spike_trap_reward_1,
         CastleLocationNames.p2_toggle_spike_trap_reward_2,
         CastleLocationNames.p2_toggle_spike_trap_reward_3,
@@ -295,11 +328,34 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     p2_gg_room_reward_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_gg_room_reward,
                                              p2_gg_room_reward_locations)
 
+    p2_w_treasure_locs = [
+        CastleLocationNames.p2_beetle_boss_hidden_room_1,
+    ]
+    p2_w_treasure_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_w_treasure,
+                                         p2_w_treasure_locs)
+
+    p2_w_treasure_tp_locs = [
+        CastleLocationNames.p2_beetle_boss_hidden_room_2,
+    ]
+    p2_w_treasure_tp_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_w_treasure_tp,
+                                            p2_w_treasure_tp_locs)
+
+    p2_tp_puzzle_locs = [
+        CastleLocationNames.p2_sequence_puzzle_reward,
+    ]
+    p2_tp_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_tp_puzzle,
+                                        p2_tp_puzzle_locs)
+
     p2_end_locations = [
         CastleLocationNames.p2_end_1,
         CastleLocationNames.p2_end_2,
     ]
     p2_end_region = create_region(multiworld, player, active_locations, CastleRegionNames.p2_end, p2_end_locations)
+
+    p3_start_door_locs = [
+    ]
+    p3_start_door_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_start_door,
+                                         p3_start_door_locs)
 
     p3_start_locs = [
         CastleLocationNames.p3_entrance_s_of_poker_1,
@@ -330,6 +386,11 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p3_tower_plant_1,
     ]
     p3_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_start, p3_start_locs)
+
+    p3_nw_closed_room_locs = [
+    ]
+    p3_nw_closed_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_nw_closed_room,
+                                             p3_nw_closed_room_locs)
 
     p3_nw_n_bronze_gate_locs = [
         CastleLocationNames.p3_nw_n_bronze_gate_1,
@@ -364,15 +425,8 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
 
     p3_n_gold_gate_locs = [
         CastleLocationNames.p3_by_w_shop,
-        CastleLocationNames.p3_red_spike_room,
-        CastleLocationNames.p3_spike_trap_1,
-        CastleLocationNames.p3_spike_trap_2,
-        CastleLocationNames.p3_spike_trap_3,
         CastleLocationNames.p3_ne_se_1,
         CastleLocationNames.p3_ne_se_2,
-        CastleLocationNames.p3_ne_of_bridge_1,
-        CastleLocationNames.p3_ne_of_bridge_2,
-        CastleLocationNames.p3_secret_secret,
         CastleLocationNames.p3_se_cross_hall_e_1,
         CastleLocationNames.p3_se_cross_hall_e_2,
         CastleLocationNames.p3_se_cross_hall_s_1,
@@ -384,6 +438,58 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p3_arrow_hall_2,
         CastleLocationNames.p3_se_m_1,
         CastleLocationNames.p3_se_m_2,
+        CastleLocationNames.p3_ne_e_1,
+        CastleLocationNames.p3_ne_e_2,
+        CastleLocationNames.p3_ne_e_3,
+        CastleLocationNames.p3_ne_e_4,
+        CastleLocationNames.p3_s_of_e_poker_1,
+        CastleLocationNames.p3_s_of_e_poker_2,
+        CastleLocationNames.p3_se_of_w_shop,
+        CastleLocationNames.p3_sw_of_w_shop,
+        CastleLocationNames.p3_miniboss_tick_1,
+        CastleLocationNames.p3_miniboss_tick_2,
+        CastleLocationNames.p3_tower_plant_2,
+        CastleLocationNames.p3_tower_plant_5,
+        CastleLocationNames.p3_tower_plant_6,
+        CastleLocationNames.p3_tower_plant_7,
+    ]
+    p3_n_gold_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_n_gold_gate,
+                                          p3_n_gold_gate_locs)
+
+    p3_rspikes_locs = [
+        CastleLocationNames.p3_red_spike_room,
+    ]
+    p3_rspikes_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_rspikes,
+                                      p3_rspikes_locs)
+
+    p3_rspikes_room_locs = [
+        CastleLocationNames.p3_tower_plant_4,
+    ]
+    p3_rspikes_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_rspikes_room,
+                                           p3_rspikes_room_locs)
+
+    p3_bonus_locs = [
+    ]
+    p3_bonus_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_bonus, p3_bonus_locs)
+
+    p3_arrow_hall_secret_locs = [
+    ]
+    p3_arrow_hall_secret_region = create_region(multiworld, player, active_locations,
+                                                CastleRegionNames.p3_arrow_hall_secret, p3_arrow_hall_secret_locs)
+
+    p3_spikes_s_locs = [
+        CastleLocationNames.p3_spike_trap_1,
+        CastleLocationNames.p3_spike_trap_2,
+        CastleLocationNames.p3_spike_trap_3,
+        CastleLocationNames.p3_by_m_shop_1,
+        CastleLocationNames.p3_by_m_shop_2,
+    ]
+    p3_spikes_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_spikes_s,
+                                       p3_spikes_s_locs)
+
+    p3_sw_locs = [
+        CastleLocationNames.p3_ne_of_bridge_1,
+        CastleLocationNames.p3_ne_of_bridge_2,
         CastleLocationNames.p3_w_of_w_poker,
         CastleLocationNames.p3_s_of_w_poker,
         CastleLocationNames.p3_nw_of_bridge,
@@ -393,34 +499,26 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.p3_n_of_bridge_4,
         CastleLocationNames.p3_n_of_bridge_5,
         CastleLocationNames.p3_w_of_bridge,
-        CastleLocationNames.p3_ne_e_1,
-        CastleLocationNames.p3_ne_e_2,
-        CastleLocationNames.p3_ne_e_3,
-        CastleLocationNames.p3_ne_e_4,
         CastleLocationNames.p3_e_of_bridge_1,
         CastleLocationNames.p3_e_of_bridge_2,
         CastleLocationNames.p3_e_of_bridge_3,
         CastleLocationNames.p3_s_of_boss_door,
-        CastleLocationNames.p3_secret_arrow_hall_1,
-        CastleLocationNames.p3_secret_arrow_hall_2,
-        CastleLocationNames.p3_s_of_e_poker_1,
-        CastleLocationNames.p3_s_of_e_poker_2,
-        CastleLocationNames.p3_se_of_w_shop,
-        CastleLocationNames.p3_sw_of_w_shop,
-        CastleLocationNames.p3_by_m_shop_1,
-        CastleLocationNames.p3_by_m_shop_2,
-        CastleLocationNames.p3_miniboss_tick_1,
-        CastleLocationNames.p3_miniboss_tick_2,
-        CastleLocationNames.p3_tower_plant_2,
         CastleLocationNames.p3_tower_plant_3,
-        CastleLocationNames.p3_tower_plant_4,
-        CastleLocationNames.p3_tower_plant_5,
-        CastleLocationNames.p3_tower_plant_6,
-        CastleLocationNames.p3_tower_plant_7,
         CastleLocationNames.p3_tower_plant_8,
     ]
-    p3_n_gold_gate_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_n_gold_gate,
-                                          p3_n_gold_gate_locs)
+    p3_sw_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_sw, p3_sw_locs)
+
+    p3_exit_s_locs = [
+    ]
+    p3_exit_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_exit_s, p3_exit_s_locs)
+
+    p3_hidden_arrow_hall_locs = [
+        CastleLocationNames.p3_secret_secret,
+        CastleLocationNames.p3_secret_arrow_hall_1,
+        CastleLocationNames.p3_secret_arrow_hall_2,
+    ]
+    p3_hidden_arrow_hall_region = create_region(multiworld, player, active_locations,
+                                                CastleRegionNames.p3_hidden_arrow_hall, p3_hidden_arrow_hall_locs)
 
     p3_s_gold_gate_locs = [
         CastleLocationNames.ev_p3_boss_switch
@@ -458,10 +556,15 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     n1_room1_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room1, n1_room1_locs)
 
     n1_room2_locs = [
-        CastleLocationNames.n1_room2_small_box,
         CastleLocationNames.n1_room2_s_1,
         CastleLocationNames.n1_room2_s_2,
         CastleLocationNames.n1_room2_s_3,
+        CastleLocationNames.n1_room2_n_secret_room,
+    ]
+    n1_room2_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room2, n1_room2_locs)
+
+    n1_room2_unlock_locs = [
+        CastleLocationNames.n1_room2_small_box,
         CastleLocationNames.n1_room2_nw_room_1,
         CastleLocationNames.n1_room2_nw_room_2,
         CastleLocationNames.n1_room2_nw_room_3,
@@ -474,9 +577,9 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.n1_room2_n_m_room_4,
         CastleLocationNames.n1_room2_n_m_room_5,
         CastleLocationNames.n1_room2_n_m_room_6,
-        CastleLocationNames.n1_room2_n_secret_room,
     ]
-    n1_room2_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room2, n1_room2_locs)
+    n1_room2_unlock_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room2_unlock,
+                                           n1_room2_unlock_locs)
 
     n1_room3_locs = [
         CastleLocationNames.n1_room3_w_1,
@@ -499,12 +602,22 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.n1_room3_w_18,
         CastleLocationNames.n1_room3_w_19,
         CastleLocationNames.n1_room3_w_20,
+    ]
+    n1_room3_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room3, n1_room3_locs)
+
+    n1_room3_unlock_locs = [
         CastleLocationNames.n1_room3_sealed_room_1,
         CastleLocationNames.n1_room3_sealed_room_2,
         CastleLocationNames.n1_room3_sealed_room_3,
         CastleLocationNames.n1_room3_sealed_room_4,
     ]
-    n1_room3_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room3, n1_room3_locs)
+    n1_room3_unlock_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room3_unlock,
+                                           n1_room3_unlock_locs)
+
+    n1_room3_hall_locs = [
+    ]
+    n1_room3_hall_region = create_region(multiworld, player, active_locations, CastleRegionNames.n1_room3_hall,
+                                         n1_room3_hall_locs)
 
     n1_room4_locs = [
         CastleLocationNames.n1_room4_e,
@@ -535,10 +648,26 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
                                        b1_defeated_locs)
 
     a1_start_locs = [
+    ]
+    a1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start, a1_start_locs)
+
+    a1_start_shop_w_locs = []  # Start bronze gate shop
+    a1_start_shop_w_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start_shop_w,
+                                           a1_start_shop_w_locs)
+
+    a1_start_shop_m_locs = []  # Start top gold gate shop
+    a1_start_shop_m_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start_shop_m,
+                                           a1_start_shop_m_locs)
+
+    a1_start_shop_e_locs = []  # Start bottom gold gate shop
+    a1_start_shop_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start_shop_e,
+                                           a1_start_shop_e_locs)
+
+    a1_se_locs = [
         CastleLocationNames.a1_s_save_1,
         CastleLocationNames.a1_s_save_2,
     ]
-    a1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_start, a1_start_locs)
+    a1_se_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_se, a1_se_locs)
 
     a1_e_locs = [
         CastleLocationNames.a1_m_trellis_secret,
@@ -565,7 +694,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a1_ne_3,
         CastleLocationNames.a1_e_e,
         CastleLocationNames.a1_e_se,
-        CastleLocationNames.a1_n_tp,
         CastleLocationNames.a1_ne_ice_tower_secret,
         CastleLocationNames.a1_miniboss_skeleton_1,
         CastleLocationNames.a1_miniboss_skeleton_2,
@@ -573,6 +701,28 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a1_tower_ice_4,
     ]
     a1_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e, a1_e_locs)
+
+    a1_e_sw_bgate_locs = []
+    a1_e_sw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e_sw_bgate,
+                                         a1_e_sw_bgate_locs)
+
+    a1_e_s_bgate_locs = []
+    a1_e_s_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e_s_bgate,
+                                        a1_e_s_bgate_locs)
+
+    a1_e_se_bgate_locs = []
+    a1_e_se_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e_se_bgate,
+                                         a1_e_se_bgate_locs)
+
+    a1_e_e_bgate_locs = []
+    a1_e_e_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_e_e_bgate,
+                                        a1_e_e_bgate_locs)
+
+    a1_rune_room_locs = [
+
+    ]
+    a1_rune_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_rune_room,
+                                        a1_rune_room_locs)
 
     a1_se_cache_locs = [
         CastleLocationNames.a1_se_cache_1,
@@ -611,6 +761,11 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     a1_n_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_n_bgate,
                                       a1_n_bgate_locs)
 
+    a1_tp_n_locs = [
+        CastleLocationNames.a1_n_tp,
+    ]
+    a1_tp_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_tp_n, a1_tp_n_locs)
+
     a1_w_locs = [
         CastleLocationNames.a1_nw_left_1,
         CastleLocationNames.a1_nw_left_2,
@@ -628,21 +783,37 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a1_sw_w_2,
         CastleLocationNames.a1_w_save_1,
         CastleLocationNames.a1_w_save_2,
-        CastleLocationNames.a1_puzzle_1,
-        CastleLocationNames.a1_puzzle_2,
-        CastleLocationNames.a1_puzzle_3,
-        CastleLocationNames.a1_puzzle_4,
         CastleLocationNames.a1_tower_ice_1,
         CastleLocationNames.a1_tower_ice_2,
         CastleLocationNames.ev_a1_boss_switch,
     ]
     a1_w_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_w, a1_w_locs)
 
+    a1_puzzle_locs = [
+        CastleLocationNames.a1_puzzle_1,
+        CastleLocationNames.a1_puzzle_2,
+        CastleLocationNames.a1_puzzle_3,
+        CastleLocationNames.a1_puzzle_4,
+    ]
+    a1_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_puzzle, a1_puzzle_locs)
+
+    a1_w_ne_bgate_locs = []
+    a1_w_ne_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_w_ne_bgate,
+                                         a1_w_ne_bgate_locs)
+
     a1_nw_bgate_locs = [
         CastleLocationNames.a1_nw_bgate
     ]
     a1_nw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_nw_bgate,
                                        a1_nw_bgate_locs)
+
+    a1_w_se_bgate_locs = []
+    a1_w_se_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_w_se_bgate,
+                                         a1_w_se_bgate_locs)
+
+    a1_w_sw_bgate_locs = []
+    a1_w_sw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a1_w_sw_bgate,
+                                         a1_w_sw_bgate_locs)
 
     a1_sw_spikes_locs = [
         CastleLocationNames.a1_sw_spikes
@@ -666,7 +837,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a2_s_fire_trap_1,
         CastleLocationNames.a2_s_fire_trap_2,
         CastleLocationNames.a2_sw_ice_tower,
-        CastleLocationNames.a2_sw_ice_tower_tp,
         CastleLocationNames.a2_s_ice_tower_1,
         CastleLocationNames.a2_s_ice_tower_2,
         CastleLocationNames.a2_s_ice_tower_3,
@@ -676,21 +846,46 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a2_e_of_s_save_2,
         CastleLocationNames.a2_e_of_s_save_3,
         CastleLocationNames.a2_e_of_s_save_4,
-        CastleLocationNames.a2_se_tp,
-        CastleLocationNames.a2_puzzle_1,
-        CastleLocationNames.a2_puzzle_2,
-        CastleLocationNames.a2_puzzle_3,
-        CastleLocationNames.a2_puzzle_4,
         CastleLocationNames.a2_tower_ice_3,
         CastleLocationNames.a2_tower_ice_5,
     ]
     a2_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_start, a2_start_locs)
+
+    a2_puzzle_locs = [
+        CastleLocationNames.a2_puzzle_1,
+        CastleLocationNames.a2_puzzle_2,
+        CastleLocationNames.a2_puzzle_3,
+        CastleLocationNames.a2_puzzle_4,
+    ]
+    a2_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_puzzle, a2_puzzle_locs)
+
+    a2_tp_sw_locs = [
+        CastleLocationNames.a2_sw_ice_tower_tp,
+    ]
+    a2_tp_sw_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_tp_sw, a2_tp_sw_locs)
+
+    a2_tp_se_locs = [
+        CastleLocationNames.a2_se_tp,
+    ]
+    a2_tp_se_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_tp_se, a2_tp_se_locs)
+
+    a2_sw_bgate_locs = []
+    a2_sw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_sw_bgate,
+                                       a2_sw_bgate_locs)
 
     a2_s_bgate_locs = [
         CastleLocationNames.a2_s_bgate,
     ]
     a2_s_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_s_bgate,
                                       a2_s_bgate_locs)
+
+    a2_se_bgate_locs = []
+    a2_se_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_se_bgate,
+                                       a2_se_bgate_locs)
+
+    a2_s_save_bgate_locs = []
+    a2_s_save_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_s_save_bgate,
+                                           a2_s_save_bgate_locs)
 
     a2_ne_locs = [
         CastleLocationNames.a2_s_of_n_save_1,
@@ -722,7 +917,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a2_se_of_e_ice_tower_1,
         CastleLocationNames.a2_se_of_e_ice_tower_2,
         CastleLocationNames.a2_se_of_e_ice_tower_3,
-        CastleLocationNames.a2_ne_tp,
         CastleLocationNames.a2_miniboss_skeleton_1,
         CastleLocationNames.a2_miniboss_skeleton_2,
         CastleLocationNames.a2_tower_ice_2,
@@ -730,6 +924,10 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.ev_a2_boss_switch,
     ]
     a2_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne, a2_ne_locs)
+
+    a2_ne_m_bgate_locs = []
+    a2_ne_m_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_m_bgate,
+                                         a2_ne_m_bgate_locs)
 
     a2_ne_l_bgate_locs = [
         CastleLocationNames.a2_ne_l_bgate,
@@ -743,6 +941,19 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     a2_ne_r_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_r_bgate,
                                          a2_ne_r_bgate_locs)
+
+    a2_ne_b_bgate_locs = []
+    a2_ne_b_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_b_bgate,
+                                         a2_ne_b_bgate_locs)
+
+    a2_ne_save_bgate_locs = []
+    a2_ne_save_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne_save_bgate,
+                                            a2_ne_save_bgate_locs)
+
+    a2_tp_ne_locs = [
+        CastleLocationNames.a2_ne_tp,
+    ]
+    a2_tp_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_tp_ne, a2_tp_ne_locs)
 
     a2_e_locs = [
         CastleLocationNames.a2_e_ice_tower_1,
@@ -780,10 +991,18 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
 
     a2_blue_spikes_locs = [
         CastleLocationNames.a2_blue_spikes,
-        CastleLocationNames.a2_nw_tp,
     ]
     a2_blue_spikes_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_blue_spikes,
                                           a2_blue_spikes_locs)
+
+    a2_blue_spikes_tp_locs = [
+        CastleLocationNames.a2_nw_tp,
+    ]
+    a2_blue_spikes_tp_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_blue_spikes_tp,
+                                             a2_blue_spikes_tp_locs)
+
+    a2_to_a3_locs = []
+    a2_to_a3_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_to_a3, a2_to_a3_locs)
 
     n2_start_locs = [
         CastleLocationNames.n2_start_1,
@@ -902,6 +1121,21 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     n2_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_ne, n2_ne_locs)
 
+    n2_se_locs = [
+    ]
+    n2_se_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_se, n2_se_locs)
+
+    n2_exit_locs = [
+    ]
+    n2_exit_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_exit, n2_exit_locs)
+
+    a3_start_locs = [
+        CastleLocationNames.a3_sw_1,
+        CastleLocationNames.a3_sw_2,
+        CastleLocationNames.a3_sw_3,
+    ]
+    a3_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_start, a3_start_locs)
+
     a3_main_locs = [
         CastleLocationNames.a3_s_banner_secret,
         CastleLocationNames.a3_nw_save_2,
@@ -914,7 +1148,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a3_pyramids_s_3,
         CastleLocationNames.a3_e_ice_towers_1,
         CastleLocationNames.a3_e_ice_towers_2,
-        CastleLocationNames.a3_sw_3,
         CastleLocationNames.a3_spike_floor_8,
         CastleLocationNames.a3_spike_floor_15,
         CastleLocationNames.a3_spike_floor_11,
@@ -942,8 +1175,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a3_pyramids_n_4,
         CastleLocationNames.a3_pyramids_s_6,
         CastleLocationNames.a3_pyramids_s_7,
-        CastleLocationNames.a3_sw_1,
-        CastleLocationNames.a3_sw_2,
         CastleLocationNames.a3_se_boss_room_1,
         CastleLocationNames.a3_se_boss_room_2,
         CastleLocationNames.a3_spike_floor_6,
@@ -958,7 +1189,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.a3_fireball_hall_1,
         CastleLocationNames.a3_e_of_spike_floor,
         CastleLocationNames.a3_spike_floor_10,
-        CastleLocationNames.a3_m_tp,
         CastleLocationNames.a3_miniboss_skeleton_1,
         CastleLocationNames.a3_miniboss_skeleton_2,
         CastleLocationNames.a3_tower_ice_1,
@@ -974,22 +1204,62 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     a3_main_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_main, a3_main_locs)
 
+    a3_tp_locs = [
+        CastleLocationNames.a3_m_tp,
+    ]
+    a3_tp_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_tp, a3_tp_locs)
+
+    a3_from_a2_locs = [
+        # Bgate teleport button
+    ]
+    a3_from_a2_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_from_a2,
+                                      a3_from_a2_locs)
+
     a3_knife_puzzle_reward_locs = [
-        CastleLocationNames.a3_knife_puzzle_reward_l_1,
-        CastleLocationNames.a3_knife_puzzle_reward_l_2,
-        CastleLocationNames.a3_knife_puzzle_reward_l_3,
-        CastleLocationNames.a3_knife_puzzle_reward_l_4,
         CastleLocationNames.a3_knife_puzzle_reward_l_5,
         CastleLocationNames.a3_knife_puzzle_reward_r,
     ]
     a3_knife_puzzle_reward_region = create_region(multiworld, player, active_locations,
                                                   CastleRegionNames.a3_knife_puzzle_reward, a3_knife_puzzle_reward_locs)
 
-    a3_pyramids_s_bgate_locs = [
+    a3_knife_reward_2_locs = [
+        CastleLocationNames.a3_knife_puzzle_reward_l_1,
+        CastleLocationNames.a3_knife_puzzle_reward_l_2,
+        CastleLocationNames.a3_knife_puzzle_reward_l_3,
+        CastleLocationNames.a3_knife_puzzle_reward_l_4,
+    ]
+    a3_knife_reward_2_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_knife_reward_2,
+                                             a3_knife_reward_2_locs)
+
+    a3_w_b_bgate_locs = [
         CastleLocationNames.a3_pyramids_s_bgate_tp
     ]
-    a3_pyramids_s_bgate_region = create_region(multiworld, player, active_locations,
-                                               CastleRegionNames.a3_pyramids_s_bgate, a3_pyramids_s_bgate_locs)
+    a3_w_b_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_w_b_bgate,
+                                        a3_w_b_bgate_locs)
+
+    a3_w_t_bgate_locs = []
+    a3_w_t_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_w_t_bgate,
+                                        a3_w_t_bgate_locs)
+
+    a3_w_r_bgate_locs = []
+    a3_w_r_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_w_r_bgate,
+                                        a3_w_r_bgate_locs)
+
+    a3_n_l_bgate_locs = []
+    a3_n_l_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_n_l_bgate,
+                                        a3_n_l_bgate_locs)
+
+    a3_n_r_bgate_locs = []
+    a3_n_r_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_n_r_bgate,
+                                        a3_n_r_bgate_locs)
+
+    a3_e_l_bgate_locs = []
+    a3_e_l_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_e_l_bgate,
+                                        a3_e_l_bgate_locs)
+
+    a3_e_r_bgate_locs = []
+    a3_e_r_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.a3_e_r_bgate,
+                                        a3_e_r_bgate_locs)
 
     b2_start_locs = [
     ]
@@ -1015,6 +1285,10 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.r1_se_6,
     ]
     r1_start_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_start, r1_start_locs)
+
+    r1_se_ggate_locs = []
+    r1_se_ggate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_se_ggate,
+                                       r1_se_ggate_locs)
 
     r1_start_wall_locs = [
         CastleLocationNames.r1_start_wall
@@ -1094,6 +1368,10 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     r1_nw_hidden_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_nw_hidden,
                                         r1_nw_hidden_locs)
 
+    r1_nw_ggate_locs = []
+    r1_nw_ggate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_nw_ggate,
+                                       r1_nw_ggate_locs)
+
     r1_sw_locs = [
         CastleLocationNames.r1_sw_nw_1,
         CastleLocationNames.r1_sw_nw_2,
@@ -1125,6 +1403,16 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     r1_w_sgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_w_sgate,
                                       r1_w_sgate_locs)
+
+    r1_sw_ggate_locs = []
+    r1_sw_ggate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_sw_ggate,
+                                       r1_sw_ggate_locs)
+
+    r1_exit_l_locs = []
+    r1_exit_l_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_exit_l, r1_exit_l_locs)
+
+    r1_exit_r_locs = []
+    r1_exit_r_region = create_region(multiworld, player, active_locations, CastleRegionNames.r1_exit_r, r1_exit_r_locs)
 
     r2_start_locs = [
         CastleLocationNames.r2_start
@@ -1199,11 +1487,15 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     r2_nw_locs = [
         CastleLocationNames.r2_nw_spike_trap_1,
         CastleLocationNames.r2_nw_spike_trap_2,
-        CastleLocationNames.r2_n_closed_room,
         CastleLocationNames.r2_tower_plant_1,
-        CastleLocationNames.ev_r2_boss_switch,
     ]
     r2_nw_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_nw, r2_nw_locs)
+
+    r2_n_locs = [
+        CastleLocationNames.r2_n_closed_room,
+        CastleLocationNames.ev_r2_boss_switch,
+    ]
+    r2_n_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_n, r2_n_locs)
 
     r2_e_locs = [
         CastleLocationNames.r2_e_1,
@@ -1214,12 +1506,14 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     r2_e_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_e, r2_e_locs)
 
+    r2_w_bgate_locs = []
+    r2_w_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_w_bgate,
+                                      r2_w_bgate_locs)
+
+    r2_sgate_locs = []
+    r2_sgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_sgate, r2_sgate_locs)
+
     r2_s_locs = [
-        CastleLocationNames.r2_s_knife_trap_1,
-        CastleLocationNames.r2_s_knife_trap_2,
-        CastleLocationNames.r2_s_knife_trap_3,
-        CastleLocationNames.r2_s_knife_trap_4,
-        CastleLocationNames.r2_s_knife_trap_5,
         CastleLocationNames.r2_sw_1,
         CastleLocationNames.r2_sw_2,
         CastleLocationNames.r2_sw_3,
@@ -1232,27 +1526,55 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.r2_sw_10,
         CastleLocationNames.r2_sw_11,
         CastleLocationNames.r2_sw_12,
-        CastleLocationNames.r2_puzzle_1,
-        CastleLocationNames.r2_puzzle_2,
-        CastleLocationNames.r2_puzzle_3,
-        CastleLocationNames.r2_puzzle_4,
-        CastleLocationNames.r2_w_island,
         CastleLocationNames.r2_tower_plant_5,
     ]
     r2_s_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_s, r2_s_locs)
 
+    r2_spike_island_locs = [
+        CastleLocationNames.r2_s_knife_trap_1,
+        CastleLocationNames.r2_s_knife_trap_2,
+        CastleLocationNames.r2_s_knife_trap_3,
+        CastleLocationNames.r2_s_knife_trap_4,
+        CastleLocationNames.r2_s_knife_trap_5,
+    ]
+    r2_spike_island_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_spike_island,
+                                           r2_spike_island_locs)
+
+    r2_sw_bridge_locs = []
+    r2_sw_bridge_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_sw_bridge,
+                                        r2_sw_bridge_locs)
+
+    r2_puzzle_locs = [
+        CastleLocationNames.r2_puzzle_1,
+        CastleLocationNames.r2_puzzle_2,
+        CastleLocationNames.r2_puzzle_3,
+        CastleLocationNames.r2_puzzle_4,
+    ]
+    r2_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_puzzle, r2_puzzle_locs)
+
+    r2_w_locs = [
+        CastleLocationNames.r2_w_island,
+    ]
+    r2_w_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_w, r2_w_locs)
+
     r2_from_r3_locs = [
-        CastleLocationNames.r2_ne_knife_trap_wall_1,
-        CastleLocationNames.r2_ne_knife_trap_wall_2,
-        CastleLocationNames.r2_ne_knife_trap_wall_3,
         CastleLocationNames.r2_ne_knife_trap_end,
     ]
     r2_from_r3_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_from_r3,
                                       r2_from_r3_locs)
 
+    r2_ne_cache_locs = [
+        CastleLocationNames.r2_ne_knife_trap_wall_1,
+        CastleLocationNames.r2_ne_knife_trap_wall_2,
+        CastleLocationNames.r2_ne_knife_trap_wall_3,
+    ]
+    r2_ne_cache_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_ne_cache,
+                                       r2_ne_cache_locs)
+
+    r2_ggate_locs = []
+    r2_ggate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r2_ggate, r2_ggate_locs)
+
     r3_main_locs = [
-        CastleLocationNames.r3_e_secret_tp,
-        CastleLocationNames.r3_e_shops_puzzle_reward,
         CastleLocationNames.r3_ne_knife_trap_1,
         CastleLocationNames.r3_ne_knife_trap_2,
         CastleLocationNames.r3_e_fire_floor_n_1,
@@ -1260,15 +1582,12 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.r3_sw_bgate_3,
         CastleLocationNames.r3_sw_bgate_4,
         CastleLocationNames.r3_sw_bgate_5,
-        CastleLocationNames.r3_s_shops_room_1,
-        CastleLocationNames.r3_s_shops_room_2,
         CastleLocationNames.r3_n_bgate_e,
         CastleLocationNames.r3_w_fire_floor_1,
         CastleLocationNames.r3_start,
         CastleLocationNames.r3_e_miniboss,
         CastleLocationNames.r3_e_fire_floor_w,
         CastleLocationNames.r3_nw_save_2,
-        CastleLocationNames.r3_e_tp,
         CastleLocationNames.r3_ne_save_1,
         CastleLocationNames.r3_ne_save_2,
         CastleLocationNames.r3_start_nw_3,
@@ -1294,7 +1613,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.r3_nw_save_1,
         CastleLocationNames.r3_n_miniboss_1,
         CastleLocationNames.r3_e_shops_3,
-        CastleLocationNames.r3_e_fire_floor_secret,
         CastleLocationNames.r3_shops_room_secret,
         CastleLocationNames.r3_miniboss_eye_e_1,
         CastleLocationNames.r3_miniboss_eye_e_2,
@@ -1314,6 +1632,19 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     r3_main_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_main, r3_main_locs)
 
+    r3_ne_room_locs = [
+        CastleLocationNames.r3_e_secret_tp,
+        CastleLocationNames.r3_e_tp,
+    ]
+    r3_ne_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_ne_room,
+                                      r3_ne_room_locs)
+
+    r3_s_room_locs = [
+        CastleLocationNames.r3_s_shops_room_1,
+        CastleLocationNames.r3_s_shops_room_2,
+    ]
+    r3_s_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_s_room, r3_s_room_locs)
+
     r3_w_ggate_locs = [
         CastleLocationNames.r3_s_of_boss_door_1,
         CastleLocationNames.r3_s_of_boss_door_2,
@@ -1332,14 +1663,34 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
                                       r3_e_ggate_locs)
 
     r3_sw_bgate_locs = [
-        CastleLocationNames.r3_w_passage_behind_spikes,
-        CastleLocationNames.r3_w_passage_s_closed_room,
-        CastleLocationNames.r3_nw_tp,
-        CastleLocationNames.r3_sw_hidden_room_1,
-        CastleLocationNames.r3_sw_hidden_room_2,
     ]
     r3_sw_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_sw_bgate,
                                        r3_sw_bgate_locs)
+
+    r3_sw_wall_r_locs = [
+        CastleLocationNames.r3_sw_hidden_room_1,
+        CastleLocationNames.r3_sw_hidden_room_2,
+    ]
+    r3_sw_wall_r_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_sw_wall_r,
+                                        r3_sw_wall_r_locs)
+
+    r3_sw_wall_l_locs = [
+        CastleLocationNames.r3_w_passage_behind_spikes,
+        CastleLocationNames.r3_w_passage_s_closed_room,
+    ]
+    r3_sw_wall_l_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_sw_wall_l,
+                                        r3_sw_wall_l_locs)
+
+    r3_nw_tp_locs = [
+        CastleLocationNames.r3_nw_tp,
+    ]
+    r3_nw_tp_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_nw_tp, r3_nw_tp_locs)
+
+    r3_se_cache_locs = [
+        CastleLocationNames.r3_e_fire_floor_secret,
+    ]
+    r3_se_cache_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_se_cache,
+                                       r3_se_cache_locs)
 
     r3_boss_switch_locs = [
         CastleLocationNames.r3_boss_switch_room_1,
@@ -1349,14 +1700,20 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     r3_boss_switch_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_boss_switch,
                                           r3_boss_switch_locs)
 
+    r3_rune_room_locs = []
+    r3_rune_room_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_rune_room,
+                                        r3_rune_room_locs)
+
+    r3_bonus_locs = []
+    r3_bonus_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_bonus, r3_bonus_locs)
+
     r3_l_shop_sgate_locs = [
         CastleLocationNames.r3_s_shops_room_left_shop,
     ]
     r3_l_shop_sgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_l_shop_sgate,
                                            r3_l_shop_sgate_locs)
-    # Shop region
-    r3_r_shop_sgate_locs = [
-    ]
+
+    r3_r_shop_sgate_locs = []
     r3_r_shop_sgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_r_shop_sgate,
                                            r3_r_shop_sgate_locs)
 
@@ -1366,6 +1723,15 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     ]
     r3_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_bonus_return,
                                            r3_bonus_return_locs)
+
+    r3_bonus_return_bridge_locs = [
+        CastleLocationNames.r3_e_shops_puzzle_reward,
+    ]
+    r3_bonus_return_bridge_region = create_region(multiworld, player, active_locations,
+                                                  CastleRegionNames.r3_bonus_return_bridge, r3_bonus_return_bridge_locs)
+
+    r3_exit_locs = []
+    r3_exit_region = create_region(multiworld, player, active_locations, CastleRegionNames.r3_exit, r3_exit_locs)
 
     n3_main_locs = [
         CastleLocationNames.n3_tp_room_n_1,
@@ -1585,7 +1951,6 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.c2_ne_platform_4,
         CastleLocationNames.c2_by_tp_island_1,
         CastleLocationNames.c2_w_spikes_s_7,
-        CastleLocationNames.c2_w_save_wall,
         CastleLocationNames.c2_w_knife_traps_2,
         CastleLocationNames.c2_w_knife_traps_4,
         CastleLocationNames.c2_s_1,
@@ -1646,16 +2011,33 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.c2_tower_ice_9,
         CastleLocationNames.c2_tower_ice_10,
         CastleLocationNames.c2_tower_ice_11,
-        CastleLocationNames.ev_c2_n_tp_button,
+        CastleLocationNames.c2_by_e_shops_2_1,
+        CastleLocationNames.c2_by_e_shops_2_2,
         CastleLocationNames.ev_c2_boss_switch
     ]
     c2_main_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_main, c2_main_locs)
+
+    c2_exit_bgate_locs = [
+        CastleLocationNames.btnc_c2_n_open_wall,
+    ]
+    c2_exit_bgate_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_exit_bgate,
+                                         c2_exit_bgate_locs)
 
     c2_sw_wall_locs = [
         CastleLocationNames.c2_sw_ice_tower_6,
     ]
     c2_sw_wall_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_sw_wall,
                                       c2_sw_wall_locs)
+
+    c2_w_wall_locs = [
+        CastleLocationNames.c2_w_save_wall,
+    ]
+    c2_w_wall_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_w_wall, c2_w_wall_locs)
+
+    c2_e_wall_locs = [
+        CastleLocationNames.c2_by_e_shops_2,
+    ]
+    c2_e_wall_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_e_wall, c2_e_wall_locs)
 
     c2_w_spikes_locs = [
         CastleLocationNames.c2_w_spikes_1,
@@ -1685,22 +2067,21 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     c2_w_shops_3_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_w_shops_3,
                                         c2_w_shops_3_locs)
 
-    c2_e_shops_1_locs = [
+    c2_e_shops_1_locs = []
+    c2_e_shops_1_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_e_shops_1,
+                                        c2_e_shops_1_locs)
+
+    c2_e_shops_2_locs = []
+    c2_e_shops_2_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_e_shops_2,
+                                        c2_e_shops_2_locs)
+
+    c2_puzzle_locs = [
         CastleLocationNames.c2_puzzle_1,
         CastleLocationNames.c2_puzzle_2,
         CastleLocationNames.c2_puzzle_3,
         CastleLocationNames.c2_puzzle_4,
     ]
-    c2_e_shops_1_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_e_shops_1,
-                                        c2_e_shops_1_locs)
-
-    c2_e_shops_2_locs = [
-        CastleLocationNames.c2_by_e_shops_2,
-        CastleLocationNames.c2_by_e_shops_2_1,
-        CastleLocationNames.c2_by_e_shops_2_2,
-    ]
-    c2_e_shops_2_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_e_shops_2,
-                                        c2_e_shops_2_locs)
+    c2_puzzle_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_puzzle, c2_puzzle_locs)
 
     c2_n_locs = [
         CastleLocationNames.c2_nw_ledge_1,
@@ -1728,6 +2109,9 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.c2_n_wall
     ]
     c2_n_wall_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_n_wall, c2_n_wall_locs)
+
+    c2_bonus_locs = []
+    c2_bonus_region = create_region(multiworld, player, active_locations, CastleRegionNames.c2_bonus, c2_bonus_locs)
 
     c2_bonus_return_locs = [
         CastleLocationNames.c2_bonus_return
@@ -2051,6 +2435,7 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
     multiworld.regions += [
         menu_region,
         p1_start_region,
+        p1_nw_region,
         p1_s_region,
         p1_sw_bronze_gate_region,
         p1_e_region,
@@ -2060,51 +2445,99 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         p1_from_p3_s_region,
         p2_start_region,
         p2_m_region,
+        p2_p1_return_region,
         p2_n_region,
+        p2_spike_puzzle_bottom_region,
+        p2_spike_puzzle_left_region,
+        p2_spike_puzzle_top_region,
         p2_red_switch_region,
+        p2_puzzle_region,
         p2_e_bronze_gate_region,
+        p2_e_save_region,
         p2_s_region,
         p2_e_bronze_gate_2_region,
         p2_m_bronze_gate_region,
         p2_se_bronze_gate_region,
         p2_gg_room_reward_region,
+        p2_w_treasure_region,
+        p2_w_treasure_tp_region,
+        p2_tp_puzzle_region,
         p2_end_region,
+        p3_start_door_region,
         p3_start_region,
+        p3_nw_closed_room_region,
         p3_nw_n_bronze_gate_region,
         p3_nw_s_bronze_gate_region,
         p3_s_bronze_gate_region,
         p3_silver_gate_region,
         p3_n_gold_gate_region,
+        p3_rspikes_region,
+        p3_rspikes_room_region,
+        p3_bonus_region,
+        p3_arrow_hall_secret_region,
+        p3_spikes_s_region,
+        p3_sw_region,
+        p3_exit_s_region,
+        p3_hidden_arrow_hall_region,
         p3_s_gold_gate_region,
         p3_bonus_return_region,
         n1_start_region,
         n1_room1_region,
         n1_room2_region,
+        n1_room2_unlock_region,
         n1_room3_region,
+        n1_room3_unlock_region,
+        n1_room3_hall_region,
         n1_room4_region,
         b1_start_region,
         b1_arena_region,
         b1_defeated_region,
         a1_start_region,
+        a1_start_shop_w_region,
+        a1_start_shop_m_region,
+        a1_start_shop_e_region,
+        a1_se_region,
         a1_e_region,
+        a1_e_sw_bgate_region,
+        a1_e_s_bgate_region,
+        a1_e_se_bgate_region,
+        a1_e_e_bgate_region,
+        a1_rune_room_region,
         a1_se_cache_region,
         a1_e_ne_bgate_region,
         a1_red_spikes_region,
         a1_n_bgate_region,
+        a1_tp_n_region,
         a1_w_region,
+        a1_puzzle_region,
+        a1_w_ne_bgate_region,
         a1_nw_bgate_region,
+        a1_w_se_bgate_region,
+        a1_w_sw_bgate_region,
         a1_sw_spikes_region,
         a1_from_a2_region,
         a2_start_region,
+        a2_puzzle_region,
+        a2_tp_sw_region,
+        a2_tp_se_region,
+        a2_sw_bgate_region,
         a2_s_bgate_region,
+        a2_se_bgate_region,
+        a2_s_save_bgate_region,
         a2_ne_region,
+        a2_ne_m_bgate_region,
         a2_ne_l_bgate_region,
         a2_ne_r_bgate_region,
+        a2_ne_b_bgate_region,
+        a2_ne_save_bgate_region,
+        a2_tp_ne_region,
         a2_e_region,
         a2_e_bgate_region,
         a2_nw_region,
         a2_bonus_return_region,
         a2_blue_spikes_region,
+        a2_blue_spikes_tp_region,
+        a2_to_a3_region,
         n2_start_region,
         n2_m_region,
         n2_nw_region,
@@ -2113,13 +2546,26 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         n2_s_region,
         n2_w_region,
         n2_ne_region,
+        n2_se_region,
+        n2_exit_region,
+        a3_start_region,
         a3_main_region,
+        a3_tp_region,
+        a3_from_a2_region,
         a3_knife_puzzle_reward_region,
-        a3_pyramids_s_bgate_region,
+        a3_knife_reward_2_region,
+        a3_w_t_bgate_region,
+        a3_w_r_bgate_region,
+        a3_w_b_bgate_region,
+        a3_n_l_bgate_region,
+        a3_n_r_bgate_region,
+        a3_e_l_bgate_region,
+        a3_e_r_bgate_region,
         b2_start_region,
         b2_arena_region,
         b2_defeated_region,
         r1_start_region,
+        r1_se_ggate_region,
         r1_e_region,
         r1_start_wall_region,
         r1_e_n_bgate_region,
@@ -2130,22 +2576,45 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         r1_ne_ggate_region,
         r1_nw_region,
         r1_nw_hidden_region,
+        r1_nw_ggate_region,
         r1_sw_region,
+        r1_sw_ggate_region,
+        r1_exit_l_region,
+        r1_exit_r_region,
         r2_start_region,
         r2_bswitch_region,
         r2_m_region,
+        r2_w_bgate_region,
         r2_nw_region,
+        r2_n_region,
         r2_e_region,
+        r2_sgate_region,
         r2_s_region,
+        r2_spike_island_region,
+        r2_sw_bridge_region,
+        r2_puzzle_region,
+        r2_w_region,
         r2_from_r3_region,
+        r2_ne_cache_region,
+        r2_ggate_region,
         r3_main_region,
+        r3_ne_room_region,
+        r3_s_room_region,
         r3_w_ggate_region,
         r3_e_ggate_region,
         r3_sw_bgate_region,
+        r3_sw_wall_r_region,
+        r3_sw_wall_l_region,
+        r3_nw_tp_region,
+        r3_se_cache_region,
         r3_boss_switch_region,
+        r3_rune_room_region,
+        r3_bonus_region,
         r3_l_shop_sgate_region,
         r3_r_shop_sgate_region,
         r3_bonus_return_region,
+        r3_bonus_return_bridge_region,
+        r3_exit_region,
         n3_main_region,
         n3_tp_room_region,
         b3_start_region,
@@ -2165,14 +2634,19 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         pstart_puzzle_region,
         c2_main_region,
         c2_sw_wall_region,
+        c2_w_wall_region,
+        c2_e_wall_region,
         c2_w_spikes_region,
         c2_w_shops_1_region,
         c2_w_shops_2_region,
         c2_w_shops_3_region,
         c2_e_shops_1_region,
         c2_e_shops_2_region,
+        c2_puzzle_region,
+        c2_exit_bgate_region,
         c2_n_region,
         c2_n_wall_region,
+        c2_bonus_region,
         c2_bonus_return_region,
         c2_tp_island_region,
         c2_c3_tp_region,
@@ -2331,7 +2805,7 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.key_bronze, player, 103)))
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, None, True)
-    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a3_pyramids_s_bgate,
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a3_w_b_bgate,
             lambda state: (state.has(ItemName.key_bronze, player, 103)), True)
 
     if multiworld.randomize_bonus_keys[player]:
@@ -2482,7 +2956,7 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.key_gold, player, 14 + 1)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.n4_main, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_wall,
-            lambda state: (state.has(ItemName.ev_castle_c2_n_tp_button, player)))
+            lambda state: (state.has(ItemName.btnc_c2_n_wall, player)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_shops,
             lambda state: (state.has(ItemName.ev_castle_c2_n_shops_switch, player)))
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_main,
@@ -2546,6 +3020,576 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
+def connect_castle_regions_generic(multiworld, player: int):
+    used_names: typing.Dict[str, int] = {}
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
+                    False, True, ItemName.btnc_p1_floor, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p1_s,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_sw_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_e,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, True)
+    if multiworld.shortcut_teleporter[player]:
+        connect_generic(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
+                        True, True)
+        connect_generic(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1,
+                        CastleRegionNames.p3_n_gold_gate)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_from_p2, CastleRegionNames.p2_p1_return, True)
+    # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_p1_return, CastleRegionNames.p2_m)
+    # Requires return wall button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_bottom)
+    # Requires spike button 5
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_top)
+    # Requires spike buttons (4, 5, 9) or (5, 7, 6)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_left)
+    # Requires spike buttons (4, 5, 9) or (5, 7, 6, 1 ,9)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_red_switch)
+    # Requires red spike button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_puzzle)
+    # Requires puzzle button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_save)
+    # Requires east save button
+    # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_e_save)
+    # Requires east save button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_se_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
+                    False, False, ItemName.ev_castle_p2_switch, 4, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_w_treasure)
+    # Requires treasure west wall button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_w_treasure, CastleRegionNames.p2_w_treasure_tp)
+    # Requires treasure east wall button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_tp_puzzle)
+    # Requires tp puzzle buttons
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start_door, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start_door, CastleRegionNames.p3_start,
+                    False, False)  # Actually *not* two-way! The button prevents backtracking for now
+    # Requires entrance button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_closed_room)
+    # Requires room open button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_n_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_s_bronze_gate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_silver_gate,
+                    False, True, ItemName.key_silver)
+    # Requires start spike switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s,
+                    True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
+                    CastleRegionNames.p3_rspikes)
+    # Requires red spikes button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
+                    CastleRegionNames.p3_rspikes_room)
+    # Requires middle room unlock button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_bonus)
+    # Requires 5 bonus switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_bonus, CastleRegionNames.n1_start, True)
+    # Requires 9 bonus buttons
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
+                    CastleRegionNames.p3_s_bronze_gate, False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_spikes_s)
+    # Requires spike switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_sw)
+    # Requires spike switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_exit_s)
+    # Requires exit button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p1_from_p3_n, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
+                    CastleRegionNames.p3_arrow_hall_secret)
+    # Requires sw floor button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_hidden_arrow_hall)
+    # Requires arrow hall secret button
+    # Requires spike switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_s_gold_gate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.b1_start,
+                    True, True, ItemName.ev_castle_b1_boss_switch, 3, False)
+
+    # if multiworld.randomize_bonus_keys[player]:
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room2_unlock,
+                    False, False)
+    # Requires room 2 panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_unlock,
+                    False, False)
+    # Requires room 3 west panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_hall,
+                    False, False)
+    # Requires room 3 east panel or room 3 hall panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3_hall, CastleRegionNames.n1_room4,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
+                    True, False, ItemName.bonus_key)
+    # else:
+    #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
+    #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
+    #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3)
+    #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room4)
+    #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
+    #                     True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_start, CastleRegionNames.b1_arena, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.a1_start, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_w,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_m,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_e,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, True)
+    # Requires start wall switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_se, CastleRegionNames.a1_e,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_sw_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_s_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_se_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_e_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_ne_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_n_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e_se_bgate, CastleRegionNames.a1_rune_room)
+    # Requires se gate wall switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_rune_room, CastleRegionNames.a1_se_cache)
+    # Requires 4 rune switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_red_spikes)
+    # Requires red spike switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_tp_n)
+    # Requires tp switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_w,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_nw_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_ne_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_se_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_sw_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_puzzle)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes)
+    # Requires spike switch
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_sw)
+    # Requires floor 5 sw teleport switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_se)
+    # Requires floor 5 se teleport switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_puzzle)
+    # Requires floor 5 puzzle switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_sw_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_se_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_save_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_ne,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_m_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_l_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_r_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_b_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_save_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_tp_ne)
+    # Requires floor 5 ne teleport switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start, True)
+    # Requires bonus portal switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_blue_spikes,
+                    False, False, ItemName.btnc_a2_blue_spikes, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_blue_spikes,
+                    CastleRegionNames.a2_blue_spikes_tp)
+    # Requires floor 5 blue spikes teleport switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_to_a3)
+    # Requires floor 6 passage open switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_to_a3, CastleRegionNames.a3_from_a2, True)
+
+    # if multiworld.randomize_bonus_keys[player]:
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
+                    False, True, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_se)
+    # Requires bonus 2 open se room panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+    # Requires bonus 2 open ne room panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.n2_exit)
+    # Requires bonus 2 open exit panel
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_exit, CastleRegionNames.a2_bonus_return, True)
+    # else:
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+    #     connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return, None, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_start, CastleRegionNames.a3_main)
+    # Requires open start top wall switch or open start right wall switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_puzzle_reward)
+    # Requires 5 spike puzzle switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_reward_2)
+    # Requires 2 spike puzzle switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_knife_reward_2, CastleRegionNames.a2_nw, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_tp, True)
+    # Requires floor 6 teleport switch
+    # connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_main)
+    # Requires floor 6 from floor 5 open passage switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_w_b_bgate,
+                    False, True, ItemName.key_bronze)
+    # Don't forget to add extra thing in rules requiring the teleport button for the item inside
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_t_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_r_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_l_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_r_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_l_bgate,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_r_bgate,
+                    False, True, ItemName.key_bronze)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
+                    True, True, ItemName.ev_castle_b2_boss_switch, 3, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_se_ggate,
+                    False, False, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_se_ggate, CastleRegionNames.r1_e)
+    # Requires floor 7 open east passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_s_bgate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_sgate,
+                    False, False, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall)
+    # Requires floor 7 open right wall
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
+                    False, True, ItemName.key_bronze)
+    # Two doors can be used to enter, but this one is set as an internal gate bc it causes issues with generation
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
+                    False, False, ItemName.key_bronze)
+    # connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
+    #                 False, False, ItemName.key_bronze)
+    # Internal gate
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
+                    False, False, ItemName.key_bronze)
+    # Technically there is no gate here but this makes the logic correct so it's staying until I figure it out
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_ne_ggate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw)
+    # Requires floor 7 open North passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw, CastleRegionNames.r1_nw_hidden)
+    # Requires floor 7 open hidden room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw_hidden, CastleRegionNames.r1_nw_ggate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw_ggate, CastleRegionNames.r1_sw)
+    # Requires floor 7 open west passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_w_sgate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall)
+    # Requires floor 7 open start wall
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw_ggate,
+                    True, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw_ggate, CastleRegionNames.r1_exit_l)
+    # From sw requires floor 7 open left exit
+    # Internal bronze gate
+    for i in range(2):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r1_exit_r)
+    # From start requires floor 7 open right exit
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_r, CastleRegionNames.r2_bswitch)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_w_bgate,
+                    False, True, ItemName.key_bronze)
+    # Internal bronze gates
+    for i in range(5):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_m,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_e)
+    # Requires open east passage top or open east passage bottom
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_nw,
+                    False, True, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_nw, CastleRegionNames.r2_n)
+    # Requires open north room left
+    # Or requires open north room right from r2_m
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_sgate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_sgate, CastleRegionNames.r2_s)
+    # Requires silver gate floor button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_spike_island)
+    # Requires open spike island passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_spike_island, CastleRegionNames.r2_sw_bridge)
+    # Requires open sw bridge from r2_s
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_sw_bridge, CastleRegionNames.r2_puzzle)
+    # Requires open puzzle room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_w)
+    # Requires open west passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_from_r3, CastleRegionNames.r2_ne_cache)
+    # Requires open cache passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_ggate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main, True)
+    # Requires open exit button
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_ne_room)
+    # Requires open ne room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_s_room)
+    # Requires open south room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_l_shop_sgate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_r_shop_sgate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_se_cache)
+    # Requires open se cache room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch)
+    # Requires open boss switch room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_boss_switch, CastleRegionNames.r3_rune_room)
+    # Requires 5 open simon says room switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_rune_room, CastleRegionNames.r3_bonus)
+    # Requires 6 simon says switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main, True)
+    # Requires open bonus entrance passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
+                    False, True, ItemName.key_bronze)
+    # Internal bronze gates
+    for i in range(5):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_main,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_l)
+    # Requires left sw button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_r)
+    # Requires right sw button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_wall_l, CastleRegionNames.r3_nw_tp)
+    # Requires nw tp button
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus_return,
+                    CastleRegionNames.r3_bonus_return_bridge)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3,
+                    True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_e_ggate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_w_ggate,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.r3_exit)
+    # Requires open boss switch room
+    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_exit, CastleRegionNames.b3_start,
+                    True, True, ItemName.ev_castle_b3_boss_switch, 3, False)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, True)
+    # Internal bronze gates
+    for i in range(3):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_main,
+                        False, False, ItemName.bonus_key)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.c1_start, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_shop,
+                    False, False, ItemName.key_bronze)
+    # Bronze gates with no checks
+    for i in range(6):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_start,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_w,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_sgate,
+                    False, True, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs)
+    # Requires open prison door passage from c1_start
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
+                    True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_s_bgate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_ledge,
+                    False, False, ItemName.key_bronze)
+    # Bronze gates with no checks
+    for i in range(4):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_w,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.pstart_start, CastleRegionNames.pstart_puzzle)
+    # Requires 4 prison return rune switches and prison return puzzle switch
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_sw_wall)
+    # Requires open sw wall
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_wall)
+    # Requires open west wall
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_w_shops_2, CastleRegionNames.c2_e_wall)
+    # Requires open east wall
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes)
+    # Requires 4 spike floor rune switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_1,
+                    False, False, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_w_shops_3, CastleRegionNames.c2_w_shops_2,
+                    False, False, ItemName.key_silver)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_3,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_1,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_2,
+                    False, False, ItemName.key_bronze)
+    # Can also access from main through open east passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_e_shops_1, CastleRegionNames.c2_puzzle)
+    # Requires open puzzle room and puzzle switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_exit_bgate,
+                    False, False, ItemName.key_bronze)
+    # Bronze gates with no checks
+    for i in range(12):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_main,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n,
+                    False, True, ItemName.key_gold)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_bonus, True)
+    # Require 5 open bonus entrance wall switches
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_bonus, CastleRegionNames.n4_main, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_wall,
+                    False, False, ItemName.btnc_c2_n_wall, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_shops,
+                    False, False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_main,
+                    False, False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island,
+                    True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
+                    False, False, ItemName.bonus_key)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
+                    True, False, ItemName.bonus_key)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
+                    False, True, ItemName.ev_castle_c3_rspikes_switch, 1, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_s_bgate,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_shop,
+                    False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_wall)
+    # Requires open middle passage
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_tp)
+    # Requires teleport middle item
+    # Bronze gates with no checks
+    for i in range(8):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_rspikes,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_nw,
+                    False, True, ItemName.key_gold)
+    # Bronze gates with no checks
+    for i in range(3):
+        connect_generic(multiworld, player, used_names, CastleRegionNames.c3_nw, CastleRegionNames.c3_nw,
+                        False, False, ItemName.key_bronze)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_sw_hidden,
+                    False, True, ItemName.ev_castle_c3_sw_hidden_switch, 6, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_se_hidden)
+    # Requires open se hidden wall switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_se_hidden, CastleRegionNames.c3_light_bridge)
+    # Requires activate light bridge switch
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_fire_floor,
+                    True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c3_fire_floor_tp)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c2_c3_tp, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp, True)
+
+    # Old connect method to ensure no keys will in the final boss room
+    connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.b4_start,
+            lambda state: (state.has(ItemName.ev_castle_b4_boss_switch, player, 3)
+                           and state.has(ItemName.key_gold, player, 16)
+                           and state.has(ItemName.key_silver, player, 13)
+                           and state.has(ItemName.key_bronze, player, 103)
+                           and state.has(ItemName.bonus_key, player, 18)), True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated)
+
+    planks_to_win = multiworld.planks_required_count[player]
+    connect_generic(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.e1_main,
+                    False, False, ItemName.plank, 12, False)
+    # Technically planks are consumed, but nothing else does so this is faster
+    connect_generic(multiworld, player, used_names, CastleRegionNames.e1_main, CastleRegionNames.e2_main, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.e2_main, CastleRegionNames.e3_main, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.e3_main, CastleRegionNames.e4_main, True)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.e4_main, CastleRegionNames.escaped, True)
+
+    connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
+                    False, False, ItemName.plank, planks_to_win, False)
+
+
 def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
     menu_region = create_region(multiworld, player, active_locations, TempleRegionNames.menu, None)
 
@@ -2595,10 +3639,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave3_secret_n,
         TempleLocationNames.cave3_secret_nw,
         TempleLocationNames.cave3_secret_s,
-        TempleLocationNames.c3_puzzle_1,
-        TempleLocationNames.c3_puzzle_2,
-        TempleLocationNames.c3_puzzle_3,
-        TempleLocationNames.c3_puzzle_4,
         TempleLocationNames.c3_miniboss_tick_1,
         TempleLocationNames.c3_miniboss_tick_2,
         TempleLocationNames.c3_tower_plant_small_1,
@@ -2610,6 +3650,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     cave3_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_3_main,
                                       cave3_main_locations)
+
+    c3_puzzle_locs = [
+        TempleLocationNames.c3_puzzle_1,
+        TempleLocationNames.c3_puzzle_2,
+        TempleLocationNames.c3_puzzle_3,
+        TempleLocationNames.c3_puzzle_4,
+    ]
+    c3_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.c3_puzzle, c3_puzzle_locs)
 
     c3_e_locs = [
         TempleLocationNames.cave3_outside_guard,
@@ -2768,10 +3816,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave2_sw,
         TempleLocationNames.cave2_double_bridge_secret,
         TempleLocationNames.cave2_secret_w,
-        TempleLocationNames.c2_puzzle_1,
-        TempleLocationNames.c2_puzzle_2,
-        TempleLocationNames.c2_puzzle_3,
-        TempleLocationNames.c2_puzzle_4,
         TempleLocationNames.c2_miniboss_maggot_s_1,
         TempleLocationNames.c2_miniboss_maggot_s_2,
         TempleLocationNames.c2_tower_plant_2,
@@ -2781,6 +3825,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.c2_tower_plant_small_22,
     ]
     c2_sw_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_sw, c2_sw_locs)
+
+    c2_puzzle_locs = [
+        TempleLocationNames.c2_puzzle_1,
+        TempleLocationNames.c2_puzzle_2,
+        TempleLocationNames.c2_puzzle_3,
+        TempleLocationNames.c2_puzzle_4,
+    ]
+    c2_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.c2_puzzle, c2_puzzle_locs)
 
     cave1_main_locations = [
         TempleLocationNames.cave1_n_3,
@@ -2805,10 +3857,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave1_secret_nw,
         TempleLocationNames.cave1_secret_w,
         TempleLocationNames.cave1_secret_m,
-        TempleLocationNames.c1_n_puzzle_1,
-        TempleLocationNames.c1_n_puzzle_2,
-        TempleLocationNames.c1_n_puzzle_3,
-        TempleLocationNames.c1_n_puzzle_4,
         TempleLocationNames.c1_miniboss_maggot_s_1,
         TempleLocationNames.c1_miniboss_maggot_s_2,
         TempleLocationNames.c1_miniboss_tick_1,
@@ -2824,6 +3872,15 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     cave1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_main,
                                       cave1_main_locations)
+
+    c1_n_puzzle_locs = [
+        TempleLocationNames.c1_n_puzzle_1,
+        TempleLocationNames.c1_n_puzzle_2,
+        TempleLocationNames.c1_n_puzzle_3,
+        TempleLocationNames.c1_n_puzzle_4,
+    ]
+    c1_n_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.c1_n_puzzle,
+                                       c1_n_puzzle_locs)
 
     cave1_blue_bridge_locations = [
         TempleLocationNames.cave1_ne_hidden_room_1,
@@ -2877,13 +3934,18 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.cave1_se_2,
         TempleLocationNames.cave1_e_1,
         TempleLocationNames.cave1_secret_e,
+    ]
+    cave1_red_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_red_bridge,
+                                            cave1_red_bridge_locations)
+
+    c1_e_puzzle_locs = [
         TempleLocationNames.c1_e_puzzle_1,
         TempleLocationNames.c1_e_puzzle_2,
         TempleLocationNames.c1_e_puzzle_3,
         TempleLocationNames.c1_e_puzzle_4,
     ]
-    cave1_red_bridge_region = create_region(multiworld, player, active_locations, TempleRegionNames.cave_1_red_bridge,
-                                            cave1_red_bridge_locations)
+    c1_e_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.c1_e_puzzle,
+                                       c1_e_puzzle_locs)
 
     cave1_green_bridge_locations = [
         TempleLocationNames.cave1_green_bridge_1,
@@ -2982,10 +4044,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.p_mid5_1,
         TempleLocationNames.p_mid5_2,
         TempleLocationNames.p_mid5_secret,
-        TempleLocationNames.p_puzzle_1,
-        TempleLocationNames.p_puzzle_2,
-        TempleLocationNames.p_puzzle_3,
-        TempleLocationNames.p_puzzle_4,
         TempleLocationNames.p_tower_plant_small_1,
         TempleLocationNames.p_tower_plant_small_2,
         TempleLocationNames.p_tower_plant_small_3,
@@ -2995,6 +4053,15 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
     passage_mid_region = create_region(multiworld, player, active_locations, TempleRegionNames.passage_mid,
                                        passage_mid_locations)
+
+    passage_puzzle_locations = [
+        TempleLocationNames.p_puzzle_1,
+        TempleLocationNames.p_puzzle_2,
+        TempleLocationNames.p_puzzle_3,
+        TempleLocationNames.p_puzzle_4,
+    ]
+    passage_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.passage_puzzle,
+                                          passage_puzzle_locations)
 
     passage_end_locations = [
         TempleLocationNames.p_end1_secret,
@@ -3030,12 +4097,17 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_sw_hidden_room_2,
         TempleLocationNames.t1_sw_hidden_room_3,
         TempleLocationNames.t1_sw_hidden_room_4,
+    ]
+    t1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_main, t1_main_locations)
+
+    t1_w_puzzle_locs = [
         TempleLocationNames.t1_w_puzzle_1,
         TempleLocationNames.t1_w_puzzle_2,
         TempleLocationNames.t1_w_puzzle_3,
         TempleLocationNames.t1_w_puzzle_4,
     ]
-    t1_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_main, t1_main_locations)
+    t1_w_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_w_puzzle,
+                                       t1_w_puzzle_locs)
 
     t1_sw_sdoor_locations = [
         TempleLocationNames.t1_sw_sdoor_1,
@@ -3140,13 +4212,18 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_node_2_passage_2,
         TempleLocationNames.t1_node_2_passage_3,
         TempleLocationNames.ev_temple1_pof_switch,
+        TempleLocationNames.t1_miniboss_mummy,
+    ]
+    t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
+
+    t1_e_puzzle_locs = [
         TempleLocationNames.t1_e_puzzle_1,
         TempleLocationNames.t1_e_puzzle_2,
         TempleLocationNames.t1_e_puzzle_3,
         TempleLocationNames.t1_e_puzzle_4,
-        TempleLocationNames.t1_miniboss_mummy,
     ]
-    t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
+    t1_e_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_e_puzzle,
+                                       t1_e_puzzle_locs)
 
     t1_jail_e_locs = [
         TempleLocationNames.t1_e_gold_beetles,
@@ -3244,14 +4321,6 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_se_fireball_hall,
         TempleLocationNames.btn_t2_rune_e,
         TempleLocationNames.btn_t2_rune_se,
-        TempleLocationNames.t2_nw_puzzle_1,
-        TempleLocationNames.t2_nw_puzzle_2,
-        TempleLocationNames.t2_nw_puzzle_3,
-        TempleLocationNames.t2_nw_puzzle_4,
-        TempleLocationNames.t2_e_puzzle_1,
-        TempleLocationNames.t2_e_puzzle_2,
-        TempleLocationNames.t2_e_puzzle_3,
-        TempleLocationNames.t2_e_puzzle_4,
         TempleLocationNames.t2_miniboss_mummy_e,
         TempleLocationNames.t2_miniboss_mummy_w,
         TempleLocationNames.t2_tower_fire,
@@ -3260,6 +4329,24 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_tower_mana_2,
     ]
     t2_main_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_main, t2_main_locations)
+
+    t2_nw_puzzle_locs = [
+        TempleLocationNames.t2_nw_puzzle_1,
+        TempleLocationNames.t2_nw_puzzle_2,
+        TempleLocationNames.t2_nw_puzzle_3,
+        TempleLocationNames.t2_nw_puzzle_4,
+    ]
+    t2_nw_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_nw_puzzle,
+                                        t2_nw_puzzle_locs)
+
+    t2_e_puzzle_locs = [
+        TempleLocationNames.t2_e_puzzle_1,
+        TempleLocationNames.t2_e_puzzle_2,
+        TempleLocationNames.t2_e_puzzle_3,
+        TempleLocationNames.t2_e_puzzle_4,
+    ]
+    t2_e_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_e_puzzle,
+                                       t2_e_puzzle_locs)
 
     t2_melt_ice_locations = [
     ]
@@ -3285,15 +4372,20 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_nw_ice_turret_4,
         TempleLocationNames.t2_nw_under_block,
         TempleLocationNames.t2_nw_gate_3,
-        TempleLocationNames.t2_n_puzzle_1,
-        TempleLocationNames.t2_n_puzzle_2,
-        TempleLocationNames.t2_n_puzzle_3,
-        TempleLocationNames.t2_n_puzzle_4,
         TempleLocationNames.t2_tower_ice_1,
         TempleLocationNames.t2_tower_ice_2,
     ]
     t2_n_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_gate,
                                      t2_n_gate_locations)
+
+    t2_n_puzzle_locs = [
+        TempleLocationNames.t2_n_puzzle_1,
+        TempleLocationNames.t2_n_puzzle_2,
+        TempleLocationNames.t2_n_puzzle_3,
+        TempleLocationNames.t2_n_puzzle_4,
+    ]
+    t2_n_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_n_puzzle,
+                                       t2_n_puzzle_locs)
 
     t2_nw_button_gate_locs = [
         TempleLocationNames.t2_nw_gate_1,
@@ -3312,15 +4404,20 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_sw_jail_2,
         TempleLocationNames.btn_t2_rune_sw,
         TempleLocationNames.ev_temple2_pof_switch,
-        TempleLocationNames.t2_sw_puzzle_1,
-        TempleLocationNames.t2_sw_puzzle_2,
-        TempleLocationNames.t2_sw_puzzle_3,
-        TempleLocationNames.t2_sw_puzzle_4,
         TempleLocationNames.t2_tower_mana_3,
         TempleLocationNames.btn_t2_floor_blue,
     ]
     t2_s_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_s_gate,
                                      t2_s_gate_locations)
+
+    t2_sw_puzzle_locs = [
+        TempleLocationNames.t2_sw_puzzle_1,
+        TempleLocationNames.t2_sw_puzzle_2,
+        TempleLocationNames.t2_sw_puzzle_3,
+        TempleLocationNames.t2_sw_puzzle_4,
+    ]
+    t2_sw_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t2_sw_puzzle,
+                                        t2_sw_puzzle_locs)
 
     t2_n_node_locations = [
         TempleLocationNames.ev_t2_n_node,
@@ -3477,12 +4574,16 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     t3_gates_locs = [
         TempleLocationNames.t3_tower_ice_2,
         TempleLocationNames.t3_tower_ice_3,
+    ]
+    t3_gates_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_gates, t3_gates_locs)
+
+    t3_puzzle_locs = [
         TempleLocationNames.t3_puzzle_1,
         TempleLocationNames.t3_puzzle_2,
         TempleLocationNames.t3_puzzle_3,
         TempleLocationNames.t3_puzzle_4,
     ]
-    t3_gates_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_gates, t3_gates_locs)
+    t3_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.t3_puzzle, t3_puzzle_locs)
 
     t3_n_node_locations = [
         TempleLocationNames.ev_t3_n_node
@@ -3657,14 +4758,19 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     pof_2_n_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_n, pof_2_n_locations)
 
     pof_2_puzzle_locs = [
-        TempleLocationNames.pof_puzzle_1,
-        TempleLocationNames.pof_puzzle_2,
-        TempleLocationNames.pof_puzzle_3,
-        TempleLocationNames.pof_puzzle_4,
         TempleLocationNames.ev_pof_2_unlock_exit
     ]
     pof_2_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_2_puzzle,
                                         pof_2_puzzle_locs)
+
+    pof_puzzle_locs = [
+        TempleLocationNames.pof_puzzle_1,
+        TempleLocationNames.pof_puzzle_2,
+        TempleLocationNames.pof_puzzle_3,
+        TempleLocationNames.pof_puzzle_4,
+    ]
+    pof_puzzle_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_puzzle,
+                                      pof_puzzle_locs)
 
     pof_2_exit_locations = [
     ]
@@ -3723,6 +4829,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         library_region,
         library_lobby_region,
         cave3_main_region,
+        c3_puzzle_region,
         c3_e_region,
         cave3_fall_region,
         cave3_fields_region,
@@ -3734,11 +4841,14 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         cave2_green_bridge_region,
         c2_double_bridge_region,
         c2_sw_region,
+        c2_puzzle_region,
         cave2_pumps_region,
         cave1_main_region,
+        c1_n_puzzle_region,
         cave1_blue_bridge_region,
         c1_secret_hall_region,
         cave1_red_bridge_region,
+        c1_e_puzzle_region,
         cave1_green_bridge_region,
         cave1_pumps_region,
         cave1_temple_region,
@@ -3748,10 +4858,12 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         boss1_defeated_region,
         passage_entrance_region,
         passage_mid_region,
+        passage_puzzle_region,
         passage_end_region,
         temple_entrance_region,
         temple_entrance_back_region,
         t1_main_region,
+        t1_w_puzzle_region,
         t1_sw_cache_region,
         t1_node_1_region,
         t1_node_2_region,
@@ -3761,6 +4873,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t1_n_of_ice_turret_region,
         t1_s_of_ice_turret_region,
         t1_east_region,
+        t1_e_puzzle_region,
         t1_jail_e_region,
         t1_sun_block_hall_region,
         t1_telarian_melt_ice_region,
@@ -3768,12 +4881,16 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         boss2_main_region,
         boss2_defeated_region,
         t2_main_region,
+        t2_nw_puzzle_region,
+        t2_e_puzzle_region,
         t2_melt_ice_region,
         t2_w_ice_gate_region,
         t2_e_ice_gate_region,
         t2_n_gate_region,
+        t2_n_puzzle_region,
         t2_nw_button_gate_region,
         t2_s_gate_region,
+        t2_sw_puzzle_region,
         t2_n_node_region,
         t2_boulder_room_region,
         t2_n_hidden_hall_region,
@@ -3794,6 +4911,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t3_s_gate_region,
         t3_n_node_blocks_region,
         t3_gates_region,
+        t3_puzzle_region,
         t3_n_node_region,
         t3_s_node_blocks_1_region,
         t3_s_node_blocks_2_region,
@@ -3811,6 +4929,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         pof_2_main_region,
         pof_2_n_region,
         pof_2_puzzle_region,
+        pof_puzzle_region,
         pof_2_exit_region,
         pof_3_start_region,
         pof_3_main_region,
@@ -3990,18 +5109,6 @@ def connect_tots_regions(multiworld, player: int):
 def connect_tots_regions_generic(multiworld, player: int):
     used_names: typing.Dict[str, int] = {}
 
-    def has_pan(state):
-        return state.has(ItemName.pan, player) \
-               or state.has(ItemName.pan_fragment, player, multiworld.pan_fragments[player])
-
-    def has_lever(state):
-        return state.has(ItemName.lever, player) \
-               or state.has(ItemName.lever_fragment, player, multiworld.lever_fragments[player])
-
-    def has_pickaxe(state):
-        return state.has(ItemName.pickaxe, player) \
-               or state.has(ItemName.pickaxe_fragment, player, multiworld.pickaxe_fragments[player])
-
     pan_item = ItemName.pan
     lever_item = ItemName.lever
     pickaxe_item = ItemName.pickaxe
@@ -4040,6 +5147,7 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
                     False, True, lever_item, lever_item_count, False)
 
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_puzzle)
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e)
     connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,
                     True, True, ItemName.key_teleport, 1, False)
@@ -4051,6 +5159,7 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_green_bridge)
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_sw)
     # Both require green switch
+    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_puzzle)
     connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_double_bridge)
     # connect_generic(multiworld, player, used_names, TempleRegionNames.c2_double_bridge, TempleRegionNames.cave_2_main)
     # Both require double bridge switch
@@ -4059,6 +5168,7 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_1_main,
                     True, True, ItemName.key_teleport, 2, False)
 
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.c1_n_puzzle)
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge)
     # Requires blue switch
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
@@ -4076,6 +5186,7 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated,
                     False, False)
 
+    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.c1_e_puzzle)
     connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge,
                     TempleRegionNames.boss_1_entrance, True, True, ItemName.key_teleport, 3, False)
 
@@ -4091,15 +5202,19 @@ def connect_tots_regions_generic(multiworld, player: int):
                     TempleRegionNames.passage_entrance, True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid,
                     True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_puzzle)
     connect_generic(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end, True)
 
     connect_generic(multiworld, player, used_names, TempleRegionNames.passage_end,
                     TempleRegionNames.temple_entrance_back, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back,
-                    TempleRegionNames.temple_entrance, False, True, ItemName.ev_open_temple_entrance_shortcut, 1, False)
+    # Kinda useless, we can already access this
+    # connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back,
+    #                 TempleRegionNames.temple_entrance, False, True, ItemName.ev_open_temple_entrance_shortcut, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main,
                     True)
 
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_w_puzzle,
+                    False, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_sdoor,
                     False, True, ItemName.key_silver)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
@@ -4122,14 +5237,21 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_sun_block_hall,
                     False, True, ItemName.mirror, 3)
     # TODO: Problems with logic when entering from east, gotta figure out a better solution for this eventually
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_sun_block_hall, TempleRegionNames.t1_node_2,
-                    False, True, ItemName.mirror, 2)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_node_2,
+                    False, True, ItemName.mirror, 1)
+    # Also technically you need to place the mirrors earlier too, but logic sets things correctly if we do this
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east,
                     TempleRegionNames.t1_ice_chamber_melt_ice, False, True, ItemName.ev_krilith_defeated, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_jail_e)
     # Requires east jail button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_e_puzzle,
+                    False, False)
 
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main, True)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_nw_puzzle,
+                    False, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_e_puzzle,
+                    False, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
                     False, True, ItemName.ev_krilith_defeated, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_w_ice_gate)
@@ -4150,6 +5272,8 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_ornate_t3, TempleRegionNames.t2_ornate_gate,
                     False, False)
     # Requires west ornate wall button. Note we make this one-way because you have to access the other side to cross
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_puzzle,
+                    False, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
                     False, True, ItemName.mirror, 3)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_nw_button_gate)
@@ -4163,6 +5287,8 @@ def connect_tots_regions_generic(multiworld, player: int):
     # Requires hidden hall button
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_hidden_hall, TempleRegionNames.t2_jones_hall)
     # Requires jones hall button
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sw_puzzle,
+                    False, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
                     False, True, ItemName.mirror, 4)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_node, TempleRegionNames.t2_pof)
@@ -4187,17 +5313,23 @@ def connect_tots_regions_generic(multiworld, player: int):
                     False, False)
     # One-way because we need to hit the button first!
     connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_n_node_blocks,
-                    False, True, ItemName.mirror, 20, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_main,
+                    False, False, ItemName.mirror, 2)
+    # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2,
+                    TempleRegionNames.t3_n_node_blocks, False, False, ItemName.mirror, 1)
+    # After wasting mirrors everywhere else only this one will turn on the beam to break the blockade
     connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_blockade_s)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_gates)
     # Requires gates button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node,
-                    False, True, ItemName.mirror, 20, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_gates, TempleRegionNames.t3_puzzle,
+                    False, False)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_1,
-                    False, True, ItemName.mirror, 2)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_1,
-                    TempleRegionNames.t3_s_node_blocks_2, False, True, ItemName.mirror, 1)
+                    False, False, ItemName.mirror, 2)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main,
+                    TempleRegionNames.t3_s_node_blocks_2, False, False, ItemName.mirror, 1)
+    # More wonky logic, I promise everything works out!
     connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node)
 
     connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
@@ -4217,6 +5349,7 @@ def connect_tots_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main, True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n, True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle)
+    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_puzzle, TempleRegionNames.pof_puzzle)
     # Requires bonus panel
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_exit,
                     False, True, ItemName.ev_pof_2_unlock_exit, 1, False)
@@ -4289,7 +5422,7 @@ def connect_generic(multiworld: MultiWorld, player: int, used_names: typing.Dict
         forward_name = target
     else:
         used_names[target] += 1
-        forward_name = target + (' ' * used_names[target])
+        forward_name = target + ('_' * used_names[target])
 
     connection = HWEntrance(player, forward_name, source_region, pass_item, item_count, items_consumed, level_exit)
 

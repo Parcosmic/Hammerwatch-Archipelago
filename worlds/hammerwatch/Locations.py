@@ -1340,6 +1340,7 @@ castle_shop_locations: typing.Dict[str, LocationData] = {
 }
 
 castle_event_locations: typing.Dict[str, LocationData] = {
+    CastleLocationNames.btn_p1_floor: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_ne_switch: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_nw_switch: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_se_switch: LocationData(None),
@@ -1355,7 +1356,7 @@ castle_event_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.ev_r2_boss_switch: LocationData(None),
     CastleLocationNames.ev_r3_boss_switch: LocationData(None),
     CastleLocationNames.ev_c2_n_shops_switch: LocationData(None),
-    CastleLocationNames.ev_c2_n_tp_button: LocationData(None),
+    CastleLocationNames.btnc_c2_n_open_wall: LocationData(None),
     CastleLocationNames.ev_c1_boss_switch: LocationData(None),
     CastleLocationNames.ev_c2_boss_switch: LocationData(None),
     CastleLocationNames.ev_c3_boss_switch: LocationData(None),
