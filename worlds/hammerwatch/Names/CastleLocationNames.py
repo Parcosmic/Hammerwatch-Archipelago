@@ -1382,16 +1382,22 @@ shop_c2_def_2 = "Chambers 11 Secret Defense Shop"
 shop_c3_power = "Chambers 12 Powerup Shop"
 
 # Event Locations
+btn_p1_floor = "Prison Floor 1 Floor Button"
 ev_p1_boss_switch = "Prison Floor 1 Boss Switch"
 ev_p2_boss_switch = "Prison Floor 2 Boss Switch"
 ev_p3_boss_switch = "Prison Floor 3 Boss Switch"
-ev_p3_boss_switch_skip = "Prison 3 Skip Boss Switch"
 
 ev_p2_gold_gate_room_nw_switch = "Prison 2 Gold Gate Room NW Switch"
 ev_p2_gold_gate_room_ne_switch = "Prison 2 Gold Gate Room NE Switch"
 ev_p2_gold_gate_room_sw_switch = "Prison 2 Gold Gate Room SW Switch"
 ev_p2_gold_gate_room_se_switch = "Prison 2 Gold Gate Room SE Switch"
 
+btnc_n1_panel_n = "Bonus 1 North Unlock Panel"
+btnc_n1_panel_e_1 = "Bonus 1 NE Left Unlock Panel"
+btnc_n1_panel_e_2 = "Bonus 1 NE Right Unlock Panel"
+btnc_n1_panel_s = "Bonus 1 South Unlock Panel"
+
+btnc_n2_blue_spikes = "Bonus 2 Blue Spike Switch"
 ev_a1_boss_switch = "Armory Floor 4 Boss Switch"
 ev_a2_boss_switch = "Armory Floor 5 Boss Switch"
 ev_a3_boss_switch = "Armory Floor 6 Boss Switch"
@@ -1401,7 +1407,7 @@ ev_r2_boss_switch = "Archives Floor 8 Boss Switch"
 ev_r3_boss_switch = "Archives Floor 9 Boss Switch"
 
 ev_c2_n_shops_switch = "Chambers Floor 11 North Shops Switch"
-ev_c2_n_tp_button = "Chambers Floor 11 North Teleport Button"
+btnc_c2_n_open_wall = "Chambers Floor 11 North Open Wall Wall Button"
 ev_c3_rspikes_switch = "Chambers Floor 12 Red Spikes Switch"
 ev_c3_sw_hidden_switch_1 = "Chambers Floor 12 SW Hidden Hall Switch NW"
 ev_c3_sw_hidden_switch_2 = "Chambers Floor 12 SW Hidden Hall Switch NW East"
