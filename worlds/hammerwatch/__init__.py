@@ -75,7 +75,7 @@ class HammerwatchWorld(World):
             item_counts = Items.castle_item_counts
         else:
             item_counts = Items.temple_item_counts
-        for key in get_key_names(self.multiworld, self.player):
+        for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
         # self.item_counts, extra_items = get_item_counts(self.multiworld, self.campaign, self.player)
@@ -274,6 +274,9 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
         self.multiworld.get_location(CastleLocationNames.ev_a3_boss_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
+        # Event items
+        self.multiworld.get_location(CastleLocationNames.btnc_n2_blue_spikes, self.player) \
+            .place_locked_item(self.create_event(ItemName.btnc_a2_blue_spikes))
 
         # Archives Boss Switches
         self.multiworld.get_location(CastleLocationNames.ev_r1_boss_switch, self.player) \

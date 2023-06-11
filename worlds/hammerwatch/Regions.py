@@ -1040,6 +1040,7 @@ def create_castle_regions(multiworld, player: int, active_locations: typing.Dict
         CastleLocationNames.n2_nw_bottom_2,
         CastleLocationNames.n2_nw_bottom_3,
         CastleLocationNames.n2_nw_bottom_4,
+        CastleLocationNames.btnc_n2_blue_spikes,
     ]
     n2_nw_region = create_region(multiworld, player, active_locations, CastleRegionNames.n2_nw, n2_nw_locs)
 

@@ -1349,6 +1349,7 @@ castle_event_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.ev_p2_boss_switch: LocationData(None),
     CastleLocationNames.ev_p3_boss_switch: LocationData(None),
     # CastleLocationNames.ev_p3_boss_switch_skip: LocationData(None),
+    CastleLocationNames.btnc_n2_blue_spikes: LocationData(None),
     CastleLocationNames.ev_a1_boss_switch: LocationData(None),
     CastleLocationNames.ev_a2_boss_switch: LocationData(None),
     CastleLocationNames.ev_a3_boss_switch: LocationData(None),

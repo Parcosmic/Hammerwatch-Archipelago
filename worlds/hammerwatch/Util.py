@@ -33,7 +33,7 @@ def get_goal_type(multiworld: MultiWorld, player: int) -> GoalType:
     return GoalType(multiworld.goal[player] % 10)
 
 
-def get_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]:
+def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]:
     campaign = get_campaign(multiworld, player)
     if campaign == Campaign.Castle:
         key_names = {ItemName.key_bronze}
@@ -42,6 +42,7 @@ def get_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]:
     key_names.update({
         ItemName.key_silver,
         ItemName.key_gold,
-        ItemName.bonus_key,
                           })
+    if multiworld.randomize_bonus_keys[player]:
+        key_names.add(ItemName.bonus_key)
     return key_names
