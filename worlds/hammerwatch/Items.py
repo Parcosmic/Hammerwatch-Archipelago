@@ -21,7 +21,7 @@ id_start = 0x110000
 counter = Counter(id_start - 1)
 collectable_table: typing.Dict[str, ItemData] = {
     ItemName.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
-    ItemName.bonus_key: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_bonus: ItemData(counter.count(), ItemClassification.progression),
     ItemName.chest_blue: ItemData(counter.count(), ItemClassification.filler),
     ItemName.chest_green: ItemData(counter.count(), ItemClassification.filler),
     ItemName.chest_purple: ItemData(counter.count(), ItemClassification.useful),
@@ -165,13 +165,46 @@ trap_items: typing.List[str] = [
     ItemName.trap_banner,
 ]
 
-big_key_table: typing.Dict[str, typing.Tuple[str, int]] = {
+big_key_amount = 3
+key_table: typing.Dict[str, typing.Tuple[str, int]] = {
+    # ItemName.key_bronze: (ItemName.key_bronze, 1),
+    # ItemName.key_silver: (ItemName.key_silver, 1),
+    # ItemName.key_gold: (ItemName.key_gold, 1),
+    # ItemName.key_bonus: (ItemName.key_bonus, 1),
+
     ItemName.key_bronze_big: (ItemName.key_bronze, 3),
+
+    ItemName.key_bronze_big_prison: (ItemName.key_bronze_prison, 3),
+    ItemName.key_bronze_big_armory: (ItemName.key_bronze_armory, 3),
+    ItemName.key_bronze_big_archives: (ItemName.key_bronze_archives, 3),
+    ItemName.key_bronze_big_chambers: (ItemName.key_bronze_chambers, 3),
+
+    ItemName.key_bronze_prison: (ItemName.key_bronze, 1),
+    ItemName.key_bronze_armory: (ItemName.key_bronze, 1),
+    ItemName.key_bronze_archives: (ItemName.key_bronze, 1),
+    ItemName.key_bronze_chambers: (ItemName.key_bronze, 1),
+
+    ItemName.key_silver_prison: (ItemName.key_silver, 1),
+    ItemName.key_silver_armory: (ItemName.key_silver, 1),
+    ItemName.key_silver_archives: (ItemName.key_silver, 1),
+    ItemName.key_silver_chambers: (ItemName.key_silver, 1),
+
+    ItemName.key_gold_prison: (ItemName.key_gold, 1),
+    ItemName.key_gold_armory: (ItemName.key_gold, 1),
+    ItemName.key_gold_archives: (ItemName.key_gold, 1),
+    ItemName.key_gold_chambers: (ItemName.key_gold, 1),
+
+    ItemName.key_bonus_prison: (ItemName.key_bonus, 1),
+    ItemName.key_bonus_armory: (ItemName.key_bonus, 1),
+    ItemName.key_bonus_archives: (ItemName.key_bonus, 1),
+    ItemName.key_bonus_chambers: (ItemName.key_bonus, 1),
+
+    # ItemName.key_teleport: (ItemName.key_teleport, 1),
 }
 
 castle_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 227,
-    ItemName.bonus_key: 18,
+    ItemName.key_bonus: 18,
     ItemName.chest_blue: 15,
     ItemName.chest_green: 18,
     ItemName.chest_purple: 7,
@@ -206,27 +239,27 @@ castle_item_counts: typing.Dict[str, int] = {
     ItemName.miniboss_stat_upgrade: 17,
     ItemName.loot_tower: 45,
     ItemName.loot_flower: 43,
-    # ItemName.key_bronze_prison: 12,
-    # ItemName.key_silver_prison: 2,
-    # ItemName.key_gold_prison: 4,
-    # ItemName.key_bonus_prison: 5,
-    # ItemName.key_bronze_armory: 29,
-    # ItemName.key_silver_armory: 3,
-    # ItemName.key_gold_armory: 2,
-    # ItemName.key_bonus_armory: 6,
-    # ItemName.key_bronze_archives: 20,
-    # ItemName.key_silver_archives: 5,
-    # ItemName.key_gold_archives: 7,
-    # ItemName.key_bonus_archives: 3,
-    # ItemName.key_bronze_chambers: 42,
-    # ItemName.key_silver_chambers: 3,
-    # ItemName.key_gold_chambers: 3,
-    # ItemName.key_bonus_chambers: 4,
+    ItemName.key_bronze_prison: 12,
+    ItemName.key_silver_prison: 2,
+    ItemName.key_gold_prison: 4,
+    ItemName.key_bonus_prison: 5,
+    ItemName.key_bronze_armory: 29,
+    ItemName.key_silver_armory: 3,
+    ItemName.key_gold_armory: 2,
+    ItemName.key_bonus_armory: 6,
+    ItemName.key_bronze_archives: 20,
+    ItemName.key_silver_archives: 5,
+    ItemName.key_gold_archives: 7,
+    ItemName.key_bonus_archives: 3,
+    ItemName.key_bronze_chambers: 42,
+    ItemName.key_silver_chambers: 3,
+    ItemName.key_gold_chambers: 3,
+    ItemName.key_bonus_chambers: 4,
 }
 
 temple_item_counts: typing.Dict[str, int] = {
     ItemName.bonus_chest: 75,
-    ItemName.bonus_key: 2,
+    ItemName.key_bonus: 2,
     ItemName.chest_blue: 10,
     ItemName.chest_green: 5,
     ItemName.chest_purple: 13,
@@ -280,7 +313,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     # Remove bonus keys from the item counts as they are placed elsewhere
     if multiworld.randomize_bonus_keys[player] == 0:
-        item_counts_table.pop(ItemName.bonus_key)
+        item_counts_table.pop(ItemName.key_bonus)
 
     # Strange planks
     if get_goal_type(multiworld, player) == GoalType.PlankHunt \
@@ -296,15 +329,48 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         item_counts_table.pop(ItemName.plank)
 
     # Extra keys
-    # if multiworld.act_specific_keys[player]:
-    #    pass
-    # else:
-    extra_skeys = int(item_counts_table[ItemName.key_silver] * multiworld.extra_keys_percent[player] / 100)
-    extra_gkeys = int(item_counts_table[ItemName.key_gold] * multiworld.extra_keys_percent[player] / 100)
-    item_counts_table[ItemName.key_silver] += extra_skeys
-    item_counts_table[ItemName.key_gold] += extra_gkeys
-    extra_items += extra_skeys
-    extra_items += extra_gkeys
+    all_key_names = {
+        ItemName.key_bronze,
+        ItemName.key_silver,
+        ItemName.key_gold,
+        ItemName.key_bonus,
+        ItemName.mirror,
+        ItemName.key_bronze_prison,
+        ItemName.key_bronze_armory,
+        ItemName.key_bronze_archives,
+        ItemName.key_bronze_chambers,
+        ItemName.key_silver_prison,
+        ItemName.key_silver_armory,
+        ItemName.key_silver_archives,
+        ItemName.key_silver_chambers,
+        ItemName.key_gold_prison,
+        ItemName.key_gold_armory,
+        ItemName.key_gold_archives,
+        ItemName.key_gold_chambers,
+        ItemName.key_bonus_prison,
+        ItemName.key_bonus_armory,
+        ItemName.key_bonus_archives,
+        ItemName.key_bonus_chambers,
+    }
+    active_keys = get_active_key_names(multiworld, player)
+    for key in all_key_names:
+        if key in item_counts_table.keys() and key not in active_keys:
+            item_counts_table.pop(key)
+    # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
+    key_names = set()
+    for key_name in active_keys:
+        if "Bronze" not in key_name and "Bonus" not in key_name:
+            key_names.add(key_name)
+    for key in key_names:
+        extra_keys = int(item_counts_table[key] * multiworld.extra_keys_percent[player] / 100)
+        item_counts_table[key] += extra_keys
+        extra_items += extra_keys
+    # extra_skeys = int(item_counts_table[ItemName.key_silver] * multiworld.extra_keys_percent[player] / 100)
+    # extra_gkeys = int(item_counts_table[ItemName.key_gold] * multiworld.extra_keys_percent[player] / 100)
+    # item_counts_table[ItemName.key_silver] += extra_skeys
+    # item_counts_table[ItemName.key_gold] += extra_gkeys
+    # extra_items += extra_skeys
+    # extra_items += extra_gkeys
     if get_campaign(multiworld, player) == Campaign.Temple:
         extra_mirrors = int(item_counts_table[ItemName.mirror] * multiworld.extra_keys_percent[player] / 100)
         item_counts_table[ItemName.mirror] += extra_mirrors
@@ -314,15 +380,17 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_none:
         item_counts_table[ItemName.bonus_chest] = 0
 
-    # Consolidate bronze keys into keyrings
-    if campaign == Campaign.Castle:
-        bronze_keyrings = int(
-            item_counts_table[ItemName.key_bronze] * multiworld.big_bronze_key_percent[player] / 100
-            / big_key_table[ItemName.key_bronze_big][1])
-        if bronze_keyrings > 0:
-            item_counts_table[ItemName.key_bronze_big] = bronze_keyrings
-            item_counts_table[ItemName.key_bronze] -= bronze_keyrings * big_key_table[ItemName.key_bronze_big][1]
-            extra_items += bronze_keyrings * big_key_table[ItemName.key_bronze_big][1] - bronze_keyrings
+    # Consolidate bronze keys
+    if campaign == Campaign.Castle and multiworld.big_bronze_key_percent[player] > 0:
+        bronze_key_names = [key for key in get_active_key_names(multiworld, player) if "Bronze" in key]
+        for bronze_key in bronze_key_names:
+            big_name = bronze_key.replace("Bronze", "Big Bronze")
+            big_keys = int(item_counts_table[bronze_key] * multiworld.big_bronze_key_percent[player] / 100
+                           / key_table[big_name][1])
+            if big_keys > 0:
+                item_counts_table[big_name] = big_keys
+                item_counts_table[bronze_key] -= big_keys * key_table[big_name][1]
+                extra_items += big_keys * key_table[big_name][1] - big_keys
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments

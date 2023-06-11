@@ -210,7 +210,8 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         # If the items are consumed gotta use the downstream cost logic
         if exit.items_consumed and exit.pass_item in door_counts.keys():
             needed_keys = door_counts[exit.pass_item] - exit.downstream_count
-            # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
+            # if exit.parent_region.name != exit.connected_region.name:
+            #     print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
             add_rule(exit, lambda state, this=exit, num=needed_keys: state.has(this.pass_item, player, num), "and")
         else:  # Elsewise just set the item rule normally
             # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {exit.item_count}")

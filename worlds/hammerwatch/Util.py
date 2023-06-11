@@ -36,13 +36,42 @@ def get_goal_type(multiworld: MultiWorld, player: int) -> GoalType:
 def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]:
     campaign = get_campaign(multiworld, player)
     if campaign == Campaign.Castle:
-        key_names = {ItemName.key_bronze}
+        if multiworld.act_specific_keys[player]:
+            key_names = {
+                ItemName.key_bronze_prison,
+                ItemName.key_bronze_armory,
+                ItemName.key_bronze_archives,
+                ItemName.key_bronze_chambers,
+                ItemName.key_silver_prison,
+                ItemName.key_silver_armory,
+                ItemName.key_silver_archives,
+                ItemName.key_silver_chambers,
+                ItemName.key_gold_prison,
+                ItemName.key_gold_armory,
+                ItemName.key_gold_archives,
+                ItemName.key_gold_chambers,
+            }
+            if multiworld.randomize_bonus_keys[player]:
+                key_names.update({
+                    ItemName.key_bonus_prison,
+                    ItemName.key_bonus_armory,
+                    ItemName.key_bonus_archives,
+                    ItemName.key_bonus_chambers,
+                    })
+        else:
+            key_names = {
+                ItemName.key_bronze,
+                ItemName.key_silver,
+                ItemName.key_gold,
+            }
+            if multiworld.randomize_bonus_keys[player]:
+                key_names.add(ItemName.key_bonus)
     else:
-        key_names = {ItemName.mirror}
-    key_names.update({
-        ItemName.key_silver,
-        ItemName.key_gold,
-                          })
-    if multiworld.randomize_bonus_keys[player]:
-        key_names.add(ItemName.bonus_key)
+        key_names = {
+            ItemName.key_silver,
+            ItemName.key_gold,
+            ItemName.mirror,
+        }
+        if multiworld.randomize_bonus_keys[player]:
+            key_names.add(ItemName.key_bonus)
     return key_names

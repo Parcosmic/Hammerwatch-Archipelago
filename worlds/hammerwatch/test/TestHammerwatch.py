@@ -15,6 +15,8 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_secrets": Options.RandomizeSecrets.option_true,
             "randomize_puzzles": Options.RandomizePuzzles.option_true,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_true,
+            "extra_keys_percent": Options.ExtraKeysPercent.range_end,
+            "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_start,
             "shortcut_teleporter": Options.ShortcutTeleporter.option_true,
         },
         "Temple max locations": {
@@ -25,6 +27,8 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_secrets": Options.RandomizeSecrets.option_true,
             "randomize_puzzles": Options.RandomizePuzzles.option_true,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_true,
+            "extra_keys_percent": Options.ExtraKeysPercent.range_end,
+            "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_start,
         },
         "Castle min locations": {
             "goal": Options.Goal.option_castle_plank_hunt,
@@ -34,6 +38,8 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_secrets": Options.RandomizeSecrets.option_false,
             "randomize_puzzles": Options.RandomizePuzzles.option_false,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
+            "extra_keys_percent": Options.ExtraKeysPercent.range_start,
+            "shortcut_teleporter": Options.ShortcutTeleporter.option_false,
         },
         "Temple min locations": {
             "goal": Options.Goal.option_temple_plank_hunt,
@@ -43,12 +49,24 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_secrets": Options.RandomizeSecrets.option_false,
             "randomize_puzzles": Options.RandomizePuzzles.option_false,
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
+            "extra_keys_percent": Options.ExtraKeysPercent.range_start,
         },
         "Castle kill final boss goal": {
             "goal": Options.Goal.option_castle_kill_dragon,
         },
         "Temple complete Pyramid of Fear": {
             "goal": Options.Goal.option_temple_pyramid_of_fear,
+        },
+        "Castle test act-specific keys": {
+            "act_specific_keys": Options.ActSpecificKeys.option_true,
+        },
+        "Castle test act-specific keys with extra keys": {
+            "act_specific_keys": Options.ActSpecificKeys.option_true,
+            "extra_keys_percent": Options.ExtraKeysPercent.range_end,
+        },
+        "Castle test act-specific keys with big keys": {
+            "act_specific_keys": Options.ActSpecificKeys.option_true,
+            "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_end,
         },
     }
 
