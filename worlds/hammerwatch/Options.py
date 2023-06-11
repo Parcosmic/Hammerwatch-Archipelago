@@ -127,6 +127,53 @@ class ShuffleShops(Toggle):
     default = False
 
 
+class ShopUpgradeCategoryShuffle(Choice):
+    """Shuffles the shop upgrades between different categories of shops
+    Group: upgrades sharing the same base name (Damage 1, 2, 3, etc.) are shuffled together in the same category
+    All: upgrades are shuffled amongst all categories, regardless of prerequisites"""
+    display_name = "Shop Upgrade Category Shuffle"
+    # category = "Generation"
+    option_off = 0
+    option_group = 1
+    option_all = 2
+    default = 0
+
+
+class ShopUpgradePrereqShuffle(Choice):
+    """Shuffles the prerequisites of shop upgrades. If Shop Upgrade Level Shuffle is off prerequisite levels will stay the same
+    Same Category: upgrade prerequisites are only shuffled within the same category
+    All: all upgrade prerequisites are shuffled, even between categories"""
+    display_name = "Shop Upgrade Prerequisite Shuffle"
+    # category = "Generation"
+    option_off = 0
+    option_same_category = 1
+    option_all = 2
+    default = 0
+
+
+class ShopUpgradeLevelShuffle(Toggle):
+    """Shuffles the level each shop upgrade is found"""
+    display_name = "Shop Upgrade Level Shuffle"
+    # category = "Generation"
+    default = False
+
+
+class ShopCostRandoMin(Range):
+    """The lowest percent each shop upgrade cost can be multiplied by"""
+    display_name = "Minimum Shop Cost Percent"
+    range_start = 0
+    range_end = 500
+    default = 100
+
+
+class ShopCostRandoMax(Range):
+    """The highest percent each shop upgrade cost can be multiplied by"""
+    display_name = "Maximum Shop Cost Percent"
+    range_start = 0
+    range_end = 500
+    default = 100
+
+
 class ExtraKeysPercent(Range):
     """Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
     """
@@ -138,8 +185,8 @@ class ExtraKeysPercent(Range):
 
 
 class ActSpecificKeys(Toggle):
-    """(Castle only) Separates keys into versions that can only be used on a specific act. Mainly improves hinting for
-    keys, as with generic keys you could hint for a gold key at the end of the seed that you can't get"""
+    """(Castle only) Separates keys into versions that can only be used on a specific act.
+    Mainly improves hinting for keys, as with generic keys you could hint for a gold key at the end of the seed that you can't get"""
     display_name = "Act Specific Keys"
     # category = "Generation"
     default = False
@@ -244,11 +291,14 @@ class DeathLink(DeathLink):
 
 hammerwatch_options: typing.Dict[str, type(Option)] = {
     "goal": Goal,
-    # "plank_count": PlankCount,
     "planks_required_count": PlanksRequiredCount,
     "extra_plank_percent": ExtraPlankPercent,
     "difficulty": Difficulty,
     "shop_shuffle": ShuffleShops,
+    "shop_upgrade_category_shuffle": ShopUpgradeCategoryShuffle,
+    # "shop_upgrade_level_shuffle": ShopUpgradeLevelShuffle,
+    "shop_cost_min": ShopCostRandoMin,
+    "shop_cost_max": ShopCostRandoMax,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_bonus_keys": RandomizeBonusKeys,
     "randomize_recovery_items": RandomizeRecoveryItems,
