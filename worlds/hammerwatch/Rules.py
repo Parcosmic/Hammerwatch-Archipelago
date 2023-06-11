@@ -179,7 +179,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         remove.connected_region.entrances.remove(remove)
 
     # Set downstream costs - the keys that are required after a specific entrance
-    key_names = get_key_names(multiworld, player)
+    key_names = get_active_key_names(multiworld, player)
     # seen = [(exit.parent_region) for exit in menu_region.exits]
     start_exits = [exit for exit in menu_region.exits if exit.connected_region.name != CastleRegionNames.get_planks]
     # seen_start = [get_entrance_id(exit) for exit in start_exits]
@@ -208,7 +208,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
             # print(f"{exit.parent_region} -> {exit.connected_region}")
             continue
         # If the items are consumed gotta use the downstream cost logic
-        if exit.items_consumed:
+        if exit.items_consumed and exit.pass_item in door_counts.keys():
             needed_keys = door_counts[exit.pass_item] - exit.downstream_count
             # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
             add_rule(exit, lambda state, this=exit, num=needed_keys: state.has(this.pass_item, player, num), "and")
