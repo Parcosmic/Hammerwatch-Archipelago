@@ -255,7 +255,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
     "randomize_enemy_loot": RandomizeEnemyLoot,
-    # "act_specific_keys": ActSpecificKeys,
+    "act_specific_keys": ActSpecificKeys,
     "extra_keys_percent": ExtraKeysPercent,
     "big_bronze_key_percent": BigBronzeKeyPercent,
     "shortcut_teleporter": ShortcutTeleporter,

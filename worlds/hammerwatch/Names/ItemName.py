@@ -3,7 +3,7 @@ import typing
 
 empty = "Empty"
 bonus_chest = "Bonus Chest"
-bonus_key = "Bonus Key"
+key_bonus = "Bonus Key"
 chest_blue = "Blue Chest"
 chest_green = "Green Chest"
 chest_purple = "Purple Chest"
@@ -160,7 +160,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         chest_wood,
     },
     group_keys: {
-        bonus_key,
+        key_bonus,
         key_bronze,
         key_silver,
         key_gold,

@@ -2751,19 +2751,19 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.ev_castle_b1_boss_switch, player, 3)
                            and state.has(ItemName.key_gold, player, 4)
                            and state.has(ItemName.key_bronze, player, 12)
-                           and state.has(ItemName.bonus_key, player, 5)), True)
+                           and state.has(ItemName.key_bonus, player, 5)), True)
 
     if multiworld.randomize_bonus_keys[player]:
         connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
-                lambda state: (state.has(ItemName.bonus_key, player, 14)))  # Start at 1
+                lambda state: (state.has(ItemName.key_bonus, player, 14)))  # Start at 1
         connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
-                lambda state: (state.has(ItemName.bonus_key, player, 15)))
+                lambda state: (state.has(ItemName.key_bonus, player, 15)))
         connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
-                lambda state: (state.has(ItemName.bonus_key, player, 16)))
+                lambda state: (state.has(ItemName.key_bonus, player, 16)))
         connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room4,
-                lambda state: (state.has(ItemName.bonus_key, player, 17)))
+                lambda state: (state.has(ItemName.key_bonus, player, 17)))
         connect(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+                lambda state: (state.has(ItemName.key_bonus, player, 18)), True)
     else:
         connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
         connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
@@ -2811,22 +2811,22 @@ def connect_castle_regions(multiworld, player: int):
 
     if multiworld.randomize_bonus_keys[player]:
         connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
-                lambda state: (state.has(ItemName.bonus_key, player, 13)))
+                lambda state: (state.has(ItemName.key_bonus, player, 13)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+                lambda state: (state.has(ItemName.key_bonus, player, 18)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+                lambda state: (state.has(ItemName.key_bonus, player, 18)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+                lambda state: (state.has(ItemName.key_bonus, player, 18)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+                lambda state: (state.has(ItemName.key_bonus, player, 18)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)))
+                lambda state: (state.has(ItemName.key_bonus, player, 18)))
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
         connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_blue_spikes,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+                lambda state: (state.has(ItemName.key_bonus, player, 18)), True)
         connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.a2_bonus_return,
-                lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+                lambda state: (state.has(ItemName.key_bonus, player, 18)), True)
     else:
         connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m)
         connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw)
@@ -2846,7 +2846,7 @@ def connect_castle_regions(multiworld, player: int):
                           and (state.has(ItemName.key_bronze, player, 41))
                           and (state.has(ItemName.key_silver, player, 5))
                           and (state.has(ItemName.key_gold, player, 6)
-                               and state.has(ItemName.bonus_key, player, 11)), True)
+                               and state.has(ItemName.key_bonus, player, 11)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, None, True)
@@ -2907,11 +2907,11 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.ev_castle_b3_boss_switch, player, 3)
                            and state.has(ItemName.key_silver, player, 10)
                            and state.has(ItemName.key_bronze, player, 61)
-                           and state.has(ItemName.bonus_key, player, 14)), True)
+                           and state.has(ItemName.key_bonus, player, 14)), True)
 
     connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return,
-            lambda state: (state.has(ItemName.bonus_key, player, 14)), True)  # Symbolic gate
+            lambda state: (state.has(ItemName.key_bonus, player, 14)), True)  # Symbolic gate
 
     connect(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, None, True)
     connect(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
@@ -2973,13 +2973,13 @@ def connect_castle_regions(multiworld, player: int):
     connect(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island, None, True)
 
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
-            lambda state: (state.has(ItemName.bonus_key, player, 18)))
+            lambda state: (state.has(ItemName.key_bonus, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
-            lambda state: (state.has(ItemName.bonus_key, player, 18)))
+            lambda state: (state.has(ItemName.key_bonus, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
-            lambda state: (state.has(ItemName.bonus_key, player, 18)))
+            lambda state: (state.has(ItemName.key_bonus, player, 18)))
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
-            lambda state: (state.has(ItemName.bonus_key, player, 18)), True)
+            lambda state: (state.has(ItemName.key_bonus, player, 18)), True)
 
     connect(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch)
     connect(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
@@ -3006,7 +3006,7 @@ def connect_castle_regions(multiworld, player: int):
                            and state.has(ItemName.key_gold, player, 16)
                            and state.has(ItemName.key_silver, player, 13)
                            and state.has(ItemName.key_bronze, player, 103)
-                           and state.has(ItemName.bonus_key, player, 18)), True)
+                           and state.has(ItemName.key_bonus, player, 18)), True)
     connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated)
 
     planks_to_win = multiworld.planks_required_count[player]
@@ -3024,17 +3024,64 @@ def connect_castle_regions(multiworld, player: int):
 def connect_castle_regions_generic(multiworld, player: int):
     used_names: typing.Dict[str, int] = {}
 
+    if multiworld.act_specific_keys[player]:
+        key_bronze_prison = ItemName.key_bronze_prison
+        key_silver_prison = ItemName.key_silver_prison
+        key_gold_prison = ItemName.key_gold_prison
+        key_bonus_prison = ItemName.key_bonus_prison
+
+        key_bronze_armory = ItemName.key_bronze_armory
+        key_silver_armory = ItemName.key_silver_armory
+        key_gold_armory = ItemName.key_gold_armory
+        key_bonus_armory = ItemName.key_bonus_armory
+
+        key_bronze_archives = ItemName.key_bronze_archives
+        key_silver_archives = ItemName.key_silver_archives
+        key_gold_archives = ItemName.key_gold_archives
+        key_bonus_archives = ItemName.key_bonus_archives
+
+        key_bronze_chambers = ItemName.key_bronze_chambers
+        key_silver_chambers = ItemName.key_silver_chambers
+        key_gold_chambers = ItemName.key_gold_chambers
+        key_bonus_chambers = ItemName.key_bonus_chambers
+
+        if not multiworld.randomize_bonus_keys[player]:
+            key_bonus_prison = ItemName.key_bonus
+            key_bonus_armory = ItemName.key_bonus
+            key_bonus_archives = ItemName.key_bonus
+            key_bonus_chambers = ItemName.key_bonus
+    else:
+        key_bronze_prison = ItemName.key_bronze
+        key_silver_prison = ItemName.key_silver
+        key_gold_prison = ItemName.key_gold
+        key_bonus_prison = ItemName.key_bonus
+
+        key_bronze_armory = ItemName.key_bronze
+        key_silver_armory = ItemName.key_silver
+        key_gold_armory = ItemName.key_gold
+        key_bonus_armory = ItemName.key_bonus
+
+        key_bronze_archives = ItemName.key_bronze
+        key_silver_archives = ItemName.key_silver
+        key_gold_archives = ItemName.key_gold
+        key_bonus_archives = ItemName.key_bonus
+
+        key_bronze_chambers = ItemName.key_bronze
+        key_silver_chambers = ItemName.key_silver
+        key_gold_chambers = ItemName.key_gold
+        key_bonus_chambers = ItemName.key_bonus
+
     connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
                     False, True, ItemName.btnc_p1_floor, 1, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p1_s,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_sw_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_e,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, True)
     if multiworld.shortcut_teleporter[player]:
         connect_generic(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
@@ -3043,13 +3090,13 @@ def connect_castle_regions_generic(multiworld, player: int):
                         CastleRegionNames.p3_n_gold_gate)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_from_p2, CastleRegionNames.p2_p1_return, True)
     # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_p1_return, CastleRegionNames.p2_m)
     # Requires return wall button
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_bottom)
     # Requires spike button 5
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_top)
@@ -3061,19 +3108,19 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_puzzle)
     # Requires puzzle button
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_save)
     # Requires east save button
     # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_e_save)
     # Requires east save button
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_se_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
                     False, False, ItemName.ev_castle_p2_switch, 4, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_w_treasure)
@@ -3083,7 +3130,7 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_tp_puzzle)
     # Requires tp puzzle buttons
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start_door, True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start_door, CastleRegionNames.p3_start,
@@ -3092,16 +3139,16 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_closed_room)
     # Requires room open button
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_n_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_s_bronze_gate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_silver_gate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_prison)
     # Requires start spike switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s,
                     True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
                     CastleRegionNames.p3_rspikes)
     # Requires red spikes button
@@ -3113,7 +3160,7 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_bonus, CastleRegionNames.n1_start, True)
     # Requires 9 bonus buttons
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
-                    CastleRegionNames.p3_s_bronze_gate, False, True, ItemName.key_bronze)
+                    CastleRegionNames.p3_s_bronze_gate, False, True, key_bronze_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_spikes_s)
     # Requires spike switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_sw)
@@ -3128,20 +3175,20 @@ def connect_castle_regions_generic(multiworld, player: int):
     # Requires arrow hall secret button
     # Requires spike switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_s_gold_gate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.b1_start,
                     True, True, ItemName.ev_castle_b1_boss_switch, 3, False)
 
     # if multiworld.randomize_bonus_keys[player]:
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room2_unlock,
                     False, False)
     # Requires room 2 panel
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_unlock,
                     False, False)
     # Requires room 3 west panel
@@ -3149,9 +3196,9 @@ def connect_castle_regions_generic(multiworld, player: int):
                     False, False)
     # Requires room 3 east panel or room 3 hall panel
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3_hall, CastleRegionNames.n1_room4,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_prison)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
-                    True, False, ItemName.bonus_key)
+                    True, False, key_bonus_prison)
     # else:
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
@@ -3166,28 +3213,28 @@ def connect_castle_regions_generic(multiworld, player: int):
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_w,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_m,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_e,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, True)
     # Requires start wall switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_se, CastleRegionNames.a1_e,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_sw_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_s_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_se_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_e_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_ne_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_n_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e_se_bgate, CastleRegionNames.a1_rune_room)
     # Requires se gate wall switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_rune_room, CastleRegionNames.a1_se_cache)
@@ -3197,15 +3244,15 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_tp_n)
     # Requires tp switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_w,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_nw_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_ne_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_se_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_sw_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_puzzle)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes)
     # Requires spike switch
@@ -3217,30 +3264,30 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_puzzle)
     # Requires floor 5 puzzle switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_sw_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_se_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_save_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_ne,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_m_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_l_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_r_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_b_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_save_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_tp_ne)
     # Requires floor 5 ne teleport switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start, True)
     # Requires bonus portal switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, True)
@@ -3255,17 +3302,17 @@ def connect_castle_regions_generic(multiworld, player: int):
 
     # if multiworld.randomize_bonus_keys[player]:
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
-                    False, True, ItemName.bonus_key)
+                    False, True, key_bonus_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_se)
     # Requires bonus 2 open se room panel
     connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
@@ -3295,20 +3342,20 @@ def connect_castle_regions_generic(multiworld, player: int):
     # connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_main)
     # Requires floor 6 from floor 5 open passage switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_w_b_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     # Don't forget to add extra thing in rules requiring the teleport button for the item inside
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_t_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_r_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_l_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_r_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_l_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
     connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_r_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_armory)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
                     True, True, ItemName.ev_castle_b2_boss_switch, 3, False)
@@ -3317,50 +3364,50 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_se_ggate,
-                    False, False, ItemName.key_gold)
+                    False, False, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_se_ggate, CastleRegionNames.r1_e)
     # Requires floor 7 open east passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_s_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_sgate,
-                    False, False, ItemName.key_silver)
+                    False, False, key_silver_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall)
     # Requires floor 7 open right wall
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_archives)
     # Two doors can be used to enter, but this one is set as an internal gate bc it causes issues with generation
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_archives)
     # connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
-    #                 False, False, ItemName.key_bronze)
+    #                 False, False, key_bronze_archives)
     # Internal gate
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_archives)
     # Technically there is no gate here but this makes the logic correct so it's staying until I figure it out
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_ne_ggate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw)
     # Requires floor 7 open North passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw, CastleRegionNames.r1_nw_hidden)
     # Requires floor 7 open hidden room
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw_hidden, CastleRegionNames.r1_nw_ggate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw_ggate, CastleRegionNames.r1_sw)
     # Requires floor 7 open west passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_w_sgate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall)
     # Requires floor 7 open start wall
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw_ggate,
-                    True, True, ItemName.key_gold)
+                    True, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw_ggate, CastleRegionNames.r1_exit_l)
     # From sw requires floor 7 open left exit
     # Internal bronze gate
     for i in range(2):
         connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r1_exit_r)
     # From start requires floor 7 open right exit
@@ -3368,20 +3415,20 @@ def connect_castle_regions_generic(multiworld, player: int):
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_w_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_archives)
     # Internal bronze gates
     for i in range(5):
         connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_m,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_e)
     # Requires open east passage top or open east passage bottom
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_nw,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_nw, CastleRegionNames.r2_n)
     # Requires open north room left
     # Or requires open north room right from r2_m
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_sgate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_sgate, CastleRegionNames.r2_s)
     # Requires silver gate floor button
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_spike_island)
@@ -3395,7 +3442,7 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_from_r3, CastleRegionNames.r2_ne_cache)
     # Requires open cache passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_ggate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main, True)
     # Requires open exit button
 
@@ -3404,9 +3451,9 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_s_room)
     # Requires open south room
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_l_shop_sgate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_r_shop_sgate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_se_cache)
     # Requires open se cache room
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch)
@@ -3418,11 +3465,11 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main, True)
     # Requires open bonus entrance passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
-                    False, True, ItemName.key_bronze)
+                    False, True, key_bronze_archives)
     # Internal bronze gates
     for i in range(5):
         connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_main,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_l)
     # Requires left sw button
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_r)
@@ -3434,9 +3481,9 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3,
                     True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_e_ggate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_w_ggate,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_archives)
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.r3_exit)
     # Requires open boss switch room
     connect_generic(multiworld, player, used_names, CastleRegionNames.r3_exit, CastleRegionNames.b3_start,
@@ -3447,7 +3494,7 @@ def connect_castle_regions_generic(multiworld, player: int):
     # Internal bronze gates
     for i in range(3):
         connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_main,
-                        False, False, ItemName.bonus_key)
+                        False, False, key_bonus_archives)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
@@ -3456,28 +3503,28 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_shop,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     # Bronze gates with no checks
     for i in range(6):
         connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_start,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_w,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_sgate,
-                    False, True, ItemName.key_silver)
+                    False, True, key_silver_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs)
     # Requires open prison door passage from c1_start
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
                     True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_s_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_ledge,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     # Bronze gates with no checks
     for i in range(4):
         connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_w,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main, True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.pstart_start, CastleRegionNames.pstart_puzzle)
@@ -3492,26 +3539,26 @@ def connect_castle_regions_generic(multiworld, player: int):
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes)
     # Requires 4 spike floor rune switches
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_1,
-                    False, False, ItemName.key_silver)
+                    False, False, key_silver_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_w_shops_3, CastleRegionNames.c2_w_shops_2,
-                    False, False, ItemName.key_silver)
+                    False, False, key_silver_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_3,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_1,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_2,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     # Can also access from main through open east passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_e_shops_1, CastleRegionNames.c2_puzzle)
     # Requires open puzzle room and puzzle switch
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_exit_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     # Bronze gates with no checks
     for i in range(12):
         connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_main,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_bonus, True)
     # Require 5 open bonus entrance wall switches
     connect_generic(multiworld, player, used_names, CastleRegionNames.c2_bonus, CastleRegionNames.n4_main, True)
@@ -3527,22 +3574,22 @@ def connect_castle_regions_generic(multiworld, player: int):
                     True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
-                    False, False, ItemName.bonus_key)
+                    False, False, key_bonus_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
-                    True, False, ItemName.bonus_key)
+                    True, False, key_bonus_chambers)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
                     False, True, ItemName.ev_castle_c3_rspikes_switch, 1, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_s_bgate,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_shop,
-                    False, False, ItemName.key_bronze)
+                    False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_wall)
     # Requires open middle passage
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_tp)
@@ -3550,13 +3597,13 @@ def connect_castle_regions_generic(multiworld, player: int):
     # Bronze gates with no checks
     for i in range(8):
         connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_rspikes,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_nw,
-                    False, True, ItemName.key_gold)
+                    False, True, key_gold_chambers)
     # Bronze gates with no checks
     for i in range(3):
         connect_generic(multiworld, player, used_names, CastleRegionNames.c3_nw, CastleRegionNames.c3_nw,
-                        False, False, ItemName.key_bronze)
+                        False, False, key_bronze_chambers)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_sw_hidden,
                     False, True, ItemName.ev_castle_c3_sw_hidden_switch, 6, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_se_hidden)
@@ -3575,7 +3622,7 @@ def connect_castle_regions_generic(multiworld, player: int):
                            and state.has(ItemName.key_gold, player, 16)
                            and state.has(ItemName.key_silver, player, 13)
                            and state.has(ItemName.key_bronze, player, 103)
-                           and state.has(ItemName.bonus_key, player, 18)), True)
+                           and state.has(ItemName.key_bonus, player, 18)), True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated)
 
     planks_to_win = multiworld.planks_required_count[player]
@@ -5071,10 +5118,10 @@ def connect_tots_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.ev_pof_switch, player, 6)), True)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room, None, True)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_gate_1,
-            lambda state: (state.has(ItemName.bonus_key, player, 1)))
+            lambda state: (state.has(ItemName.key_bonus, player, 1)))
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room, None, True)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_gate_2,
-            lambda state: (state.has(ItemName.bonus_key, player, 2)
+            lambda state: (state.has(ItemName.key_bonus, player, 2)
                            and state.has(ItemName.ev_pof_1_unlock_exit, player)))
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main, None, True)
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n, None, True)
@@ -5340,13 +5387,13 @@ def connect_tots_regions_generic(multiworld, player: int):
                     TempleRegionNames.pof_1_se_room_top)
     # Requires bonus panel
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_se_room_top, TempleRegionNames.pof_1_gate_1,
-                    False, True, ItemName.bonus_key)
+                    False, True, ItemName.key_bonus)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room,
                     True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_exit_hall,
                     False, True, ItemName.ev_pof_1_unlock_exit, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_exit_hall, TempleRegionNames.pof_1_gate_2,
-                    False, True, ItemName.bonus_key)
+                    False, True, ItemName.key_bonus)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main, True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n, True)
     connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle)
