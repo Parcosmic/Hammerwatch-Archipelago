@@ -171,6 +171,12 @@ class HammerwatchWorld(World):
                     self.shop_locations[loc] = self.multiworld.random.choice(remaining_shops)
                     remaining_shops.remove(self.shop_locations[loc])
 
+        # Shop cost setting validation, swap if max is higher than min
+        if self.multiworld.shop_cost_max[self.player] < self.multiworld.shop_cost_min[self.player]:
+            swap = self.multiworld.shop_cost_max[self.player]
+            self.multiworld.shop_cost_max[self.player] = self.multiworld.shop_cost_min[self.player]
+            self.multiworld.shop_cost_min[self.player] = swap
+
     def create_regions(self) -> None:
         create_regions(self.multiworld, self.campaign, self.player, self.active_location_list)
 
