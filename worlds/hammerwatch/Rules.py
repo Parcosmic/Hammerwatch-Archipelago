@@ -204,6 +204,8 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
 
     transitions = multiworld.get_entrances()
     for exit in transitions:
+        if exit.player != player:
+            continue
         if exit.pass_item is None:
             # print(f"{exit.parent_region} -> {exit.connected_region}")
             continue
