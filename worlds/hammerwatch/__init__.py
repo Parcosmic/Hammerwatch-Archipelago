@@ -37,7 +37,7 @@ class HammerwatchWorld(World):
     remote_start_inventory: bool = True
 
     hw_client_version = "0.8"
-    data_version = 2
+    data_version = 3
 
     web = HammerwatchWeb()
 
