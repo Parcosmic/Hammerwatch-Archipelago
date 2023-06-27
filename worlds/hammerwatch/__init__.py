@@ -1,5 +1,3 @@
-import os
-import typing
 
 from .Items import *
 from .Locations import *
@@ -202,53 +200,73 @@ class HammerwatchWorld(World):
             total_required_locations -= len(temple_event_locations)
             if not self.multiworld.randomize_bonus_keys[self.player]:
                 total_required_locations -= 2  # Preplaced bonus keys
-
             # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
             if self.multiworld.portal_accessibility[self.player]:
                 total_required_locations -= 6
 
+        # Remove items if the player starts with them
+        for precollected in self.multiworld.precollected_items[self.player]:
+            if precollected.name in self.item_counts:
+                if self.item_counts[precollected.name] <= 1:
+                    self.item_counts.pop(precollected.name)
+                else:
+                    self.item_counts[precollected.name] -= 1
+
         # Add items
-        for item in item_table:
-            if item in self.item_counts:
-                item_names += [item] * self.item_counts[item]
+        items = 0
+        present_filler_items = []
+        for item in self.item_counts:
+            items += self.item_counts[item]
+            item_names += [item] * self.item_counts[item]
+            if item_table[item].classification == ItemClassification.filler and self.item_counts[item] > 0:
+                present_filler_items.append(item)
+
+        # Add/remove junk items depending if we have not enough/too many locations
+        junk: int = total_required_locations - items
+        if junk > 0:
+            for item_name in self.multiworld.random.choices(present_filler_items, k=junk):
+                self.item_counts[item_name] += 1
+        else:
+            for j in range(-junk):
+                junk_item = self.multiworld.random.choice(present_filler_items)
+                self.item_counts[junk_item] -= 1
+                if self.item_counts[junk_item] == 0:
+                    present_filler_items.remove(junk_item)
 
         # Exclude items if the player starts with them
-        exclude = [item for item in self.multiworld.precollected_items[self.player]]
-        for item in map(self.create_item, item_names):
-            if item in exclude:
-                exclude.remove(item)
-            else:
-                itempool.append(item)
+        # exclude = [item for item in self.multiworld.precollected_items[self.player]]
+        # for item in map(self.create_item, item_names):
+        #     if item in exclude:
+        #         exclude.remove(item)
+        #     else:
+        #         itempool.append(item)
 
-        # Add junk items if there aren't enough items to fill the locations
-        junk: int = total_required_locations - len(itempool)
-        junk_pool: typing.List[Item] = []
-        for item_name in self.multiworld.random.choices(junk_items, k=junk):
-            junk_pool += [self.create_item(item_name)]
-
-        itempool += junk_pool
+        # Create items and add to item pool
+        for item in self.item_counts:
+            for i in range(self.item_counts[item]):
+                itempool.append(self.create_item(item))
 
         self.multiworld.itempool += itempool
 
     def collect(self, state: "CollectionState", item: "Item") -> bool:
         prog = super(HammerwatchWorld, self).collect(state, item)
         spaces = item.name.count(" ")
-        if "Key" in item.name and spaces > 1:
+        if item.name.endswith("Key") and spaces > 1:
             add_name = key_table[item.name][0]
             count = key_table[item.name][1]
             state.prog_items[add_name, self.player] += count
-            if "Big" in item.name and spaces == 3:
+            if item.name.startswith("Big") and spaces == 3:
                 state.prog_items[key_table[add_name][0], self.player] += count * key_table[add_name][1]
         return prog
 
     def remove(self, state: "CollectionState", item: "Item") -> bool:
         prog = super(HammerwatchWorld, self).remove(state, item)
         spaces = item.name.count(" ")
-        if "Key" in item.name and spaces > 1:
+        if item.name.endswith("Key") and spaces > 1:
             add_name = key_table[item.name][0]
             count = key_table[item.name][1]
             state.prog_items[add_name, self.player] -= count
-            if "Big" in item.name and spaces == 3:
+            if item.name.startswith("Big") and spaces == 3:
                 state.prog_items[key_table[add_name][0], self.player] -= count * key_table[add_name][1]
         return prog
 

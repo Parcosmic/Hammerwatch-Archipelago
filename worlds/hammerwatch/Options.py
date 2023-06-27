@@ -91,6 +91,14 @@ class RandomizeBonusKeys(Toggle):
     default = False
 
 
+class RemoveExtraLives(Toggle):
+    """Removes extra lives (Ankhs) from the item pool and replaces them with filler.
+    Recommended to have enabled when playing with the infinite lives or no extra lives modifiers"""
+    display_name = "Remove Extra Lives"
+    # category = "Generation"
+    default = False
+
+
 class RandomizeRecoveryItems(Toggle):
     """Whether recovery items (such as apples and mana crystals) are shuffled into the pool"""
     display_name = "Randomize Recovery Items"
@@ -301,6 +309,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "shop_cost_max": ShopCostRandoMax,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_bonus_keys": RandomizeBonusKeys,
+    "remove_lives": RemoveExtraLives,
     "randomize_recovery_items": RandomizeRecoveryItems,
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,

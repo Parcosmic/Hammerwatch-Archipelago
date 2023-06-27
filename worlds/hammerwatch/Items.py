@@ -1,5 +1,3 @@
-import typing
-
 from BaseClasses import Item, ItemClassification, MultiWorld
 from . import Options
 from .Names import ItemName
@@ -325,8 +323,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         extra_items = total_planks - item_counts_table[ItemName.plank]
         item_counts_table[ItemName.plank] = total_planks
     else:  # Remove planks from the pool, they're not needed
-        extra_items -= item_counts_table[ItemName.plank]
-        item_counts_table.pop(ItemName.plank)
+        extra_items -= item_counts_table.pop(ItemName.plank)
 
     # Extra keys
     all_key_names = {
@@ -384,13 +381,13 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     if campaign == Campaign.Castle and multiworld.big_bronze_key_percent[player] > 0:
         bronze_key_names = [key for key in get_active_key_names(multiworld, player) if "Bronze" in key]
         for bronze_key in bronze_key_names:
-            big_name = bronze_key.replace("Bronze", "Big Bronze")
+            big_name = "Big " + bronze_key
             big_keys = int(item_counts_table[bronze_key] * multiworld.big_bronze_key_percent[player] / 100
                            / key_table[big_name][1])
             if big_keys > 0:
                 item_counts_table[big_name] = big_keys
                 item_counts_table[bronze_key] -= big_keys * key_table[big_name][1]
-                extra_items += big_keys * key_table[big_name][1] - big_keys
+                extra_items -= big_keys * key_table[big_name][1] - big_keys
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
@@ -421,6 +418,12 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
                     item_counts_table[ItemName.ankh] += 1
                 else:
                     item_counts_table[ItemName.stat_upgrade] += 1
+
+    # Remove extra lives if the option was selected
+    if multiworld.remove_lives[player]:
+        extra_items -= item_counts_table.pop(ItemName.ankh)
+        extra_items -= item_counts_table.pop(ItemName.ankh_5up)
+        # extra_items -= item_counts_table.pop(ItemName.ankh_7up)  # No maps have 7-ups in them
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not multiworld.randomize_recovery_items[player]:
@@ -473,17 +476,18 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     # For Necessary we set the number of bonus chests equal to each extra item
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_necessary:
-        item_counts_table[ItemName.bonus_chest] = extra_items
+        item_counts_table[ItemName.bonus_chest] = max(extra_items, 0)
 
+    # This code is now at the end of create items
     # For each extra item remove a filler item, or add extra items if we need more
-    for t in range(extra_items):
-        filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
-        if extra_items > 0:
-            item_counts_table[filler_item] -= 1
-            if item_counts_table[filler_item] == 0:
-                filler_item_names.remove(filler_item)
-        else:
-            item_counts_table[filler_item] += 1
+    # for t in range(abs(extra_items)):
+    #     filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
+    #     if extra_items > 0:
+    #         item_counts_table[filler_item] -= 1
+    #         if item_counts_table[filler_item] == 0:
+    #             filler_item_names.remove(filler_item)
+    #     else:
+    #         item_counts_table[filler_item] += 1
 
     return item_counts_table, extra_items
 
