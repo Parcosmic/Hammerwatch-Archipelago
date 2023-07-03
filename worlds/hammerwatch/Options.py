@@ -182,6 +182,35 @@ class ShopCostRandoMax(Range):
     default = 100
 
 
+# Groups would be pretty hard to do, and I don't feel like it would be that much more fun than individual
+# class EnemyShuffle(Choice):
+#     """Shuffles the locations of enemies, mini-bosses, and towers in each level
+#     Group: only the types of enemies can be shuffled (ex. all grubs are replaced by beetles)
+#     All: each enemy in a group can be a different type"""
+#     display_name = "Enemy Shuffle"
+#     # category = "Generation"
+#     option_off = 0
+#     option_group = 1
+#     option_all = 2
+#     default = 0
+class EnemyShuffle(Toggle):
+    """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level"""
+    display_name = "Enemy Shuffle"
+    # category = "Generation"
+    default = False
+
+
+class EnemyShuffleBalancing(Range):
+    """How many acts away enemies can be shuffled to
+    When set to 0 only enemies on the same act will be shuffled
+    When set to 3 enemies can be shuffled to any act"""
+    display_name = "Enemy Shuffle Act Range"
+    # category = "Generation"
+    range_start = 0
+    range_end = 3
+    default = 0
+
+
 class ExtraKeysPercent(Range):
     """Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
     """
@@ -307,6 +336,8 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     # "shop_upgrade_level_shuffle": ShopUpgradeLevelShuffle,
     "shop_cost_min": ShopCostRandoMin,
     "shop_cost_max": ShopCostRandoMax,
+    "enemy_shuffle": EnemyShuffle,
+    "enemy_shuffle_act_range": EnemyShuffleBalancing,
     "bonus_behavior": BonusChestLocationBehavior,
     "randomize_bonus_keys": RandomizeBonusKeys,
     "remove_lives": RemoveExtraLives,

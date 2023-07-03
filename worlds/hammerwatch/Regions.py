@@ -3,7 +3,7 @@ from random import Random
 
 from BaseClasses import MultiWorld, Region, Entrance
 from .Items import HammerwatchItem
-from .Locations import HammerwatchLocation, LocationData, LocationClassification, random_locations
+from .Locations import HammerwatchLocation, LocationData, LocationClassification
 from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames
 from .Util import *
 
@@ -33,16 +33,18 @@ class HWEntrance(Entrance):
         self.level_exit = level_exit
 
 
-def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData]):
+def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData],
+                   random_locations: typing.Dict[str, int]):
     if map == Campaign.Castle:
-        create_castle_regions(multiworld, player, active_locations)
-        connect_castle_regions_generic(multiworld, player)
+        create_castle_regions(multiworld, player, active_locations, random_locations)
+        connect_castle_regions_generic(multiworld, player, random_locations)
     else:
-        create_tots_regions(multiworld, player, active_locations)
-        connect_tots_regions_generic(multiworld, player)
+        create_tots_regions(multiworld, player, active_locations, random_locations)
+        connect_tots_regions_generic(multiworld, player, random_locations)
 
 
-def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
+def create_castle_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData],
+                          random_locations: typing.Dict[str, int]):
     menu_region = create_region(multiworld, player, active_locations, CastleRegionNames.menu, None)
 
     p1_start_locations = [
@@ -3021,7 +3023,7 @@ def connect_castle_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
-def connect_castle_regions_generic(multiworld, player: int):
+def connect_castle_regions_generic(multiworld, player: int, random_locations: typing.Dict[str, int]):
     used_names: typing.Dict[str, int] = {}
 
     if multiworld.act_specific_keys[player]:
@@ -3638,7 +3640,8 @@ def connect_castle_regions_generic(multiworld, player: int):
                     False, False, ItemName.plank, planks_to_win, False)
 
 
-def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData]):
+def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData],
+                        random_locations: typing.Dict[str, int]):
     menu_region = create_region(multiworld, player, active_locations, TempleRegionNames.menu, None)
 
     get_planks_locations = []
@@ -5154,7 +5157,7 @@ def connect_tots_regions(multiworld, player: int):
             lambda state: (state.has(ItemName.plank, player, planks_to_win)))
 
 
-def connect_tots_regions_generic(multiworld, player: int):
+def connect_tots_regions_generic(multiworld, player: int, random_locations: typing.Dict[str, int]):
     used_names: typing.Dict[str, int] = {}
 
     pan_item = ItemName.pan
@@ -5480,3 +5483,23 @@ def connect_generic(multiworld: MultiWorld, player: int, used_names: typing.Dict
     if two_way:
         connect_generic(multiworld, player, used_names, target, source, level_exit, False, pass_item, item_count,
                         items_consumed)
+
+
+def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
+                 key_type: str, gate_id: str):
+    source_region = multiworld.get_region(source, player)
+    target_region = multiworld.get_region(target, player)
+
+    if target not in used_names:
+        used_names[target] = 1
+        forward_name = target
+    else:
+        used_names[target] += 1
+        forward_name = target + ('_' * used_names[target])
+
+    connection = HWEntrance(player, forward_name, source_region, key_type, 1, True, False)
+
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    connect_generic(multiworld, player, used_names, target, source, False, False, key_type, 1, True)
