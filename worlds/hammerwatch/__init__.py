@@ -1,3 +1,4 @@
+import typing
 
 from .Items import *
 from .Locations import *
@@ -36,7 +37,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    hw_client_version = "0.8"
+    hw_client_version = "1.0"
     data_version = 3
 
     web = HammerwatchWeb()
@@ -49,19 +50,22 @@ class HammerwatchWorld(World):
     campaign: Campaign = Campaign.Castle
     active_location_list: typing.Dict[str, LocationData]
     item_counts: typing.Dict[str, int]
+    random_locations: typing.Dict[str, int]
     shop_locations: typing.Dict[str, str]
     door_counts: typing.Dict[str, int] = {}
+    gate_types: typing.Dict[str, str] = {}
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
         for option_name in self.option_definitions:
             option = getattr(self.multiworld, option_name)[self.player]
             slot_data[option_name] = option.value
-        for loc, value in random_locations.items():
+        for loc, value in self.random_locations.items():
             slot_data[loc] = value
         for loc, value in self.shop_locations.items():
             slot_data[loc] = value
         slot_data["Hammerwatch Mod Version"] = self.hw_client_version
+        slot_data["Gate Types"] = self.gate_types
         return slot_data
 
     def generate_early(self):
@@ -76,7 +80,7 @@ class HammerwatchWorld(World):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
         # self.item_counts, extra_items = get_item_counts(self.multiworld, self.campaign, self.player)
-        self.active_location_list, self.item_counts = setup_locations(self.multiworld, self.campaign, self.player)
+        self.active_location_list, self.item_counts, self.random_locations = setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
         self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
@@ -176,7 +180,7 @@ class HammerwatchWorld(World):
             self.multiworld.shop_cost_min[self.player] = swap
 
     def create_regions(self) -> None:
-        create_regions(self.multiworld, self.campaign, self.player, self.active_location_list)
+        create_regions(self.multiworld, self.campaign, self.player, self.active_location_list, self.random_locations)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
