@@ -1335,10 +1335,6 @@ castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.b4_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
-castle_shop_locations: typing.Dict[str, LocationData] = {
-
-}
-
 castle_event_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.btn_p1_floor: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_ne_switch: LocationData(None),
@@ -2012,10 +2008,6 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.b3_tower_fire_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
-temple_shop_locations: typing.Dict[str, LocationData] = {
-
-}
-
 temple_event_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.ev_c1_portal: LocationData(None),
     TempleLocationNames.ev_c2_portal: LocationData(None),
@@ -2058,13 +2050,9 @@ common_event_locations: typing.Dict[str, LocationData] = {
 
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
-    **castle_shop_locations,
     **castle_enemy_loot_locations,
-    # **castle_event_locations,
     **temple_locations,
-    **temple_shop_locations,
     **temple_enemy_loot_locations,
-    # **temple_event_locations,
     # **common_event_locations
 }
 
@@ -2094,17 +2082,6 @@ def setup_locations(multiworld: MultiWorld, map: Campaign, player: int):
             continue
         if data.classification != LocationClassification.Recovery or multiworld.randomize_recovery_items[player]:
             location_table[name] = data
-
-    # Random location behavior
-    # if multiworld.random_location_behavior[player] == 0:  # Vanilla
-    #     if map == Campaign.Castle:  # Castle Hammerwatch
-    #         location_table = choose_castle_random_locations(multiworld, player, location_table)
-    #     elif map == Campaign.Temple:
-    #         location_table = choose_tots_random_locations(multiworld, player, location_table)
-    # elif multiworld.random_location_behavior[player] == 1:  # Shuffle, not implemented yet
-    #     pass  # Randomly remove some locations, need to determine the number
-    # elif multiworld.random_location_behavior[player] == 2:  # All checks
-    #     pass  # Do nothing as all locations are already added to the dict
 
     if map == Campaign.Castle:  # Castle Hammerwatch
         location_table, item_counts, random_locations = choose_castle_random_locations(multiworld, player, location_table, item_counts)
