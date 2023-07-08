@@ -128,6 +128,13 @@ class RandomizeEnemyLoot(Toggle):
     default = False
 
 
+class GateShuffle(Toggle):  # Maybe someday I'll add a mode so the number of keys are randomized too
+    """Shuffles the type of bronze, silver, and gold gates"""
+    display_name = "Gate Shuffle"
+    # category = "Generation"
+    default = False
+
+
 class ShuffleShops(Toggle):
     """Shuffles the shop vendors around so that they may be different from their normal locations"""
     display_name = "Shop Location Shuffle"
@@ -182,17 +189,6 @@ class ShopCostRandoMax(Range):
     default = 100
 
 
-# Groups would be pretty hard to do, and I don't feel like it would be that much more fun than individual
-# class EnemyShuffle(Choice):
-#     """Shuffles the locations of enemies, mini-bosses, and towers in each level
-#     Group: only the types of enemies can be shuffled (ex. all grubs are replaced by beetles)
-#     All: each enemy in a group can be a different type"""
-#     display_name = "Enemy Shuffle"
-#     # category = "Generation"
-#     option_off = 0
-#     option_group = 1
-#     option_all = 2
-#     default = 0
 class EnemyShuffle(Toggle):
     """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level"""
     display_name = "Enemy Shuffle"
@@ -331,6 +327,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "planks_required_count": PlanksRequiredCount,
     "extra_plank_percent": ExtraPlankPercent,
     "difficulty": Difficulty,
+    "gate_shuffle": GateShuffle,
     "shop_shuffle": ShuffleShops,
     "shop_upgrade_category_shuffle": ShopUpgradeCategoryShuffle,
     # "shop_upgrade_level_shuffle": ShopUpgradeLevelShuffle,

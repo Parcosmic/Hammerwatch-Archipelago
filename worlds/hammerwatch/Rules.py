@@ -21,12 +21,16 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
 
     set_door_access_rules(multiworld, player, door_counts, loop_entrances)
 
-    # It's kinda mean to make players get their last planks during the final boss, or even after when they're not sure
-    # if they can beat their game
+    # It's kinda mean to make players get their last planks or keys during the final boss,
+    # or even after when they're not sure if they can beat their game
     if get_campaign(multiworld, player) == Campaign.Castle:
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
             add_rule(multiworld.get_entrance(CastleRegionNames.b4_start, player),
-                     lambda state: state.has(ItemName.plank, player, 12))
+                     lambda state: state.has(ItemName.plank, player, 12)
+                                   and state.has(ItemName.key_gold, player, 16)
+                                   and state.has(ItemName.key_silver, player, 13)
+                                   and state.has(ItemName.key_bronze, player, 103)
+                                   and state.has(ItemName.key_bonus, player, 18))
             # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, player),
             #          lambda state: state.has(ItemName.plank, player, 1))
             # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_2, player),

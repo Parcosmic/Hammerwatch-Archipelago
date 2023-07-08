@@ -79,13 +79,11 @@ class HammerwatchWorld(World):
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
-        # self.item_counts, extra_items = get_item_counts(self.multiworld, self.campaign, self.player)
         self.active_location_list, self.item_counts, self.random_locations = setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
         self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_victory))
-        # self.multiworld.completion_condition[self.player] = lambda state: state.has(ItemName.ev_victory, self.player)
 
         if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
@@ -237,14 +235,6 @@ class HammerwatchWorld(World):
                 if self.item_counts[junk_item] == 0:
                     present_filler_items.remove(junk_item)
 
-        # Exclude items if the player starts with them
-        # exclude = [item for item in self.multiworld.precollected_items[self.player]]
-        # for item in map(self.create_item, item_names):
-        #     if item in exclude:
-        #         exclude.remove(item)
-        #     else:
-        #         itempool.append(item)
-
         # Create items and add to item pool
         for item in self.item_counts:
             for i in range(self.item_counts[item]):
@@ -299,8 +289,6 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
         self.multiworld.get_location(CastleLocationNames.ev_p3_boss_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
-        # self.multiworld.get_location(CastleLocationNames.ev_p3_boss_switch_skip, self.player) \
-        #    .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
 
         # Armory Boss Switches
         self.multiworld.get_location(CastleLocationNames.ev_a1_boss_switch, self.player) \

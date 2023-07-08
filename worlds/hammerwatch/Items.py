@@ -307,7 +307,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     extra_items: int = 0
 
     secrets: int = item_counts_table.pop(ItemName.secret)
-    # puzzles: int = item_counts_table.pop(ItemName.puzzle)
 
     # Remove bonus keys from the item counts as they are placed elsewhere
     if multiworld.randomize_bonus_keys[player] == 0:
@@ -362,12 +361,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         extra_keys = int(item_counts_table[key] * multiworld.extra_keys_percent[player] / 100)
         item_counts_table[key] += extra_keys
         extra_items += extra_keys
-    # extra_skeys = int(item_counts_table[ItemName.key_silver] * multiworld.extra_keys_percent[player] / 100)
-    # extra_gkeys = int(item_counts_table[ItemName.key_gold] * multiworld.extra_keys_percent[player] / 100)
-    # item_counts_table[ItemName.key_silver] += extra_skeys
-    # item_counts_table[ItemName.key_gold] += extra_gkeys
-    # extra_items += extra_skeys
-    # extra_items += extra_gkeys
     if get_campaign(multiworld, player) == Campaign.Temple:
         extra_mirrors = int(item_counts_table[ItemName.mirror] * multiworld.extra_keys_percent[player] / 100)
         item_counts_table[ItemName.mirror] += extra_mirrors
@@ -423,7 +416,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     if multiworld.remove_lives[player]:
         extra_items -= item_counts_table.pop(ItemName.ankh)
         extra_items -= item_counts_table.pop(ItemName.ankh_5up)
-        # extra_items -= item_counts_table.pop(ItemName.ankh_7up)  # No maps have 7-ups in them
+        extra_items -= item_counts_table.pop(ItemName.ankh_7up)  # No maps have 7-ups in them, but here for future stuff
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not multiworld.randomize_recovery_items[player]:
@@ -442,13 +435,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         for i in range(miniboss_upgrades):
             item = roll_for_item(multiworld, miniboss_stat_upgrade_chances)
             item_counts_table[item] += 1
-
-    # Add puzzle items
-    # if multiworld.randomize_puzzles[player]:
-    # item_counts_table[ItemName.chest_purple] += puzzles
-    # item_counts_table[ItemName.stat_upgrade] += puzzles
-    # item_counts_table[ItemName.ankh] += puzzles
-    # item_counts_table[ItemName.potion_rejuvenation] += puzzles
 
     # Determine stat upgrades and add them to the pool
     stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
@@ -477,17 +463,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     # For Necessary we set the number of bonus chests equal to each extra item
     if multiworld.bonus_behavior[player] == BonusChestLocationBehavior.option_necessary:
         item_counts_table[ItemName.bonus_chest] = max(extra_items, 0)
-
-    # This code is now at the end of create items
-    # For each extra item remove a filler item, or add extra items if we need more
-    # for t in range(abs(extra_items)):
-    #     filler_item = filler_item_names[multiworld.random.randrange(len(filler_item_names))]
-    #     if extra_items > 0:
-    #         item_counts_table[filler_item] -= 1
-    #         if item_counts_table[filler_item] == 0:
-    #             filler_item_names.remove(filler_item)
-    #     else:
-    #         item_counts_table[filler_item] += 1
 
     return item_counts_table, extra_items
 
