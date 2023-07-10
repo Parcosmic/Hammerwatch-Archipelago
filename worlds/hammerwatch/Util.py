@@ -75,3 +75,15 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
         if multiworld.randomize_bonus_keys[player]:
             key_names.add(ItemName.key_bonus)
     return key_names
+
+
+def get_random_element(multiworld: MultiWorld, dictionary: typing.Dict):
+    total = 0
+    for item, value in dictionary.items():
+        total += value
+    index = multiworld.random.randint(0, total-1)
+    for item, value in dictionary.items():
+        if index < value:
+            return item
+        index -= value
+    return None

@@ -38,7 +38,7 @@ class HammerwatchWorld(World):
     remote_start_inventory: bool = True
 
     hw_client_version = "1.0"
-    data_version = 3
+    data_version = 4
 
     web = HammerwatchWeb()
 
@@ -178,7 +178,8 @@ class HammerwatchWorld(World):
             self.multiworld.shop_cost_min[self.player] = swap
 
     def create_regions(self) -> None:
-        create_regions(self.multiworld, self.campaign, self.player, self.active_location_list, self.random_locations)
+        self.gate_types = create_regions(self.multiworld, self.campaign, self.player, self.active_location_list,
+                                         self.random_locations)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
