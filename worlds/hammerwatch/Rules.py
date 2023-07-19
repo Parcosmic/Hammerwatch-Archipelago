@@ -24,6 +24,15 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     # It's kinda mean to make players get their last planks or keys during the final boss,
     # or even after when they're not sure if they can beat their game
     if get_campaign(multiworld, player) == Campaign.Castle:
+        # Overwrite world completion condition if we need to defeat all bosses
+        if get_goal_type(multiworld, player) == GoalType.KillBosses:
+            boss_names: typing.Set = {
+                ItemName.evc_beat_boss_1,
+                ItemName.evc_beat_boss_2,
+                ItemName.evc_beat_boss_3,
+                ItemName.evc_beat_boss_4,
+            }
+            multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
             add_rule(multiworld.get_entrance(CastleRegionNames.b4_start, player),
                      lambda state: state.has(ItemName.plank, player, 12)
@@ -54,6 +63,15 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_11, player),
             #          lambda state: state.has(ItemName.plank, player, 11))
     else:
+        # Overwrite world completion condition if we need to defeat all bosses
+        if get_goal_type(multiworld, player) == GoalType.KillBosses:
+            boss_names: typing.Set = {
+                ItemName.evt_beat_boss_1,
+                ItemName.evt_beat_boss_2,
+                ItemName.evt_beat_boss_3,
+            }
+            multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
+
         # Set access rules for portal activation events
         def portal_rule(state) -> bool:
             return state.has(ItemName.key_teleport, player, 6)
@@ -64,6 +82,10 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         add_rule(multiworld.get_location(TempleLocationNames.ev_t1_portal, player), portal_rule)
         add_rule(multiworld.get_location(TempleLocationNames.ev_t2_portal, player), portal_rule)
         add_rule(multiworld.get_location(TempleLocationNames.ev_t3_portal, player), portal_rule)
+
+        # Extra rules for T1 north node blocks locations
+        add_rule(multiworld.get_entrance(TempleRegionNames.t1_sun_block_hall, player),
+                 lambda state: state.has_all([ItemName.evt_t1_n_mirrors, ItemName.evt_t1_s_mirror], player))
 
 
 def prune_entrances(start_region: Region, next_region: Region):

@@ -1364,6 +1364,10 @@ castle_event_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.ev_c3_sw_hidden_switch_4: LocationData(None),
     CastleLocationNames.ev_c3_sw_hidden_switch_5: LocationData(None),
     CastleLocationNames.ev_c3_sw_hidden_switch_6: LocationData(None),
+    CastleLocationNames.ev_beat_boss_1: LocationData(None),
+    CastleLocationNames.ev_beat_boss_2: LocationData(None),
+    CastleLocationNames.ev_beat_boss_3: LocationData(None),
+    CastleLocationNames.ev_beat_boss_4: LocationData(None),
 }
 
 castle_locations: typing.Dict[str, LocationData] = {
@@ -2029,6 +2033,8 @@ temple_event_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.btn_t2_rune_w: LocationData(None),
     TempleLocationNames.btn_t2_rune_sw: LocationData(None),
     TempleLocationNames.ev_t1_n_node: LocationData(None),
+    TempleLocationNames.ev_t1_n_node_n_mirrors: LocationData(None),
+    TempleLocationNames.ev_t1_n_node_s_mirror: LocationData(None),
     TempleLocationNames.ev_t1_s_node: LocationData(None),
     TempleLocationNames.ev_t2_n_node: LocationData(None),
     TempleLocationNames.ev_t2_s_node: LocationData(None),
@@ -2037,7 +2043,9 @@ temple_event_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.ev_pof_1_unlock_exit: LocationData(None),
     TempleLocationNames.ev_pof_2_unlock_exit: LocationData(None),
     TempleLocationNames.ev_pof_end: LocationData(None),
-    TempleLocationNames.ev_krilith_defeated: LocationData(None),
+    TempleLocationNames.ev_beat_boss_1: LocationData(None),
+    TempleLocationNames.ev_beat_boss_2: LocationData(None),
+    TempleLocationNames.ev_beat_boss_3: LocationData(None),
 }
 
 temple_locations: typing.Dict[str, LocationData] = {
@@ -2167,7 +2175,7 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         random_locations[CastleLocationNames.crloc_c2_puzzle] = -1
 
     # Goal stuff
-    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
+    if get_goal_type(multiworld, player) == GoalType.KillBosses:
         remove_location(CastleLocationNames.b4_plank_1, ItemName.diamond_red)
         remove_location(CastleLocationNames.b4_plank_2, ItemName.diamond_red)
         remove_location(CastleLocationNames.b4_plank_3, ItemName.diamond_red)

@@ -646,7 +646,8 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     b1_arena_region = create_region(multiworld, player, active_locations, CastleRegionNames.b1_arena, b1_arena_locs)
 
     b1_defeated_locs = [
-        CastleLocationNames.b1_reward
+        CastleLocationNames.b1_reward,
+        CastleLocationNames.ev_beat_boss_1,
     ]
     b1_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b1_defeated,
                                        b1_defeated_locs)
@@ -1281,6 +1282,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     b2_defeated_locs = [
         CastleLocationNames.b2_boss,
         CastleLocationNames.b2_boss_reward,
+        CastleLocationNames.ev_beat_boss_2,
     ]
     b2_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_defeated,
                                        b2_defeated_locs)
@@ -1826,6 +1828,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     b3_defeated_locs = [
         CastleLocationNames.b3_boss,
         CastleLocationNames.b3_reward,
+        CastleLocationNames.ev_beat_boss_3,
     ]
     b3_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b3_defeated,
                                        b3_defeated_locs)
@@ -2404,8 +2407,9 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         CastleLocationNames.b4_plank_9,
         CastleLocationNames.b4_plank_10,
         CastleLocationNames.b4_plank_11,
+        CastleLocationNames.ev_beat_boss_4,
     ]
-    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
+    if get_goal_type(multiworld, player) == GoalType.KillBosses:
         b4_defeated_locations.append(CastleLocationNames.ev_victory)
     b4_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b4_defeated,
                                        b4_defeated_locations)
@@ -3819,6 +3823,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.b1_boss_worm_4_1,
         TempleLocationNames.b1_boss_worm_4_2,
         TempleLocationNames.b1_boss_worm_key,
+        TempleLocationNames.ev_beat_boss_1,
     ]
     boss1_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss_1_defeated,
                                           boss1_defeated_locations)
@@ -3976,6 +3981,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_n_sunbeam_treasure_2,
         TempleLocationNames.t1_n_sunbeam_treasure_3,
         TempleLocationNames.t1_tower_ice,
+        TempleLocationNames.ev_t1_n_node_n_mirrors,
     ]
     t1_ice_turret_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_ice_turret,
                                          t1_ice_turret_locations)
@@ -4023,6 +4029,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_node_2_passage_3,
         TempleLocationNames.ev_temple1_pof_switch,
         TempleLocationNames.t1_miniboss_mummy,
+        TempleLocationNames.ev_t1_n_node_s_mirror,
     ]
     t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
 
@@ -4085,7 +4092,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     boss2_defeated_locations = [
         TempleLocationNames.boss2_nw,
         TempleLocationNames.boss2_se,
-        TempleLocationNames.ev_krilith_defeated
+        TempleLocationNames.ev_beat_boss_2
     ]
     boss2_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.boss2_defeated,
                                           boss2_defeated_locations)
@@ -4625,8 +4632,10 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     b3_platform_3_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_platform_3,
                                          b3_platform_3_locs)
 
-    b3_defeated_locations = []
-    if get_goal_type(multiworld, player) == GoalType.KillFinalBoss:
+    b3_defeated_locations = [
+        TempleLocationNames.ev_beat_boss_3,
+    ]
+    if get_goal_type(multiworld, player) == GoalType.KillBosses:
         b3_defeated_locations.append(TempleLocationNames.ev_victory)
     b3_defeated_region = create_region(multiworld, player, active_locations, TempleRegionNames.b3_defeated,
                                        b3_defeated_locations)
@@ -4879,7 +4888,7 @@ def connect_tots_regions_generic(multiworld, player: int, random_locations: typi
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telarian)
     # Requires telarian button
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
-                    TempleRegionNames.t1_telarian_melt_ice, False, True, ItemName.ev_krilith_defeated, 1, False)
+                    TempleRegionNames.t1_telarian_melt_ice, False, True, ItemName.evt_beat_boss_2, 1, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_n_of_ice_turret,
                  ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_0)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_s_of_ice_turret,
@@ -4893,7 +4902,7 @@ def connect_tots_regions_generic(multiworld, player: int, random_locations: typi
                     False, True, ItemName.mirror, 1)
     # Also technically you need to place the mirrors earlier too, but logic sets things correctly if we do this
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east,
-                    TempleRegionNames.t1_ice_chamber_melt_ice, False, True, ItemName.ev_krilith_defeated, 1, False)
+                    TempleRegionNames.t1_ice_chamber_melt_ice, False, True, ItemName.evt_beat_boss_2, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_jail_e)
     # Requires east jail button
     connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_e_puzzle,
@@ -4905,7 +4914,7 @@ def connect_tots_regions_generic(multiworld, player: int, random_locations: typi
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_e_puzzle,
                     False, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
-                    False, True, ItemName.ev_krilith_defeated, 1, False)
+                    False, True, ItemName.evt_beat_boss_2, 1, False)
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_w_ice_gate)
     # Requires west ice gate button
     connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_e_ice_gate)

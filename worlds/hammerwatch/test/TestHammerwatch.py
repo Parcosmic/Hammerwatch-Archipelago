@@ -20,7 +20,7 @@ class TestHammerwatch(HammerwatchTestBase):
             "shortcut_teleporter": Options.ShortcutTeleporter.option_true,
         },
         "Temple max locations": {
-            "goal": Options.Goal.option_temple_kill_sharand,
+            "goal": Options.Goal.option_temple_all_bosses,
             "bonus_behavior": Options.BonusChestLocationBehavior.option_all,
             "randomize_bonus_keys": Options.RandomizeBonusKeys.option_true,
             "randomize_recovery_items": Options.RandomizeRecoveryItems.option_true,
@@ -51,8 +51,8 @@ class TestHammerwatch(HammerwatchTestBase):
             "randomize_enemy_loot": Options.RandomizeEnemyLoot.option_false,
             "extra_keys_percent": Options.ExtraKeysPercent.range_start,
         },
-        "Castle kill final boss goal": {
-            "goal": Options.Goal.option_castle_kill_dragon,
+        "Castle kill bosses goal": {
+            "goal": Options.Goal.option_castle_all_bosses,
         },
         "Temple complete Pyramid of Fear": {
             "goal": Options.Goal.option_temple_pyramid_of_fear,

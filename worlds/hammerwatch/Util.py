@@ -10,7 +10,7 @@ class Campaign(Enum):
 
 
 class GoalType(Enum):
-    KillFinalBoss = 0
+    KillBosses = 0
     PlankHunt = 1
     FullCompletion = 2
     AltCompletion = 3

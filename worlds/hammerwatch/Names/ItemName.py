@@ -121,6 +121,12 @@ ev_castle_b1_boss_switch = "Prison Boss Switch"
 ev_castle_b2_boss_switch = "Armory Boss Switch"
 ev_castle_b3_boss_switch = "Archives Boss Switch"
 ev_castle_b4_boss_switch = "Chambers Boss Switch"
+
+evc_beat_boss_1 = "Defeat Queen"
+evc_beat_boss_2 = "Defeat Knight"
+evc_beat_boss_3 = "Defeat Lich"
+evc_beat_boss_4 = "Defeat Dragon"
+
 # Temple
 ev_c1_portal = "Cave Level 1 Activate Portal"
 ev_c2_portal = "Cave Level 2 Activate Portal"
@@ -129,14 +135,19 @@ ev_t1_portal = "Temple Floor 1 Activate Portal"
 ev_t2_portal = "Temple Floor 2 Activate Portal"
 ev_t3_portal = "Temple Floor 3 Activate Portal"
 ev_open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
-ev_krilith_defeated = "Krilith Defeated"
 ev_pof_switch = "Activate PoF Switch"
 ev_solar_node = "Activate Solar Node"
+evt_t1_n_mirrors = "Temple Floor 1 North Node North Mirrors"
+evt_t1_s_mirror = "Temple Floor 1 North Node South Mirror"
 btn_t2_blue_spikes = "Temple Floor 2 Deactivate Blue Spikes"
 ev_t2_rune_switch = "Temple Floor 2 Light Bridge Rune Button"
 ev_pof_1_unlock_exit = "PoF Level 1 Unlock Exit"
 ev_pof_2_unlock_exit = "PoF Level 2 Unlock Exit"
 ev_pof_complete = "PoF Complete"
+
+evt_beat_boss_1 = "Defeat Dune Sharks"
+evt_beat_boss_2 = "Defeat Krilith"
+evt_beat_boss_3 = "Defeat Sha'Rand"
 
 # group names
 group_chests = "Chests"

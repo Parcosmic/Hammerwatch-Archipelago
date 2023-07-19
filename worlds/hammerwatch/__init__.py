@@ -47,13 +47,13 @@ class HammerwatchWorld(World):
 
     item_name_groups = ItemName.item_groups
 
-    campaign: Campaign = Campaign.Castle
+    campaign: Campaign
     active_location_list: typing.Dict[str, LocationData]
     item_counts: typing.Dict[str, int]
     random_locations: typing.Dict[str, int]
     shop_locations: typing.Dict[str, str]
-    door_counts: typing.Dict[str, int] = {}
-    gate_types: typing.Dict[str, str] = {}
+    door_counts: typing.Dict[str, int]
+    gate_types: typing.Dict[str, str]
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -76,6 +76,7 @@ class HammerwatchWorld(World):
             item_counts = Items.castle_item_counts
         else:
             item_counts = Items.temple_item_counts
+        self.door_counts = {}
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
@@ -336,6 +337,16 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(CastleLocationNames.ev_c3_boss_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
 
+        # Boss defeat locations
+        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_1, self.player) \
+            .place_locked_item(self.create_event(ItemName.evc_beat_boss_1))
+        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_2, self.player) \
+            .place_locked_item(self.create_event(ItemName.evc_beat_boss_2))
+        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_3, self.player) \
+            .place_locked_item(self.create_event(ItemName.evc_beat_boss_3))
+        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_4, self.player) \
+            .place_locked_item(self.create_event(ItemName.evc_beat_boss_4))
+
         # Bonus Key Locations
         if not self.multiworld.randomize_bonus_keys[self.player]:
             self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
@@ -405,6 +416,12 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(TempleLocationNames.ev_temple_entrance_rock, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_open_temple_entrance_shortcut))
 
+        # Temple Floor 1 North Node Mirrors
+        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node_n_mirrors, self.player) \
+            .place_locked_item(self.create_event(ItemName.evt_t1_n_mirrors))
+        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node_s_mirror, self.player) \
+            .place_locked_item(self.create_event(ItemName.evt_t1_s_mirror))
+
         # Pyramid of fear
         self.multiworld.get_location(TempleLocationNames.ev_hub_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
@@ -425,10 +442,6 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_pof_2_unlock_exit))
         self.multiworld.get_location(TempleLocationNames.ev_pof_end, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_complete))
-
-        # Krilith defeated
-        self.multiworld.get_location(TempleLocationNames.ev_krilith_defeated, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_krilith_defeated))
 
         # Temple Floor 2 buttons
         self.multiworld.get_location(TempleLocationNames.btn_t2_floor_blue, self.player) \
@@ -526,6 +539,14 @@ class HammerwatchWorld(World):
             for loc in rune_key_locs:
                 self.multiworld.get_location(loc, self.player).place_locked_item(
                     self.create_item(ItemName.key_teleport))
+
+        # Boss defeat locations
+        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_1, self.player) \
+            .place_locked_item(self.create_event(ItemName.evt_beat_boss_1))
+        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_2, self.player) \
+            .place_locked_item(self.create_event(ItemName.evt_beat_boss_2))
+        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_3, self.player) \
+            .place_locked_item(self.create_event(ItemName.evt_beat_boss_3))
 
     def set_rules(self) -> None:
         set_rules(self.multiworld, self.player, self.door_counts)

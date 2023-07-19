@@ -1419,5 +1419,10 @@ ev_c1_boss_switch = "Chambers Floor 10 Boss Switch"
 ev_c2_boss_switch = "Chambers Floor 11 Boss Switch"
 ev_c3_boss_switch = "Chambers Floor 12 Boss Switch"
 
+ev_beat_boss_1 = "Defeat Queen"
+ev_beat_boss_2 = "Defeat Knight"
+ev_beat_boss_3 = "Defeat Lich"
+ev_beat_boss_4 = "Defeat Dragon"
+
 # Shared Event Locations
 ev_victory = "Victory"
