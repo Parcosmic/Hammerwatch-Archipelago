@@ -1,6 +1,8 @@
 # Castle Region Names
 menu = "Menu"
 
+hub = "AP Hub"
+
 p1_start = "Prison Floor 1 Start"
 p1_nw = "Prison Floor 1 NW"
 p1_s = "Prison Floor 1 South"

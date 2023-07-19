@@ -48,6 +48,7 @@ def create_regions(multiworld, map: Campaign, player: int, active_locations: typ
 def create_castle_regions(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData],
                           random_locations: typing.Dict[str, int]):
     menu_region = create_region(multiworld, player, active_locations, CastleRegionNames.menu, None)
+    hub_region = create_region(multiworld, player, active_locations, CastleRegionNames.hub, None)
 
     p1_start_locations = [
         CastleLocationNames.p1_by_nw_bronze_gate,
@@ -2447,6 +2448,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
 
     multiworld.regions += [
         menu_region,
+        hub_region,
         p1_start_region,
         p1_nw_region,
         p1_s_region,
@@ -2789,6 +2791,13 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     chambers_gate_items[key_gold_chambers] += 3
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False, False)
+
+    if multiworld.open_castle[player]:
+        connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, False, True)
+        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, False, True)
+        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, False, True)
+        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, False, True)
+
     connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
                     False, True, ItemName.btnc_p1_floor, 1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p1_s,
@@ -2927,7 +2936,8 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.b1_start, CastleRegionNames.b1_arena, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.a1_start, True)
+    if not multiworld.open_castle[player]:
+        connect_generic(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.a1_start, True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_w,
@@ -3071,7 +3081,8 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
                     True, True, ItemName.ev_castle_b2_boss_switch, 3, False)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, True)
+    if not multiworld.open_castle[player]:
+        connect_generic(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, True)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_se_ggate,
                  key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_2)
@@ -3225,7 +3236,8 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, True)
     connect_generic(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.c1_start, True)
+    if not multiworld.open_castle[player]:
+        connect_generic(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.c1_start, True)
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes)
     connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes)

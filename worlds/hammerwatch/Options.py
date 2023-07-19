@@ -219,6 +219,14 @@ class ExtraKeysPercent(Range):
     default = 0
 
 
+class OpenCastle(Toggle):
+    """(Castle only) Unlocks travel to/from all floors at the start of the game. Pairs well with Act Specific Keys!
+    """
+    display_name = "Open Castle"
+    # category = "Generation"
+    default = False
+
+
 class ActSpecificKeys(Toggle):
     """(Castle only) Separates keys into versions that can only be used on a specific act.
     Mainly improves hinting for keys, as with generic keys you could hint for a gold key at the end of the seed that you can't get"""
@@ -344,6 +352,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "randomize_secrets": RandomizeSecrets,
     "randomize_puzzles": RandomizePuzzles,
     "randomize_enemy_loot": RandomizeEnemyLoot,
+    "open_castle": OpenCastle,
     "act_specific_keys": ActSpecificKeys,
     "extra_keys_percent": ExtraKeysPercent,
     "big_bronze_key_percent": BigBronzeKeyPercent,
