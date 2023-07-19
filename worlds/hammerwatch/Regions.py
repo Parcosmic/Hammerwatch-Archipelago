@@ -2791,9 +2791,9 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     chambers_gate_items[key_gold_chambers] += 3
 
     connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False, False)
+    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, False, True)
 
     if multiworld.open_castle[player]:
-        connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, False, True)
         connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, False, True)
         connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, False, True)
         connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, False, True)
