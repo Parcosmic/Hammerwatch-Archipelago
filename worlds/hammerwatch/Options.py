@@ -118,7 +118,7 @@ class RandomizeSecrets(Toggle):
 
 class RandomizePuzzles(Toggle):
     """Whether items from peg puzzles are shuffled into the item pool"""
-    display_name = "Randomize Puzzles"
+    display_name = "Randomize Peg Puzzles"
     # category = "Generation"
     default = False
 
@@ -210,7 +210,7 @@ class EnemyShuffleBalancing(Range):
 
 
 class ExtraKeysPercent(Range):
-    """Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) added to the item pool
+    """Determines the percentage of extra silver and gold keys (and mirrors in the TotS campaign) that are added to the item pool
     """
     display_name = "Extra Keys Percentage"
     # category = "Generation"
@@ -232,7 +232,7 @@ class ActSpecificKeys(Toggle):
     Mainly improves hinting for keys, as with generic keys you could hint for a gold key at the end of the seed that you can't get"""
     display_name = "Act Specific Keys"
     # category = "Generation"
-    default = False
+    default = True
 
 
 class BigBronzeKeyPercent(Range):
