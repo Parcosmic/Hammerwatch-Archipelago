@@ -1,4 +1,4 @@
-import typing
+from typing import Dict
 
 from .Items import *
 from .Locations import *
@@ -80,7 +80,8 @@ class HammerwatchWorld(World):
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
-        self.active_location_list, self.item_counts, self.random_locations = setup_locations(self.multiworld, self.campaign, self.player)
+        self.active_location_list, self.item_counts, self.random_locations =\
+            setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
         self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
@@ -284,6 +285,12 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_sw_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
 
+        # Prison 3 Switches
+        self.multiworld.get_location(CastleLocationNames.btnc_p3_sw, self.player) \
+            .place_locked_item(self.create_event(ItemName.btnc_p3_e_passage))
+        self.multiworld.get_location(CastleLocationNames.btnc_p3_arrow_hall_wall, self.player) \
+            .place_locked_item(self.create_event(ItemName.btnc_p3_s_passage))
+
         # Prison Boss Switches
         self.multiworld.get_location(CastleLocationNames.ev_p1_boss_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
@@ -302,6 +309,8 @@ class HammerwatchWorld(World):
         # Event items
         self.multiworld.get_location(CastleLocationNames.btnc_n2_blue_spikes, self.player) \
             .place_locked_item(self.create_event(ItemName.btnc_a2_blue_spikes))
+        self.multiworld.get_location(CastleLocationNames.btnc_a2_bspikes_tp, self.player) \
+            .place_locked_item(self.create_event(ItemName.btnc_a2_bspikes_tp))
 
         # Archives Boss Switches
         self.multiworld.get_location(CastleLocationNames.ev_r1_boss_switch, self.player) \
@@ -436,6 +445,8 @@ class HammerwatchWorld(World):
         self.multiworld.get_location(TempleLocationNames.ev_temple2_pof_switch, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_switch))
 
+        self.multiworld.get_location(TempleLocationNames.ev_pof_1_se_room_panel, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_pof_1_s_walls))
         self.multiworld.get_location(TempleLocationNames.ev_pof_1_unlock_exit, self.player) \
             .place_locked_item(self.create_event(ItemName.ev_pof_1_unlock_exit))
         self.multiworld.get_location(TempleLocationNames.ev_pof_2_unlock_exit, self.player) \
@@ -556,3 +567,6 @@ class HammerwatchWorld(World):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
+
+    def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):
+        pass

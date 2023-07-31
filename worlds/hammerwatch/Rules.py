@@ -4,12 +4,14 @@ import typing
 from BaseClasses import MultiWorld, Region
 from .Names import CastleLocationNames, CastleRegionNames, TempleLocationNames, TempleRegionNames, ItemName
 from worlds.generic.Rules import add_rule, set_rule, forbid_item
-from .Regions import HWEntrance
+from .Regions import HWEntrance, etr_base_name
 from .Util import *
 
 
 def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str, int]):
     multiworld.completion_condition[player] = lambda state: state.has(ItemName.ev_victory, player)
+
+    set_connections(multiworld, player)
 
     menu_region = multiworld.get_region(CastleRegionNames.menu, player)
     if get_campaign(multiworld, player) == Campaign.Castle:
@@ -34,7 +36,8 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             }
             multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
-            add_rule(multiworld.get_entrance(CastleRegionNames.b4_start, player),
+            entr_name = etr_base_name(CastleRegionNames.c2_main, CastleRegionNames.b4_start)
+            add_rule(multiworld.get_entrance(entr_name, player),
                      lambda state: state.has(ItemName.plank, player, 12)
                                    and state.has(ItemName.key_gold, player, 16)
                                    and state.has(ItemName.key_silver, player, 13)
@@ -84,8 +87,15 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         add_rule(multiworld.get_location(TempleLocationNames.ev_t3_portal, player), portal_rule)
 
         # Extra rules for T1 north node blocks locations
-        add_rule(multiworld.get_entrance(TempleRegionNames.t1_sun_block_hall, player),
+        t1_sun_block_entr = etr_base_name(TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_sun_block_hall)
+        add_rule(multiworld.get_entrance(t1_sun_block_entr, player),
                  lambda state: state.has_all([ItemName.evt_t1_n_mirrors, ItemName.evt_t1_s_mirror], player))
+        add_rule(multiworld.get_entrance(etr_base_name(TempleRegionNames.t1_east, TempleRegionNames.t1_node_2), player),
+                 lambda state: state.has(ItemName.evt_t1_n_mirrors, player))
+
+
+def set_connections(multiworld, player):
+    pass
 
 
 def prune_entrances(start_region: Region, next_region: Region):
@@ -156,7 +166,7 @@ def prune_entrances(start_region: Region, next_region: Region):
 
 
 def delete_entrance(entrance: HWEntrance):
-    # print(entrance)
+    # print("Prune entrance: " + entrance.name)
     entrance.parent_region.exits.remove(entrance)
     entrance.connected_region.entrances.remove(entrance)
     del entrance
@@ -177,10 +187,10 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         return entr
     if get_campaign(multiworld, player) == Campaign.Castle:
         remove_entrances = [
-            multiworld.get_entrance(CastleRegionNames.b1_start, player),
-            multiworld.get_entrance(CastleRegionNames.b2_start, player),
-            multiworld.get_entrance(CastleRegionNames.b3_start, player),
-            multiworld.get_entrance(CastleRegionNames.b4_start, player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.p3_sw, CastleRegionNames.b1_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.a1_start, CastleRegionNames.b2_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.r3_exit, CastleRegionNames.b3_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.c2_main, CastleRegionNames.b4_start), player),
         ]
         add_entrances = [
             add_entrance("P1 Boss Switch", CastleRegionNames.p1_from_p3_n, CastleRegionNames.b1_start),

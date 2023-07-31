@@ -1392,12 +1392,16 @@ ev_p2_gold_gate_room_ne_switch = "Prison 2 Gold Gate Room NE Switch"
 ev_p2_gold_gate_room_sw_switch = "Prison 2 Gold Gate Room SW Switch"
 ev_p2_gold_gate_room_se_switch = "Prison 2 Gold Gate Room SE Switch"
 
+btnc_p3_sw = "Prison Floor 3 SW Floor Button"
+btnc_p3_arrow_hall_wall = "Prison Floor 3 East Arrow Hall Wall Button"
+
 btnc_n1_panel_n = "Bonus 1 North Unlock Panel"
 btnc_n1_panel_e_1 = "Bonus 1 NE Left Unlock Panel"
 btnc_n1_panel_e_2 = "Bonus 1 NE Right Unlock Panel"
 btnc_n1_panel_s = "Bonus 1 South Unlock Panel"
 
 btnc_n2_blue_spikes = "Bonus 2 Blue Spike Switch"
+btnc_a2_bspikes_tp = "Bonus 2 Blue Spike Teleport Item Switch"
 ev_a1_boss_switch = "Armory Floor 4 Boss Switch"
 ev_a2_boss_switch = "Armory Floor 5 Boss Switch"
 ev_a3_boss_switch = "Armory Floor 6 Boss Switch"

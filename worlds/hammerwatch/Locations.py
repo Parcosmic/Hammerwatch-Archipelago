@@ -1341,11 +1341,14 @@ castle_event_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.ev_p2_gold_gate_room_nw_switch: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_se_switch: LocationData(None),
     CastleLocationNames.ev_p2_gold_gate_room_sw_switch: LocationData(None),
+    CastleLocationNames.btnc_p3_sw: LocationData(None),
+    CastleLocationNames.btnc_p3_arrow_hall_wall: LocationData(None),
     CastleLocationNames.ev_p1_boss_switch: LocationData(None),
     CastleLocationNames.ev_p2_boss_switch: LocationData(None),
     CastleLocationNames.ev_p3_boss_switch: LocationData(None),
     # CastleLocationNames.ev_p3_boss_switch_skip: LocationData(None),
     CastleLocationNames.btnc_n2_blue_spikes: LocationData(None),
+    CastleLocationNames.btnc_a2_bspikes_tp: LocationData(None),
     CastleLocationNames.ev_a1_boss_switch: LocationData(None),
     CastleLocationNames.ev_a2_boss_switch: LocationData(None),
     CastleLocationNames.ev_a3_boss_switch: LocationData(None),
@@ -2040,6 +2043,7 @@ temple_event_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.ev_t2_s_node: LocationData(None),
     TempleLocationNames.ev_t3_n_node: LocationData(None),
     TempleLocationNames.ev_t3_s_node: LocationData(None),
+    TempleLocationNames.ev_pof_1_se_room_panel: LocationData(None),
     TempleLocationNames.ev_pof_1_unlock_exit: LocationData(None),
     TempleLocationNames.ev_pof_2_unlock_exit: LocationData(None),
     TempleLocationNames.ev_pof_end: LocationData(None),
@@ -2862,6 +2866,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         TempleLocationNames.t2_left_of_pof_switch_2,
     ]
     location_table = keep_one_location(t2_keystone_locations, TempleLocationNames.rloc_t2_keystone)
+    random_locations[TempleLocationNames.rloc_t2_entrance] = multiworld.random.randrange(2)
     random_locations[TempleLocationNames.rloc_t2_portal] = multiworld.random.randrange(4)
     if random_locations[TempleLocationNames.rloc_t2_portal] != 2:
         remove_location(TempleLocationNames.t2_teleporter, ItemName.stat_upgrade)

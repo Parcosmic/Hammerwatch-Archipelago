@@ -20,17 +20,17 @@ class HWEntrance(Entrance):
     pass_item: str
     item_count: int
     items_consumed: bool
-    level_exit: bool
+    exit_code: str
 
     downstream_count: int = 0
 
-    def __init__(self, player: int, name: str = "", parent: Region = None, pass_item: str = None, item_count=0,
-                 items_consumed=True, level_exit: bool = False):
+    def __init__(self, player: int, name: str = "", parent: Region = None, target: Region = None,
+                 pass_item: str = None, item_count=0, items_consumed=True, exit_code: str = None):
         super().__init__(player, name, parent)
         self.pass_item = pass_item
         self.item_count = item_count
         self.items_consumed = items_consumed
-        self.level_exit = level_exit
+        self.exit_code = exit_code
 
 
 def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData],
@@ -38,10 +38,10 @@ def create_regions(multiworld, map: Campaign, player: int, active_locations: typ
     gate_codes = {}
     if map == Campaign.Castle:
         create_castle_regions(multiworld, player, active_locations, random_locations)
-        connect_castle_regions_generic(multiworld, player, random_locations, gate_codes)
+        connect_castle_regions(multiworld, player, random_locations, gate_codes)
     else:
         create_tots_regions(multiworld, player, active_locations, random_locations)
-        connect_tots_regions_generic(multiworld, player, random_locations, gate_codes)
+        connect_tots_regions(multiworld, player, random_locations, gate_codes)
     return gate_codes
 
 
@@ -478,6 +478,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     p3_bonus_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_bonus, p3_bonus_locs)
 
     p3_arrow_hall_secret_locs = [
+        CastleLocationNames.btnc_p3_arrow_hall_wall,
     ]
     p3_arrow_hall_secret_region = create_region(multiworld, player, active_locations,
                                                 CastleRegionNames.p3_arrow_hall_secret, p3_arrow_hall_secret_locs)
@@ -510,6 +511,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         CastleLocationNames.p3_s_of_boss_door,
         CastleLocationNames.p3_tower_plant_3,
         CastleLocationNames.p3_tower_plant_8,
+        CastleLocationNames.btnc_p3_sw,
     ]
     p3_sw_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_sw, p3_sw_locs)
 
@@ -652,6 +654,10 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     ]
     b1_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b1_defeated,
                                        b1_defeated_locs)
+
+    b1_exit_locs = [
+    ]
+    b1_exit_region = create_region(multiworld, player, active_locations, CastleRegionNames.b1_exit, b1_exit_locs)
 
     a1_start_locs = [
     ]
@@ -932,6 +938,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         CastleLocationNames.a2_tower_ice_2,
         CastleLocationNames.a2_tower_ice_4,
         CastleLocationNames.ev_a2_boss_switch,
+        CastleLocationNames.btnc_a2_bspikes_tp,
     ]
     a2_ne_region = create_region(multiworld, player, active_locations, CastleRegionNames.a2_ne, a2_ne_locs)
 
@@ -1287,6 +1294,10 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     ]
     b2_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_defeated,
                                        b2_defeated_locs)
+
+    b2_exit_locs = [
+    ]
+    b2_exit_region = create_region(multiworld, player, active_locations, CastleRegionNames.b2_exit, b2_exit_locs)
 
     r1_start_locs = [
         CastleLocationNames.r1_se_1,
@@ -1833,6 +1844,10 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     ]
     b3_defeated_region = create_region(multiworld, player, active_locations, CastleRegionNames.b3_defeated,
                                        b3_defeated_locs)
+
+    b3_exit_locs = [
+    ]
+    b3_exit_region = create_region(multiworld, player, active_locations, CastleRegionNames.b3_exit, b3_exit_locs)
 
     c1_start_locs = [
         CastleLocationNames.c1_n_alcove_2,
@@ -2507,6 +2522,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         b1_start_region,
         b1_arena_region,
         b1_defeated_region,
+        b1_exit_region,
         a1_start_region,
         a1_start_shop_w_region,
         a1_start_shop_m_region,
@@ -2580,6 +2596,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         b2_start_region,
         b2_arena_region,
         b2_defeated_region,
+        b2_exit_region,
         r1_start_region,
         r1_se_ggate_region,
         r1_e_region,
@@ -2636,6 +2653,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         b3_start_region,
         b3_arena_region,
         b3_defeated_region,
+        b3_exit_region,
         c1_start_region,
         c1_n_spikes_region,
         c1_se_spikes_region,
@@ -2696,8 +2714,8 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     ]
 
 
-def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_locations: typing.Dict[str, int],
-                                   gate_codes: typing.Dict[str, str]):
+def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations: typing.Dict[str, int],
+                           gate_codes: typing.Dict[str, str]):
     used_names: typing.Dict[str, int] = {}
     gate_counts: typing.Dict[str, int] = {
         ItemName.key_bronze: 0,
@@ -2790,142 +2808,140 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     archives_gate_items[key_gold_archives] += 7
     chambers_gate_items[key_gold_chambers] += 3
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, False, True)
+    connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, True)
 
     if multiworld.open_castle[player]:
-        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, False, True)
-        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, False, True)
-        connect_generic(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, False, True)
+        connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, True)
+        connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, True)
+        connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, True)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
-                    False, True, ItemName.btnc_p1_floor, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
+            True, ItemName.btnc_p1_floor, 1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p1_s,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_0)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_0, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_sw_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_3)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_3, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_e,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_2)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_2, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_1)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, True)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_1, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, "2|0", "1|1")
     if multiworld.shortcut_teleporter[player]:
-        connect_generic(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
-                        True, True)
-        connect_generic(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1,
-                        CastleRegionNames.p3_n_gold_gate)
+        connect_exit(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
+                     "3|81", "1|20")
+        connect(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1, CastleRegionNames.p3_n_gold_gate,
+                True)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_0)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p1_from_p2, CastleRegionNames.p2_p1_return, True)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_0, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, "1|2", "2|1")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p1_from_p2, CastleRegionNames.p2_p1_return,
+                 "2|2", "1|3")
     # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_p1_return, CastleRegionNames.p2_m)
     # Requires return wall button
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
-                 key_silver_prison, gate_codes, prison_gate_items, GateNames.c_p2_5)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_bottom)
+                 key_silver_prison, gate_codes, prison_gate_items, GateNames.c_p2_5, True)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_bottom, False)
     # Requires spike button 5
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_top)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_top, False)
     # Requires spike buttons (4, 5, 9) or (5, 7, 6)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_left)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_spike_puzzle_left, False)
     # Requires spike buttons (4, 5, 9) or (5, 7, 6, 1 ,9)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_red_switch)
-    # Requires red spike button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_puzzle)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_n, CastleRegionNames.p2_red_switch, False)
+    # Requires red spike button, also two-way
+    connect(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_puzzle, False)
     # Requires puzzle button
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_1)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_save)
-    # Requires east save button
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_red_switch, CastleRegionNames.p2_e_save, False)
+    # Requires east save button, also two-way
     # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_e_save)
     # Requires east save button
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_s,
-                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p2_4)
+                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p2_4, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_e_bronze_gate_2,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_7)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_7, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_m_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_6)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_6, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_se_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_2)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
-                    False, False, ItemName.ev_castle_p2_switch, 4, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_w_treasure)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_2, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_gg_room_reward,
+            False, ItemName.ev_castle_p2_switch, 4, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_w_treasure, False)
     # Requires treasure west wall button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_w_treasure, CastleRegionNames.p2_w_treasure_tp)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_w_treasure, CastleRegionNames.p2_w_treasure_tp, False)
     # Requires treasure east wall button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_tp_puzzle)
+    connect(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_tp_puzzle, False)
     # Requires tp puzzle buttons
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
-                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p2_3)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start_door, True)
+                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p2_3, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start_door,
+                 "3|0", "2|3")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start_door, CastleRegionNames.p3_start,
-                    False, False)  # Actually *not* two-way! The button prevents backtracking for now
+    connect(multiworld, player, used_names, CastleRegionNames.p3_start_door, CastleRegionNames.p3_start, False)
+    # Actually *not* two-way! The button prevents backtracking for now
     # Requires entrance button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_closed_room)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_closed_room, False)
     # Requires room open button
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_n_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_1)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_nw_s_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_0)
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_0, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_silver_gate,
-                 key_silver_prison, gate_codes, prison_gate_items, GateNames.c_p3_3)
+                 key_silver_prison, gate_codes, prison_gate_items, GateNames.c_p3_3, True)
     # Requires start spike switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s,
-                    True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s,
+                 "1|4", "3|1")
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
-                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_4)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
-                    CastleRegionNames.p3_rspikes)
-    # Requires red spikes button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
-                    CastleRegionNames.p3_rspikes_room)
-    # Requires middle room unlock button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_bonus)
+                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_4, True)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_rspikes, False)
+    # Requires red spikes button, two-way
+    connect(multiworld, player, used_names, CastleRegionNames.p3_rspikes, CastleRegionNames.p3_rspikes_room, False)
+    # Requires middle room unlock button, from p3_n_gold_gate, two-way. This also connects p3_start to p3_n_gold_gate!
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_bonus, False)
     # Requires 5 bonus switches
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_bonus, CastleRegionNames.n1_start, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p3_bonus, CastleRegionNames.n1_start,
+                 "bonus_1|0", "3|88")
     # Requires 9 bonus buttons
-    connect_gate(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
-                    CastleRegionNames.p3_s_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_2)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_spikes_s)
+    connect_gate(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_bronze_gate,
+                 key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_2, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_spikes_s, False)
     # Requires spike switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_sw)
-    # Requires spike switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_exit_s)
-    # Requires exit button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p1_from_p3_n, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate,
-                    CastleRegionNames.p3_arrow_hall_secret)
-    # Requires sw floor button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_hidden_arrow_hall)
-    # Requires arrow hall secret button
-    # Requires spike switch
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_sw, False)
+    # Requires spike switch, also two-way
+    connect(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_exit_s, False)
+    # Requires exit button, two-way
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p1_from_p3_n,
+                 "1|10", "3|10")
+    connect(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p3_n_gold_gate, False)
+    # Requires exit shortcut button, two-way
+    connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_arrow_hall_secret,
+            False, ItemName.btnc_p3_e_passage, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_hidden_arrow_hall, False,
+            ItemName.btnc_p3_s_passage, 1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_s_gold_gate,
-                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_5)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.b1_start,
-                    True, True, ItemName.ev_castle_b1_boss_switch, 3, False)
+                 key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_5, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.b1_start,
+                 "boss_1|0", "3|100", ItemName.ev_castle_b1_boss_switch, 3, False)
 
     # if multiworld.randomize_bonus_keys[player]:
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
-                    False, False, key_bonus_prison)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
-                    False, False, key_bonus_prison)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room2_unlock,
-                    False, False)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
+            False, key_bonus_prison)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2,
+            False, key_bonus_prison)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room2_unlock, False)
     # Requires room 2 panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
-                    False, False, key_bonus_prison)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_unlock,
-                    False, False)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room2, CastleRegionNames.n1_room3,
+            False, key_bonus_prison)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_unlock, False)
     # Requires room 3 west panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_hall,
-                    False, False)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room3, CastleRegionNames.n1_room3_hall, False)
     # Requires room 3 east panel or room 3 hall panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room3_hall, CastleRegionNames.n1_room4,
-                    False, False, key_bonus_prison)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
-                    True, False, key_bonus_prison)
+    connect(multiworld, player, used_names, CastleRegionNames.n1_room3_hall, CastleRegionNames.n1_room4,
+            False, key_bonus_prison)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
+                 "3|20", None, key_bonus_prison)
     # else:
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
@@ -2934,194 +2950,198 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
     #                     True)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_start, CastleRegionNames.b1_arena, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.a1_start, True,
-                    False, ItemName.evc_beat_boss_1, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b1_start, CastleRegionNames.b1_arena, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.b1_exit, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.b1_exit, CastleRegionNames.a1_start,
+                 "4|0", "boss_1|1")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_w,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_3)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_3, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_m,
-                 key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_7)
+                 key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_7, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_e,
-                 key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_8)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, True)
+                 key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_8, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, "5|0", "4|5")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, "6|0", "4|6")
     # Requires start wall switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_se, CastleRegionNames.a1_e,
-                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a1_6)
+                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a1_6, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_12)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_12, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_s_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_4)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_4, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_5)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_5, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_e_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_14)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_14, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_e_ne_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_13)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_13, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_n_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_10)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e_se_bgate, CastleRegionNames.a1_rune_room)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_10, False)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e_se_bgate, CastleRegionNames.a1_rune_room, False)
     # Requires se gate wall switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_rune_room, CastleRegionNames.a1_se_cache)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_rune_room, CastleRegionNames.a1_se_cache, False)
     # Requires 4 rune switches
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_red_spikes)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_red_spikes, False)
     # Requires red spike switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_tp_n)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_tp_n, False)
     # Requires tp switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_e, CastleRegionNames.a1_w,
-                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a1_15)
+                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a1_15, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_nw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_0)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_0, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_ne_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_9)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_9, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_2)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_2, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_1)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_w_sw_bgate_1,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_11)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_puzzle)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes)
-    # Requires spike switch
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a1_11, False)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_puzzle, False)
+    connect(multiworld, player, used_names, CastleRegionNames.a1_w, CastleRegionNames.a1_sw_spikes, False)
+    # Requires spike switch, can also reach from a1_start
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_sw)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_sw, False)
     # Requires floor 5 sw teleport switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_se)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_tp_se, False)
     # Requires floor 5 se teleport switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_puzzle)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_puzzle, False)
     # Requires floor 5 puzzle switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_3)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_3, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_4)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_4, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_5)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_5, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_s_save_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_10)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_10, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_start, CastleRegionNames.a2_ne,
-                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a2_6)
+                 key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a2_6, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_m_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_7)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_7, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_1)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_0)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_0, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_b_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_8)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_8, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_ne_save_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_9)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_tp_ne)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_9, False)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_tp_ne, False)
     # Requires floor 5 ne teleport switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_ne, CastleRegionNames.a2_e, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_2)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start, True)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_2, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start,
+                 "bonus_2|0", "5|88")
     # Requires bonus portal switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_blue_spikes,
-                    False, False, ItemName.btnc_a2_blue_spikes, 1, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_blue_spikes,
-                    CastleRegionNames.a2_blue_spikes_tp)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, "4|1", "5|1")
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_blue_spikes,
+            False, ItemName.btnc_a2_blue_spikes, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_blue_spikes, CastleRegionNames.a2_blue_spikes_tp,
+            False, ItemName.btnc_a2_bspikes_tp, 1, False)
     # Requires floor 5 blue spikes teleport switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_to_a3)
+    connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_to_a3, False)
     # Requires floor 6 passage open switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a2_to_a3, CastleRegionNames.a3_from_a2, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_to_a3, CastleRegionNames.a3_from_a2, "6|1", "5|2")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
-                    False, True, key_bonus_armory)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_se)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_nw,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_n,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_e,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_s,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_w,
+            False, key_bonus_armory)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_se, False)
     # Requires bonus 2 open se room panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_m, CastleRegionNames.n2_ne, False)
     # Requires bonus 2 open ne room panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.n2_exit)
+    connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.n2_exit, False)
     # Requires bonus 2 open exit panel
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n2_exit, CastleRegionNames.a2_bonus_return, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.n2_exit, CastleRegionNames.a2_bonus_return,
+                 "5|10", None)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_start, CastleRegionNames.a3_main)
+    connect(multiworld, player, used_names, CastleRegionNames.a3_start, CastleRegionNames.a3_main, True)
     # Requires open start top wall switch or open start right wall switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_puzzle_reward)
+    connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_puzzle_reward, False)
     # Requires 5 spike puzzle switches
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_reward_2)
+    connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_reward_2, False)
     # Requires 2 spike puzzle switches
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_knife_reward_2, CastleRegionNames.a2_nw, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_tp, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a2_nw, "5|3", "6|2")
+    connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_tp, False)
     # Requires floor 6 teleport switch
     # connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_main)
     # Requires floor 6 from floor 5 open passage switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_w_b_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_5)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_5, False)
     # Don't forget to add extra thing in rules requiring the teleport button for the item inside
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_t_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_2)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_2, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_w_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_4)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_4, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_1)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_1, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_n_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_0)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_0, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_3)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_3, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_e_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_6)
+                 key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_6, False)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
-                    True, True, ItemName.ev_castle_b2_boss_switch, 3, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.r1_start, True,
-                    False, ItemName.evc_beat_boss_2, 1, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
+                 "boss_2|0", "4|100", ItemName.ev_castle_b2_boss_switch, 3, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.b2_exit, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.b2_exit, CastleRegionNames.r1_start,
+                 "7|0", "boss_2|1")
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_se_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_2)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_se_ggate, CastleRegionNames.r1_e)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_2, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_se_ggate, CastleRegionNames.r1_e, False)
     # Requires floor 7 open east passage
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_s_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_5)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_5, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r1_7)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall)
+                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r1_7, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall, False)
     # Requires floor 7 open right wall
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_4)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_4, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_6)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_6, True)
     # connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
     #                 False, False, key_bronze_archives)
     # Internal gate
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_3)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_3, False)
     # connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
     #              key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_ne_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_1)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw, False)
     # Requires floor 7 open North passage
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw, CastleRegionNames.r1_nw_hidden)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_nw, CastleRegionNames.r1_nw_hidden, False)
     # Requires floor 7 open hidden room
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_nw_hidden, CastleRegionNames.r1_nw_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_0)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_nw_ggate, CastleRegionNames.r1_sw)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_0, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_nw_ggate, CastleRegionNames.r1_sw, False)
     # Requires floor 7 open west passage
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_w_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r1_10)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall)
+                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r1_10, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_w_sgate, CastleRegionNames.r1_start_wall, False)
     # Requires floor 7 open start wall
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_11)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_sw_ggate, CastleRegionNames.r1_exit_l)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_11, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r1_sw_ggate, CastleRegionNames.r1_exit_l, False)
     # From sw requires floor 7 open left exit
     # Internal bronze gate
     r1_internals = [
@@ -3130,15 +3150,16 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in r1_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r1_exit_r)
+                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start, "8|0", "7|1")
+    connect(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r1_exit_r, False)
     # From start requires floor 7 open right exit
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r1_exit_r, CastleRegionNames.r2_bswitch)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r1_exit_r, CastleRegionNames.r2_bswitch,
+                 "8|1", "7|2")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_w_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r2_0)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r2_0, False)
     # Internal bronze gates
     r2_internals = [
         GateNames.c_r2_6,
@@ -3149,53 +3170,55 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in r2_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_m,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_e)
+                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_e, False)
     # Requires open east passage top or open east passage bottom
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_nw,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r2_7)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_nw, CastleRegionNames.r2_n)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r2_7, False)  # True for button rando
+    connect(multiworld, player, used_names, CastleRegionNames.r2_nw, CastleRegionNames.r2_n, False)  # True
     # Requires open north room left
     # Or requires open north room right from r2_m
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r2_5)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_sgate, CastleRegionNames.r2_s)
+                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r2_5, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_sgate, CastleRegionNames.r2_s, False)
     # Requires silver gate floor button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_spike_island)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_spike_island, False)
     # Requires open spike island passage
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_spike_island, CastleRegionNames.r2_sw_bridge)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_spike_island, CastleRegionNames.r2_sw_bridge, False)
     # Requires open sw bridge from r2_s
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_sw_bridge, CastleRegionNames.r2_puzzle)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_sw_bridge, CastleRegionNames.r2_puzzle, False)
     # Requires open puzzle room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_w)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_s, CastleRegionNames.r2_w, False)
     # Requires open west passage
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_from_r3, CastleRegionNames.r2_ne_cache)
+    connect(multiworld, player, used_names, CastleRegionNames.r2_from_r3, CastleRegionNames.r2_ne_cache, False)
     # Requires open cache passage
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r2_4)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main, True)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r2_4, False)  # True
+    # Can also access with open exit button, it removes the wall
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main, "9|0", "8|2")
     # Requires open exit button
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_ne_room)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_ne_room, False)
     # Requires open ne room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_s_room)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_s_room, False)
     # Requires open south room
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_l_shop_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r3_5)
+                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r3_5, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_s_room, CastleRegionNames.r3_r_shop_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r3_4)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_se_cache)
+                 key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r3_4, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_se_cache, False)
     # Requires open se cache room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_boss_switch, False)
     # Requires open boss switch room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_boss_switch, CastleRegionNames.r3_rune_room)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_boss_switch, CastleRegionNames.r3_rune_room, False)
     # Requires 5 open simon says room switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_rune_room, CastleRegionNames.r3_bonus)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_rune_room, CastleRegionNames.r3_bonus, False)
     # Requires 6 simon says switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main,
+                 "bonus_3|0", "9|200")
     # Requires open bonus entrance passage
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r3_1)
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r3_1, False)
     # Internal bronze gates
     r3_internals = [
         GateNames.c_r3_0,
@@ -3207,42 +3230,46 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in r3_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_main,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_l)
+                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_l, False)
     # Requires left sw button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_r)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_sw_bgate, CastleRegionNames.r3_sw_wall_r, False)
     # Requires right sw button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_sw_wall_l, CastleRegionNames.r3_nw_tp)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_sw_wall_l, CastleRegionNames.r3_nw_tp, False)
     # Requires nw tp button
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus_return,
-                    CastleRegionNames.r3_bonus_return_bridge)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3,
-                    True)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r3_bonus_return_bridge,
+            False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3,
+                 "8|200", "9|250")
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_e_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r3_6)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r3_6, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_w_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r3_3)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.r3_exit)
+                 key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r3_3, True)
+    connect(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.r3_exit, False)
     # Requires open boss switch room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.r3_exit, CastleRegionNames.b3_start,
-                    True, True, ItemName.ev_castle_b3_boss_switch, 3, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r3_exit, CastleRegionNames.b3_start,
+                 "boss_3|0", "9|100", ItemName.ev_castle_b3_boss_switch, 3, False)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room,
+                 "bonus_3|80", "bonus_3|12")
+    connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, False)
     # Internal bronze gates
     for i in range(3):
-        connect_generic(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_main,
-                        False, False, key_bonus_archives)
+        connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_main,
+                False, key_bonus_archives)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.c1_start, True,
-                    False, ItemName.evc_beat_boss_3, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b3_start, CastleRegionNames.b3_arena, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.b3_exit, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.b3_exit, CastleRegionNames.c1_start,
+                 "10|0", "boss_3|1")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes)
+    connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes, False)
+    # Requires n spikes switch
+    connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_se_spikes, False)
+    # Requires se spikes switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_shop,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_3)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_3, False)
     # Bronze gates with no checks
     c1_s_internals = [
         GateNames.c_c1_7,
@@ -3253,20 +3280,25 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in c1_s_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_start,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate)
+                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_w,
-                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_12)
+                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_12, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_sgate,
-                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_13)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs)
+                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_13, True)
+    connect(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs, False)
     # Requires open prison door passage from c1_start
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
-                    True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island,
+                 "11|50", None)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_tp_island, CastleRegionNames.c1_sgate,
+                 "10|75", None)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
+                 "10b|0", "10|169")
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_s_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_6)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_6, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_start, False)
+    # Requires s shortcut button
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_ledge,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_5)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_5, False)
     # Bronze gates with no checks
     c1_s_internals = [
         GateNames.c_c1_0,
@@ -3276,35 +3308,35 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in c1_s_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_w,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main, True)
+                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main, "11|0", "10|100")
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.pstart_start, CastleRegionNames.pstart_puzzle)
+    connect(multiworld, player, used_names, CastleRegionNames.pstart_start, CastleRegionNames.pstart_puzzle, False)
     # Requires 4 prison return rune switches and prison return puzzle switch
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_sw_wall)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_sw_wall, False)
     # Requires open sw wall
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_wall)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_wall, False)
     # Requires open west wall
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_w_shops_2, CastleRegionNames.c2_e_wall)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_w_shops_2, CastleRegionNames.c2_e_wall, False)
     # Requires open east wall
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_spikes, False)
     # Requires 4 spike floor rune switches
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_1,
-                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_11)
+                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_11, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_w_shops_3, CastleRegionNames.c2_w_shops_2,
-                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_10)
+                 key_silver_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_10, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_w_shops_3,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_3)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_3, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_1,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_2)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_2, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_e_shops_2,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_16)
-    # Can also access from main through open east passage
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_e_shops_1, CastleRegionNames.c2_puzzle)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_16, False)
+    # Can also access from main through open east wall
+    connect(multiworld, player, used_names, CastleRegionNames.c2_e_shops_1, CastleRegionNames.c2_puzzle, False)
     # Requires open puzzle room and puzzle switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_exit_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_12)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_12, False)
     # Bronze gates with no checks
     c2_internals = [
         GateNames.c_c2_5,
@@ -3322,43 +3354,47 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in c2_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_main,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate)
+                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n,
-                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_9)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_bonus, True)
+                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c2_9, True)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_bonus, True)
     # Require 5 open bonus entrance wall switches
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_bonus, CastleRegionNames.n4_main, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_wall,
-                    False, False, ItemName.btnc_c2_n_wall, 1, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_shops,
-                    False, False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_main,
-                    False, False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island,
-                    True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_bonus, CastleRegionNames.n4_main,
+                 "bonus_4|0", "11|88")
+    connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_wall,
+            False, ItemName.btnc_c2_n_wall, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_shops,
+            False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n_shops,
+            False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
+    # Presently to open the north shops you need access to c3_nw, change to two-way for button rando
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start, "12|0", "11|45")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw, "12|54", "11|105")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island,
+                 "10|99", None)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
-                    False, False, key_bonus_chambers)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
-                    False, False, key_bonus_chambers)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
-                    False, False, key_bonus_chambers)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
-                    True, False, key_bonus_chambers)
+    connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
+            False, key_bonus_chambers)
+    connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_w,
+            False, key_bonus_chambers)
+    connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
+            False, key_bonus_chambers)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
+                 "11|125", None, key_bonus_chambers)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_1)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
-                    False, True, ItemName.ev_castle_c3_rspikes_switch, 1, False)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_1, False)
+    # Can also get there if you have red spike switch
+    connect(multiworld, player, used_names, CastleRegionNames.c3_rspike_switch, CastleRegionNames.c3_rspikes,
+            False, ItemName.ev_castle_c3_rspikes_switch, 1, False)
+    # From c3_start technically, but route through gate so that we require it
     connect_gate(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_s_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_8)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_8, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_shop,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_5)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_wall)
+                 key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_5, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_wall, False)
     # Requires open middle passage
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_tp)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_m_tp, False)
     # Requires teleport middle item
     # Bronze gates with no checks
     c3_s_internals = [
@@ -3373,9 +3409,9 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in c3_s_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_rspikes,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate)
+                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_nw,
-                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_9)
+                 key_gold_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_9, True)
     # Bronze gates with no checks
     c3_n_internals = [
         GateNames.c_c3_2,
@@ -3384,35 +3420,37 @@ def connect_castle_regions_generic(multiworld: MultiWorld, player: int, random_l
     ]
     for gate in c3_n_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c3_nw, CastleRegionNames.c3_nw,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_sw_hidden,
-                    False, True, ItemName.ev_castle_c3_sw_hidden_switch, 6, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_se_hidden)
+                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_rspikes, CastleRegionNames.c3_sw_hidden,
+            False, ItemName.ev_castle_c3_sw_hidden_switch, 6, False)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_se_hidden, False)
     # Requires open se hidden wall switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_se_hidden, CastleRegionNames.c3_light_bridge)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_se_hidden, CastleRegionNames.c3_light_bridge, False)
     # Requires activate light bridge switch
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_fire_floor,
-                    True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c3_fire_floor_tp)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c2_c3_tp, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp, True)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_fire_floor,
+                 "12|67", None)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c3_fire_floor_tp, False)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c2_c3_tp,
+                 "11|77", None)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp, "12|156", None)
 
     # Old connect method to ensure no keys will in the final boss room
-    connect_generic(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.b4_start,
-                    True, True, ItemName.ev_castle_b4_boss_switch, 3, False)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.b4_start,
+                 "boss_4|0", "11|1", ItemName.ev_castle_b4_boss_switch, 3, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated, False)
 
+    # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
     planks_to_win = multiworld.planks_required_count[player]
-    connect_generic(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.e1_main,
-                    False, False, ItemName.plank, 12, False)
+    connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.e1_main,
+            False, ItemName.plank, 12, False)
     # Technically planks are consumed, but nothing else does so this is faster
-    connect_generic(multiworld, player, used_names, CastleRegionNames.e1_main, CastleRegionNames.e2_main, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.e2_main, CastleRegionNames.e3_main, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.e3_main, CastleRegionNames.e4_main, True)
-    connect_generic(multiworld, player, used_names, CastleRegionNames.e4_main, CastleRegionNames.escaped, True)
+    connect(multiworld, player, used_names, CastleRegionNames.e1_main, CastleRegionNames.e2_main, False)
+    connect(multiworld, player, used_names, CastleRegionNames.e2_main, CastleRegionNames.e3_main, False)
+    connect(multiworld, player, used_names, CastleRegionNames.e3_main, CastleRegionNames.e4_main, False)
+    connect(multiworld, player, used_names, CastleRegionNames.e4_main, CastleRegionNames.escaped, False)
 
-    connect_generic(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
-                    False, False, ItemName.plank, planks_to_win, False)
+    connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.get_planks,
+            False, ItemName.plank, planks_to_win, False)
 
 
 def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[str, LocationData],
@@ -3947,6 +3985,12 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                        t1_sw_sdoor_locations)
 
     t1_node_1_locations = [
+        TempleLocationNames.ev_t1_s_node
+    ]
+    t1_node_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_node_1,
+                                     t1_node_1_locations)
+
+    t1_w_locations = [
         TempleLocationNames.t1_double_gate_1,
         TempleLocationNames.t1_double_gate_2,
         TempleLocationNames.t1_double_gate_3,
@@ -3960,10 +4004,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_mana_drain_fire_trap_reward_1,
         TempleLocationNames.t1_mana_drain_fire_trap_reward_2,
         TempleLocationNames.t1_mana_drain_fire_trap_passage,
-        TempleLocationNames.ev_t1_s_node
     ]
-    t1_node_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_node_1,
-                                     t1_node_1_locations)
+    t1_w_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_w, t1_w_locations)
 
     t1_sun_turret_locations = [
         TempleLocationNames.t1_double_gate_behind_block,
@@ -4492,6 +4534,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
                                       pof_1_main_locations)
 
     pof_1_se_room_locations = [
+        TempleLocationNames.ev_pof_1_se_room_panel,
     ]
     pof_1_se_room_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room,
                                          pof_1_se_room_locations)
@@ -4514,14 +4557,18 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     pof_1_se_room_top_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_se_room_top,
                                              pof_1_se_room_top_locs)
 
-    pof_gate_1_locations = [
+    pof_1_sw_gate_locs = [
+    ]
+    pof_1_sw_gate_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_sw_gate,
+                                         pof_1_sw_gate_locs)
+
+    pof_1_nw_locs = [
         TempleLocationNames.pof_1_confuse_corner_1,
         TempleLocationNames.pof_1_confuse_corner_2,
         TempleLocationNames.pof_1_confuse_corner_3,
         TempleLocationNames.pof_1_confuse_corner_4,
     ]
-    pof_gate_1_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_gate_1,
-                                      pof_gate_1_locations)
+    pof_1_nw_region = create_region(multiworld, player, active_locations, TempleRegionNames.pof_1_nw, pof_1_nw_locs)
 
     pof_1_n_room_locations = [
         TempleLocationNames.pof_1_n_1,
@@ -4696,6 +4743,7 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         t1_main_region,
         t1_w_puzzle_region,
         t1_sw_cache_region,
+        t1_w_region,
         t1_node_1_region,
         t1_node_2_region,
         t1_sun_turret_region,
@@ -4753,7 +4801,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         pof_1_main_region,
         pof_1_se_room_region,
         pof_1_se_room_top_region,
-        pof_gate_1_region,
+        pof_1_sw_gate_region,
+        pof_1_nw_region,
         pof_1_n_room_region,
         pof_1_exit_hall_region,
         pof_1_gate_2_region,
@@ -4773,8 +4822,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
     ]
 
 
-def connect_tots_regions_generic(multiworld, player: int, random_locations: typing.Dict[str, int],
-                                 gate_codes: typing.Dict[str, str]):
+def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[str, int],
+                         gate_codes: typing.Dict[str, str]):
     used_names: typing.Dict[str, int] = {}
 
     gate_counts: typing.Dict[str, int] = {
@@ -4795,262 +4844,269 @@ def connect_tots_regions_generic(multiworld, player: int, random_locations: typi
     if pickaxe_item_count > 1:
         pickaxe_item = ItemName.pickaxe_fragment
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main)
+    connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
-                    False, True, pickaxe_item, pickaxe_item_count, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_rocks, TempleRegionNames.cave_3_fall,
-                    True, False)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
+            True, pickaxe_item, pickaxe_item_count, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.hub_rocks, TempleRegionNames.cave_3_fall,
+                 "c1|111", None)
     # For the temple entrances in the hub
     t3_entrance = TempleRegionNames.t3_main
     if random_locations[TempleLocationNames.rloc_t3_entrance] == 2:
         t3_entrance = TempleRegionNames.t3_blockade_s
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_rocks, t3_entrance,
-                    True, True, ItemName.key_teleport, 5, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.temple_entrance, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_pyramid_of_fear,
-                    False, True, ItemName.ev_pof_complete, 1, False)
+    t3_entrance_code = f"t3|{random_locations[TempleLocationNames.rloc_t3_entrance]}"
+    connect_exit(multiworld, player, used_names, TempleRegionNames.hub_rocks, t3_entrance,
+                 t3_entrance_code, "hub|56", ItemName.key_teleport, 5, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.temple_entrance,
+                 "t_entrance|0", "hub|1")
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_pyramid_of_fear,
+            False, ItemName.ev_pof_complete, 1, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.library_lobby, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.library_lobby, TempleRegionNames.library, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main,
-                    True, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields,
-                    False, True, lever_item, lever_item_count, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
-                    False, True, lever_item, lever_item_count, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.library_lobby,
+                 "library|0", "hub|50")
+    connect_exit(multiworld, player, used_names, TempleRegionNames.library_lobby, TempleRegionNames.library,
+                 "library|3", "library|1")
+    connect_exit(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main,
+                 "c1|0", "library|5")
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields,
+            False, lever_item, lever_item_count, False)
+    connect(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
+            False, lever_item, lever_item_count, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,
-                    True, True, ItemName.key_teleport, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e, True)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,
+                 "c2|0", "c1|1", ItemName.key_teleport, 1, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_2_pumps,
-                    False, True, lever_item, lever_item_count, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_red_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_2_pumps,
+            False, lever_item, lever_item_count, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_red_bridge, False)
     # Requires red switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_green_bridge)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_sw)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_green_bridge, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.c2_sw, True)
     # Both require green switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_double_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.c2_double_bridge, False)
+    # Two-way
     # connect_generic(multiworld, player, used_names, TempleRegionNames.c2_double_bridge, TempleRegionNames.cave_2_main)
     # Both require double bridge switch
-    # connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_2_main)
+    # connect(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_2_main, False)
     # Requires lower bridge switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_1_main,
-                    True, True, ItemName.key_teleport, 2, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_1_main,
+                 "c3|0", "c2|1", ItemName.key_teleport, 2, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.c1_n_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge)
-    # Requires blue switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
-                    TempleRegionNames.cave_1_red_bridge)  # Requires red switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
-                    TempleRegionNames.c1_secret_hall)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.c1_n_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge, False)
+    # Requires blue switch, two-way
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge, TempleRegionNames.cave_1_red_bridge,
+            False)
+    # Requires red switch, two-way
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_blue_bridge,
+            TempleRegionNames.c1_secret_hall, False)
     # Requires wall switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_pumps,
-                    False, True, lever_item, lever_item_count, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_pumps,
-                    TempleRegionNames.cave_1_green_bridge)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_pumps,
+            True, lever_item, lever_item_count, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.cave_1_green_bridge,
+            False)
     # Symbolic connection, requires green switch which is underwater
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.boss2_main,
-                    True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated,
-                    False, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.boss2_main, False)
+    #             "boss_2|0", "c3|123")
+    # Technically a level exit, but we need to be able to go to the defeated room from anywhere rip
+    connect(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated,
+            False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.c1_e_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge,
-                    TempleRegionNames.boss_1_entrance, True, True, ItemName.key_teleport, 3, False)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.c1_e_puzzle, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge,
+                 TempleRegionNames.boss_1_entrance, "boss_1|0", "c3|49", ItemName.key_teleport, 3, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.boss_1_entrance, TempleRegionNames.boss_1_arena,
-                    True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.boss_1_arena, TempleRegionNames.boss_1_defeated)
+    connect(multiworld, player, used_names, TempleRegionNames.boss_1_entrance, TempleRegionNames.boss_1_arena,
+            True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
+    connect(multiworld, player, used_names, TempleRegionNames.boss_1_arena, TempleRegionNames.boss_1_defeated, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.boss_1_arena, TempleRegionNames.b1_back,
-                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_b1_0)
+                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_b1_0, True)
     # connect_generic(multiworld, player, used_names, TempleRegionNames.b1_back, TempleRegionNames.boss_1_entrance)
     # Requires boss 1 bridge switch
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b1_back,
-                    TempleRegionNames.passage_entrance, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid,
-                    True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end, True)
+    passage_entrance = f"passage|{0 if random_locations[TempleLocationNames.rloc_passage_entrance] == 0 else 2}"
+    connect_exit(multiworld, player, used_names, TempleRegionNames.b1_back, TempleRegionNames.passage_entrance,
+                 passage_entrance, "boss_1|2")
+    passage_mid = f"passage|{random_locations[TempleLocationNames.rloc_passage_middle] + 1}0"
+    connect_exit(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid,
+                 passage_mid, "passage|1")
+    connect(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_puzzle, False)
+    passage_end = f"passage|1{random_locations[TempleLocationNames.rloc_passage_end] + 1}0"
+    connect_exit(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end,
+                 passage_end, f"passage|{random_locations[TempleLocationNames.rloc_passage_middle] + 1}1")
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.passage_end,
-                    TempleRegionNames.temple_entrance_back, True)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.passage_end, TempleRegionNames.temple_entrance_back,
+                 "t_entrance|11", "passage|128")
     # Kinda useless, we can already access this
     # connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back,
     #                 TempleRegionNames.temple_entrance, False, True, ItemName.ev_open_temple_entrance_shortcut, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main,
-                    True)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main,
+                 "t1|0", "t_entrance|1")
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_w_puzzle,
-                    False, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_w_puzzle, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_sdoor,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_3)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
-                    False, True, ItemName.mirror, 3)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.cave_3_secret, True)
-    connect_gate(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_sun_turret,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_1)
-    connect_gate(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_ice_turret,
-                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t1_4)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telarian)
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_3, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
+            False, ItemName.mirror, 3)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_w, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.cave_3_secret,
+                 "c1|197")
+    connect_gate(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.t1_sun_turret,
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_1, False)
+    connect_gate(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.t1_ice_turret,
+                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t1_4, True)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_telarian, False)
     # Requires telarian button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
-                    TempleRegionNames.t1_telarian_melt_ice, False, True, ItemName.evt_beat_boss_2, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret,
+            TempleRegionNames.t1_telarian_melt_ice, True, ItemName.evt_beat_boss_2, 1, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_n_of_ice_turret,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_0)
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_0, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_s_of_ice_turret,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_2)
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_2, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_east,
-                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t1_5)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_sun_block_hall,
-                    False, True, ItemName.mirror, 3)
-    # TODO: Problems with logic when entering from east, gotta figure out a better solution for this eventually
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_node_2,
-                    False, True, ItemName.mirror, 1)
-    # Also technically you need to place the mirrors earlier too, but logic sets things correctly if we do this
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east,
-                    TempleRegionNames.t1_ice_chamber_melt_ice, False, True, ItemName.evt_beat_boss_2, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_jail_e)
+                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t1_5, True)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_ice_turret, TempleRegionNames.t1_sun_block_hall,
+            False, ItemName.mirror, 3)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_node_2,
+            False, ItemName.mirror, 1)  # For future reference both these have extra stuff set in Rules.py
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east,
+            TempleRegionNames.t1_ice_chamber_melt_ice, False, ItemName.evt_beat_boss_2, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_jail_e, False)
     # Requires east jail button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_e_puzzle,
-                    False, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_e_puzzle, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_nw_puzzle,
-                    False, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_e_puzzle,
-                    False, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
-                    False, True, ItemName.evt_beat_boss_2, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_w_ice_gate)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main,
+                 f"t2|{random_locations[TempleLocationNames.rloc_t2_entrance]}", "t1|1")
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_nw_puzzle,
+            False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_e_puzzle,
+            False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_melt_ice,
+            True, ItemName.evt_beat_boss_2, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_w_ice_gate, False)
     # Requires west ice gate button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_e_ice_gate)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_e_ice_gate, False)
     # Requires east ice gate button
     connect_gate(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_n_gate,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t2_0)
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t2_0, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t2_melt_ice, TempleRegionNames.t2_s_gate,
-                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t2_1)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sdoor_gate)
+                 ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t2_1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sdoor_gate, False)
     # Requires south door gate button
     connect_gate(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_ornate,
-                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t2_2)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_ornate, TempleRegionNames.t2_ornate_gate,
-                    False, False)
+                 ItemName.key_gold, gate_codes, gate_counts, GateNames.t_t2_2, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_ornate, TempleRegionNames.t2_ornate_gate, False)
     # Requires east ornate wall button. Note we make this one-way because you have to access the other side to cross
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_ornate_t3, TempleRegionNames.t2_ornate_gate,
-                    False, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_ornate_t3, TempleRegionNames.t2_ornate_gate, False)
     # Requires west ornate wall button. Note we make this one-way because you have to access the other side to cross
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_puzzle,
-                    False, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
-                    False, True, ItemName.mirror, 3)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_nw_button_gate)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_n_node,
+            False, ItemName.mirror, 3)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_gate, TempleRegionNames.t2_nw_button_gate, False)
     # Requires nw gate button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_node, TempleRegionNames.t2_boulder_room)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_node, TempleRegionNames.t2_boulder_room, False)
     # From north gate, requires north node button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_boulder_room, TempleRegionNames.t2_jail_sw,
-                    False, True, ItemName.btn_t2_blue_spikes, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_boulder_room,
-                    TempleRegionNames.t2_n_hidden_hall)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_boulder_room, TempleRegionNames.t2_jail_sw,
+            False, ItemName.btn_t2_blue_spikes, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_boulder_room, TempleRegionNames.t2_n_hidden_hall,
+            False)
     # Requires hidden hall button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_n_hidden_hall, TempleRegionNames.t2_jones_hall)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_n_hidden_hall, TempleRegionNames.t2_jones_hall, False)
     # Requires jones hall button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sw_puzzle,
-                    False, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
-                    False, True, ItemName.mirror, 4)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_s_node, TempleRegionNames.t2_pof)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_sw_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_s_gate, TempleRegionNames.t2_s_node,
+            False,  ItemName.mirror, 4)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_s_node, TempleRegionNames.t2_pof, False)
     # Technically you only need 3 mirrors to get here, but this is safer logic
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_pof, TempleRegionNames.t2_jail_s)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_pof, TempleRegionNames.t2_jail_s, False)
     # Requires pof wall button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_jail_s, TempleRegionNames.t2_pof_spikes)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_jail_s, TempleRegionNames.t2_pof_spikes, False)
     # Requires pof south jail wall button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
-                    False, True, ItemName.ev_t2_rune_switch, 5, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges,
-                    TempleRegionNames.t2_portal_gate)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_light_bridges,
+            False, ItemName.ev_t2_rune_switch, 5, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.t2_portal_gate, False)
     # Requires portal floor switch
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal,
-                    True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple,
-                    True)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal,
+                 "c1|123", "t2|78")
+    connect_exit(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple,
+                 "t3|97", "t2|97")
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_blockade_s, TempleRegionNames.t3_s_gate)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_blockade_s, TempleRegionNames.t3_s_gate, False)
     # Requires south gate button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_gate, TempleRegionNames.t3_main,
-                    False, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_s_gate, TempleRegionNames.t3_main, False)
     # One-way because we need to hit the button first!
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_main,
-                    False, False, ItemName.mirror, 2)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3,
+                 "t2|123", "t3|123")
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_main,
+            False, ItemName.mirror, 2)
     # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2,
-                    TempleRegionNames.t3_n_node_blocks, False, False, ItemName.mirror, 1)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2,
+            TempleRegionNames.t3_n_node_blocks, False, ItemName.mirror, 1)
     # After wasting mirrors everywhere else only this one will turn on the beam to break the blockade
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_blockade_s)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_gates)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_blockade_s, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_gates, False)
     # Requires gates button
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_gates, TempleRegionNames.t3_puzzle,
-                    False, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_1,
-                    False, False, ItemName.mirror, 2)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_main,
-                    TempleRegionNames.t3_s_node_blocks_2, False, False, ItemName.mirror, 1)
-    # More wonky logic, I promise everything works out!
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_gates, TempleRegionNames.t3_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_n_node_blocks, TempleRegionNames.t3_n_node, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_1,
+            False, ItemName.mirror, 2)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_s_node_blocks_2,
+            False, ItemName.mirror, 1)
+    # More wonky logic, I hope everything works out!
+    connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
-                    True, True, ItemName.ev_pof_switch, 6, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_se_room,
-                    TempleRegionNames.pof_1_se_room_top)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
+                 "bonus_5|0", "hub|111", ItemName.ev_pof_switch, 6, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room,
+                 "bonus_5|80", "bonus_5|12")
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_se_room_top, False,
+            ItemName.ev_pof_1_s_walls, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_sw_gate, False,
+            ItemName.ev_pof_1_s_walls, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_sw_gate, TempleRegionNames.pof_1_nw,
+            False, ItemName.key_bonus)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_nw, TempleRegionNames.pof_1_n_room,
+                 "bonus_5|15", "bonus_5|75")
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_nw, TempleRegionNames.pof_1_exit_hall,
+            True, ItemName.ev_pof_1_unlock_exit, 1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_1_exit_hall, TempleRegionNames.pof_1_gate_2,
+            True, ItemName.key_bonus)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main,
+                 "bonus_5|18", None)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n,
+                 "bonus_5|35", "bonus_5|25")
+    connect(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle, False)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_2_puzzle, TempleRegionNames.pof_puzzle, False)
     # Requires bonus panel
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_se_room_top, TempleRegionNames.pof_1_gate_1,
-                    False, True, ItemName.key_bonus)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_n_room,
-                    True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_1, TempleRegionNames.pof_1_exit_hall,
-                    False, True, ItemName.ev_pof_1_unlock_exit, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_exit_hall, TempleRegionNames.pof_1_gate_2,
-                    False, True, ItemName.key_bonus)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_puzzle, TempleRegionNames.pof_puzzle)
-    # Requires bonus panel
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_exit,
-                    False, True, ItemName.ev_pof_2_unlock_exit, 1, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_2_exit, TempleRegionNames.pof_3_start, True)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_3_start, TempleRegionNames.pof_3_main)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.pof_3_main, TempleRegionNames.hub_main,
-                    True, False)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_exit,
+            False, ItemName.ev_pof_2_unlock_exit, 1, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_2_exit, TempleRegionNames.pof_3_start,
+                 "bonus_5|160", None)
+    connect(multiworld, player, used_names, TempleRegionNames.pof_3_start, TempleRegionNames.pof_3_main, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_3_main, TempleRegionNames.hub_main,
+                 "hub|111", None)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
-                    True, True, ItemName.ev_solar_node, 6, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_main, TempleRegionNames.b3_platform_1)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.b3_platform_2)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.b3_platform_3)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.b3_defeated)
+    connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
+            True, ItemName.ev_solar_node, 6, False)  # Ignoring for ER, kinda dumb
+    connect(multiworld, player, used_names, TempleRegionNames.b3_main, TempleRegionNames.b3_platform_1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.b3_platform_2, False)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.b3_platform_3, False)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.b3_defeated, False)
 
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.t3_boss_fall_1,
-                    True, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_1, TempleRegionNames.t3_main)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.t3_boss_fall_2,
-                    True, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_2, TempleRegionNames.t3_main)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.t3_boss_fall_3,
-                    True, False)
-    connect_generic(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_3, TempleRegionNames.t3_main)
+    # These are also ignored 
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_1, TempleRegionNames.t3_boss_fall_1, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_1, TempleRegionNames.t3_main, False)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_2, TempleRegionNames.t3_boss_fall_2, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_2, TempleRegionNames.t3_main, False)
+    connect(multiworld, player, used_names, TempleRegionNames.b3_platform_3, TempleRegionNames.t3_boss_fall_3, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t3_boss_fall_3, TempleRegionNames.t3_main, False)
 
     planks_to_win = multiworld.planks_required_count[player]
-    connect_generic(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.get_planks,
-                    False, False, ItemName.plank, planks_to_win, False)
+    connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.get_planks,
+            False, ItemName.plank, planks_to_win, False)
 
 
 def create_region(multiworld: MultiWorld, player: int, active_locations: typing.Dict[str, LocationData], name: str,
@@ -5064,39 +5120,31 @@ def create_region(multiworld: MultiWorld, player: int, active_locations: typing.
     return region
 
 
-def connect_generic(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
-                    level_exit=False, two_way=True, pass_item: str = None, item_count=1, items_consumed=True):
+def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
+            two_way, pass_item: str = None, item_count=1, items_consumed=True):
     source_region = multiworld.get_region(source, player)
     target_region = multiworld.get_region(target, player)
 
-    if target not in used_names:
-        used_names[target] = 1
-        forward_name = target
-    else:
-        used_names[target] += 1
-        forward_name = target + ('_' * used_names[target])
+    entrance_name = get_entrance_name(used_names, source, target)
 
-    connection = HWEntrance(player, forward_name, source_region, pass_item, item_count, items_consumed, level_exit)
+    connection = HWEntrance(player, entrance_name, source_region, target_region,
+                            pass_item, item_count, items_consumed, None)
 
     source_region.exits.append(connection)
     connection.connect(target_region)
 
     if two_way:
-        connect_generic(multiworld, player, used_names, target, source, level_exit, False, pass_item, item_count,
-                        items_consumed)
+        connect(multiworld, player, used_names, target, source, False, pass_item, item_count,
+                items_consumed)
 
 
 def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
-                 key_type: str, gate_codes: typing.Dict[str, str], gate_items: typing.Dict[str, int], gate_code: str):
+                 key_type: str, gate_codes: typing.Dict[str, str], gate_items: typing.Dict[str, int], gate_code: str,
+                 two_way: bool):
     source_region = multiworld.get_region(source, player)
     target_region = multiworld.get_region(target, player)
 
-    if target not in used_names:
-        used_names[target] = 1
-        forward_name = target
-    else:
-        used_names[target] += 1
-        forward_name = target + ('_' * used_names[target])
+    entrance_name = get_entrance_name(used_names, source, target)
 
     key_item_name = key_type
     if multiworld.gate_shuffle[player]:
@@ -5106,9 +5154,43 @@ def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
             gate_items.pop(key_item_name)
         gate_codes[gate_code] = key_item_name.split(" ")[-2].lower()
 
-    connection = HWEntrance(player, forward_name, source_region, key_item_name, 1, True, False)
+    connection = HWEntrance(player, entrance_name, source_region, target_region, key_item_name, 1, True, None)
 
     source_region.exits.append(connection)
     connection.connect(target_region)
 
-    connect_generic(multiworld, player, used_names, target, source, False, False, key_item_name, 1, True)
+    if two_way:
+        connect(multiworld, player, used_names, target, source, False, key_item_name, 1, True)
+
+
+def connect_exit(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,
+                 exit_code: str, return_code: str = None, pass_item: str = None, item_count=1, items_consumed=True):
+    source_region = multiworld.get_region(source, player)
+    target_region = multiworld.get_region(target, player)
+
+    entrance_name = get_entrance_name(used_names, source, target)
+
+    connection = HWEntrance(player, entrance_name, source_region, target_region,
+                            pass_item, item_count, items_consumed, exit_code)
+
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    if return_code is not None:
+        connect_exit(multiworld, player, used_names, target, source, return_code, None, pass_item, item_count,
+                     items_consumed)
+
+
+def etr_base_name(source: str, target: str):
+    return source + " > " + target
+
+
+def get_entrance_name(used_names: typing.Dict[str, int], source: str, target: str):
+    base_name = etr_base_name(source, target)
+    if base_name not in used_names:
+        used_names[base_name] = 1
+        name = base_name
+    else:
+        used_names[base_name] += 1
+        name = base_name + ('_' * used_names[base_name])
+    return name
