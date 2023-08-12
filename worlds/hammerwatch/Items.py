@@ -134,25 +134,6 @@ stat_upgrade_items: typing.List[str] = [
     ItemName.stat_upgrade_mana,
 ]
 
-junk_items: typing.List[str] = [
-    ItemName.apple,
-    ItemName.orange,
-    ItemName.steak,
-    ItemName.fish,
-    ItemName.mana_1,
-    ItemName.mana_2,
-    ItemName.diamond_small,
-    ItemName.diamond,
-    ItemName.diamond_small_red,
-    ItemName.diamond_red,
-    ItemName.bonus_chest,
-    ItemName.ankh,
-    ItemName.potion_damage,
-    ItemName.potion_rejuvenation,
-    ItemName.potion_invulnerability,
-    ItemName.vendor_coin,
-]
-
 trap_items: typing.List[str] = [
     ItemName.trap_bomb,
     ItemName.trap_mana,
