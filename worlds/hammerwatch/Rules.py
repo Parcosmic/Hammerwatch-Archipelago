@@ -2,7 +2,7 @@ import math
 import typing
 
 from BaseClasses import MultiWorld, Region
-from .Names import CastleLocationNames, CastleRegionNames, TempleLocationNames, TempleRegionNames, ItemName
+from .Names import CastleLocationNames, CastleRegionNames, TempleLocationNames, TempleRegionNames, EntranceNames
 from worlds.generic.Rules import add_rule, set_rule, forbid_item
 from .Regions import HWEntrance, etr_base_name
 from .Util import *
@@ -96,6 +96,153 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
 
 def set_connections(multiworld, player):
     pass
+
+
+class EntranceBlockType(Enum):
+    Unblocked = 0
+    Blocked = 1  # Blocked means you cannot progress without being on the other side, effectively dead end
+    DeadEnd = 2
+
+
+entrance_block_types: typing.Dict[str, EntranceBlockType] = {
+    EntranceNames.c_p1_1: EntranceBlockType.DeadEnd,  # Technically not a dead end if shortcut portal is enabled
+    EntranceNames.c_p1_2: EntranceBlockType.Unblocked,  # Leads to 3
+    EntranceNames.c_p1_3: EntranceBlockType.Unblocked,
+    EntranceNames.c_p1_4: EntranceBlockType.DeadEnd,
+    EntranceNames.c_p1_10: EntranceBlockType.DeadEnd,
+    EntranceNames.c_p1_20: EntranceBlockType.DeadEnd,  # Portal exit, same note as 1 ^
+    EntranceNames.c_p2_0: EntranceBlockType.Unblocked,  # Leads to 1, 3 (2 is blocked)
+    EntranceNames.c_p2_1: EntranceBlockType.Unblocked,
+    EntranceNames.c_p2_2: EntranceBlockType.Unblocked,  # Leads to 0, 1,
+    EntranceNames.c_p2_3: EntranceBlockType.Blocked,  # Blocked by South spikes
+    EntranceNames.c_p3_0: EntranceBlockType.Unblocked,  # Is blocked from other exits, but leads to 1, 10, b_ent
+    EntranceNames.c_p3_1: EntranceBlockType.Blocked,  # Blocked by spikes
+    EntranceNames.c_p3_10: EntranceBlockType.Unblocked,  # Leads to 100
+    EntranceNames.c_p3_b_return: EntranceBlockType.Unblocked,  # Leads to 10, b_ent, 1
+    EntranceNames.c_p3_portal: EntranceBlockType.Unblocked,
+    EntranceNames.c_p3_b_ent: EntranceBlockType.Unblocked,
+    EntranceNames.c_p3_boss: EntranceBlockType.Unblocked,
+    EntranceNames.c_n1_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_b1_0: EntranceBlockType.Unblocked,  # Gotta beat the boss though
+    EntranceNames.c_b1_1: EntranceBlockType.DeadEnd,  # Technically blocked, but after the wall opens can't move on
+    EntranceNames.c_a1_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_a1_1: EntranceBlockType.DeadEnd,
+    EntranceNames.c_a1_a2: EntranceBlockType.Unblocked,
+    EntranceNames.c_a1_a3: EntranceBlockType.Unblocked,
+    EntranceNames.c_a1_boss: EntranceBlockType.Unblocked,
+    EntranceNames.c_a2_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_a2_1: EntranceBlockType.Unblocked,
+    EntranceNames.c_a2_2: EntranceBlockType.Blocked,  # Need to push button to open walls
+    EntranceNames.c_a2_3: EntranceBlockType.Unblocked,
+    EntranceNames.c_a2_10: EntranceBlockType.Unblocked,
+    EntranceNames.c_a2_88: EntranceBlockType.Unblocked,
+    EntranceNames.c_a3_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_a3_1: EntranceBlockType.Unblocked,
+    EntranceNames.c_a3_2: EntranceBlockType.Blocked,  # Need to activate glass bridge
+    EntranceNames.c_n2_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_b2_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_b2_1: EntranceBlockType.DeadEnd,
+    EntranceNames.c_r1_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_r1_1: EntranceBlockType.Unblocked,  # Funnily enough you appear on the floor switch to open the wall
+    EntranceNames.c_r1_2: EntranceBlockType.Blocked,
+    EntranceNames.c_r2_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_r2_1: EntranceBlockType.DeadEnd,
+    EntranceNames.c_r2_2: EntranceBlockType.Blocked,
+    EntranceNames.c_r2_200: EntranceBlockType.DeadEnd,  # Not a dead end if you aren't a coward :)
+    EntranceNames.c_r3_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_r3_b_return: EntranceBlockType.Unblocked,
+    EntranceNames.c_r3_boss: EntranceBlockType.Blocked,  # Need to open wall
+    EntranceNames.c_r3_b_ent: EntranceBlockType.Blocked,
+    EntranceNames.c_r3_250: EntranceBlockType.Blocked,
+    EntranceNames.c_n3_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_n3_12: EntranceBlockType.Unblocked,
+    EntranceNames.c_n3_80: EntranceBlockType.DeadEnd,
+    EntranceNames.c_b3_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_b3_1: EntranceBlockType.DeadEnd,
+    EntranceNames.c_c1_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_c1_75: EntranceBlockType.Unblocked,
+    EntranceNames.c_c1_99: EntranceBlockType.Unblocked,
+    EntranceNames.c_c1_100: EntranceBlockType.Unblocked,
+    EntranceNames.c_c1_169: EntranceBlockType.Blocked,
+    EntranceNames.c_c2_0: EntranceBlockType.Unblocked,  # Blocked by spikes from other entrances
+    EntranceNames.c_c2_boss: EntranceBlockType.Unblocked,
+    EntranceNames.c_c2_45: EntranceBlockType.Unblocked,
+    EntranceNames.c_c2_50: EntranceBlockType.Unblocked,  # One way island
+    EntranceNames.c_c2_77: EntranceBlockType.Unblocked,  # One way wall
+    EntranceNames.c_c2_b_ent: EntranceBlockType.Blocked,
+    EntranceNames.c_c2_105: EntranceBlockType.Unblocked,
+    EntranceNames.c_c2_125: EntranceBlockType.Unblocked,  # Blocked by wall from other entrances
+    EntranceNames.c_c3_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_c3_54: EntranceBlockType.Unblocked,
+    EntranceNames.c_c3_67: EntranceBlockType.Unblocked,
+    EntranceNames.c_c3_156: EntranceBlockType.Unblocked,  # Blocked by wall from other entrances
+    EntranceNames.c_n4_0: EntranceBlockType.Unblocked,
+    EntranceNames.c_b4_0: EntranceBlockType.DeadEnd,  # Technically not a dead end, but no entrances beyond are shuffled
+    EntranceNames.c_p_return_0: EntranceBlockType.DeadEnd,
+    
+    EntranceNames.t_hub_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_hub_50: EntranceBlockType.Unblocked,
+    EntranceNames.t_hub_56: EntranceBlockType.Blocked,  # Blocked because you need to talk to Lyron to clear the rocks!
+    EntranceNames.t_hub_111: EntranceBlockType.Unblocked,
+    EntranceNames.t_library_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_library_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_library_3: EntranceBlockType.Unblocked,
+    EntranceNames.t_library_5: EntranceBlockType.Unblocked,
+    EntranceNames.t_c1_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_c1_1: EntranceBlockType.Unblocked,  # Can't get back to the start, but can get to hub portal
+    EntranceNames.t_c1_111: EntranceBlockType.Unblocked,
+    EntranceNames.t_c1_123: EntranceBlockType.DeadEnd,
+    EntranceNames.t_c1_197: EntranceBlockType.Unblocked,
+    EntranceNames.t_c2_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_c2_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_c3_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_c3_49: EntranceBlockType.Blocked,  # Need a switch/switches to cross bridge
+    EntranceNames.t_c3_123: EntranceBlockType.Blocked,  # Need green switch
+    EntranceNames.t_b1_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_b1_2: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_ent_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_ent_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_ent_exit: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_2: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_3: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_4: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_end_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_end_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_end_2: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_end_3: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_mid_end_4: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_end_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_end_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_end_2: EntranceBlockType.Unblocked,
+    EntranceNames.t_p_end_end: EntranceBlockType.Unblocked,
+    EntranceNames.t_b2_0: EntranceBlockType.DeadEnd,
+    EntranceNames.t_t1_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_t1_1: EntranceBlockType.Unblocked,  # Technically unblocked, but it's kinda hard
+    EntranceNames.t_t2_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_t2_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_t2_78: EntranceBlockType.Unblocked,  # Can go to an exit to level 1
+    EntranceNames.t_t2_97: EntranceBlockType.Blocked,  # Need glass walk
+    EntranceNames.t_t2_123: EntranceBlockType.Blocked,  # Need column gate on the other side
+    EntranceNames.t_t3_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_t3_1: EntranceBlockType.Unblocked,
+    EntranceNames.t_t3_2: EntranceBlockType.Unblocked,
+    EntranceNames.t_c3_97: EntranceBlockType.DeadEnd,
+    EntranceNames.t_t3_123: EntranceBlockType.Blocked,  # Could potentially be blocked, so we assume worst case
+    EntranceNames.t_t_ent_hub: EntranceBlockType.Blocked,
+    EntranceNames.t_t_ent_temple: EntranceBlockType.Unblocked,
+    EntranceNames.t_t_ent_p: EntranceBlockType.Unblocked,
+    EntranceNames.t_n1_0: EntranceBlockType.Unblocked,
+    EntranceNames.t_n1_12: EntranceBlockType.Unblocked,
+    EntranceNames.t_n1_15: EntranceBlockType.DeadEnd,
+    EntranceNames.t_n1_18: EntranceBlockType.Unblocked,
+    EntranceNames.t_n1_25: EntranceBlockType.Unblocked,
+    EntranceNames.t_n1_35: EntranceBlockType.DeadEnd,
+    EntranceNames.t_n1_75: EntranceBlockType.Blocked,
+    EntranceNames.t_n1_80: EntranceBlockType.DeadEnd,
+    EntranceNames.t_n1_160: EntranceBlockType.Unblocked,
+}
 
 
 def prune_entrances(start_region: Region, next_region: Region):

@@ -4,7 +4,8 @@ from random import Random
 from BaseClasses import MultiWorld, Region, Entrance
 from .Items import HammerwatchItem
 from .Locations import HammerwatchLocation, LocationData, LocationClassification
-from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames, GateNames
+from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames, GateNames,\
+    EntranceNames
 from .Util import *
 
 
@@ -20,16 +21,19 @@ class HWEntrance(Entrance):
     pass_item: str
     item_count: int
     items_consumed: bool
+    return_code: str
     exit_code: str
 
     downstream_count: int = 0
 
     def __init__(self, player: int, name: str = "", parent: Region = None, target: Region = None,
-                 pass_item: str = None, item_count=0, items_consumed=True, exit_code: str = None):
+                 pass_item: str = None, item_count=0, items_consumed=True,
+                 return_code: str = None, exit_code: str = None):
         super().__init__(player, name, parent)
         self.pass_item = pass_item
         self.item_count = item_count
         self.items_consumed = items_consumed
+        self.return_code = return_code
         self.exit_code = exit_code
 
 
@@ -2826,18 +2830,20 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_2, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p1_m_bronze_gate,
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_1, False)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start, "2|0", "1|1")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start,
+                 EntranceNames.c_p2_0, EntranceNames.c_p1_1)
     if multiworld.shortcut_teleporter[player]:
         connect_exit(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
-                     "3|81", "1|20")
+                     EntranceNames.c_p3_portal, EntranceNames.c_p1_20)
         connect(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1, CastleRegionNames.p3_n_gold_gate,
                 True)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_start, CastleRegionNames.p2_m,
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p2_0, True)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2, "1|2", "2|1")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p1_from_p2,
+                 EntranceNames.c_p1_2, EntranceNames.c_p2_1)
     connect_exit(multiworld, player, used_names, CastleRegionNames.p1_from_p2, CastleRegionNames.p2_p1_return,
-                 "2|2", "1|3")
+                 EntranceNames.c_p2_2, EntranceNames.c_p1_3)
     # connect_generic(multiworld, player, used_names, CastleRegionNames.p2_p1_return, CastleRegionNames.p2_m)
     # Requires return wall button
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_m, CastleRegionNames.p2_n,
@@ -2877,7 +2883,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect_gate(multiworld, player, used_names, CastleRegionNames.p2_s, CastleRegionNames.p2_end,
                  key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p2_3, True)
     connect_exit(multiworld, player, used_names, CastleRegionNames.p2_end, CastleRegionNames.p3_start_door,
-                 "3|0", "2|3")
+                 EntranceNames.c_p3_0, EntranceNames.c_p2_3)
 
     connect(multiworld, player, used_names, CastleRegionNames.p3_start_door, CastleRegionNames.p3_start, False)
     # Actually *not* two-way! The button prevents backtracking for now
@@ -2892,7 +2898,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_silver_prison, gate_codes, prison_gate_items, GateNames.c_p3_3, True)
     # Requires start spike switch
     connect_exit(multiworld, player, used_names, CastleRegionNames.p3_silver_gate, CastleRegionNames.p1_from_p3_s,
-                 "1|4", "3|1")
+                 EntranceNames.c_p1_4, EntranceNames.c_p3_1)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_start, CastleRegionNames.p3_n_gold_gate,
                  key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_4, True)
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_rspikes, False)
@@ -2902,7 +2908,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_bonus, False)
     # Requires 5 bonus switches
     connect_exit(multiworld, player, used_names, CastleRegionNames.p3_bonus, CastleRegionNames.n1_start,
-                 "bonus_1|0", "3|88")
+                 EntranceNames.c_n1_0, EntranceNames.c_p3_b_ent)
     # Requires 9 bonus buttons
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_s_bronze_gate,
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p3_2, False)
@@ -2913,7 +2919,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_exit_s, False)
     # Requires exit button, two-way
     connect_exit(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p1_from_p3_n,
-                 "1|10", "3|10")
+                 EntranceNames.c_p1_10, EntranceNames.c_p3_10)
     connect(multiworld, player, used_names, CastleRegionNames.p3_exit_s, CastleRegionNames.p3_n_gold_gate, False)
     # Requires exit shortcut button, two-way
     connect(multiworld, player, used_names, CastleRegionNames.p3_n_gold_gate, CastleRegionNames.p3_arrow_hall_secret,
@@ -2923,7 +2929,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect_gate(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.p3_s_gold_gate,
                  key_gold_prison, gate_codes, prison_gate_items, GateNames.c_p3_5, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.p3_sw, CastleRegionNames.b1_start,
-                 "boss_1|0", "3|100", ItemName.ev_castle_b1_boss_switch, 3, False)
+                 EntranceNames.c_b1_0, EntranceNames.c_p3_boss, ItemName.ev_castle_b1_boss_switch, 3, False)
 
     # if multiworld.randomize_bonus_keys[player]:
     connect(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1,
@@ -2941,7 +2947,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.n1_room3_hall, CastleRegionNames.n1_room4,
             False, key_bonus_prison)
     connect_exit(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
-                 "3|20", None, key_bonus_prison)
+                 EntranceNames.c_p3_b_return, None, key_bonus_prison)
     # else:
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
@@ -2954,7 +2960,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.b1_arena, CastleRegionNames.b1_defeated, False)
     connect(multiworld, player, used_names, CastleRegionNames.b1_defeated, CastleRegionNames.b1_exit, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.b1_exit, CastleRegionNames.a1_start,
-                 "4|0", "boss_1|1")
+                 EntranceNames.c_a1_0, EntranceNames.c_b1_1)
 
     connect(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_se, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_w,
@@ -2963,8 +2969,10 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_7, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a1_start_shop_e,
                  key_gold_armory, gate_codes, armory_gate_items, GateNames.c_a1_8, False)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start, "5|0", "4|5")
-    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main, "6|0", "4|6")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a2_start,
+                 EntranceNames.c_a2_0, EntranceNames.c_a1_a2)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.a3_main,
+                 EntranceNames.c_a3_0, EntranceNames.c_a1_a3)
     # Requires start wall switch
     connect_gate(multiworld, player, used_names, CastleRegionNames.a1_se, CastleRegionNames.a1_e,
                  key_silver_armory, gate_codes, armory_gate_items, GateNames.c_a1_6, True)
@@ -3036,9 +3044,10 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect_gate(multiworld, player, used_names, CastleRegionNames.a2_e, CastleRegionNames.a2_e_bgate,
                  key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a2_2, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.n2_start,
-                 "bonus_2|0", "5|88")
+                 EntranceNames.c_n2_0, EntranceNames.c_a2_88)
     # Requires bonus portal switch
-    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2, "4|1", "5|1")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a1_from_a2,
+                 EntranceNames.c_a1_1, EntranceNames.c_a2_1)
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_blue_spikes,
             False, ItemName.btnc_a2_blue_spikes, 1, False)
     connect(multiworld, player, used_names, CastleRegionNames.a2_blue_spikes, CastleRegionNames.a2_blue_spikes_tp,
@@ -3046,7 +3055,8 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     # Requires floor 5 blue spikes teleport switch
     connect(multiworld, player, used_names, CastleRegionNames.a2_nw, CastleRegionNames.a2_to_a3, False)
     # Requires floor 6 passage open switch
-    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_to_a3, CastleRegionNames.a3_from_a2, "6|1", "5|2")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a2_to_a3, CastleRegionNames.a3_from_a2,
+                 EntranceNames.c_a3_1, EntranceNames.c_a2_2)
 
     connect(multiworld, player, used_names, CastleRegionNames.n2_start, CastleRegionNames.n2_m,
             False, key_bonus_armory)
@@ -3067,7 +3077,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.n2_ne, CastleRegionNames.n2_exit, False)
     # Requires bonus 2 open exit panel
     connect_exit(multiworld, player, used_names, CastleRegionNames.n2_exit, CastleRegionNames.a2_bonus_return,
-                 "5|10", None)
+                 EntranceNames.c_a2_10, None)
 
     connect(multiworld, player, used_names, CastleRegionNames.a3_start, CastleRegionNames.a3_main, True)
     # Requires open start top wall switch or open start right wall switch
@@ -3075,7 +3085,8 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     # Requires 5 spike puzzle switches
     connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_knife_reward_2, False)
     # Requires 2 spike puzzle switches
-    connect_exit(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a2_nw, "5|3", "6|2")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a2_nw,
+                 EntranceNames.c_a2_3, EntranceNames.c_a3_2)
     connect(multiworld, player, used_names, CastleRegionNames.a3_main, CastleRegionNames.a3_tp, False)
     # Requires floor 6 teleport switch
     # connect_generic(multiworld, player, used_names, CastleRegionNames.a3_from_a2, CastleRegionNames.a3_main)
@@ -3097,12 +3108,12 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_bronze_armory, gate_codes, armory_gate_items, GateNames.c_a3_6, False)
 
     connect_exit(multiworld, player, used_names, CastleRegionNames.a1_start, CastleRegionNames.b2_start,
-                 "boss_2|0", "4|100", ItemName.ev_castle_b2_boss_switch, 3, False)
+                 EntranceNames.c_b2_0, EntranceNames.c_a1_boss, ItemName.ev_castle_b2_boss_switch, 3, False)
     connect(multiworld, player, used_names, CastleRegionNames.b2_start, CastleRegionNames.b2_arena, False)
     connect(multiworld, player, used_names, CastleRegionNames.b2_arena, CastleRegionNames.b2_defeated, False)
     connect(multiworld, player, used_names, CastleRegionNames.b2_defeated, CastleRegionNames.b2_exit, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.b2_exit, CastleRegionNames.r1_start,
-                 "7|0", "boss_2|1")
+                 EntranceNames.c_r1_0, EntranceNames.c_b2_1)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_start, CastleRegionNames.r1_se_ggate,
                  key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_2, False)
@@ -3151,11 +3162,12 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     for gate in r1_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.r1_sw, CastleRegionNames.r1_sw,
                      key_bronze_archives, gate_codes, archives_gate_items, gate, False)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start, "8|0", "7|1")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r2_start,
+                 EntranceNames.c_r2_0, EntranceNames.c_r1_1)
     connect(multiworld, player, used_names, CastleRegionNames.r1_exit_l, CastleRegionNames.r1_exit_r, False)
     # From start requires floor 7 open right exit
     connect_exit(multiworld, player, used_names, CastleRegionNames.r1_exit_r, CastleRegionNames.r2_bswitch,
-                 "8|1", "7|2")
+                 EntranceNames.c_r2_1, EntranceNames.c_r1_2)
 
     connect(multiworld, player, used_names, CastleRegionNames.r2_start, CastleRegionNames.r2_m, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_w_bgate,
@@ -3195,7 +3207,8 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect_gate(multiworld, player, used_names, CastleRegionNames.r2_m, CastleRegionNames.r2_ggate,
                  key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r2_4, False)  # True
     # Can also access with open exit button, it removes the wall
-    connect_exit(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main, "9|0", "8|2")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.r2_ggate, CastleRegionNames.r3_main,
+                 EntranceNames.c_r3_0, EntranceNames.c_r2_2)
     # Requires open exit button
 
     connect(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_ne_room, False)
@@ -3215,7 +3228,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.r3_rune_room, CastleRegionNames.r3_bonus, False)
     # Requires 6 simon says switch
     connect_exit(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main,
-                 "bonus_3|0", "9|200")
+                 EntranceNames.c_n3_0, EntranceNames.c_r3_b_ent)
     # Requires open bonus entrance passage
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
                  key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r3_1, False)
@@ -3240,7 +3253,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r3_bonus_return_bridge,
             False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.r3_bonus_return, CastleRegionNames.r2_from_r3,
-                 "8|200", "9|250")
+                 EntranceNames.c_r2_200, EntranceNames.c_r3_250)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_e_ggate,
                  key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r3_6, False)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_w_ggate,
@@ -3248,11 +3261,12 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.r3_w_ggate, CastleRegionNames.r3_exit, False)
     # Requires open boss switch room
     connect_exit(multiworld, player, used_names, CastleRegionNames.r3_exit, CastleRegionNames.b3_start,
-                 "boss_3|0", "9|100", ItemName.ev_castle_b3_boss_switch, 3, False)
+                 EntranceNames.c_b3_0, EntranceNames.c_r3_boss, ItemName.ev_castle_b3_boss_switch, 3, False)
 
     connect_exit(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_tp_room,
-                 "bonus_3|80", "bonus_3|12")
-    connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return, False)
+                 EntranceNames.c_n3_80, EntranceNames.c_n3_12)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.r3_bonus_return,
+                 EntranceNames.c_r3_b_return, None)
     # Internal bronze gates
     for i in range(3):
         connect(multiworld, player, used_names, CastleRegionNames.n3_main, CastleRegionNames.n3_main,
@@ -3262,7 +3276,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.b3_arena, CastleRegionNames.b3_defeated, False)
     connect(multiworld, player, used_names, CastleRegionNames.b3_defeated, CastleRegionNames.b3_exit, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.b3_exit, CastleRegionNames.c1_start,
-                 "10|0", "boss_3|1")
+                 EntranceNames.c_c1_0, EntranceNames.c_b3_1)
 
     connect(multiworld, player, used_names, CastleRegionNames.c1_start, CastleRegionNames.c1_n_spikes, False)
     # Requires n spikes switch
@@ -3288,11 +3302,11 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c1_prison_stairs, False)
     # Requires open prison door passage from c1_start
     connect_exit(multiworld, player, used_names, CastleRegionNames.c1_sgate, CastleRegionNames.c2_tp_island,
-                 "11|50", None)
+                 EntranceNames.c_c2_50, None)
     connect_exit(multiworld, player, used_names, CastleRegionNames.c1_tp_island, CastleRegionNames.c1_sgate,
-                 "10|75", None)
+                 EntranceNames.c_c1_75, None)
     connect_exit(multiworld, player, used_names, CastleRegionNames.c1_prison_stairs, CastleRegionNames.pstart_start,
-                 "10b|0", "10|169")
+                 EntranceNames.c_p_return_0, EntranceNames.c_c1_169)
     connect_gate(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_s_bgate,
                  key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c1_6, False)
     connect(multiworld, player, used_names, CastleRegionNames.c1_s_bgate, CastleRegionNames.c1_start, False)
@@ -3309,7 +3323,8 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     for gate in c1_s_internals:
         connect_gate(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c1_w,
                      key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main, "11|0", "10|100")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c1_w, CastleRegionNames.c2_main,
+                 EntranceNames.c_c2_0, EntranceNames.c_c1_100)
 
     connect(multiworld, player, used_names, CastleRegionNames.pstart_start, CastleRegionNames.pstart_puzzle, False)
     # Requires 4 prison return rune switches and prison return puzzle switch
@@ -3360,7 +3375,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_bonus, True)
     # Require 5 open bonus entrance wall switches
     connect_exit(multiworld, player, used_names, CastleRegionNames.c2_bonus, CastleRegionNames.n4_main,
-                 "bonus_4|0", "11|88")
+                 EntranceNames.c_n4_0, EntranceNames.c_c2_b_ent)
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_wall,
             False, ItemName.btnc_c2_n_wall, 1, False)
     connect(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c2_n_shops,
@@ -3368,10 +3383,12 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c2_n_shops,
             False, ItemName.ev_castle_c2_n_shops_switch, 1, False)
     # Presently to open the north shops you need access to c3_nw, change to two-way for button rando
-    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start, "12|0", "11|45")
-    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw, "12|54", "11|105")
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.c3_start,
+                 EntranceNames.c_c3_0, EntranceNames.c_c2_45)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_n, CastleRegionNames.c3_nw,
+                 EntranceNames.c_c3_54, EntranceNames.c_c2_105)
     connect_exit(multiworld, player, used_names, CastleRegionNames.c2_tp_island, CastleRegionNames.c1_tp_island,
-                 "10|99", None)
+                 EntranceNames.c_c1_99, None)
 
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_nw,
             False, key_bonus_chambers)
@@ -3380,7 +3397,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.n4_e,
             False, key_bonus_chambers)
     connect_exit(multiworld, player, used_names, CastleRegionNames.n4_main, CastleRegionNames.c2_bonus_return,
-                 "11|125", None, key_bonus_chambers)
+                 EntranceNames.c_c2_125, None, key_bonus_chambers)
 
     connect_gate(multiworld, player, used_names, CastleRegionNames.c3_start, CastleRegionNames.c3_rspike_switch,
                  key_bronze_chambers, gate_codes, chambers_gate_items, GateNames.c_c3_1, False)
@@ -3428,15 +3445,16 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.c3_se_hidden, CastleRegionNames.c3_light_bridge, False)
     # Requires activate light bridge switch
     connect_exit(multiworld, player, used_names, CastleRegionNames.c3_sw_hidden, CastleRegionNames.c3_fire_floor,
-                 "12|67", None)
+                 EntranceNames.c_c3_67, None)
     connect(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c3_fire_floor_tp, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.c3_fire_floor, CastleRegionNames.c2_c3_tp,
-                 "11|77", None)
-    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp, "12|156", None)
+                 EntranceNames.c_c2_77, None)
+    connect_exit(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp,
+                 EntranceNames.c_c3_156, None)
 
     # Old connect method to ensure no keys will in the final boss room
     connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.b4_start,
-                 "boss_4|0", "11|1", ItemName.ev_castle_b4_boss_switch, 3, False)
+                 EntranceNames.c_b4_0, EntranceNames.c_c2_boss, ItemName.ev_castle_b4_boss_switch, 3, False)
     connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated, False)
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
@@ -4849,25 +4867,25 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
             True, pickaxe_item, pickaxe_item_count, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_rocks, TempleRegionNames.cave_3_fall,
-                 "c1|111", None)
+                 EntranceNames.t_c1_111, None)
     # For the temple entrances in the hub
     t3_entrance = TempleRegionNames.t3_main
     if random_locations[TempleLocationNames.rloc_t3_entrance] == 2:
         t3_entrance = TempleRegionNames.t3_blockade_s
     t3_entrance_code = f"t3|{random_locations[TempleLocationNames.rloc_t3_entrance]}"
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_rocks, t3_entrance,
-                 t3_entrance_code, "hub|56", ItemName.key_teleport, 5, False)
+                 t3_entrance_code, EntranceNames.t_hub_56, ItemName.key_teleport, 5, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.temple_entrance,
-                 "t_entrance|0", "hub|1")
+                 EntranceNames.t_t_ent_hub, EntranceNames.t_hub_1)
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_pyramid_of_fear,
             False, ItemName.ev_pof_complete, 1, False)
 
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.library_lobby,
-                 "library|0", "hub|50")
+                 EntranceNames.t_library_0, EntranceNames.t_hub_50)
     connect_exit(multiworld, player, used_names, TempleRegionNames.library_lobby, TempleRegionNames.library,
-                 "library|3", "library|1")
+                 EntranceNames.t_library_3, EntranceNames.t_library_1)
     connect_exit(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main,
-                 "c1|0", "library|5")
+                 EntranceNames.t_c1_0, EntranceNames.t_library_5)
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields,
             False, lever_item, lever_item_count, False)
     connect(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
@@ -4876,7 +4894,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_puzzle, False)
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e, True)
     connect_exit(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,
-                 "c2|0", "c1|1", ItemName.key_teleport, 1, False)
+                 EntranceNames.t_c2_0, EntranceNames.t_c1_1, ItemName.key_teleport, 1, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.cave_2_main, TempleRegionNames.cave_2_pumps,
             False, lever_item, lever_item_count, False)
@@ -4893,7 +4911,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # connect(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_2_main, False)
     # Requires lower bridge switch
     connect_exit(multiworld, player, used_names, TempleRegionNames.c2_sw, TempleRegionNames.cave_1_main,
-                 "c3|0", "c2|1", ItemName.key_teleport, 2, False)
+                 EntranceNames.t_c3_0, EntranceNames.t_c2_1, ItemName.key_teleport, 2, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.c1_n_puzzle, False)
     connect(multiworld, player, used_names, TempleRegionNames.cave_1_main, TempleRegionNames.cave_1_blue_bridge, False)
@@ -4910,14 +4928,15 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
             False)
     # Symbolic connection, requires green switch which is underwater
     connect(multiworld, player, used_names, TempleRegionNames.cave_1_pumps, TempleRegionNames.boss2_main, False)
-    #             "boss_2|0", "c3|123")
+    #             EntranceNames.t_b2_0, EntranceNames.t_c3_123)
     # Technically a level exit, but we need to be able to go to the defeated room from anywhere rip
     connect(multiworld, player, used_names, TempleRegionNames.boss2_main, TempleRegionNames.boss2_defeated,
             False)
 
     connect(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge, TempleRegionNames.c1_e_puzzle, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.cave_1_red_bridge,
-                 TempleRegionNames.boss_1_entrance, "boss_1|0", "c3|49", ItemName.key_teleport, 3, False)
+                 TempleRegionNames.boss_1_entrance, EntranceNames.t_b1_0, EntranceNames.t_c3_49,
+                 ItemName.key_teleport, 3, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.boss_1_entrance, TempleRegionNames.boss_1_arena,
             True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
@@ -4927,24 +4946,25 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # connect_generic(multiworld, player, used_names, TempleRegionNames.b1_back, TempleRegionNames.boss_1_entrance)
     # Requires boss 1 bridge switch
 
-    passage_entrance = f"passage|{0 if random_locations[TempleLocationNames.rloc_passage_entrance] == 0 else 2}"
+    passage_entrance = EntranceNames.t_p_ent_0 if random_locations[TempleLocationNames.rloc_passage_entrance] == 0\
+        else EntranceNames.t_p_ent_1
     connect_exit(multiworld, player, used_names, TempleRegionNames.b1_back, TempleRegionNames.passage_entrance,
-                 passage_entrance, "boss_1|2")
+                 passage_entrance, EntranceNames.t_b1_2)
     passage_mid = f"passage|{random_locations[TempleLocationNames.rloc_passage_middle] + 1}0"
     connect_exit(multiworld, player, used_names, TempleRegionNames.passage_entrance, TempleRegionNames.passage_mid,
-                 passage_mid, "passage|1")
+                 passage_mid, EntranceNames.t_p_ent_exit)
     connect(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_puzzle, False)
     passage_end = f"passage|1{random_locations[TempleLocationNames.rloc_passage_end] + 1}0"
     connect_exit(multiworld, player, used_names, TempleRegionNames.passage_mid, TempleRegionNames.passage_end,
                  passage_end, f"passage|{random_locations[TempleLocationNames.rloc_passage_middle] + 1}1")
 
     connect_exit(multiworld, player, used_names, TempleRegionNames.passage_end, TempleRegionNames.temple_entrance_back,
-                 "t_entrance|11", "passage|128")
+                 EntranceNames.t_t_ent_p, EntranceNames.t_p_end_end)
     # Kinda useless, we can already access this
     # connect_generic(multiworld, player, used_names, TempleRegionNames.temple_entrance_back,
     #                 TempleRegionNames.temple_entrance, False, True, ItemName.ev_open_temple_entrance_shortcut, 1, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.temple_entrance_back, TempleRegionNames.t1_main,
-                 "t1|0", "t_entrance|1")
+                 EntranceNames.t_t1_0, EntranceNames.t_t_ent_temple)
 
     connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_w_puzzle, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_sw_sdoor,
@@ -4952,8 +4972,9 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.t1_main, TempleRegionNames.t1_node_1,
             False, ItemName.mirror, 3)
     connect(multiworld, player, used_names, TempleRegionNames.t1_node_1, TempleRegionNames.t1_w, False)
+    connect(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.t1_main, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.cave_3_secret,
-                 "c1|197")
+                 EntranceNames.t_c1_197)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.t1_sun_turret,
                  ItemName.key_silver, gate_codes, gate_counts, GateNames.t_t1_1, False)
     connect_gate(multiworld, player, used_names, TempleRegionNames.t1_w, TempleRegionNames.t1_ice_turret,
@@ -4979,7 +5000,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t1_e_puzzle, False)
 
     connect_exit(multiworld, player, used_names, TempleRegionNames.t1_east, TempleRegionNames.t2_main,
-                 f"t2|{random_locations[TempleLocationNames.rloc_t2_entrance]}", "t1|1")
+                 f"t2|{random_locations[TempleLocationNames.rloc_t2_entrance]}", EntranceNames.t_t1_1)
     connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_nw_puzzle,
             False)
     connect(multiworld, player, used_names, TempleRegionNames.t2_main, TempleRegionNames.t2_e_puzzle,
@@ -5030,16 +5051,16 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.t2_portal_gate, False)
     # Requires portal floor switch
     connect_exit(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_3_portal,
-                 "c1|123", "t2|78")
+                 EntranceNames.t_c1_123, EntranceNames.t_t2_78)
     connect_exit(multiworld, player, used_names, TempleRegionNames.t2_light_bridges, TempleRegionNames.cave_1_temple,
-                 "t3|97", "t2|97")
+                 EntranceNames.t_c3_97, EntranceNames.t_t2_97)
 
     connect(multiworld, player, used_names, TempleRegionNames.t3_blockade_s, TempleRegionNames.t3_s_gate, False)
     # Requires south gate button
     connect(multiworld, player, used_names, TempleRegionNames.t3_s_gate, TempleRegionNames.t3_main, False)
     # One-way because we need to hit the button first!
     connect_exit(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t2_ornate_t3,
-                 "t2|123", "t3|123")
+                 EntranceNames.t_t2_123, EntranceNames.t_t3_123)
     connect(multiworld, player, used_names, TempleRegionNames.t3_main, TempleRegionNames.t3_main,
             False, ItemName.mirror, 2)
     # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit
@@ -5059,9 +5080,9 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node, False)
 
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
-                 "bonus_5|0", "hub|111", ItemName.ev_pof_switch, 6, False)
+                 EntranceNames.t_n1_0, EntranceNames.t_hub_111, ItemName.ev_pof_switch, 6, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room,
-                 "bonus_5|80", "bonus_5|12")
+                 EntranceNames.t_n1_80, EntranceNames.t_n1_12)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_se_room_top, False,
             ItemName.ev_pof_1_s_walls, 1, False)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_sw_gate, False,
@@ -5069,25 +5090,25 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_sw_gate, TempleRegionNames.pof_1_nw,
             False, ItemName.key_bonus)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_nw, TempleRegionNames.pof_1_n_room,
-                 "bonus_5|15", "bonus_5|75")
+                 EntranceNames.t_n1_15, EntranceNames.t_n1_75)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_nw, TempleRegionNames.pof_1_exit_hall,
             True, ItemName.ev_pof_1_unlock_exit, 1, False)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_exit_hall, TempleRegionNames.pof_1_gate_2,
             True, ItemName.key_bonus)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_gate_2, TempleRegionNames.pof_2_main,
-                 "bonus_5|18", None)
+                 EntranceNames.t_n1_18, None)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_n,
-                 "bonus_5|35", "bonus_5|25")
+                 EntranceNames.t_n1_35, EntranceNames.t_n1_25)
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_n, TempleRegionNames.pof_2_puzzle, False)
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_puzzle, TempleRegionNames.pof_puzzle, False)
     # Requires bonus panel
     connect(multiworld, player, used_names, TempleRegionNames.pof_2_main, TempleRegionNames.pof_2_exit,
             False, ItemName.ev_pof_2_unlock_exit, 1, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_2_exit, TempleRegionNames.pof_3_start,
-                 "bonus_5|160", None)
+                 EntranceNames.t_n1_160, None)
     connect(multiworld, player, used_names, TempleRegionNames.pof_3_start, TempleRegionNames.pof_3_main, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_3_main, TempleRegionNames.hub_main,
-                 "hub|111", None)
+                 EntranceNames.t_hub_111, None)
 
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.b3_main,
             True, ItemName.ev_solar_node, 6, False)  # Ignoring for ER, kinda dumb
@@ -5171,7 +5192,7 @@ def connect_exit(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
     entrance_name = get_entrance_name(used_names, source, target)
 
     connection = HWEntrance(player, entrance_name, source_region, target_region,
-                            pass_item, item_count, items_consumed, exit_code)
+                            pass_item, item_count, items_consumed, return_code, exit_code)
 
     source_region.exits.append(connection)
     connection.connect(target_region)
