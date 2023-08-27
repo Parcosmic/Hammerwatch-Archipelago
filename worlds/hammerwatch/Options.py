@@ -130,6 +130,13 @@ class RandomizeEnemyLoot(Toggle):
     default = False
 
 
+class ExitRandomization(Toggle):
+    """Randomizes where level exits and portals lead"""
+    display_name = "Exit Randomization"
+    # category = "Generation"
+    default = False
+
+
 class GateShuffle(Toggle):  # Maybe someday I'll add a mode so the number of keys are randomized too
     """Shuffles the type of bronze, silver, and gold gates"""
     display_name = "Gate Shuffle"
@@ -337,6 +344,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     "planks_required_count": PlanksRequiredCount,
     "extra_plank_percent": ExtraPlankPercent,
     "difficulty": Difficulty,
+    "exit_randomization": ExitRandomization,
     "gate_shuffle": GateShuffle,
     "shop_shuffle": ShuffleShops,
     "shop_upgrade_category_shuffle": ShopUpgradeCategoryShuffle,

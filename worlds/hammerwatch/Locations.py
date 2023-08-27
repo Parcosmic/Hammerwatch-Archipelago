@@ -1375,6 +1375,7 @@ castle_event_locations: typing.Dict[str, LocationData] = {
 
 castle_locations: typing.Dict[str, LocationData] = {
     **castle_pickup_locations,
+    **castle_enemy_loot_locations,
     **castle_event_locations
 }
 
@@ -2053,7 +2054,9 @@ temple_event_locations: typing.Dict[str, LocationData] = {
 }
 
 temple_locations: typing.Dict[str, LocationData] = {
-    **temple_pickup_locations
+    **temple_pickup_locations,
+    **temple_enemy_loot_locations,
+    **temple_event_locations,
 }
 
 common_event_locations: typing.Dict[str, LocationData] = {
@@ -2062,9 +2065,7 @@ common_event_locations: typing.Dict[str, LocationData] = {
 
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
-    **castle_enemy_loot_locations,
     **temple_locations,
-    **temple_enemy_loot_locations,
     # **common_event_locations
 }
 

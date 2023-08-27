@@ -32,7 +32,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     ItemName.key_gold: ItemData(counter.count(), ItemClassification.progression),
     ItemName.mirror: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     ItemName.ore: ItemData(counter.count(), ItemClassification.useful),
-    ItemName.key_teleport: ItemData(counter.count(), ItemClassification.progression),
+    ItemName.key_teleport: ItemData(counter.count(), ItemClassification.useful),
     ItemName.ankh: ItemData(counter.count(), ItemClassification.filler),
     ItemName.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
     ItemName.ankh_7up: ItemData(counter.count(), ItemClassification.filler),

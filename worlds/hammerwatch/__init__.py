@@ -2,7 +2,7 @@ from typing import Dict
 
 from .Items import *
 from .Locations import *
-from .Regions import create_regions
+from .Regions import create_regions, HWEntrance, HWExitData
 from .Rules import set_rules
 from .Util import *
 
@@ -54,6 +54,8 @@ class HammerwatchWorld(World):
     shop_locations: typing.Dict[str, str]
     door_counts: typing.Dict[str, int]
     gate_types: typing.Dict[str, str]
+    level_exits: typing.List[HWEntrance]
+    exit_swaps: typing.Dict[str, str]
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -66,6 +68,7 @@ class HammerwatchWorld(World):
             slot_data[loc] = value
         slot_data["Hammerwatch Mod Version"] = self.hw_client_version
         slot_data["Gate Types"] = self.gate_types
+        slot_data["Exit Swaps"] = self.exit_swaps
         return slot_data
 
     def generate_early(self):
@@ -180,6 +183,7 @@ class HammerwatchWorld(World):
             self.multiworld.shop_cost_min[self.player] = swap
 
     def create_regions(self) -> None:
+        self.level_exits = []
         self.gate_types = create_regions(self.multiworld, self.campaign, self.player, self.active_location_list,
                                          self.random_locations)
 
@@ -560,6 +564,7 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.evt_beat_boss_3))
 
     def set_rules(self) -> None:
+        self.exit_swaps = {}
         set_rules(self.multiworld, self.player, self.door_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:

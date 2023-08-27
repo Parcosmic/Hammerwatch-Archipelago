@@ -176,9 +176,9 @@ cave1_water_s_shore = "CL1: South Water Shore"
 
 cave1_green_bridge_1 = "CL1: Green Bridge Dupe 1"
 cave1_green_bridge_2 = "CL1: Green Bridge Dupe 2"
-cave1_krilith_ledge_n = "CL1: Storeroom Ledge North"
-cave1_krilith_ledge_e = "CL1: Storeroom Ledge East"
-cave1_krilith_door = "CL1: Storeroom Entrance"
+cave1_krilith_ledge_n = "CL1: Storage Ledge North"
+cave1_krilith_ledge_e = "CL1: Storage Ledge East"
+cave1_krilith_door = "CL1: Storage Entrance"
 
 cave1_temple_hall_1 = "CL1: Temple Bottom Dupe 1"
 cave1_temple_hall_2 = "CL1: Temple Bottom Dupe 2"

@@ -68,6 +68,13 @@ class TestHammerwatch(HammerwatchTestBase):
             "act_specific_keys": Options.ActSpecificKeys.option_true,
             "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_end,
         },
+        "Basic castle exit rando": {
+            "exit_randomization": Options.ExitRandomization.option_true,
+        },
+        "Basic temple exit rando": {
+            "goal": Options.Goal.option_temple_all_bosses,
+            "exit_randomization": Options.ExitRandomization.option_true,
+        }
     }
 
     def testOptions(self):
