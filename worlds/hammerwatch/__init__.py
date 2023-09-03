@@ -6,7 +6,7 @@ from .Regions import create_regions, HWEntrance, HWExitData
 from .Rules import set_rules
 from .Util import *
 
-from .Names import ItemName, TempleLocationNames, TempleRegionNames
+from .Names import TempleLocationNames, TempleRegionNames
 
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .Options import *
@@ -98,7 +98,7 @@ class HammerwatchWorld(World):
 
         # Shop shuffle
         self.shop_locations = {}
-        if self.multiworld.shop_shuffle[self.player] > 0:
+        if get_option(self.multiworld, OptionNames.shop_shuffle, self.player):
             if self.campaign == Campaign.Castle:
                 shop_counts = {
                     "Combo": [1, 2, 2, 3, 4, 4, 5],
@@ -178,7 +178,8 @@ class HammerwatchWorld(World):
                     remaining_shops.remove(self.shop_locations[loc])
 
         # Shop cost setting validation, swap if max is higher than min
-        if self.multiworld.shop_cost_max[self.player] < self.multiworld.shop_cost_min[self.player]:
+        if get_option(self.multiworld, OptionNames.shop_cost_max, self.player)\
+                < get_option(self.multiworld, OptionNames.shop_cost_min, self.player):
             swap = self.multiworld.shop_cost_max[self.player]
             self.multiworld.shop_cost_max[self.player] = self.multiworld.shop_cost_min[self.player]
             self.multiworld.shop_cost_min[self.player] = swap
@@ -204,14 +205,14 @@ class HammerwatchWorld(World):
         total_required_locations -= len(common_event_locations)
         if self.campaign == Campaign.Castle:
             total_required_locations -= len(castle_event_locations)
-            if not self.multiworld.randomize_bonus_keys[self.player]:
+            if not get_option(self.multiworld, OptionNames.randomize_bonus_keys, self.player):
                 total_required_locations -= 18  # Preplaced bonus keys
         elif self.campaign == Campaign.Temple:
             total_required_locations -= len(temple_event_locations)
-            if not self.multiworld.randomize_bonus_keys[self.player]:
+            if not get_option(self.multiworld, OptionNames.randomize_bonus_keys, self.player):
                 total_required_locations -= 2  # Preplaced bonus keys
             # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
-            if self.multiworld.portal_accessibility[self.player]:
+            if get_option(self.multiworld, OptionNames.portal_accessibility, self.player):
                 total_required_locations -= 6
 
         # Remove items if the player starts with them
@@ -362,7 +363,7 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.evc_beat_boss_4))
 
         # Bonus Key Locations
-        if not self.multiworld.randomize_bonus_keys[self.player]:
+        if not get_option(self.multiworld, OptionNames.randomize_bonus_keys, self.player):
             self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
                 .place_locked_item(self.create_item(ItemName.key_bonus))
             self.multiworld.get_location(CastleLocationNames.n1_room3_sealed_room_1, self.player) \
@@ -489,14 +490,14 @@ class HammerwatchWorld(World):
             .place_locked_item(self.create_event(ItemName.ev_solar_node))
 
         # Pyramid of Fear Bonus Keys
-        if not self.multiworld.randomize_bonus_keys[self.player]:
+        if not get_option(self.multiworld, OptionNames.randomize_bonus_keys, self.player):
             self.multiworld.get_location(TempleLocationNames.pof_1_n_5, self.player) \
                 .place_locked_item(self.create_item(ItemName.key_bonus))
             self.multiworld.get_location(TempleLocationNames.pof_1_ent_5, self.player) \
                 .place_locked_item(self.create_item(ItemName.key_bonus))
 
         # Portal Accessibility rune keys
-        if self.multiworld.portal_accessibility[self.player]:
+        if get_option(self.multiworld, OptionNames.portal_accessibility, self.player):
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
@@ -506,7 +507,7 @@ class HammerwatchWorld(World):
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(TempleRegionNames.c3_e)
             # If playing exit rando we need to ensure we can always return if falling from the temple
-            if not self.multiworld.exit_randomization[self.player]:
+            if not get_option(self.multiworld, OptionNames.exit_randomization, self.player):
                 c3_locs.extend(get_region_item_locs(TempleRegionNames.cave_3_main))
             rune_key_locs.append(self.multiworld.random.choice(c3_locs))
 
@@ -573,11 +574,12 @@ class HammerwatchWorld(World):
         set_rules(self.multiworld, self.player, self.door_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:
-        if self.multiworld.shop_shuffle[self.player]:
+        if get_option(self.multiworld, OptionNames.shop_shuffle, self.player):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
-        if self.multiworld.exit_randomization[self.player]:
+        # if self.multiworld.exit_randomization[self.player]:
+        if get_option(self.multiworld, OptionNames.exit_randomization, self.player):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
             for entry in self.exit_spoiler_info:
                 spoiler_handle.write(f"\n{entry}")

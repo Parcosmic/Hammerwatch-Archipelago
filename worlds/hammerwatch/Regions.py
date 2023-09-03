@@ -1,11 +1,9 @@
-import typing
 from collections import namedtuple
-from random import Random
 
-from BaseClasses import MultiWorld, Region, Entrance
+from BaseClasses import Region, Entrance
 from .Items import HammerwatchItem
 from .Locations import HammerwatchLocation, LocationData, LocationClassification
-from .Names import CastleLocationNames, TempleLocationNames, ItemName, CastleRegionNames, TempleRegionNames, GateNames,\
+from .Names import CastleLocationNames, TempleLocationNames, CastleRegionNames, TempleRegionNames, GateNames,\
     EntranceNames
 from .Util import *
 
@@ -551,7 +549,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     p3_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_bonus_return,
                                            p3_bonus_return_locs)
 
-    if multiworld.shortcut_teleporter[player]:
+    if get_option(multiworld, OptionNames.shortcut_teleporter, player):
         p3_portal_from_p1_locs = [
             CastleLocationNames.p3_skip_boss_switch_1,
             CastleLocationNames.p3_skip_boss_switch_2,
@@ -2755,7 +2753,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
         ItemName.key_gold_chambers: 0,
     }
 
-    if multiworld.act_specific_keys[player]:
+    if get_option(multiworld, OptionNames.act_specific_keys, player):
         key_bronze_prison = ItemName.key_bronze_prison
         key_silver_prison = ItemName.key_silver_prison
         key_gold_prison = ItemName.key_gold_prison
@@ -2776,7 +2774,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
         key_gold_chambers = ItemName.key_gold_chambers
         key_bonus_chambers = ItemName.key_bonus_chambers
 
-        if not multiworld.randomize_bonus_keys[player]:
+        if not get_option(multiworld, OptionNames.randomize_bonus_keys, player):
             key_bonus_prison = ItemName.key_bonus
             key_bonus_armory = ItemName.key_bonus
             key_bonus_archives = ItemName.key_bonus
@@ -2823,7 +2821,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False)
     connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, True)
 
-    if multiworld.open_castle[player]:
+    if get_option(multiworld, OptionNames.open_castle, player):
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, True)
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, True)
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, True)
@@ -2840,7 +2838,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_1, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start,
                  EntranceNames.c_p2_0, EntranceNames.c_p1_1)
-    if multiworld.shortcut_teleporter[player]:
+    if get_option(multiworld, OptionNames.shortcut_teleporter, player):
         connect_exit(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
                      EntranceNames.c_p3_portal, EntranceNames.c_p1_20)
         connect(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1, CastleRegionNames.p3_n_gold_gate,
@@ -3466,7 +3464,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated, False)
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
-    planks_to_win = multiworld.planks_required_count[player]
+    planks_to_win = get_option(multiworld, OptionNames.planks_required_count, player)
     connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.e1_main,
             False, ItemName.plank, 12, False)
     # Technically planks are consumed, but nothing else does so this is faster
@@ -5204,7 +5202,7 @@ def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
     entrance_name = get_entrance_name(used_names, source, target)
 
     key_item_name = key_type
-    if multiworld.gate_shuffle[player]:
+    if get_option(multiworld, OptionNames.gate_shuffle, player):
         key_item_name = get_random_element(multiworld, gate_items)
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:

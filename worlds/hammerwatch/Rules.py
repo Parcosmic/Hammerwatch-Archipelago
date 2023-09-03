@@ -2,7 +2,7 @@ import math
 import typing
 
 from BaseClasses import MultiWorld, Region
-from .Names import CastleLocationNames, CastleRegionNames, TempleLocationNames, TempleRegionNames, EntranceNames
+from .Names import CastleRegionNames, TempleRegionNames, EntranceNames
 from worlds.generic.Rules import add_rule, set_rule, forbid_item
 from .Regions import HWEntrance, HWExitData, etr_base_name, connect_from_data
 from .Util import *
@@ -43,7 +43,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
             entr_name = ""
-            if multiworld.exit_randomization[player]:
+            if get_option(multiworld, OptionNames.exit_randomization, player):
                 for exit in multiworld.get_entrances():
                     if exit.player == player and exit.name.endswith(CastleRegionNames.b4_start):
                         entr_name = exit.name
@@ -110,7 +110,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
 def set_connections(multiworld: MultiWorld, player: int) -> bool:
     world = multiworld.worlds[player]
     level_exits: typing.List[HWEntrance] = world.level_exits.copy()
-    if multiworld.exit_randomization[player]:
+    if get_option(multiworld, OptionNames.exit_randomization, player):
         if get_campaign(multiworld, player) == Campaign.Castle:
             entrance_block_types = c_entrance_block_types
             passage_blocking_codes = c_passage_blocking_codes
@@ -650,7 +650,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         entr.connect(multiworld.get_region(to_name, player))
         return entr
     if get_campaign(multiworld, player) == Campaign.Castle:
-        if not multiworld.exit_randomization[player]:
+        if not get_option(multiworld, OptionNames.exit_randomization, player):
             remove_entrances = [
                 multiworld.get_entrance(etr_base_name(CastleRegionNames.p3_sw, CastleRegionNames.b1_start), player),
                 multiworld.get_entrance(etr_base_name(CastleRegionNames.a1_start, CastleRegionNames.b2_start), player),
@@ -668,7 +668,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
             add_entrance("C3 Boss Switch", CastleRegionNames.c3_rspike_switch, CastleRegionNames.b4_start),
         ]
     else:
-        if not multiworld.exit_randomization[player]:
+        if not get_option(multiworld, OptionNames.exit_randomization, player):
             remove_entrances = [
                 # multiworld.get_entrance('Temple Entrance Back__', player),
             ]
@@ -677,7 +677,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
                          TempleRegionNames.t3_s_node_blocks_2)
         ]
     # Don't remove entrances with exit rando because they won't exist
-    if not multiworld.exit_randomization[player]:
+    if not get_option(multiworld, OptionNames.exit_randomization, player):
         for remove in remove_entrances:
             remove.parent_region.exits.remove(remove)
             remove.connected_region.entrances.remove(remove)
@@ -703,7 +703,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         add.parent_region.exits.remove(add)
         add.connected_region.entrances.remove(add)
     # Don't remove entrances with exit rando because they won't exist
-    if not multiworld.exit_randomization[player]:
+    if not get_option(multiworld, OptionNames.exit_randomization, player):
         for remove in remove_entrances:
             remove.parent_region.exits.append(remove)
             remove.connected_region.entrances.append(remove)
