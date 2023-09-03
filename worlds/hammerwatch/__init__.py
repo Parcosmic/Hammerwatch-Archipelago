@@ -56,6 +56,7 @@ class HammerwatchWorld(World):
     gate_types: typing.Dict[str, str]
     level_exits: typing.List[HWEntrance]
     exit_swaps: typing.Dict[str, str]
+    exit_spoiler_info: typing.List[str]
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -503,7 +504,10 @@ class HammerwatchWorld(World):
                         if loc.name not in temple_event_locations]
 
             # Cave Level 3 Rune Key
-            c3_locs = get_region_item_locs(TempleRegionNames.cave_3_main)
+            c3_locs = get_region_item_locs(TempleRegionNames.c3_e)
+            # If playing exit rando we need to ensure we can always return if falling from the temple
+            if not self.multiworld.exit_randomization[self.player]:
+                c3_locs.extend(get_region_item_locs(TempleRegionNames.cave_3_main))
             rune_key_locs.append(self.multiworld.random.choice(c3_locs))
 
             # Cave Level 2 Rune Key
@@ -565,13 +569,18 @@ class HammerwatchWorld(World):
 
     def set_rules(self) -> None:
         self.exit_swaps = {}
+        self.exit_spoiler_info = []
         set_rules(self.multiworld, self.player, self.door_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:
-        if self.multiworld.shop_shuffle[self.player] > 0:
+        if self.multiworld.shop_shuffle[self.player]:
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
+        if self.multiworld.exit_randomization[self.player]:
+            spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
+            for entry in self.exit_spoiler_info:
+                spoiler_handle.write(f"\n{entry}")
 
     def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):
         pass

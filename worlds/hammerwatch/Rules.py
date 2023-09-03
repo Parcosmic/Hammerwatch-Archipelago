@@ -259,7 +259,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                     # code_to_exit.pop(open_exit.return_code)
                     link = multiworld.get_entrance(code_to_exit[link_code].name, player)
                     link.connect(open_exit.parent_region)
-                    multiworld.worlds[player].exit_swaps[link_code] = open_exit.return_code
+                    multiworld.worlds[player].exit_swaps[link.exit_code] = open_exit.return_code
                     link.linked = True
                     open_codes.remove(open_exit.return_code)
                     # if open_exit.return_code in linked_codes:
@@ -322,6 +322,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             # All exits have been connected, change the names to match where they lead
             for exit in level_exits:
                 exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
+                world.exit_spoiler_info.append(exit.name)
         return True
     else:
         # Create entrances
@@ -393,7 +394,7 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
                               [CastleRegionNames.r2_bswitch, CastleRegionNames.r2_n, CastleRegionNames.r3_main]),  # Need to open wall
     EntranceNames.c_r3_b_ent: (3, EntranceBlockType.Blocked, None),
     EntranceNames.c_r3_250: (3, EntranceBlockType.Blocked, None),
-    EntranceNames.c_n3_0: (3, EntranceBlockType.Unblocked, None),
+    EntranceNames.c_n3_0: (3, EntranceBlockType.OneWay, None),  # Nothing is blocked so we can make this one way
     EntranceNames.c_n3_12: (3, EntranceBlockType.Unblocked, None),
     EntranceNames.c_n3_80: (3, EntranceBlockType.DeadEnd, None),
     EntranceNames.c_b3_0: (3, EntranceBlockType.Unblocked, None),
@@ -434,8 +435,8 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
     EntranceNames.t_lib_start: (1, EntranceBlockType.Unblocked, None),
     EntranceNames.t_lib_lobby_end: (1, EntranceBlockType.Unblocked, None),
     EntranceNames.t_lib_books: (1, EntranceBlockType.Unblocked, None),
-    EntranceNames.t_lib_end: (1, EntranceBlockType.Unblocked, None),
-    EntranceNames.t_c1_start: (1, EntranceBlockType.Unblocked, None),
+    # EntranceNames.t_lib_end: (1, EntranceBlockType.Unblocked, None),
+    EntranceNames.t_c1_start: (1, EntranceBlockType.OneWay, None),
     EntranceNames.t_c1_end: (1, EntranceBlockType.Unblocked, None),  # Can't get back to the start, but can get to hub portal
     EntranceNames.t_c1_fall_surface: (1, EntranceBlockType.OneWay, [TempleRegionNames.cave_3_main]),
     # Not actually required, to enforce that the right exits in the hub will have items
@@ -468,8 +469,8 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
     EntranceNames.t_b2: (2, EntranceBlockType.DeadEnd, [TempleRegionNames.cave_2_main]),
     EntranceNames.t_t1_start: (3, EntranceBlockType.Unblocked, None),
     EntranceNames.t_t1_end: (3, EntranceBlockType.Unblocked, None),  # Technically unblocked, but it's kinda hard
-    EntranceNames.t_t2_start_1: (3, EntranceBlockType.Unblocked, None),
-    EntranceNames.t_t2_start_2: (3, EntranceBlockType.Unblocked, None),
+    EntranceNames.t_t2_start_1: (3, EntranceBlockType.Blocked, None),
+    EntranceNames.t_t2_start_2: (3, EntranceBlockType.Blocked, None),
     EntranceNames.t_t2_w_portal: (3, EntranceBlockType.Unblocked,
                                   [TempleRegionNames.boss2_defeated]),  # Can go through the gate to the main area
     EntranceNames.t_t2_s_light_bridge: (3, EntranceBlockType.Blocked, None),  # Need glass walk

@@ -4911,14 +4911,15 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect_exit(multiworld, player, used_names, TempleRegionNames.library_lobby, TempleRegionNames.library,
                  EntranceNames.t_lib_books, EntranceNames.t_lib_lobby_end)
     connect_exit(multiworld, player, used_names, TempleRegionNames.library, TempleRegionNames.cave_3_main,
-                 EntranceNames.t_c1_start, EntranceNames.t_lib_end)
+                 EntranceNames.t_c1_start, None)
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.cave_3_fields,
             False, lever_item, lever_item_count, False)
     connect(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.c3_e_water,
             False, lever_item, lever_item_count, False)
+    connect(multiworld, player, used_names, TempleRegionNames.c3_e_water, TempleRegionNames.cave_3_main, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_puzzle, False)
-    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e, True)
+    connect(multiworld, player, used_names, TempleRegionNames.cave_3_main, TempleRegionNames.c3_e, False)
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_fall, TempleRegionNames.cave_3_main, False)
     connect(multiworld, player, used_names, TempleRegionNames.cave_3_secret, TempleRegionNames.cave_3_main, False)
     connect_exit(multiworld, player, used_names, TempleRegionNames.c3_e, TempleRegionNames.cave_2_main,

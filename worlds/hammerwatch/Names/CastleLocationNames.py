@@ -1340,7 +1340,7 @@ crloc_a2_puzzle = "Armory 5 Puzzle 1"
 crloc_r1_puzzle = "Archives 7 Puzzle 1"
 crloc_r2_puzzle = "Archives 8 Puzzle 1"
 
-crloc_ps_puzzle = "PrF1: Chambers Return Puzzle 1"
+crloc_ps_puzzle = "Prison Return Puzzle 1"
 
 crloc_c2_puzzle = "Chambers 11 Puzzle 1"
 
