@@ -4,7 +4,7 @@ import typing
 from BaseClasses import MultiWorld, Region, Entrance
 from .Names import CastleRegionNames, TempleRegionNames, EntranceNames
 from worlds.generic.Rules import add_rule, set_rule, forbid_item
-from .Regions import HWEntrance, HWExitData, etr_base_name, connect_from_data
+from .Regions import HWEntrance, HWExitData, etr_base_name, connect
 from .Util import *
 # from Utils import visualize_regions
 
@@ -15,20 +15,12 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     tries = 0
     stop_threshold = 100000
     while not set_connections(multiworld, player):
-        # print("------------------------------------------------------------------------------------------------")
         if tries >= stop_threshold:
             break
         tries += 1
     if tries >= stop_threshold:
         raise RuntimeError("Could not generate a valid ER configuration!")
     # print(f"Connecting exits took {tries} tries")
-
-    # test_entrances = multiworld.get_entrances()
-    # unconnected = []
-    # for entr in test_entrances:
-    #     if entr.connected_region is None:
-    #         unconnected.append(entr.name)
-    # print(unconnected)
 
     menu_region = multiworld.get_region(CastleRegionNames.menu, player)
     # visualize_regions(menu_region, "_testing.puml", show_locations=False)
@@ -131,24 +123,21 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
     world = multiworld.worlds[player]
     level_exits: typing.List[HWEntrance] = world.level_exits.copy()
     if get_option(multiworld, OptionNames.exit_randomization, player):
-        act_range = get_option(multiworld, OptionNames.er_act_range, player)
+        start_entrance = None
+        act_range = get_option(multiworld, OptionNames.er_act_range, player).value
         if get_campaign(multiworld, player) == Campaign.Castle:
             entrance_block_types = c_entrance_block_types
             passage_blocking_codes = c_passage_blocking_codes
+            world.start_exit = EntranceNames.c_p1_start
         else:
             entrance_block_types = t_entrance_block_types
             passage_blocking_codes = t_passage_blocking_codes
+            world.start_exit = EntranceNames.t_hub_start
+
         code_to_exit = {}
         code_to_region = {}
         open_codes = []
-        # exit_to_data = {}
-        # region_to_exits = {}
         for exit in world.level_exits:
-            # exit_name = etr_base_name(exit_data.parent.name, exit_data.target.name)
-            # exit_to_data[exit_name] = exit_data
-            # if exit_data.parent.name in region_to_exits:
-            #     region_to_exits[exit_data.parent.name] = []
-            # region_to_exits[exit_data.parent.name].append(exit_data)
             if exit.return_code is not None:
                 code_to_exit[exit.return_code] = exit
                 code_to_region[exit.return_code] = exit.parent_region
@@ -157,26 +146,33 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                 code_to_exit[exit.exit_code] = None
                 open_codes.append(exit.exit_code)
                 code_to_region[exit.exit_code] = exit.target_region
-        start_region = multiworld.get_region(CastleRegionNames.menu, player)
+
+        # Randomly choose a starting exit if the setting is one
+        if get_option(multiworld, OptionNames.random_start_exit, player):
+            available_start_codes = [code for code in open_codes
+                                     if entrance_block_types[code][0] - 1 <= act_range]
+            start_code = world.random.choice(available_start_codes)
+            world.start_exit = start_code
+            start_region = code_to_region[start_code]
+            # print(start_region)
+            start_entrance = connect(multiworld, player, {}, CastleRegionNames.menu, start_region.name, False)
+        else:
+            start_region = multiworld.get_region(CastleRegionNames.menu, player)
         entrances = start_region.exits.copy()
-        traversed_regions: typing.List[str] = [start_region.name]
+        traversed_regions: typing.List[str] = [start_region]
         needed_regions = []
         open_exits = []
-        # connected_exits = []
-        # linked_codes = []
         impassable_exits = []
 
         def disconnect_linked_exit(to_disconnect: HWEntrance):
             to_disconnect.connected_region.entrances.remove(to_disconnect)
             to_disconnect.connected_region = None
             open_codes.append(to_disconnect.return_code)
-            # connected_exits.remove(to_disconnect.name)
             to_disconnect.linked = False
         while len(entrances) + len(impassable_exits) > 0:
             # Traverse current section
             while len(entrances) > 0:
                 entr = entrances.pop()
-                # open_exits.append(entr)  # Technically should be swapped with below but this works so idc
                 if not entr.linked:
                     open_exits.append(entr)
                     continue
@@ -218,17 +214,17 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                                 needed_names.append(reg)
                         elif reg not in have_names:
                             have_names.append(reg)
-                blocked_exit = None
-                blocked_exit_needed_regions = []
-                for b_exit, b_regs in exit_needed_regions.items():
-                    if len(b_regs) < len(blocked_exit_needed_regions):
-                        blocked_exit = b_exit
-                        blocked_exit_needed_regions = b_regs
-                blocked_needed_codes = [code_to_exit[code] for code in open_codes
-                                        if code_to_region[code].name in blocked_exit_needed_regions]
-                # swap goes from dead end to rest of map
-                for b in range(len(blocked_exit_needed_regions)):
-                    pass
+                # blocked_exit = None
+                # blocked_exit_needed_regions = []
+                # for b_exit, b_regs in exit_needed_regions.items():
+                #     if len(b_regs) < len(blocked_exit_needed_regions):
+                #         blocked_exit = b_exit
+                #         blocked_exit_needed_regions = b_regs
+                # blocked_needed_codes = [code_to_exit[code] for code in open_codes
+                #                         if code_to_region[code].name in blocked_exit_needed_regions]
+                # # swap goes from dead end to rest of map
+                # for b in range(len(blocked_exit_needed_regions)):
+                #     pass
                 swap = None
                 options = level_exits.copy()
                 while len(options) > 0:
@@ -266,12 +262,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             while len(open_exits):
                 open_exit = open_exits.pop(world.random.randint(0, len(open_exits)-1))
                 if open_exit.linked:
-                    # print(f"----Ditched {open_exit}")
                     continue
-                # if open_exit.name in connected_exits:
-                #     a = 5
-                # connected_exits.append(open_exit.name)
-                # open_exit = multiworld.get_entrance(open_exit.name, player)
                 valid_exits = get_valid_exits(entrance_block_types, open_codes, code_to_region, traversed_regions,
                                               open_exits, open_exit, needed_codes, act_range)
                 # print(f"# Exits for {open_exit.parent_region}: {len(valid_exits)}")
@@ -282,45 +273,20 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
 
                 # Set the reverse exit too if the exit is two-way
                 if open_exit.return_code is not None:
-                    # code_to_exit.pop(open_exit.return_code)
                     link = multiworld.get_entrance(code_to_exit[link_code].name, player)
                     link.connect(open_exit.parent_region)
                     multiworld.worlds[player].exit_swaps[link.exit_code] = open_exit.return_code
                     link.linked = True
                     open_codes.remove(open_exit.return_code)
-                    # if open_exit.return_code in linked_codes:
-                    #     print("PANIC")
-                    # linked_codes.append(open_exit.return_code)
 
                 open_exit.connect(link_region)
                 multiworld.worlds[player].exit_swaps[open_exit.exit_code] = link_code
-                # code_to_exit.pop(link_code)
                 open_exit.linked = True
                 open_codes.remove(link_code)
-                # if link_code in linked_codes:
-                #     print("PANIC")
-                # linked_codes.append(link_code)
 
                 # Find new entrances from new connection
                 traversed_regions.append(link_region.name)
                 entrances.extend(link_region.exits)
-                # Re-add impassable exits back to entrances, we might be able to traverse them now
-                # re_verify = []
-                # for impassable in impassable_exits:
-                #     re_verify.append(impassable)
-                # impassable_exits.clear()
-                # for l_exit in re_verify:
-                #     if not l_exit.linked:
-                #         exit_passable = True
-                #         req_regions = entrance_block_types[l_exit.exit_code][2]
-                #         if req_regions is not None:
-                #             for reg in req_regions:
-                #                 if reg not in traversed_regions:
-                #                     exit_passable = False
-                #                     impassable_exits.append(l_exit)
-                #                     break
-                #         if exit_passable:
-                #             open_exits.append(l_exit)
         unconnected = []
         for exit in level_exits:
             # Set exit names
@@ -328,21 +294,15 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                 unconnected.append(exit)
         if len(unconnected) > 0:
             # print(" !!! Failed to connect entrances properly, trying again...")
-            # print(f"Unconnected entrances ({len(unconnected)}): {unconnected}")
-            # if len(impassable_exits) > 0:
-            #     print(f"Impassable ({len(impassable_exits)}): {impassable_exits}")
-            #     test = [t_entrance_block_types[tixe.exit_code][2] for tixe in impassable_exits]
-            #     not_in = []
-            #     for info in test:
-            #         for dat in info:
-            #             if dat not in traversed_regions:
-            #                 not_in.append(dat)
-            #     print(not_in)
             # Give up and disconnect all the entrances
             while len(level_exits) > 0:
                 unconnect = level_exits.pop()
                 if unconnect.linked:
                     disconnect_linked_exit(unconnect)
+            # If random start exit is on we have to remove the failed entrance
+            if get_option(multiworld, OptionNames.random_start_exit, player):
+                start_entrance.parent_region.exits.remove(start_entrance)
+                start_entrance.connected_region.entrances.remove(start_entrance)
             return False
         return True
     else:

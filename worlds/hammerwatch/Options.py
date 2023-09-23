@@ -148,6 +148,14 @@ class ERActRange(Range):
     default = 1
 
 
+class StartExit(Toggle):
+    """If Exit Randomization is on, will place you at a random exit at the start of the game
+    Use the /t command in game to return if you get stuck!"""
+    display_name = "Randomize Start Location"
+    # category = "Generation"
+    default = False
+
+
 class GateShuffle(Toggle):  # Maybe someday I'll add a mode so the number of keys are randomized too
     """Shuffles the type of bronze, silver, and gold gates"""
     display_name = "Gate Shuffle"
@@ -357,6 +365,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     difficulty: Difficulty,
     exit_randomization: ExitRandomization,
     er_act_range: ERActRange,
+    random_start_exit: StartExit,
     gate_shuffle: GateShuffle,
     shop_shuffle: ShuffleShops,
     shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle,

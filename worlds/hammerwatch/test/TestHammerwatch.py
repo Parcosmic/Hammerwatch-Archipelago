@@ -84,6 +84,15 @@ class TestHammerwatch(HammerwatchTestBase):
             "goal": Options.Goal.option_temple_all_bosses,
             "exit_randomization": Options.ExitRandomization.option_true,
         },
+        "Castle exit rando with start randomized": {
+            "exit_randomization": Options.ExitRandomization.option_true,
+            OptionNames.random_start_exit: Options.StartExit.option_true,
+        },
+        "Temple exit rando with start randomized": {
+            "goal": Options.Goal.option_temple_all_bosses,
+            "exit_randomization": Options.ExitRandomization.option_true,
+            OptionNames.random_start_exit: Options.StartExit.option_true,
+        },
     }
 
     def testOptions(self):

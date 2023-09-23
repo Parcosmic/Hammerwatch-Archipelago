@@ -6,7 +6,7 @@ from .Regions import create_regions, HWEntrance, HWExitData
 from .Rules import set_rules
 from .Util import *
 
-from .Names import TempleLocationNames, TempleRegionNames
+from .Names import TempleLocationNames, TempleRegionNames, EntranceNames
 
 from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
 from .Options import *
@@ -57,6 +57,7 @@ class HammerwatchWorld(World):
     level_exits: typing.List[HWEntrance]
     exit_swaps: typing.Dict[str, str]
     exit_spoiler_info: typing.List[str]
+    start_exit: str
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         slot_data: typing.Dict[str, object] = {}
@@ -70,6 +71,7 @@ class HammerwatchWorld(World):
         slot_data["Hammerwatch Mod Version"] = self.hw_client_version
         slot_data["Gate Types"] = self.gate_types
         slot_data["Exit Swaps"] = self.exit_swaps
+        slot_data["Start Exit"] = self.start_exit
         return slot_data
 
     def generate_early(self):

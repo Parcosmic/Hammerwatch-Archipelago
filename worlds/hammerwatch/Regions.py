@@ -2819,7 +2819,10 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     archives_gate_items[key_gold_archives] += 7
     chambers_gate_items[key_gold_chambers] += 3
 
-    connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False)
+    # If not doing entrance randomization or randomizing the start we start in the normal spot
+    if not get_option(multiworld, OptionNames.exit_randomization, player) \
+            or not get_option(multiworld, OptionNames.random_start_exit, player):
+        connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False)
     connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, True)
 
     if get_option(multiworld, OptionNames.open_castle, player):
@@ -2829,7 +2832,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
 
     connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_nw,
             True, ItemName.btnc_p1_floor, 1, False)
-    connect_gate(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p1_s,
+    connect_gate(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.p1_s,
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_0, True)
     connect_gate(multiworld, player, used_names, CastleRegionNames.p1_s, CastleRegionNames.p1_sw_bronze_gate,
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_3, False)
@@ -4886,7 +4889,10 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     if pickaxe_item_count > 1:
         pickaxe_item = ItemName.pickaxe_fragment
 
-    connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main, False)
+    # If not doing entrance randomization or randomizing the start we start in the normal spot
+    if not get_option(multiworld, OptionNames.exit_randomization, player) \
+            or not get_option(multiworld, OptionNames.random_start_exit, player):
+        connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
             True, pickaxe_item, pickaxe_item_count, False)
@@ -5194,6 +5200,8 @@ def connect(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, in
     if two_way:
         connect(multiworld, player, used_names, target, source, False, pass_item, item_count,
                 items_consumed)
+
+    return connection
 
 
 def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[str, int], source: str, target: str,

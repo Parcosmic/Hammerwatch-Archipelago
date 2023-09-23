@@ -1,4 +1,5 @@
 # Castle entrances
+c_p1_start = "1|0"
 c_p1_1 = "1|1"
 c_p1_2 = "1|2"
 c_p1_3 = "1|3"
@@ -74,6 +75,7 @@ c_n4_0 = "bonus_4|0"
 c_b4_0 = "boss_4|0"
 c_p_return_0 = "10b|0"
 
+t_hub_start = "hub|0"
 t_hub_t_ent = "hub|1"
 t_hub_library = "hub|50"
 t_hub_t3 = "hub|56"
