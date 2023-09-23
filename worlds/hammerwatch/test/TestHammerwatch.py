@@ -1,7 +1,7 @@
 import typing
 
 from . import HammerwatchTestBase
-from .. import ItemName, CastleLocationNames, TempleLocationNames
+from .. import ItemName, CastleLocationNames, TempleLocationNames, OptionNames
 from .. import Options
 
 
@@ -68,13 +68,22 @@ class TestHammerwatch(HammerwatchTestBase):
             "act_specific_keys": Options.ActSpecificKeys.option_true,
             "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_end,
         },
-        # "Basic castle exit rando": {  # This doesn't work yet
-        #     "exit_randomization": Options.ExitRandomization.option_true,
-        # },
+        "Full act range castle exit rando": {
+            "exit_randomization": Options.ExitRandomization.option_true,
+            OptionNames.er_act_range: Options.ERActRange.range_end,
+        },
+        "Full act range temple exit rando": {
+            "goal": Options.Goal.option_temple_all_bosses,
+            "exit_randomization": Options.ExitRandomization.option_true,
+            OptionNames.er_act_range: Options.ERActRange.range_end,
+        },
+        "Basic castle exit rando": {
+            "exit_randomization": Options.ExitRandomization.option_true,
+        },
         "Basic temple exit rando": {
             "goal": Options.Goal.option_temple_all_bosses,
             "exit_randomization": Options.ExitRandomization.option_true,
-        }
+        },
     }
 
     def testOptions(self):

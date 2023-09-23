@@ -287,6 +287,8 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     secrets: int = item_counts_table.pop(ItemName.secret)
 
+    world = multiworld.worlds[player]
+
     # Remove bonus keys from the item counts as they are placed elsewhere
     if get_option(multiworld, OptionNames.randomize_bonus_keys, player) == 0:
         item_counts_table.pop(ItemName.key_bonus)
@@ -388,7 +390,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         # Add secret items from TotS
         if get_option(multiworld, OptionNames.randomize_secrets, player):
             for s in range(secrets):
-                item = multiworld.random.randint(0, 12)
+                item = world.random.randint(0, 12)
                 if item < 8:
                     item_counts_table[ItemName.chest_wood] += 1
                 elif item < 12:
@@ -417,13 +419,13 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         ]
         miniboss_upgrades = item_counts_table.pop(ItemName.miniboss_stat_upgrade)
         for i in range(miniboss_upgrades):
-            item = roll_for_item(multiworld, miniboss_stat_upgrade_chances)
+            item = roll_for_item(world, miniboss_stat_upgrade_chances)
             item_counts_table[item] += 1
 
     # Determine stat upgrades and add them to the pool
     stat_upgrades: int = item_counts_table.pop(ItemName.stat_upgrade)
     for u in range(stat_upgrades):
-        upgrade = multiworld.random.randrange(4)
+        upgrade = world.random.randrange(4)
         item_counts_table[stat_upgrade_items[upgrade]] += 1
 
     # Build filler items list
@@ -442,7 +444,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         trap_item_count = int((filler_item_count - extra_items) * trap_item_percent)
         extra_items += trap_item_count
         for t in range(trap_item_count):
-            item = trap_items[multiworld.random.randrange(len(trap_items))]
+            item = trap_items[world.random.randrange(len(trap_items))]
             item_counts_table[item] += 1
 
     # For Necessary we set the number of bonus chests equal to each extra item
@@ -452,8 +454,8 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     return item_counts_table, extra_items
 
 
-def roll_for_item(multiworld, loot_chances: typing.List[typing.Tuple[float, str]]):
-    rnd = multiworld.random.random()
+def roll_for_item(world, loot_chances: typing.List[typing.Tuple[float, str]]):
+    rnd = world.random.random()
     for item in loot_chances:
         rnd -= item[0]
         if rnd < 0:

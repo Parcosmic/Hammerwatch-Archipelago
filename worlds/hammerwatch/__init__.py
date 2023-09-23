@@ -147,7 +147,7 @@ class HammerwatchWorld(World):
                 }
 
                 for loc in self.shop_locations.keys():
-                    shop_type = self.multiworld.random.choice(list(shop_counts.keys()))
+                    shop_type = self.random.choice(list(shop_counts.keys()))
                     tier = shop_counts[shop_type].pop(0)
                     if len(shop_counts[shop_type]) == 0:
                         shop_counts.pop(shop_type)
@@ -174,7 +174,7 @@ class HammerwatchWorld(World):
                         remaining_shops.append(shop_type)
 
                 for loc in self.shop_locations.keys():
-                    self.shop_locations[loc] = self.multiworld.random.choice(remaining_shops)
+                    self.shop_locations[loc] = self.random.choice(remaining_shops)
                     remaining_shops.remove(self.shop_locations[loc])
 
         # Shop cost setting validation, swap if max is higher than min
@@ -235,11 +235,11 @@ class HammerwatchWorld(World):
         # Add/remove junk items depending if we have not enough/too many locations
         junk: int = total_required_locations - items
         if junk > 0:
-            for item_name in self.multiworld.random.choices(present_filler_items, k=junk):
+            for item_name in self.random.choices(present_filler_items, k=junk):
                 self.item_counts[item_name] += 1
         else:
             for j in range(-junk):
-                junk_item = self.multiworld.random.choice(present_filler_items)
+                junk_item = self.random.choice(present_filler_items)
                 self.item_counts[junk_item] -= 1
                 if self.item_counts[junk_item] == 0:
                     present_filler_items.remove(junk_item)
@@ -274,7 +274,7 @@ class HammerwatchWorld(World):
         return prog
 
     def get_filler_item_name(self) -> str:
-        return self.multiworld.random.choice(tuple(filler_items))
+        return self.random.choice(tuple(filler_items))
 
     def place_castle_locked_items(self):
         # Prison 1 Switches
@@ -509,18 +509,18 @@ class HammerwatchWorld(World):
             # If playing exit rando we need to ensure we can always return if falling from the temple
             if not get_option(self.multiworld, OptionNames.exit_randomization, self.player):
                 c3_locs.extend(get_region_item_locs(TempleRegionNames.cave_3_main))
-            rune_key_locs.append(self.multiworld.random.choice(c3_locs))
+            rune_key_locs.append(self.random.choice(c3_locs))
 
             # Cave Level 2 Rune Key
             c2_locs = get_region_item_locs(TempleRegionNames.cave_2_main)
-            rune_key_locs.append(self.multiworld.random.choice(c2_locs))
+            rune_key_locs.append(self.random.choice(c2_locs))
 
             # Cave Level 1 Rune Key
             c1_locs = []
             c1_locs += get_region_item_locs(TempleRegionNames.cave_1_main)
             c1_locs += get_region_item_locs(TempleRegionNames.cave_1_blue_bridge)
             c1_locs += get_region_item_locs(TempleRegionNames.cave_1_red_bridge)
-            rune_key_locs.append(self.multiworld.random.choice(c1_locs))
+            rune_key_locs.append(self.random.choice(c1_locs))
 
             # Temple Floor 1 Rune Key
             t1_locs = []
@@ -534,7 +534,7 @@ class HammerwatchWorld(World):
             t1_locs += get_region_item_locs(TempleRegionNames.t1_s_of_ice_turret)
             t1_locs += get_region_item_locs(TempleRegionNames.t1_east)
             t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_block_hall)
-            rune_key_locs.append(self.multiworld.random.choice(t1_locs))
+            rune_key_locs.append(self.random.choice(t1_locs))
 
             # Temple Floor 2 Rune Key
             t2_locs = []
@@ -544,7 +544,7 @@ class HammerwatchWorld(World):
             t2_locs += get_region_item_locs(TempleRegionNames.t2_n_node)
             t2_locs += get_region_item_locs(TempleRegionNames.t2_s_node)
             t2_locs += get_region_item_locs(TempleRegionNames.t2_ornate)
-            rune_key_locs.append(self.multiworld.random.choice(t2_locs))
+            rune_key_locs.append(self.random.choice(t2_locs))
 
             # Temple Floor 3 Rune Key
             t3_locs = []
@@ -554,7 +554,7 @@ class HammerwatchWorld(World):
             t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node_blocks_2)
             t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node)
             t3_locs += get_region_item_locs(TempleRegionNames.t3_n_node)
-            rune_key_locs.append(self.multiworld.random.choice(t3_locs))
+            rune_key_locs.append(self.random.choice(t3_locs))
 
             for loc in rune_key_locs:
                 self.multiworld.get_location(loc, self.player).place_locked_item(

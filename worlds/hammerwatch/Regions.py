@@ -20,13 +20,13 @@ HWExitData = namedtuple("HWExitData",
 
 
 class HWEntrance(Entrance):
-    visited = False
     target_region: Region
     pass_item: str
     item_count: int
     items_consumed: bool
     return_code: str
     exit_code: str
+    swapped: bool
 
     linked = True
     downstream_count: int = 0
@@ -41,6 +41,7 @@ class HWEntrance(Entrance):
         self.items_consumed = items_consumed
         self.return_code = return_code
         self.exit_code = exit_code
+        self.swapped = False
 
 
 def create_regions(multiworld, map: Campaign, player: int, active_locations: typing.Dict[str, LocationData],
@@ -2954,6 +2955,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
             False, key_bonus_prison)
     connect_exit(multiworld, player, used_names, CastleRegionNames.n1_room4, CastleRegionNames.p3_bonus_return,
                  EntranceNames.c_p3_b_return, None, key_bonus_prison)
+    connect(multiworld, player, used_names, CastleRegionNames.p3_bonus_return, CastleRegionNames.p3_bonus, False)
     # else:
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_start, CastleRegionNames.n1_room1)
     #     connect_generic(multiworld, player, used_names, CastleRegionNames.n1_room1, CastleRegionNames.n1_room2)
@@ -3131,17 +3133,14 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_silver_archives, gate_codes, archives_gate_items, GateNames.c_r1_7, False)
     connect(multiworld, player, used_names, CastleRegionNames.r1_e_sgate, CastleRegionNames.r1_se_wall, False)
     # Requires floor 7 open right wall
-    connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_4, True)
+    connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
+                 key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_4, False)
+    # Technically this also leads to e_n_bgate, but doing this should logically be equivalent (hopefully)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e_n_bgate,
                  key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_6, True)
-    # connect_generic(multiworld, player, used_names, CastleRegionNames.r1_e, CastleRegionNames.r1_e,
-    #                 False, False, key_bronze_archives)
     # Internal gate
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
                  key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_3, False)
-    # connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_e_n_bgate,
-    #              key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r1_)
     connect_gate(multiworld, player, used_names, CastleRegionNames.r1_e_n_bgate, CastleRegionNames.r1_ne_ggate,
                  key_gold_archives, gate_codes, archives_gate_items, GateNames.c_r1_1, False)
     connect(multiworld, player, used_names, CastleRegionNames.r1_ne_ggate, CastleRegionNames.r1_nw, False)
@@ -3234,8 +3233,8 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.r3_rune_room, CastleRegionNames.r3_bonus, False)
     # Requires 6 simon says switch
     connect_exit(multiworld, player, used_names, CastleRegionNames.r3_bonus, CastleRegionNames.n3_main,
-                 EntranceNames.c_n3_0, EntranceNames.c_r3_b_ent)
-    # Requires open bonus entrance passage
+                 EntranceNames.c_n3_0, None)  # EntranceNames.c_r3_b_ent)
+    # Requires open bonus entrance passage  # We can make this one-way because we can't get locked here
     connect_gate(multiworld, player, used_names, CastleRegionNames.r3_main, CastleRegionNames.r3_sw_bgate,
                  key_bronze_archives, gate_codes, archives_gate_items, GateNames.c_r3_1, False)
     # Internal bronze gates
@@ -3457,6 +3456,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  EntranceNames.c_c2_77, None)
     connect_exit(multiworld, player, used_names, CastleRegionNames.c2_c3_tp, CastleRegionNames.c3_c2_tp,
                  EntranceNames.c_c3_156, None)
+    connect(multiworld, player, used_names, CastleRegionNames.c3_c2_tp, CastleRegionNames.c3_nw, False)
 
     # Old connect method to ensure no keys will in the final boss room
     connect_exit(multiworld, player, used_names, CastleRegionNames.c2_main, CastleRegionNames.b4_start,
@@ -5114,7 +5114,10 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, TempleRegionNames.t3_s_node_blocks_2, TempleRegionNames.t3_s_node, False)
 
     connect_exit(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.pof_1_main,
-                 EntranceNames.t_n1_1_start, EntranceNames.t_hub_pof, ItemName.ev_pof_switch, 6, False)
+                 EntranceNames.t_n1_1_start, EntranceNames.t_hub_pof, ItemName.ev_pof_switch, 6, False, False)
+    connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.hub_main,
+                 EntranceNames.t_hub_pof, EntranceNames.t_n1_1_start, None, 1, False, False)
+    # Going back to the hub has no entrance requirements
     connect_exit(multiworld, player, used_names, TempleRegionNames.pof_1_main, TempleRegionNames.pof_1_se_room,
                  EntranceNames.t_n1_1_se, EntranceNames.t_n1_1_sw)
     connect(multiworld, player, used_names, TempleRegionNames.pof_1_se_room, TempleRegionNames.pof_1_se_room_top, False,

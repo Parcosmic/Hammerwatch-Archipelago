@@ -138,6 +138,16 @@ class ExitRandomization(Toggle):
     default = False
 
 
+class ERActRange(Range):
+    """Determines the maximum number of acts away levels will try to be connected to each other in exit randomization
+    For example with an act range of 1 Prison exits will mostly only connect to other Prison exits or Armory exits"""
+    display_name = "ER Act Connection Range"
+    # category = "Generation"
+    range_start = 1
+    range_end = 3
+    default = 1
+
+
 class GateShuffle(Toggle):  # Maybe someday I'll add a mode so the number of keys are randomized too
     """Shuffles the type of bronze, silver, and gold gates"""
     display_name = "Gate Shuffle"
@@ -346,6 +356,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     extra_plank_percent: ExtraPlankPercent,
     difficulty: Difficulty,
     exit_randomization: ExitRandomization,
+    er_act_range: ERActRange,
     gate_shuffle: GateShuffle,
     shop_shuffle: ShuffleShops,
     shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle,

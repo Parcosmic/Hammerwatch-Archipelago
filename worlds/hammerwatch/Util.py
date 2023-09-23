@@ -1,6 +1,7 @@
 import typing
 from enum import Enum
 from BaseClasses import MultiWorld
+from ..AutoWorld import World
 from .Names import ItemName, OptionNames
 
 
@@ -25,7 +26,7 @@ class Counter:
         return self.counter
 
 
-def get_option(multiworld, option_name, player):
+def get_option(multiworld: MultiWorld, option_name: str, player: int):
     return getattr(multiworld, option_name)[player]
 
 
@@ -81,11 +82,11 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
     return key_names
 
 
-def get_random_element(multiworld: MultiWorld, dictionary: typing.Dict):
+def get_random_element(world: World, dictionary: typing.Dict):
     total = 0
     for item, value in dictionary.items():
         total += value
-    index = multiworld.random.randint(0, total-1)
+    index = world.random.randint(0, total-1)
     for item, value in dictionary.items():
         if index < value:
             return item

@@ -1,7 +1,7 @@
 import math
 import typing
 
-from BaseClasses import MultiWorld, Region
+from BaseClasses import MultiWorld, Region, Entrance
 from .Names import CastleRegionNames, TempleRegionNames, EntranceNames
 from worlds.generic.Rules import add_rule, set_rule, forbid_item
 from .Regions import HWEntrance, HWExitData, etr_base_name, connect_from_data
@@ -13,9 +13,22 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     multiworld.completion_condition[player] = lambda state: state.has(ItemName.ev_victory, player)
 
     tries = 0
+    stop_threshold = 100000
     while not set_connections(multiworld, player):
+        # print("------------------------------------------------------------------------------------------------")
+        if tries >= stop_threshold:
+            break
         tries += 1
-    print(f"Connecting exits took {tries} tries")
+    if tries >= stop_threshold:
+        raise RuntimeError("Could not generate a valid ER configuration!")
+    # print(f"Connecting exits took {tries} tries")
+
+    # test_entrances = multiworld.get_entrances()
+    # unconnected = []
+    # for entr in test_entrances:
+    #     if entr.connected_region is None:
+    #         unconnected.append(entr.name)
+    # print(unconnected)
 
     menu_region = multiworld.get_region(CastleRegionNames.menu, player)
     # visualize_regions(menu_region, "_testing.puml", show_locations=False)
@@ -25,9 +38,16 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         second_region_name = TempleRegionNames.hub_main
     second_region = multiworld.get_region(second_region_name, player)
     loop_entrances = prune_entrances(menu_region, second_region)
-    # visualize_regions(second_region, "_testing_pruned.puml", show_locations=False)
+    # visualize_regions(second_region, "_testing.puml", show_locations=False)
 
     set_door_access_rules(multiworld, player, door_counts, loop_entrances)
+
+    # Change the names of all entrances to match where they lead if ER is on
+    if get_option(multiworld, OptionNames.exit_randomization, player):
+        world = multiworld.worlds[player]
+        for exit in world.level_exits:
+            exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
+            world.exit_spoiler_info.append(exit.name)
 
     # It's kinda mean to make players get their last planks or keys during the final boss,
     # or even after when they're not sure if they can beat their game
@@ -111,6 +131,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
     world = multiworld.worlds[player]
     level_exits: typing.List[HWEntrance] = world.level_exits.copy()
     if get_option(multiworld, OptionNames.exit_randomization, player):
+        act_range = get_option(multiworld, OptionNames.er_act_range, player)
         if get_campaign(multiworld, player) == Campaign.Castle:
             entrance_block_types = c_entrance_block_types
             passage_blocking_codes = c_passage_blocking_codes
@@ -129,14 +150,10 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             #     region_to_exits[exit_data.parent.name] = []
             # region_to_exits[exit_data.parent.name].append(exit_data)
             if exit.return_code is not None:
-                if exit.return_code in open_codes:
-                    a = 5
                 code_to_exit[exit.return_code] = exit
                 code_to_region[exit.return_code] = exit.parent_region
                 open_codes.append(exit.return_code)
             else:
-                if exit.exit_code in open_codes:
-                    a = 5
                 code_to_exit[exit.exit_code] = None
                 open_codes.append(exit.exit_code)
                 code_to_region[exit.exit_code] = exit.target_region
@@ -155,7 +172,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             open_codes.append(to_disconnect.return_code)
             # connected_exits.remove(to_disconnect.name)
             to_disconnect.linked = False
-        while len(entrances) > 0:  # + len(impassable_exits) > 0:
+        while len(entrances) + len(impassable_exits) > 0:
             # Traverse current section
             while len(entrances) > 0:
                 entr = entrances.pop()
@@ -187,27 +204,38 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             for impassable in impassable_exits:
                 open_exits.remove(impassable)
             # If we ran out of valid placements we gotta swap a connection
-            if len(impassable_exits) > 0 and len(open_exits) == 0:
+            if (len(impassable_exits) + len(open_codes) > 0) and len(open_exits) == 0:
                 # The only things we have to worry about swapping are dead-ends luckily
+                exit_needed_regions = {}
                 needed_names = []
                 have_names = []
                 for impassable in impassable_exits:
+                    exit_needed_regions[impassable] = []
                     for reg in entrance_block_types[impassable.exit_code][2]:
                         if reg not in traversed_regions:
+                            exit_needed_regions[impassable].append(reg)
                             if reg not in needed_names:
                                 needed_names.append(reg)
                         elif reg not in have_names:
                             have_names.append(reg)
-                # needed_unconnected = [code_to_exit[code] for code in open_codes
-                #                       if code_to_region[code].name in needed_names]
+                blocked_exit = None
+                blocked_exit_needed_regions = []
+                for b_exit, b_regs in exit_needed_regions.items():
+                    if len(b_regs) < len(blocked_exit_needed_regions):
+                        blocked_exit = b_exit
+                        blocked_exit_needed_regions = b_regs
+                blocked_needed_codes = [code_to_exit[code] for code in open_codes
+                                        if code_to_region[code].name in blocked_exit_needed_regions]
                 # swap goes from dead end to rest of map
+                for b in range(len(blocked_exit_needed_regions)):
+                    pass
                 swap = None
                 options = level_exits.copy()
                 while len(options) > 0:
-                    op = options.pop(multiworld.random.randint(0, len(options) - 1))
-                    if op.linked and op.return_code is not None:
-                        op_code = t_entrance_block_types[op.return_code][1]
-                        if op_code == EntranceBlockType.DeadEnd and op.return_code not in t_passage_blocking_codes.values():
+                    op = options.pop(world.random.randint(0, len(options) - 1))
+                    if op.linked and not op.swapped and op.return_code is not None:
+                        op_code = entrance_block_types[op.return_code][1]
+                        if op_code == EntranceBlockType.DeadEnd and op.return_code not in passage_blocking_codes.values():
                             swap = op
                             break
                 if swap is None:
@@ -218,27 +246,25 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                     if swapp.connected_region == swap.parent_region:
                         swap2 = swapp
                         break
-                print(f"Unhooked {swap.name}: {swap.parent_region.name} > {swap.connected_region.name}")
+                # print(f"  Unhooked {swap.name}: {swap.parent_region.name} > {swap.connected_region.name}")
                 traversed_regions.remove(swap.parent_region.name)
                 disconnect_linked_exit(swap)
                 disconnect_linked_exit(swap2)
-                # swap.connected_region.entrances.remove(swap)
-                # swap2.connected_region.entrances.remove(swap2)
-                # swap.connected_region = None
-                # swap2.connected_region = None
-                # open_codes.append(swap.return_code)
-                # open_codes.append(swap2.return_code)
-                # swap.linked = False
-                # swap2.linked = False
+                swap.swapped = True
+                swap2.swapped = True
                 open_exits.insert(0, swap2)
             needed_codes = []
             for needed_reg in needed_regions:
                 if needed_reg in passage_blocking_codes:
                     needed_codes.append(passage_blocking_codes[needed_reg])
-            print(f"  Needed regions: {needed_codes}")
+            # print(f"  Needed regions: {needed_codes}")
+            # Move one way exits to the front of the list to be filled first
+            for i in range(len(open_exits)):
+                if open_exits[i].return_code is None:
+                    open_exits.insert(0, open_exits.pop(i))
             # For each exit find a valid connection and connect them
             while len(open_exits):
-                open_exit = open_exits.pop(multiworld.random.randint(0, len(open_exits)-1))
+                open_exit = open_exits.pop(world.random.randint(0, len(open_exits)-1))
                 if open_exit.linked:
                     # print(f"----Ditched {open_exit}")
                     continue
@@ -247,12 +273,12 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                 # connected_exits.append(open_exit.name)
                 # open_exit = multiworld.get_entrance(open_exit.name, player)
                 valid_exits = get_valid_exits(entrance_block_types, open_codes, code_to_region, traversed_regions,
-                                              open_exits, open_exit, needed_codes)
+                                              open_exits, open_exit, needed_codes, act_range)
                 # print(f"# Exits for {open_exit.parent_region}: {len(valid_exits)}")
-                link_code = multiworld.random.choice(valid_exits)
+                link_code = world.random.choice(valid_exits)
                 link_region = code_to_region[link_code]
-                print(f"Linked {open_exit.parent_region} ({open_exit.return_code}) to {link_region} ({link_code})"
-                      + ("    >><<" if open_exit.return_code is not None else ""))
+                # print(f"Linked {open_exit.parent_region} ({open_exit.return_code}) to {link_region} ({link_code})"
+                #       + ("    >><<" if open_exit.return_code is not None else ""))
 
                 # Set the reverse exit too if the exit is two-way
                 if open_exit.return_code is not None:
@@ -301,7 +327,7 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
             if not exit.linked:
                 unconnected.append(exit)
         if len(unconnected) > 0:
-            print(" !!! Failed to connect entrances properly, trying again...")
+            # print(" !!! Failed to connect entrances properly, trying again...")
             # print(f"Unconnected entrances ({len(unconnected)}): {unconnected}")
             # if len(impassable_exits) > 0:
             #     print(f"Impassable ({len(impassable_exits)}): {impassable_exits}")
@@ -318,11 +344,6 @@ def set_connections(multiworld: MultiWorld, player: int) -> bool:
                 if unconnect.linked:
                     disconnect_linked_exit(unconnect)
             return False
-        else:
-            # All exits have been connected, change the names to match where they lead
-            for exit in level_exits:
-                exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
-                world.exit_spoiler_info.append(exit.name)
         return True
     else:
         # Create entrances
@@ -340,7 +361,7 @@ class EntranceBlockType(Enum):
     OneWay = 3
 
 
-# Required traversed regions is in the entry of the exit_code of the original entrance that requires them
+# Required traversed regions is of the exit_code of the original entrance that requires them
 c_entrance_block_types = {  # (act, EntranceBlockType, required traversed regions)
     EntranceNames.c_p1_1: (1, EntranceBlockType.DeadEnd, None),  # Technically not a dead end if shortcut portal is enabled
     EntranceNames.c_p1_2: (1, EntranceBlockType.Unblocked, None),  # Leads to 3
@@ -358,17 +379,17 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     EntranceNames.c_p3_b_return: (1, EntranceBlockType.OneWay, None),  # Leads to 10, b_ent, 1
     EntranceNames.c_p3_portal: (1, EntranceBlockType.Unblocked, None),
     EntranceNames.c_p3_b_ent: (1, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_p3_boss: (1, EntranceBlockType.Unblocked,
-                              [CastleRegionNames.p1_from_p3_n, CastleRegionNames.p2_s, CastleRegionNames.p3_s_gold_gate]),
+    EntranceNames.c_p3_boss: (1, EntranceBlockType.Unblocked, None),
     EntranceNames.c_n1_0: (1, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_b1_0: (1, EntranceBlockType.Unblocked, None),  # Gotta beat the boss though
-    EntranceNames.c_b1_1: (1, EntranceBlockType.DeadEnd, None),  # Technically blocked, but after the wall opens can't move on
+    EntranceNames.c_b1_0: (1, EntranceBlockType.Unblocked,
+                              [CastleRegionNames.p1_from_p3_n, CastleRegionNames.p2_s, CastleRegionNames.p3_s_gold_gate]),
+    EntranceNames.c_b1_1: (1, EntranceBlockType.DeadEnd, None),
+    # Technically blocked, but after the wall opens can't move on
     EntranceNames.c_a1_0: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a1_1: (2, EntranceBlockType.DeadEnd, None),
     EntranceNames.c_a1_a2: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a1_a3: (2, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_a1_boss: (2, EntranceBlockType.Unblocked,
-                              [CastleRegionNames.a1_w, CastleRegionNames.a2_ne, CastleRegionNames.a3_main]),
+    EntranceNames.c_a1_boss: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a2_0: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a2_1: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a2_2: (2, EntranceBlockType.Blocked, None),  # Need to push button to open walls
@@ -379,7 +400,8 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     EntranceNames.c_a3_1: (2, EntranceBlockType.Unblocked, None),
     EntranceNames.c_a3_2: (2, EntranceBlockType.Blocked, None),  # Need to activate glass bridge
     EntranceNames.c_n2_0: (2, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_b2_0: (2, EntranceBlockType.Unblocked, None),
+    EntranceNames.c_b2_0: (2, EntranceBlockType.Unblocked,
+                              [CastleRegionNames.a1_w, CastleRegionNames.a2_ne, CastleRegionNames.a3_main]),
     EntranceNames.c_b2_1: (2, EntranceBlockType.DeadEnd, None),
     EntranceNames.c_r1_0: (3, EntranceBlockType.Unblocked, None),
     EntranceNames.c_r1_1: (3, EntranceBlockType.Unblocked, None),
@@ -390,14 +412,14 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     EntranceNames.c_r2_200: (3, EntranceBlockType.DeadEnd, None),  # Not a dead end if you aren't a coward :)
     EntranceNames.c_r3_0: (3, EntranceBlockType.Unblocked, None),
     EntranceNames.c_r3_b_return: (3, EntranceBlockType.OneWay, None),
-    EntranceNames.c_r3_boss: (3, EntranceBlockType.Blocked,
-                              [CastleRegionNames.r2_bswitch, CastleRegionNames.r2_n, CastleRegionNames.r3_main]),  # Need to open wall
+    EntranceNames.c_r3_boss: (3, EntranceBlockType.Blocked, None),  # Need to open wall
     EntranceNames.c_r3_b_ent: (3, EntranceBlockType.Blocked, None),
     EntranceNames.c_r3_250: (3, EntranceBlockType.Blocked, None),
     EntranceNames.c_n3_0: (3, EntranceBlockType.OneWay, None),  # Nothing is blocked so we can make this one way
     EntranceNames.c_n3_12: (3, EntranceBlockType.Unblocked, None),
     EntranceNames.c_n3_80: (3, EntranceBlockType.DeadEnd, None),
-    EntranceNames.c_b3_0: (3, EntranceBlockType.Unblocked, None),
+    EntranceNames.c_b3_0: (3, EntranceBlockType.Unblocked,
+                              [CastleRegionNames.r2_bswitch, CastleRegionNames.r2_n, CastleRegionNames.r3_main]),
     EntranceNames.c_b3_1: (3, EntranceBlockType.DeadEnd, None),
     EntranceNames.c_c1_0: (4, EntranceBlockType.Unblocked, None),
     EntranceNames.c_c1_75: (4, EntranceBlockType.OneWay, None),
@@ -405,8 +427,7 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     EntranceNames.c_c1_100: (4, EntranceBlockType.Unblocked, None),
     EntranceNames.c_c1_169: (4, EntranceBlockType.Blocked, None),
     EntranceNames.c_c2_0: (4, EntranceBlockType.Unblocked, None),  # Blocked by spikes from other entrances
-    EntranceNames.c_c2_boss: (4, EntranceBlockType.Unblocked,
-                              [CastleRegionNames.c2_main, CastleRegionNames.c2_tp_island, CastleRegionNames.c3_nw]),
+    EntranceNames.c_c2_boss: (4, EntranceBlockType.Unblocked, None),
     EntranceNames.c_c2_45: (4, EntranceBlockType.Unblocked, None),
     EntranceNames.c_c2_50: (4, EntranceBlockType.OneWay, None),  # One way island
     EntranceNames.c_c2_77: (4, EntranceBlockType.OneWay, None),  # One way wall
@@ -415,14 +436,27 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     EntranceNames.c_c2_125: (4, EntranceBlockType.OneWay, None),  # Blocked by wall from other entrances
     EntranceNames.c_c3_0: (4, EntranceBlockType.Unblocked, None),
     EntranceNames.c_c3_54: (4, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_c3_67: (4, EntranceBlockType.OneWay, None),
+    EntranceNames.c_c3_67: (4, EntranceBlockType.OneWay, [CastleRegionNames.c3_nw]),
     EntranceNames.c_c3_156: (4, EntranceBlockType.OneWay, None),  # Blocked by wall from other entrances
     EntranceNames.c_n4_0: (4, EntranceBlockType.Unblocked, None),
-    EntranceNames.c_b4_0: (4, EntranceBlockType.DeadEnd, None),  # Technically not a dead end, but no entrances beyond are shuffled
+    EntranceNames.c_b4_0: (4, EntranceBlockType.DeadEnd,
+                              [CastleRegionNames.c2_main, CastleRegionNames.c2_tp_island, CastleRegionNames.c3_nw]),
+    # Technically not a dead end, but no entrances beyond are shuffled
     EntranceNames.c_p_return_0: (1, EntranceBlockType.DeadEnd, None),
 }
 
 c_passage_blocking_codes = {
+    CastleRegionNames.p1_from_p3_n: EntranceNames.c_p1_10,
+    CastleRegionNames.p2_s: EntranceNames.c_p2_3,  # Not actually connected, got a gate in the way
+    CastleRegionNames.a2_ne: EntranceNames.c_a2_0,
+    CastleRegionNames.a3_main: EntranceNames.c_a3_0,
+    CastleRegionNames.r2_bswitch: EntranceNames.c_r2_1,
+    CastleRegionNames.r2_n: EntranceNames.c_r2_0,
+    CastleRegionNames.c2_tp_island: EntranceNames.c_c2_50,
+    CastleRegionNames.c3_nw: EntranceNames.c_c3_54,
+    CastleRegionNames.b1_defeated: EntranceNames.c_b1_0,
+    CastleRegionNames.b2_defeated: EntranceNames.c_b2_0,
+    CastleRegionNames.b3_defeated: EntranceNames.c_b3_0,
 }
 
 t_entrance_block_types = {  # (act, EntranceBlockType)
@@ -508,6 +542,13 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
 }
 
 t_passage_blocking_codes = {
+    TempleRegionNames.cave_3_main: EntranceNames.t_c1_start,  # There are more entrances, but use this one for now
+    TempleRegionNames.cave_2_main: EntranceNames.t_c2_start,
+    TempleRegionNames.cave_2_pumps: EntranceNames.t_c2_start,
+    TempleRegionNames.cave_1_main: EntranceNames.t_c3_start,
+    TempleRegionNames.cave_1_blue_bridge: EntranceNames.t_c3_start,
+    TempleRegionNames.t1_east: EntranceNames.t_t1_end,
+    TempleRegionNames.t2_s_gate: EntranceNames.t_t2_w_portal,
     TempleRegionNames.boss2_defeated: EntranceNames.t_b2,
     TempleRegionNames.cave_3_portal: EntranceNames.t_c1_portal,
     TempleRegionNames.pof_1_n_room: EntranceNames.t_n1_1_n,
@@ -530,22 +571,23 @@ def get_valid_exits(entrance_block_types, open_codes: typing.List, code_to_regio
     # if entrance.return_code in unlinked_exit_data:
     #     print("sdfjs")
     for exit_code in open_codes:
-        if exit_code != entrance.return_code:
-            data = entrance_block_types[exit_code]
-            if (entrance.return_code is not None) == (data[1] == EntranceBlockType.OneWay):
-                continue  # Only shuffle one way transitions together
-            type_match_exits.append(exit_code)
-            if code_to_region[exit_code].name in traversed_regions:
-                continue  # If we can reach the destination then don't consider the transition
-            # if exit_count <= 1 and exit_code in open_exit_codes:
-            if exit_code in open_exit_codes:
-                continue  # If we only have 2 exits don't connect them with each other
-            if abs(act - data[0]) > act_range:
-                continue  # Only include connections within the act range
-            valid_exits.append(exit_code)
-            if exit_count == 0 and not (data[1] == EntranceBlockType.Unblocked or data[1] == EntranceBlockType.OneWay):
-                continue  # If there is only 1 exit left, we can't block it off
-            exits.append(exit_code)
+        if exit_code == entrance.return_code:
+            continue  # Can't connect an entrance to itself!
+        data = entrance_block_types[exit_code]
+        if (entrance.return_code is not None) == (data[1] == EntranceBlockType.OneWay):
+            continue  # Only shuffle one way transitions together
+        type_match_exits.append(exit_code)
+        if code_to_region[exit_code].name in traversed_regions:
+            continue  # If we can reach the destination then don't consider the transition
+        # if exit_count <= 1 and exit_code in open_exit_codes:
+        if exit_code in open_exit_codes:
+            continue  # If we only have 2 exits don't connect them with each other
+        if abs(act - data[0]) > act_range:
+            continue  # Only include connections within the act range
+        valid_exits.append(exit_code)
+        if exit_count == 0 and not (data[1] == EntranceBlockType.Unblocked or data[1] == EntranceBlockType.OneWay):
+            continue  # If there is only 1 exit left, we can't block it off
+        exits.append(exit_code)
     if len(exits) == 0:
         # if len(valid_exits) == 1:
         #     return valid_exits
@@ -649,38 +691,49 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         entr.parent_region.exits.append(entr)
         entr.connect(multiworld.get_region(to_name, player))
         return entr
+
+    def copy_entrance_dest(name: str, parent_name: str, entrance: Entrance):
+        entr = HWEntrance(player, name, multiworld.get_region(parent_name, player))
+        entr.parent_region.exits.append(entr)
+        entr.connect(entrance.connected_region)
+        return entr
+
+    add_entrances = []
     if get_campaign(multiworld, player) == Campaign.Castle:
-        if not get_option(multiworld, OptionNames.exit_randomization, player):
-            remove_entrances = [
-                multiworld.get_entrance(etr_base_name(CastleRegionNames.p3_sw, CastleRegionNames.b1_start), player),
-                multiworld.get_entrance(etr_base_name(CastleRegionNames.a1_start, CastleRegionNames.b2_start), player),
-                multiworld.get_entrance(etr_base_name(CastleRegionNames.r3_exit, CastleRegionNames.b3_start), player),
-                multiworld.get_entrance(etr_base_name(CastleRegionNames.c2_main, CastleRegionNames.b4_start), player),
-            ]
+        # if not get_option(multiworld, OptionNames.exit_randomization, player):
+        # Disconnect level exits and pretend that you need to go through the boss switch areas to the boss
+        remove_entrances = [
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.p3_sw, CastleRegionNames.b1_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.a1_start, CastleRegionNames.b2_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.r3_exit, CastleRegionNames.b3_start), player),
+            multiworld.get_entrance(etr_base_name(CastleRegionNames.c2_main, CastleRegionNames.b4_start), player),
+        ]
         add_entrances = [
-            add_entrance("P1 Boss Switch", CastleRegionNames.p1_from_p3_n, CastleRegionNames.b1_start),
-            add_entrance("P3 Boss Switch", CastleRegionNames.p3_s_gold_gate, CastleRegionNames.b1_start),
-            add_entrance("A1 Boss Switch", CastleRegionNames.a1_w, CastleRegionNames.b2_start),
-            add_entrance("A2 Boss Switch", CastleRegionNames.a2_ne, CastleRegionNames.b2_start),
-            add_entrance("R2 Boss Switch", CastleRegionNames.r2_n, CastleRegionNames.b3_start),
-            add_entrance("C1 Boss Switch", CastleRegionNames.c2_tp_island, CastleRegionNames.b4_start),
-            add_entrance("C2 Boss Switch", CastleRegionNames.c2_c3_tp, CastleRegionNames.b4_start),
-            add_entrance("C3 Boss Switch", CastleRegionNames.c3_rspike_switch, CastleRegionNames.b4_start),
+            copy_entrance_dest("P1 Boss Switch", CastleRegionNames.p1_from_p3_n, remove_entrances[0]),
+            copy_entrance_dest("P3 Boss Switch", CastleRegionNames.p3_s_gold_gate, remove_entrances[0]),
+            copy_entrance_dest("A1 Boss Switch", CastleRegionNames.a1_w, remove_entrances[1]),
+            copy_entrance_dest("A2 Boss Switch", CastleRegionNames.a2_ne, remove_entrances[1]),
+            copy_entrance_dest("R2 Boss Switch", CastleRegionNames.r2_n, remove_entrances[2]),
+            copy_entrance_dest("C1 Boss Switch", CastleRegionNames.c2_tp_island, remove_entrances[3]),
+            copy_entrance_dest("C2 Boss Switch", CastleRegionNames.c2_c3_tp, remove_entrances[3]),
+            copy_entrance_dest("C3 Boss Switch", CastleRegionNames.c3_rspike_switch, remove_entrances[3]),
+            copy_entrance_dest("C3 Portal", CastleRegionNames.c3_nw,
+                               multiworld.get_entrance(etr_base_name(CastleRegionNames.c3_sw_hidden,
+                                                                     CastleRegionNames.c3_fire_floor), player)),
         ]
     else:
-        if not get_option(multiworld, OptionNames.exit_randomization, player):
-            remove_entrances = [
-                # multiworld.get_entrance('Temple Entrance Back__', player),
-            ]
+        remove_entrances = [
+            # multiworld.get_entrance('Temple Entrance Back__', player),
+        ]
         add_entrances = [
             add_entrance("T3 Psuedo Entrance", TempleRegionNames.t3_s_node_blocks_1,
                          TempleRegionNames.t3_s_node_blocks_2)
         ]
     # Don't remove entrances with exit rando because they won't exist
-    if not get_option(multiworld, OptionNames.exit_randomization, player):
-        for remove in remove_entrances:
-            remove.parent_region.exits.remove(remove)
-            remove.connected_region.entrances.remove(remove)
+    # if not get_option(multiworld, OptionNames.exit_randomization, player):
+    for remove in remove_entrances:
+        remove.parent_region.exits.remove(remove)
+        remove.connected_region.entrances.remove(remove)
 
     # Set downstream costs - the keys that are required after a specific entrance
     key_names = get_active_key_names(multiworld, player)
@@ -688,6 +741,17 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
     start_exits = [exit for exit in menu_region.exits if exit.connected_region.name != CastleRegionNames.get_planks]
     # seen_start = [get_entrance_id(exit) for exit in start_exits]
     # seen_start.remove(get_entrance_id(menu_region.exits[0]))
+    # gate_type_counts = {
+    #     ItemName.key_bronze: 0,
+    #     ItemName.key_silver: 0,
+    #     ItemName.key_gold: 0,
+    #     ItemName.key_bonus: 0,
+    # }
+    # for test_entrance in multiworld.get_entrances():
+    #     if test_entrance.pass_item in gate_type_counts:
+    #         gate_type_counts[test_entrance.pass_item] += 1
+    #         if test_entrance.item_count != 1:
+    #             print("Panicc")
     for item in key_names:
         # seen = seen_start.copy()
         set_downstream_costs(item, start_exits[0], [])
@@ -703,10 +767,10 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         add.parent_region.exits.remove(add)
         add.connected_region.entrances.remove(add)
     # Don't remove entrances with exit rando because they won't exist
-    if not get_option(multiworld, OptionNames.exit_randomization, player):
-        for remove in remove_entrances:
-            remove.parent_region.exits.append(remove)
-            remove.connected_region.entrances.append(remove)
+    # if not get_option(multiworld, OptionNames.exit_randomization, player):
+    for remove in remove_entrances:
+        remove.parent_region.exits.append(remove)
+        remove.connected_region.entrances.append(remove)
 
     transitions = multiworld.get_entrances()
     for exit in transitions:
@@ -726,31 +790,41 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
 
 
 def set_downstream_costs(item: str, entrance: HWEntrance, seen):
-    seen.append(get_entrance_id(entrance))
+    entr_id = get_entrance_id(entrance)
+    seen.append(entr_id)
     seen = seen.copy()  # Create a copy so that independent pathways don't lock each other
-    door_entrances: typing.Set[HWEntrance] = set()
-    cost_dict: typing.Dict[HWEntrance] = {}
+    door_entrances: typing.Set[str] = set()
+    cost_dict: typing.Dict[str] = {}
     cost = 0
     if entrance.parent_region != entrance.connected_region:
         for exit in entrance.connected_region.exits:
             if get_entrance_id(exit) in seen and exit.connected_region.name != exit.parent_region.name:
                 continue
-            for entr, cost in set_downstream_costs(item, exit, seen).items():
-                cost_dict[entr] = cost
-            # cost_dict.extend(set_downstream_costs(item, exit, seen))
+            entrances = set_downstream_costs(item, exit, seen)
+            cost_dict.update(entrances)
     if entrance.pass_item == item:
         # Just assume the item count is 1, doors should never cost more
-        # cost += entrance.item_count
-        door_entrances.add(entrance)
+        # entrance.downstream_count += entrance.item_count
+        door_entrances.add(entr_id)
         if entrance.downstream_count == 0:
             for cost in cost_dict.values():
                 entrance.downstream_count += cost
-        cost_dict[entrance] = entrance.item_count
+            # entrance.downstream_count = len(door_entrances)
+        # else:
+        #     new_cost = 0
+        #     for cost in cost_dict.values():
+        #         new_cost += cost
+        #     if entrance.downstream_count > new_cost:
+        #         entrance.downstream_count = new_cost
+        if entrance.connected_region.name != entrance.parent_region.name:
+            cost_dict[entr_id] = entrance.item_count
+        else:
+            cost_dict[entrance.name] = entrance.item_count
     return cost_dict.copy()
 
 
 def get_entrance_id(entrance: HWEntrance):
     if entrance.connected_region.name > entrance.parent_region.name:
-        return entrance.parent_region.name, entrance.connected_region.name
+        return f"{entrance.parent_region.name}, {entrance.connected_region.name}"
     else:
-        return entrance.connected_region.name, entrance.parent_region.name
+        return f"{entrance.connected_region.name}, {entrance.parent_region.name}"

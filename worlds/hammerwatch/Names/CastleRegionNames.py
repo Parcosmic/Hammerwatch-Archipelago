@@ -131,7 +131,7 @@ n2_se = "AmB: SE Room"
 n2_exit = "AmB: Exit"
 
 a3_start = "AmF6: Start"
-a3_main = "AmF6:"
+a3_main = "AmF6: Main"
 a3_tp = "AmF6: Teleport"
 a3_knife_puzzle_reward = "AmF6: Knife Puzzle Reward"
 a3_knife_reward_2 = "AmF6: Knife Puzzle Reward 2"
