@@ -131,11 +131,16 @@ class RandomizeEnemyLoot(Toggle):
     default = False
 
 
-class ExitRandomization(Toggle):
-    """Randomizes where level exits and portals lead"""
+class ExitRandomization(Choice):
+    """Randomizes where level exits and portals lead
+    No Boss Exits: exits to boss levels will not be shuffled
+    All: all exits including bosses will be shuffled"""
     display_name = "Exit Randomization"
     # category = "Generation"
-    default = False
+    option_off = 0
+    option_no_boss_exits = 1
+    option_all = 2
+    default = 0
 
 
 class ERActRange(Range):
@@ -154,6 +159,15 @@ class StartExit(Toggle):
     display_name = "Randomize Start Location"
     # category = "Generation"
     default = False
+
+
+class StartExitAct(Range):
+    """Randomize Start Location is on, determines the act in which you start"""
+    display_name = "Start Location Act"
+    # category = "Generation"
+    range_start = 1
+    range_end = 4
+    default = 1
 
 
 class GateShuffle(Toggle):  # Maybe someday I'll add a mode so the number of keys are randomized too
@@ -366,6 +380,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     exit_randomization: ExitRandomization,
     er_act_range: ERActRange,
     random_start_exit: StartExit,
+    random_start_exit_act: StartExitAct,
     gate_shuffle: GateShuffle,
     shop_shuffle: ShuffleShops,
     shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle,

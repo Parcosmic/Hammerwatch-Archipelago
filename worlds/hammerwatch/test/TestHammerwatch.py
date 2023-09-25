@@ -69,28 +69,28 @@ class TestHammerwatch(HammerwatchTestBase):
             "big_bronze_key_percent": Options.BigBronzeKeyPercent.range_end,
         },
         "Full act range castle exit rando": {
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
             OptionNames.er_act_range: Options.ERActRange.range_end,
         },
         "Full act range temple exit rando": {
             "goal": Options.Goal.option_temple_all_bosses,
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
             OptionNames.er_act_range: Options.ERActRange.range_end,
         },
         "Basic castle exit rando": {
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
         },
         "Basic temple exit rando": {
             "goal": Options.Goal.option_temple_all_bosses,
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
         },
         "Castle exit rando with start randomized": {
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
             OptionNames.random_start_exit: Options.StartExit.option_true,
         },
         "Temple exit rando with start randomized": {
             "goal": Options.Goal.option_temple_all_bosses,
-            "exit_randomization": Options.ExitRandomization.option_true,
+            "exit_randomization": Options.ExitRandomization.option_all,
             OptionNames.random_start_exit: Options.StartExit.option_true,
         },
     }

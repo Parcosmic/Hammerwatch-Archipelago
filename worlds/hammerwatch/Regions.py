@@ -550,7 +550,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     p3_bonus_return_region = create_region(multiworld, player, active_locations, CastleRegionNames.p3_bonus_return,
                                            p3_bonus_return_locs)
 
-    if get_option(multiworld, OptionNames.shortcut_teleporter, player):
+    if get_option(multiworld, player, OptionNames.shortcut_teleporter):
         p3_portal_from_p1_locs = [
             CastleLocationNames.p3_skip_boss_switch_1,
             CastleLocationNames.p3_skip_boss_switch_2,
@@ -2754,7 +2754,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
         ItemName.key_gold_chambers: 0,
     }
 
-    if get_option(multiworld, OptionNames.act_specific_keys, player):
+    if get_option(multiworld, player, OptionNames.act_specific_keys):
         key_bronze_prison = ItemName.key_bronze_prison
         key_silver_prison = ItemName.key_silver_prison
         key_gold_prison = ItemName.key_gold_prison
@@ -2775,7 +2775,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
         key_gold_chambers = ItemName.key_gold_chambers
         key_bonus_chambers = ItemName.key_bonus_chambers
 
-        if not get_option(multiworld, OptionNames.randomize_bonus_keys, player):
+        if not get_option(multiworld, player, OptionNames.randomize_bonus_keys):
             key_bonus_prison = ItemName.key_bonus
             key_bonus_armory = ItemName.key_bonus
             key_bonus_archives = ItemName.key_bonus
@@ -2820,12 +2820,12 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     chambers_gate_items[key_gold_chambers] += 3
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
-    if not get_option(multiworld, OptionNames.exit_randomization, player) \
-            or not get_option(multiworld, OptionNames.random_start_exit, player):
+    if not get_option(multiworld, player, OptionNames.exit_randomization) \
+            or not get_option(multiworld, player, OptionNames.random_start_exit):
         connect(multiworld, player, used_names, CastleRegionNames.menu, CastleRegionNames.p1_start, False)
     connect(multiworld, player, used_names, CastleRegionNames.p1_start, CastleRegionNames.hub, True)
 
-    if get_option(multiworld, OptionNames.open_castle, player):
+    if get_option(multiworld, player, OptionNames.open_castle):
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.a1_start, True)
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.r1_start, True)
         connect(multiworld, player, used_names, CastleRegionNames.hub, CastleRegionNames.c1_start, True)
@@ -2842,7 +2842,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
                  key_bronze_prison, gate_codes, prison_gate_items, GateNames.c_p1_1, False)
     connect_exit(multiworld, player, used_names, CastleRegionNames.p1_e, CastleRegionNames.p2_start,
                  EntranceNames.c_p2_0, EntranceNames.c_p1_1)
-    if get_option(multiworld, OptionNames.shortcut_teleporter, player):
+    if get_option(multiworld, player, OptionNames.shortcut_teleporter):
         connect_exit(multiworld, player, used_names, CastleRegionNames.p1_nw, CastleRegionNames.p3_portal_from_p1,
                      EntranceNames.c_p3_portal, EntranceNames.c_p1_20)
         connect(multiworld, player, used_names, CastleRegionNames.p3_portal_from_p1, CastleRegionNames.p3_n_gold_gate,
@@ -3467,7 +3467,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect(multiworld, player, used_names, CastleRegionNames.b4_start, CastleRegionNames.b4_defeated, False)
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
-    planks_to_win = get_option(multiworld, OptionNames.planks_required_count, player)
+    planks_to_win = get_option(multiworld, player, OptionNames.planks_required_count)
     connect(multiworld, player, used_names, CastleRegionNames.b4_defeated, CastleRegionNames.e1_main,
             False, ItemName.plank, 12, False)
     # Technically planks are consumed, but nothing else does so this is faster
@@ -4890,8 +4890,8 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
         pickaxe_item = ItemName.pickaxe_fragment
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
-    if not get_option(multiworld, OptionNames.exit_randomization, player) \
-            or not get_option(multiworld, OptionNames.random_start_exit, player):
+    if not get_option(multiworld, player, OptionNames.exit_randomization) \
+            or not get_option(multiworld, player, OptionNames.random_start_exit):
         connect(multiworld, player, used_names, TempleRegionNames.menu, TempleRegionNames.hub_main, False)
 
     connect(multiworld, player, used_names, TempleRegionNames.hub_main, TempleRegionNames.hub_rocks,
@@ -5213,8 +5213,8 @@ def connect_gate(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
     entrance_name = get_entrance_name(used_names, source, target)
 
     key_item_name = key_type
-    if get_option(multiworld, OptionNames.gate_shuffle, player):
-        key_item_name = get_random_element(multiworld, gate_items)
+    if get_option(multiworld, player, OptionNames.gate_shuffle):
+        key_item_name = get_random_element(multiworld.worlds[player], gate_items)
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:
             gate_items.pop(key_item_name)
@@ -5240,13 +5240,15 @@ def connect_exit(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
     connection = HWEntrance(player, entrance_name, source_region, target_region,
                             pass_item, item_count, items_consumed, return_code, exit_code)
     source_region.exits.append(connection)
-    # if return_code is None:
-    #     connection.connect(target_region)
-    #     return
-    connection.linked = False
-    multiworld.worlds[player].level_exits.append(connection)
-    # multiworld.worlds[player].level_exits.append(
-    #     HWExitData(source_region, target_region, return_code, exit_code, pass_item, item_count, items_consumed))
+    # if get_option(multiworld, player, OptionNames.exit_randomization, player) == 2:
+    #     connection.linked = False
+    #     multiworld.worlds[player].level_exits.append(connection)
+    if get_option(multiworld, player, OptionNames.exit_randomization) != 1 or\
+            not (exit_code.startswith("boss") or (return_code is not None and return_code.startswith("boss"))):
+        connection.linked = False
+        multiworld.worlds[player].level_exits.append(connection)
+    else:
+        connection.connect(target_region)
 
     if two_way and return_code is not None:
         connect_exit(multiworld, player, used_names, target, source, return_code, exit_code, pass_item, item_count,
