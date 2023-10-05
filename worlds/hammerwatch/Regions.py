@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from BaseClasses import Region, Entrance
 from .Items import HammerwatchItem
-from .Locations import HammerwatchLocation, LocationData, LocationClassification
+from .Locations import HammerwatchLocation, LocationData, LocationClassification, all_locations
 from .Names import CastleLocationNames, TempleLocationNames, CastleRegionNames, TempleRegionNames, GateNames,\
     EntranceNames
 from .Util import *
@@ -5178,9 +5178,11 @@ def create_region(multiworld: MultiWorld, player: int, active_locations: typing.
     region = Region(name, player, multiworld)
     if locations:
         for location in locations:
-            if location not in active_locations.keys():
+            event = location not in all_locations.keys()
+            if location not in active_locations.keys() and not event:
                 continue
-            region.locations.append(HammerwatchLocation(player, location, active_locations[location].code, region))
+            loc_id = None if event else active_locations[location].code
+            region.locations.append(HammerwatchLocation(player, location, loc_id, region))
     return region
 
 

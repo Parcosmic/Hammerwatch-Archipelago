@@ -37,7 +37,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    hw_client_version = "1.0"
+    hw_client_version = "0.9"
     data_version = 5
 
     web = HammerwatchWeb()
@@ -90,13 +90,6 @@ class HammerwatchWorld(World):
             setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
-        self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_victory))
-
-        if self.campaign == Campaign.Castle:
-            self.place_castle_locked_items()
-        else:
-            self.place_tots_locked_items()
 
         # Shop shuffle
         self.shop_locations = {}
@@ -203,20 +196,17 @@ class HammerwatchWorld(World):
         item_names: typing.List[str] = []
         itempool: typing.List[Item] = []
 
-        # Get the total number of locations we need to fill
-        total_required_locations = len(self.active_location_list)
-        total_required_locations -= len(common_event_locations)
+        self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
+            .place_locked_item(self.create_event(ItemName.ev_victory))
+
         if self.campaign == Campaign.Castle:
-            total_required_locations -= len(castle_event_locations)
-            if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-                total_required_locations -= 18  # Preplaced bonus keys
-        elif self.campaign == Campaign.Temple:
-            total_required_locations -= len(temple_event_locations)
-            if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-                total_required_locations -= 2  # Preplaced bonus keys
-            # If Portal Accessibility is on, we create/place the Rune Keys elsewhere
-            if get_option(self.multiworld, self.player, OptionNames.portal_accessibility):
-                total_required_locations -= 6
+            self.place_castle_locked_items()
+        else:
+            self.place_tots_locked_items()
+
+        # More efficient and foolproof method to get number of required locations
+        total_available_locations = [loc for loc in self.multiworld.get_locations(self.player) if not loc.item]
+        total_required_locations = len(total_available_locations)
 
         # Remove items if the player starts with them
         for precollected in self.multiworld.precollected_items[self.player]:
@@ -280,232 +270,122 @@ class HammerwatchWorld(World):
         return self.random.choice(tuple(filler_items))
 
     def place_castle_locked_items(self):
-        # Prison 1 Switches
-        self.multiworld.get_location(CastleLocationNames.btn_p1_floor, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_p1_floor))
+        castle_locked_items = {
+            CastleLocationNames.btn_p1_floor: ItemName.btnc_p1_floor,
+            CastleLocationNames.ev_p2_gold_gate_room_ne_switch: ItemName.ev_castle_p2_switch,
+            CastleLocationNames.ev_p2_gold_gate_room_nw_switch: ItemName.ev_castle_p2_switch,
+            CastleLocationNames.ev_p2_gold_gate_room_se_switch: ItemName.ev_castle_p2_switch,
+            CastleLocationNames.ev_p2_gold_gate_room_sw_switch: ItemName.ev_castle_p2_switch,
+            CastleLocationNames.btnc_p3_sw: ItemName.btnc_p3_e_passage,
+            CastleLocationNames.btnc_p3_arrow_hall_wall: ItemName.btnc_p3_s_passage,
+            CastleLocationNames.btnc_n2_blue_spikes: ItemName.btnc_a2_blue_spikes,
+            CastleLocationNames.btnc_a2_bspikes_tp: ItemName.btnc_a2_bspikes_tp,
+            CastleLocationNames.btnc_c2_n_open_wall: ItemName.btnc_c2_n_wall,
+            CastleLocationNames.ev_c2_n_shops_switch: ItemName.ev_castle_c2_n_shops_switch,
+            CastleLocationNames.ev_c3_rspikes_switch: ItemName.ev_castle_c3_rspikes_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_1: ItemName.ev_castle_c3_sw_hidden_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_2: ItemName.ev_castle_c3_sw_hidden_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_3: ItemName.ev_castle_c3_sw_hidden_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_4: ItemName.ev_castle_c3_sw_hidden_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_5: ItemName.ev_castle_c3_sw_hidden_switch,
+            CastleLocationNames.ev_c3_sw_hidden_switch_6: ItemName.ev_castle_c3_sw_hidden_switch,
 
-        # Prison 2 Switches
-        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_ne_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_nw_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_se_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_p2_gold_gate_room_sw_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_p2_switch))
+            CastleLocationNames.ev_p1_boss_switch: ItemName.ev_castle_b1_boss_switch,
+            CastleLocationNames.ev_p2_boss_switch: ItemName.ev_castle_b1_boss_switch,
+            CastleLocationNames.ev_p3_boss_switch: ItemName.ev_castle_b1_boss_switch,
+            CastleLocationNames.ev_a1_boss_switch: ItemName.ev_castle_b2_boss_switch,
+            CastleLocationNames.ev_a2_boss_switch: ItemName.ev_castle_b2_boss_switch,
+            CastleLocationNames.ev_a3_boss_switch: ItemName.ev_castle_b2_boss_switch,
+            CastleLocationNames.ev_r1_boss_switch: ItemName.ev_castle_b3_boss_switch,
+            CastleLocationNames.ev_r2_boss_switch: ItemName.ev_castle_b3_boss_switch,
+            CastleLocationNames.ev_r3_boss_switch: ItemName.ev_castle_b3_boss_switch,
+            CastleLocationNames.ev_c1_boss_switch: ItemName.ev_castle_b4_boss_switch,
+            CastleLocationNames.ev_c2_boss_switch: ItemName.ev_castle_b4_boss_switch,
+            CastleLocationNames.ev_c3_boss_switch: ItemName.ev_castle_b4_boss_switch,
 
-        # Prison 3 Switches
-        self.multiworld.get_location(CastleLocationNames.btnc_p3_sw, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_p3_e_passage))
-        self.multiworld.get_location(CastleLocationNames.btnc_p3_arrow_hall_wall, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_p3_s_passage))
-
-        # Prison Boss Switches
-        self.multiworld.get_location(CastleLocationNames.ev_p1_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_p2_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_p3_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b1_boss_switch))
-
-        # Armory Boss Switches
-        self.multiworld.get_location(CastleLocationNames.ev_a1_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_a2_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_a3_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b2_boss_switch))
-        # Event items
-        self.multiworld.get_location(CastleLocationNames.btnc_n2_blue_spikes, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_a2_blue_spikes))
-        self.multiworld.get_location(CastleLocationNames.btnc_a2_bspikes_tp, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_a2_bspikes_tp))
-
-        # Archives Boss Switches
-        self.multiworld.get_location(CastleLocationNames.ev_r1_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_r2_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_r3_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b3_boss_switch))
-
-        # Chambers Event Items
-        self.multiworld.get_location(CastleLocationNames.btnc_c2_n_open_wall, self.player) \
-            .place_locked_item(self.create_event(ItemName.btnc_c2_n_wall))
-        self.multiworld.get_location(CastleLocationNames.ev_c2_n_shops_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c2_n_shops_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_rspikes_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_rspikes_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_1, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_2, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_3, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_4, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_5, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_sw_hidden_switch_6, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_c3_sw_hidden_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c1_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c2_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
-        self.multiworld.get_location(CastleLocationNames.ev_c3_boss_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_castle_b4_boss_switch))
-
-        # Boss defeat locations
-        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_1, self.player) \
-            .place_locked_item(self.create_event(ItemName.evc_beat_boss_1))
-        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_2, self.player) \
-            .place_locked_item(self.create_event(ItemName.evc_beat_boss_2))
-        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_3, self.player) \
-            .place_locked_item(self.create_event(ItemName.evc_beat_boss_3))
-        self.multiworld.get_location(CastleLocationNames.ev_beat_boss_4, self.player) \
-            .place_locked_item(self.create_event(ItemName.evc_beat_boss_4))
+            CastleLocationNames.ev_beat_boss_1: ItemName.evc_beat_boss_1,
+            CastleLocationNames.ev_beat_boss_2: ItemName.evc_beat_boss_2,
+            CastleLocationNames.ev_beat_boss_3: ItemName.evc_beat_boss_3,
+            CastleLocationNames.ev_beat_boss_4: ItemName.evc_beat_boss_4,
+        }
 
         # Bonus Key Locations
         if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-            self.multiworld.get_location(CastleLocationNames.n1_room1, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n1_room3_sealed_room_1, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n1_room2_small_box, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n1_entrance, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n1_room4_m, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
+            castle_locked_items.update({
+                CastleLocationNames.n1_room1: ItemName.key_bonus,
+                CastleLocationNames.n1_room3_sealed_room_1: ItemName.key_bonus,
+                CastleLocationNames.n1_room2_small_box: ItemName.key_bonus,
+                CastleLocationNames.n1_entrance: ItemName.key_bonus,
+                CastleLocationNames.n1_room4_m: ItemName.key_bonus,
+                CastleLocationNames.n2_m_n: ItemName.key_bonus,
+                CastleLocationNames.n2_m_m_3: ItemName.key_bonus,
+                CastleLocationNames.n2_ne_4: ItemName.key_bonus,
+                CastleLocationNames.n2_m_e: ItemName.key_bonus,
+                CastleLocationNames.n2_start_1: ItemName.key_bonus,
+                CastleLocationNames.n2_m_se_5: ItemName.key_bonus,
+                CastleLocationNames.n3_exit_sw: ItemName.key_bonus,
+                CastleLocationNames.n3_m_cluster_5: ItemName.key_bonus,
+                CastleLocationNames.n3_se_cluster_5: ItemName.key_bonus,
+                CastleLocationNames.n4_ne: ItemName.key_bonus,
+                CastleLocationNames.n4_by_w_room_1: ItemName.key_bonus,
+                CastleLocationNames.n4_by_w_room_2: ItemName.key_bonus,
+                CastleLocationNames.n4_by_exit: ItemName.key_bonus,
+            })
 
-            self.multiworld.get_location(CastleLocationNames.n2_m_n, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n2_m_m_3, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n2_ne_4, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n2_m_e, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n2_start_1, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n2_m_se_5, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-
-            self.multiworld.get_location(CastleLocationNames.n3_exit_sw, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n3_m_cluster_5, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n3_se_cluster_5, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-
-            self.multiworld.get_location(CastleLocationNames.n4_ne, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n4_by_w_room_1, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n4_by_w_room_2, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(CastleLocationNames.n4_by_exit, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
+        for loc, itm in castle_locked_items.items():
+            self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
 
     def place_tots_locked_items(self):
-        # Portal event items/locations
-        def portal_rule(state) -> bool:
-            return state.has(ItemName.key_teleport, 6)
-        c1_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c1_portal, self.player)
-        # c1_portal_loc.access_rule = portal_rule
-        c1_portal_loc.place_locked_item(self.create_event(ItemName.ev_c1_portal))
-        c2_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c2_portal, self.player)
-        # c2_portal_loc.access_rule = portal_rule
-        c2_portal_loc.place_locked_item(self.create_event(ItemName.ev_c2_portal))
-        c3_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_c3_portal, self.player)
-        # c3_portal_loc.access_rule = portal_rule
-        c3_portal_loc.place_locked_item(self.create_event(ItemName.ev_c3_portal))
-        t1_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t1_portal, self.player)
-        # t1_portal_loc.access_rule = portal_rule
-        t1_portal_loc.place_locked_item(self.create_event(ItemName.ev_t1_portal))
-        t2_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t2_portal, self.player)
-        # t2_portal_loc.access_rule = portal_rule
-        t2_portal_loc.place_locked_item(self.create_event(ItemName.ev_t2_portal))
-        t3_portal_loc = self.multiworld.get_location(TempleLocationNames.ev_t3_portal, self.player)
-        # t3_portal_loc.access_rule = portal_rule
-        t3_portal_loc.place_locked_item(self.create_event(ItemName.ev_t3_portal))
-
-        # Temple shortcut
-        self.multiworld.get_location(TempleLocationNames.ev_temple_entrance_rock, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_open_temple_entrance_shortcut))
-
-        # Temple Floor 1 North Node Mirrors
-        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node_n_mirrors, self.player) \
-            .place_locked_item(self.create_event(ItemName.evt_t1_n_mirrors))
-        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node_s_mirror, self.player) \
-            .place_locked_item(self.create_event(ItemName.evt_t1_s_mirror))
-
-        # Pyramid of fear
-        self.multiworld.get_location(TempleLocationNames.ev_hub_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_cave1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_cave2_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_cave3_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_temple1_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-        self.multiworld.get_location(TempleLocationNames.ev_temple2_pof_switch, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_switch))
-
-        self.multiworld.get_location(TempleLocationNames.ev_pof_1_se_room_panel, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_1_s_walls))
-        self.multiworld.get_location(TempleLocationNames.ev_pof_1_unlock_exit, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_1_unlock_exit))
-        self.multiworld.get_location(TempleLocationNames.ev_pof_2_unlock_exit, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_2_unlock_exit))
-        self.multiworld.get_location(TempleLocationNames.ev_pof_end, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_pof_complete))
-
-        # Temple Floor 2 buttons
-        self.multiworld.get_location(TempleLocationNames.btn_t2_floor_blue, self.player) \
-            .place_locked_item(self.create_event(ItemName.btn_t2_blue_spikes))
-        # Temple Floor 2 light bridge switches
-        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_n, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
-        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_w, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
-        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_e, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
-        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_se, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
-        self.multiworld.get_location(TempleLocationNames.btn_t2_rune_sw, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_t2_rune_switch))
-
-        # Temple solar nodes
-        self.multiworld.get_location(TempleLocationNames.ev_t1_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(TempleLocationNames.ev_t1_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(TempleLocationNames.ev_t2_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(TempleLocationNames.ev_t3_n_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
-        self.multiworld.get_location(TempleLocationNames.ev_t3_s_node, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_solar_node))
+        temple_locked_items = {
+            TempleLocationNames.ev_c1_portal: ItemName.ev_c1_portal,
+            TempleLocationNames.ev_c2_portal: ItemName.ev_c2_portal,
+            TempleLocationNames.ev_c3_portal: ItemName.ev_c3_portal,
+            TempleLocationNames.ev_t1_portal: ItemName.ev_t1_portal,
+            TempleLocationNames.ev_t2_portal: ItemName.ev_t2_portal,
+            TempleLocationNames.ev_t3_portal: ItemName.ev_t3_portal,
+            TempleLocationNames.ev_temple_entrance_rock: ItemName.ev_open_temple_entrance_shortcut,
+            TempleLocationNames.ev_t1_n_node_n_mirrors: ItemName.evt_t1_n_mirrors,
+            TempleLocationNames.ev_t1_n_node_s_mirror: ItemName.evt_t1_s_mirror,
+            TempleLocationNames.ev_hub_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_cave1_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_cave2_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_cave3_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_temple1_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_temple2_pof_switch: ItemName.ev_pof_switch,
+            TempleLocationNames.ev_pof_1_se_room_panel: ItemName.ev_pof_1_s_walls,
+            TempleLocationNames.ev_pof_1_unlock_exit: ItemName.ev_pof_1_unlock_exit,
+            TempleLocationNames.ev_pof_2_unlock_exit: ItemName.ev_pof_2_unlock_exit,
+            TempleLocationNames.ev_pof_end: ItemName.ev_pof_complete,
+            TempleLocationNames.btn_t2_floor_blue: ItemName.btn_t2_blue_spikes,
+            TempleLocationNames.btn_t2_rune_n: ItemName.ev_t2_rune_switch,
+            TempleLocationNames.btn_t2_rune_w: ItemName.ev_t2_rune_switch,
+            TempleLocationNames.btn_t2_rune_e: ItemName.ev_t2_rune_switch,
+            TempleLocationNames.btn_t2_rune_se: ItemName.ev_t2_rune_switch,
+            TempleLocationNames.btn_t2_rune_sw: ItemName.ev_t2_rune_switch,
+            TempleLocationNames.ev_t1_n_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_t1_s_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_t2_n_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_t2_s_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_t3_n_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_t3_s_node: ItemName.ev_solar_node,
+            TempleLocationNames.ev_beat_boss_1: ItemName.evt_beat_boss_1,
+            TempleLocationNames.ev_beat_boss_2: ItemName.evt_beat_boss_2,
+            TempleLocationNames.ev_beat_boss_3: ItemName.evt_beat_boss_3,
+        }
 
         # Pyramid of Fear Bonus Keys
         if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-            self.multiworld.get_location(TempleLocationNames.pof_1_n_5, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
-            self.multiworld.get_location(TempleLocationNames.pof_1_ent_5, self.player) \
-                .place_locked_item(self.create_item(ItemName.key_bonus))
+            temple_locked_items.update({
+                TempleLocationNames.pof_1_n_5: ItemName.key_bonus,
+                TempleLocationNames.pof_1_ent_5: ItemName.key_bonus,
+            })
 
         # Portal Accessibility rune keys
         if get_option(self.multiworld, self.player, OptionNames.portal_accessibility):
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
-                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
-                        if loc.name not in temple_event_locations]
+                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(TempleRegionNames.c3_e)
@@ -560,16 +440,10 @@ class HammerwatchWorld(World):
             rune_key_locs.append(self.random.choice(t3_locs))
 
             for loc in rune_key_locs:
-                self.multiworld.get_location(loc, self.player).place_locked_item(
-                    self.create_item(ItemName.key_teleport))
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_teleport))
 
-        # Boss defeat locations
-        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_1, self.player) \
-            .place_locked_item(self.create_event(ItemName.evt_beat_boss_1))
-        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_2, self.player) \
-            .place_locked_item(self.create_event(ItemName.evt_beat_boss_2))
-        self.multiworld.get_location(TempleLocationNames.ev_beat_boss_3, self.player) \
-            .place_locked_item(self.create_event(ItemName.evt_beat_boss_3))
+        for loc, itm in temple_locked_items.items():
+            self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
 
     def set_rules(self) -> None:
         self.exit_swaps = {}

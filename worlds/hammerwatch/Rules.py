@@ -29,15 +29,15 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     code_to_region = {}
     open_codes = []
     if get_option(multiworld, player, OptionNames.exit_randomization) > 0:
-        for exit in world.level_exits:
-            if exit.return_code is not None:
-                code_to_exit[exit.return_code] = exit
-                code_to_region[exit.return_code] = exit.parent_region
-                open_codes.append(exit.return_code)
+        for level_exit in world.level_exits:
+            if level_exit.return_code is not None:
+                code_to_exit[level_exit.return_code] = level_exit
+                code_to_region[level_exit.return_code] = level_exit.parent_region
+                open_codes.append(level_exit.return_code)
             else:
-                code_to_exit[exit.exit_code] = None
-                open_codes.append(exit.exit_code)
-                code_to_region[exit.exit_code] = exit.target_region
+                code_to_exit[level_exit.exit_code] = None
+                open_codes.append(level_exit.exit_code)
+                code_to_region[level_exit.exit_code] = level_exit.target_region
 
     tries = 0
     stop_threshold = 100000
@@ -202,7 +202,7 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
         while len(entrances) + len(impassable_exits) > 0:
             # Traverse current section
             while len(entrances) > 0:
-                entr = entrances.pop()
+                entr: HWEntrance = entrances.pop()
                 if not entr.linked:
                     open_exits.append(entr)
                     continue
@@ -303,7 +303,7 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
 
                 # Set the reverse exit too if the exit is two-way
                 if open_exit.return_code is not None:
-                    link = multiworld.get_entrance(code_to_exit[link_code].name, player)
+                    link: HWEntrance = multiworld.get_entrance(code_to_exit[link_code].name, player)
                     link.connect(open_exit.parent_region)
                     multiworld.worlds[player].exit_swaps[link.exit_code] = open_exit.return_code
                     link.linked = True
@@ -670,7 +670,6 @@ def prune_entrances(start_region: Region, next_region: Region):
 
 
 def delete_entrance(entrance: HWEntrance):
-    # print("Prune entrance: " + entrance.name)
     entrance.parent_region.exits.remove(entrance)
     entrance.connected_region.entrances.remove(entrance)
     del entrance
@@ -680,7 +679,6 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
                           loop_entrances: typing.List[typing.List[HWEntrance]]):
     # Set dynamic key/door access rules
     menu_region = multiworld.get_region(CastleRegionNames.menu, player)
-    transitions_to_check = menu_region.exits
 
     # Remove some entrances and add new ones to make the downstream algo not traverse some paths and to consider some
     # doors as blocking
@@ -696,9 +694,7 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         entr.connect(entrance.connected_region)
         return entr
 
-    add_entrances = []
     if get_campaign(multiworld, player) == Campaign.Castle:
-        # if not get_option(multiworld, player, OptionNames.exit_randomization):
         # Disconnect level exits and pretend that you need to go through the boss switch areas to the boss
         remove_entrances = [
             multiworld.get_entrance(etr_base_name(CastleRegionNames.p3_sw, CastleRegionNames.b1_start), player),
@@ -727,29 +723,13 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
             add_entrance("T3 Psuedo Entrance", TempleRegionNames.t3_s_node_blocks_1,
                          TempleRegionNames.t3_s_node_blocks_2)
         ]
-    # Don't remove entrances with exit rando because they won't exist
-    # if not get_option(multiworld, player, OptionNames.exit_randomization):
     for remove in remove_entrances:
         remove.parent_region.exits.remove(remove)
         remove.connected_region.entrances.remove(remove)
 
     # Set downstream costs - the keys that are required after a specific entrance
     key_names = get_active_key_names(multiworld, player)
-    # seen = [(exit.parent_region) for exit in menu_region.exits]
     start_exits = [exit for exit in menu_region.exits if exit.connected_region.name != CastleRegionNames.get_planks]
-    # seen_start = [get_entrance_id(exit) for exit in start_exits]
-    # seen_start.remove(get_entrance_id(menu_region.exits[0]))
-    # gate_type_counts = {
-    #     ItemName.key_bronze: 0,
-    #     ItemName.key_silver: 0,
-    #     ItemName.key_gold: 0,
-    #     ItemName.key_bonus: 0,
-    # }
-    # for test_entrance in multiworld.get_entrances():
-    #     if test_entrance.pass_item in gate_type_counts:
-    #         gate_type_counts[test_entrance.pass_item] += 1
-    #         if test_entrance.item_count != 1:
-    #             print("Panicc")
     for item in key_names:
         # seen = seen_start.copy()
         set_downstream_costs(item, start_exits[0], [])
@@ -764,8 +744,6 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
     for add in add_entrances:
         add.parent_region.exits.remove(add)
         add.connected_region.entrances.remove(add)
-    # Don't remove entrances with exit rando because they won't exist
-    # if not get_option(multiworld, player, OptionNames.exit_randomization):
     for remove in remove_entrances:
         remove.parent_region.exits.append(remove)
         remove.connected_region.entrances.append(remove)
@@ -775,7 +753,6 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         if exit.player != player:
             continue
         if exit.pass_item is None or exit.parent_region.name == exit.connected_region.name:
-            # print(f"{exit.parent_region} -> {exit.connected_region}")
             continue
         # If the items are consumed gotta use the downstream cost logic
         if exit.items_consumed and exit.pass_item in door_counts.keys():
@@ -783,7 +760,6 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
             # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
             add_rule(exit, lambda state, this=exit, num=needed_keys: state.has(this.pass_item, player, num), "and")
         else:  # Elsewise just set the item rule normally
-            # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {exit.item_count}")
             add_rule(exit, lambda state, this=exit: state.has(this.pass_item, player, this.item_count), "and")
 
 
@@ -793,7 +769,6 @@ def set_downstream_costs(item: str, entrance: HWEntrance, seen):
     seen = seen.copy()  # Create a copy so that independent pathways don't lock each other
     door_entrances: typing.Set[str] = set()
     cost_dict: typing.Dict[str] = {}
-    cost = 0
     if entrance.parent_region != entrance.connected_region:
         for exit in entrance.connected_region.exits:
             if get_entrance_id(exit) in seen and exit.connected_region.name != exit.parent_region.name:
@@ -802,18 +777,10 @@ def set_downstream_costs(item: str, entrance: HWEntrance, seen):
             cost_dict.update(entrances)
     if entrance.pass_item == item:
         # Just assume the item count is 1, doors should never cost more
-        # entrance.downstream_count += entrance.item_count
         door_entrances.add(entr_id)
         if entrance.downstream_count == 0:
             for cost in cost_dict.values():
                 entrance.downstream_count += cost
-            # entrance.downstream_count = len(door_entrances)
-        # else:
-        #     new_cost = 0
-        #     for cost in cost_dict.values():
-        #         new_cost += cost
-        #     if entrance.downstream_count > new_cost:
-        #         entrance.downstream_count = new_cost
         if entrance.connected_region.name != entrance.parent_region.name:
             cost_dict[entr_id] = entrance.item_count
         else:

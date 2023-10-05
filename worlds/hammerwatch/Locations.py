@@ -1335,48 +1335,9 @@ castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
     CastleLocationNames.b4_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
-castle_event_locations: typing.Dict[str, LocationData] = {
-    CastleLocationNames.btn_p1_floor: LocationData(None),
-    CastleLocationNames.ev_p2_gold_gate_room_ne_switch: LocationData(None),
-    CastleLocationNames.ev_p2_gold_gate_room_nw_switch: LocationData(None),
-    CastleLocationNames.ev_p2_gold_gate_room_se_switch: LocationData(None),
-    CastleLocationNames.ev_p2_gold_gate_room_sw_switch: LocationData(None),
-    CastleLocationNames.btnc_p3_sw: LocationData(None),
-    CastleLocationNames.btnc_p3_arrow_hall_wall: LocationData(None),
-    CastleLocationNames.ev_p1_boss_switch: LocationData(None),
-    CastleLocationNames.ev_p2_boss_switch: LocationData(None),
-    CastleLocationNames.ev_p3_boss_switch: LocationData(None),
-    # CastleLocationNames.ev_p3_boss_switch_skip: LocationData(None),
-    CastleLocationNames.btnc_n2_blue_spikes: LocationData(None),
-    CastleLocationNames.btnc_a2_bspikes_tp: LocationData(None),
-    CastleLocationNames.ev_a1_boss_switch: LocationData(None),
-    CastleLocationNames.ev_a2_boss_switch: LocationData(None),
-    CastleLocationNames.ev_a3_boss_switch: LocationData(None),
-    CastleLocationNames.ev_r1_boss_switch: LocationData(None),
-    CastleLocationNames.ev_r2_boss_switch: LocationData(None),
-    CastleLocationNames.ev_r3_boss_switch: LocationData(None),
-    CastleLocationNames.ev_c2_n_shops_switch: LocationData(None),
-    CastleLocationNames.btnc_c2_n_open_wall: LocationData(None),
-    CastleLocationNames.ev_c1_boss_switch: LocationData(None),
-    CastleLocationNames.ev_c2_boss_switch: LocationData(None),
-    CastleLocationNames.ev_c3_boss_switch: LocationData(None),
-    CastleLocationNames.ev_c3_rspikes_switch: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_1: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_2: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_3: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_4: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_5: LocationData(None),
-    CastleLocationNames.ev_c3_sw_hidden_switch_6: LocationData(None),
-    CastleLocationNames.ev_beat_boss_1: LocationData(None),
-    CastleLocationNames.ev_beat_boss_2: LocationData(None),
-    CastleLocationNames.ev_beat_boss_3: LocationData(None),
-    CastleLocationNames.ev_beat_boss_4: LocationData(None),
-}
-
 castle_locations: typing.Dict[str, LocationData] = {
     **castle_pickup_locations,
     **castle_enemy_loot_locations,
-    **castle_event_locations
 }
 
 counter = Counter(id_start)
@@ -2016,57 +1977,14 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.b3_tower_fire_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
-temple_event_locations: typing.Dict[str, LocationData] = {
-    TempleLocationNames.ev_c1_portal: LocationData(None),
-    TempleLocationNames.ev_c2_portal: LocationData(None),
-    TempleLocationNames.ev_c3_portal: LocationData(None),
-    TempleLocationNames.ev_t1_portal: LocationData(None),
-    TempleLocationNames.ev_t2_portal: LocationData(None),
-    TempleLocationNames.ev_t3_portal: LocationData(None),
-    TempleLocationNames.ev_temple_entrance_rock: LocationData(None),
-    TempleLocationNames.ev_hub_pof_switch: LocationData(None),
-    TempleLocationNames.ev_cave3_pof_switch: LocationData(None),
-    TempleLocationNames.ev_cave2_pof_switch: LocationData(None),
-    TempleLocationNames.ev_cave1_pof_switch: LocationData(None),
-    TempleLocationNames.ev_temple1_pof_switch: LocationData(None),
-    TempleLocationNames.ev_temple2_pof_switch: LocationData(None),
-    TempleLocationNames.btn_t2_floor_blue: LocationData(None),
-    TempleLocationNames.btn_t2_rune_n: LocationData(None),
-    TempleLocationNames.btn_t2_rune_e: LocationData(None),
-    TempleLocationNames.btn_t2_rune_se: LocationData(None),
-    TempleLocationNames.btn_t2_rune_w: LocationData(None),
-    TempleLocationNames.btn_t2_rune_sw: LocationData(None),
-    TempleLocationNames.ev_t1_n_node: LocationData(None),
-    TempleLocationNames.ev_t1_n_node_n_mirrors: LocationData(None),
-    TempleLocationNames.ev_t1_n_node_s_mirror: LocationData(None),
-    TempleLocationNames.ev_t1_s_node: LocationData(None),
-    TempleLocationNames.ev_t2_n_node: LocationData(None),
-    TempleLocationNames.ev_t2_s_node: LocationData(None),
-    TempleLocationNames.ev_t3_n_node: LocationData(None),
-    TempleLocationNames.ev_t3_s_node: LocationData(None),
-    TempleLocationNames.ev_pof_1_se_room_panel: LocationData(None),
-    TempleLocationNames.ev_pof_1_unlock_exit: LocationData(None),
-    TempleLocationNames.ev_pof_2_unlock_exit: LocationData(None),
-    TempleLocationNames.ev_pof_end: LocationData(None),
-    TempleLocationNames.ev_beat_boss_1: LocationData(None),
-    TempleLocationNames.ev_beat_boss_2: LocationData(None),
-    TempleLocationNames.ev_beat_boss_3: LocationData(None),
-}
-
 temple_locations: typing.Dict[str, LocationData] = {
     **temple_pickup_locations,
     **temple_enemy_loot_locations,
-    **temple_event_locations,
-}
-
-common_event_locations: typing.Dict[str, LocationData] = {
-    TempleLocationNames.ev_victory: LocationData(None),
 }
 
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
     **temple_locations,
-    # **common_event_locations
 }
 
 
@@ -2080,15 +1998,12 @@ def setup_locations(multiworld: MultiWorld, hw_map: Campaign, player: int):
     world = multiworld.worlds[player]
 
     location_table = {}
-    # Event locations
     if hw_map == Campaign.Castle:
         item_counts.update(castle_item_counts)
         hw_map_locations = get_castle_locations(multiworld, player)
-        location_table.update(castle_event_locations)
     else:  # Need a default case for this else tests will complain
         item_counts.update(temple_item_counts)
         hw_map_locations = get_temple_locations(multiworld, player)
-        location_table.update(temple_event_locations)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
     for name, data in hw_map_locations.items():
@@ -2115,8 +2030,6 @@ def setup_locations(multiworld: MultiWorld, hw_map: Campaign, player: int):
     elif bonus_behavior == BonusChestLocationBehavior.option_all:  # All
         location_table.update(bonus_locations)
 
-    location_table.update(common_event_locations)
-
     return location_table, item_counts, random_locations
 
 
@@ -2125,7 +2038,6 @@ def get_castle_locations(multiworld, player: int):
     location_table.update(castle_pickup_locations)
     if get_option(multiworld, player, OptionNames.randomize_enemy_loot):
         location_table.update(castle_enemy_loot_locations)
-    location_table.update(castle_event_locations)
 
     return location_table
 
@@ -2135,7 +2047,6 @@ def get_temple_locations(multiworld, player: int):
     location_table.update(temple_pickup_locations)
     if get_option(multiworld, player, OptionNames.randomize_enemy_loot):
         location_table.update(temple_enemy_loot_locations)
-    location_table.update(temple_event_locations)
 
     return location_table
 

@@ -309,6 +309,13 @@ class NoSunbeamDamage(Toggle):
     default = False
 
 
+class TreasureShuffle(Toggle):
+    """Shuffles the locations of minor treasure such as coins, crates, and pots"""
+    display_name = "Treasure Shuffle"
+    # category = "Generation"
+    default = False
+
+
 class ConsumableMerchantChecks(Range):
     """(TotS only) Add a number of locations to the powerup vendor after giving them the frying pan
     Items in these locations get given out one by one after you reach specific milestones in the game"""
@@ -403,6 +410,7 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     shortcut_teleporter: ShortcutTeleporter,
     portal_accessibility: PortalAccessibility,
     no_sunbeam_damage: NoSunbeamDamage,
+    treasure_shuffle: TreasureShuffle,
     # consumables_vendor_locations: ConsumableMerchantChecks,
     pan_fragments: PanFragments,
     lever_fragments: LeverFragments,
