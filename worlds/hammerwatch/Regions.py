@@ -1,11 +1,11 @@
+import typing
+from enum import Enum
 from collections import namedtuple
-
-from BaseClasses import Region, Entrance
-from .Items import HammerwatchItem
-from .Locations import HammerwatchLocation, LocationData, LocationClassification, all_locations
-from .Names import CastleLocationNames, TempleLocationNames, CastleRegionNames, TempleRegionNames, GateNames,\
-    EntranceNames
-from .Util import *
+from BaseClasses import Region, Entrance, MultiWorld
+from .Locations import HammerwatchLocation, LocationData, all_locations
+from .Names import CastleLocationNames, TempleLocationNames, CastleRegionNames, TempleRegionNames, ItemName, GateNames,\
+    EntranceNames, OptionNames
+from .Util import GoalType, Campaign, get_option, get_goal_type, get_random_element
 
 
 class DoorType(Enum):

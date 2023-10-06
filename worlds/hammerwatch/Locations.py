@@ -1,9 +1,9 @@
 import typing
 
-from BaseClasses import Location
-from .Names import CastleLocationNames, TempleLocationNames
+from BaseClasses import Location, MultiWorld
+from .Names import CastleLocationNames, TempleLocationNames, ItemName, OptionNames
 from .Options import BonusChestLocationBehavior, Difficulty
-from .Util import *
+from .Util import Counter, GoalType, Campaign, get_option, get_goal_type
 from .Items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
 from enum import Enum
 

@@ -1,15 +1,14 @@
-from typing import Dict
+import typing
 
-from .Items import *
-from .Locations import *
+from .Names import ItemName, TempleLocationNames, TempleRegionNames, EntranceNames, OptionNames
+from .Items import HammerwatchItem, item_table, key_table, filler_items
+from .Locations import LocationData, CastleLocationNames, TempleLocationNames, all_locations, setup_locations
 from .Regions import create_regions, HWEntrance, HWExitData
 from .Rules import set_rules
-from .Util import *
+from .Util import Campaign, get_option, get_campaign, get_active_key_names
 
-from .Names import TempleLocationNames, TempleRegionNames, EntranceNames
-
-from BaseClasses import Item, MultiWorld, Tutorial, ItemClassification
-from .Options import *
+from BaseClasses import Item, Tutorial, ItemClassification
+from .Options import hammerwatch_options
 from ..AutoWorld import World, WebWorld
 
 
@@ -460,5 +459,5 @@ class HammerwatchWorld(World):
             for entry in self.exit_spoiler_info:
                 spoiler_handle.write(f"\n{entry}")
 
-    def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):
+    def extend_hint_information(self, hint_data: typing.Dict[int, typing.Dict[int, str]]):
         pass
