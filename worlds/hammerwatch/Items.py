@@ -242,7 +242,7 @@ temple_item_counts: typing.Dict[str, int] = {
     ItemName.chest_purple: 13,
     ItemName.chest_red: 11,
     ItemName.chest_wood: 29,
-    ItemName.vendor_coin: 50,
+    ItemName.vendor_coin: 53,
     ItemName.plank: 0,
     ItemName.key_silver: 6,
     ItemName.key_gold: 4,
@@ -402,7 +402,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     if get_option(multiworld, player, OptionNames.remove_lives):
         extra_items -= item_counts_table.pop(ItemName.ankh)
         extra_items -= item_counts_table.pop(ItemName.ankh_5up)
-        extra_items -= item_counts_table.pop(ItemName.ankh_7up)  # No maps have 7-ups in them, but here for future stuff
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not get_option(multiworld, player, OptionNames.randomize_recovery_items):

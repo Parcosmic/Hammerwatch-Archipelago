@@ -140,6 +140,7 @@ class ExitRandomization(Choice):
     option_off = 0
     option_no_boss_exits = 1
     option_all = 2
+    alias_on = 2
     default = 0
 
 
@@ -162,7 +163,7 @@ class StartExit(Toggle):
 
 
 class StartExitAct(Range):
-    """Randomize Start Location is on, determines the act in which you start"""
+    """Determines the act in which you start if Randomize Start Location is on"""
     display_name = "Start Location Act"
     # category = "Generation"
     range_start = 1
@@ -310,7 +311,7 @@ class NoSunbeamDamage(Toggle):
 
 
 class TreasureShuffle(Toggle):
-    """Shuffles the locations of minor treasure such as coins, crates, and pots"""
+    """Shuffles the locations of minor treasure such as coins, crates, pots, and vegetation"""
     display_name = "Treasure Shuffle"
     # category = "Generation"
     default = False

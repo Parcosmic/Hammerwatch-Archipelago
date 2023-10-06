@@ -4114,7 +4114,8 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t1_node_2_passage_2,
         TempleLocationNames.t1_node_2_passage_3,
         TempleLocationNames.ev_temple1_pof_switch,
-        TempleLocationNames.t1_miniboss_mummy,
+        TempleLocationNames.t1_miniboss_mummy_1,
+        TempleLocationNames.t1_miniboss_mummy_2,
         TempleLocationNames.ev_t1_n_node_s_mirror,
     ]
     t1_east_region = create_region(multiworld, player, active_locations, TempleRegionNames.t1_east, t1_east_locations)
@@ -4224,8 +4225,10 @@ def create_tots_regions(multiworld, player: int, active_locations: typing.Dict[s
         TempleLocationNames.t2_se_fireball_hall,
         TempleLocationNames.btn_t2_rune_e,
         TempleLocationNames.btn_t2_rune_se,
-        TempleLocationNames.t2_miniboss_mummy_e,
-        TempleLocationNames.t2_miniboss_mummy_w,
+        TempleLocationNames.t2_miniboss_mummy_e_1,
+        TempleLocationNames.t2_miniboss_mummy_e_2,
+        TempleLocationNames.t2_miniboss_mummy_w_1,
+        TempleLocationNames.t2_miniboss_mummy_w_2,
         TempleLocationNames.t2_tower_fire,
         TempleLocationNames.t2_tower_ice_3,
         TempleLocationNames.t2_tower_mana_1,

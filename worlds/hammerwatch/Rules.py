@@ -58,7 +58,6 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         second_region_name = TempleRegionNames.hub_main
     second_region = multiworld.get_region(second_region_name, player)
     loop_entrances = prune_entrances(menu_region, second_region)
-    # visualize_regions(second_region, "_testing.puml", show_locations=False)
 
     set_door_access_rules(multiworld, player, door_counts, loop_entrances)
 
@@ -146,6 +145,8 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         add_rule(multiworld.get_entrance(etr_base_name(TempleRegionNames.t1_east, TempleRegionNames.t1_node_2), player),
                  lambda state: state.has(ItemName.evt_t1_n_mirrors, player))
 
+    # visualize_regions(second_region, "_testing.puml", show_locations=False)
+
 
 def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, passage_blocking_codes,
                     code_to_exit, code_to_region, open_codes) -> bool:
@@ -154,25 +155,7 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
     if get_option(multiworld, player, OptionNames.exit_randomization) > 0:
         start_entrance = None
         act_range = get_option(multiworld, player, OptionNames.er_act_range).value
-        # if get_campaign(multiworld, player) == Campaign.Castle:
-        #     entrance_block_types = c_entrance_block_types
-        #     passage_blocking_codes = c_passage_blocking_codes
-        # else:
-        #     entrance_block_types = t_entrance_block_types
-        #     passage_blocking_codes = t_passage_blocking_codes
-
-        # code_to_exit = {}
-        # code_to_region = {}
         open_codes = open_codes.copy()
-        # for exit in world.level_exits:
-        #     if exit.return_code is not None:
-        #         code_to_exit[exit.return_code] = exit
-        #         code_to_region[exit.return_code] = exit.parent_region
-        #         open_codes.append(exit.return_code)
-        #     else:
-        #         code_to_exit[exit.exit_code] = None
-        #         open_codes.append(exit.exit_code)
-        #         code_to_region[exit.exit_code] = exit.target_region
 
         # Randomly choose a starting exit if the setting is one
         if get_option(multiworld, player, OptionNames.random_start_exit):
@@ -184,12 +167,11 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
             start_code = world.random.choice(available_start_codes)
             world.start_exit = start_code
             start_region = code_to_region[start_code]
-            print(start_region)
             start_entrance = connect(multiworld, player, {}, CastleRegionNames.menu, start_region.name, False)
         else:
             start_region = multiworld.get_region(CastleRegionNames.menu, player)
         entrances = start_region.exits.copy()
-        traversed_regions: typing.List[str] = [start_region]
+        traversed_regions: typing.List[str] = [start_region.name]
         needed_regions = []
         open_exits = []
         impassable_exits = []
@@ -298,8 +280,8 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
                 # print(f"# Exits for {open_exit.parent_region}: {len(valid_exits)}")
                 link_code = world.random.choice(valid_exits)
                 link_region = code_to_region[link_code]
-                print(f"Linked {open_exit.parent_region} ({open_exit.return_code}) to {link_region} ({link_code})"
-                      + ("    >><<" if open_exit.return_code is not None else ""))
+                # print(f"Linked {open_exit.parent_region} ({open_exit.return_code}) to {link_region} ({link_code})"
+                #       + ("    >><<" if open_exit.return_code is not None else ""))
 
                 # Set the reverse exit too if the exit is two-way
                 if open_exit.return_code is not None:

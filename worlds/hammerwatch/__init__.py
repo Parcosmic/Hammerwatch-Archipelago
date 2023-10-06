@@ -37,7 +37,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    hw_client_version = "0.9"
+    hw_client_version = "1.0"
     data_version = 5
 
     web = HammerwatchWeb()
@@ -455,7 +455,6 @@ class HammerwatchWorld(World):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
-        # if self.multiworld.exit_randomization[self.player]:
         if get_option(self.multiworld, self.player, OptionNames.exit_randomization):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
             for entry in self.exit_spoiler_info:

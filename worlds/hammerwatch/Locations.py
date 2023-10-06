@@ -1953,11 +1953,14 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     TempleLocationNames.p_tower_plant_small_4: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.p_tower_plant_small_5: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.p_tower_plant_small_6: LocationData(counter.count(), LocationClassification.EnemyLoot),
-    TempleLocationNames.t1_miniboss_mummy: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t1_miniboss_mummy_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t1_miniboss_mummy_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.t1_tower_fire: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.t1_tower_ice: LocationData(counter.count(), LocationClassification.EnemyLoot),
-    TempleLocationNames.t2_miniboss_mummy_w: LocationData(counter.count(), LocationClassification.EnemyLoot),
-    TempleLocationNames.t2_miniboss_mummy_e: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_w_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_w_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_e_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
+    TempleLocationNames.t2_miniboss_mummy_e_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.t2_tower_fire: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.t2_tower_ice_1: LocationData(counter.count(), LocationClassification.EnemyLoot),
     TempleLocationNames.t2_tower_ice_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
@@ -3019,7 +3022,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
             else:
                 item_counts[ItemName.steak] += 1
     else:
-        item_counts[ItemName.vendor_coin] -= 7
+        item_counts[ItemName.vendor_coin] -= item_counts[ItemName.miniboss_stat_upgrade]
         item_counts.pop(ItemName.miniboss_stat_upgrade)
     item_counts.pop(ItemName.loot_tower)
     item_counts.pop(ItemName.loot_flower)
