@@ -310,26 +310,28 @@ class HammerwatchWorld(World):
 
         # Bonus Key Locations
         if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-            castle_locked_items.update({
-                CastleLocationNames.n1_room1: ItemName.key_bonus,
-                CastleLocationNames.n1_room3_sealed_room_1: ItemName.key_bonus,
-                CastleLocationNames.n1_room2_small_box: ItemName.key_bonus,
-                CastleLocationNames.n1_entrance: ItemName.key_bonus,
-                CastleLocationNames.n1_room4_m: ItemName.key_bonus,
-                CastleLocationNames.n2_m_n: ItemName.key_bonus,
-                CastleLocationNames.n2_m_m_3: ItemName.key_bonus,
-                CastleLocationNames.n2_ne_4: ItemName.key_bonus,
-                CastleLocationNames.n2_m_e: ItemName.key_bonus,
-                CastleLocationNames.n2_start_1: ItemName.key_bonus,
-                CastleLocationNames.n2_m_se_5: ItemName.key_bonus,
-                CastleLocationNames.n3_exit_sw: ItemName.key_bonus,
-                CastleLocationNames.n3_m_cluster_5: ItemName.key_bonus,
-                CastleLocationNames.n3_se_cluster_5: ItemName.key_bonus,
-                CastleLocationNames.n4_ne: ItemName.key_bonus,
-                CastleLocationNames.n4_by_w_room_1: ItemName.key_bonus,
-                CastleLocationNames.n4_by_w_room_2: ItemName.key_bonus,
-                CastleLocationNames.n4_by_exit: ItemName.key_bonus,
-            })
+            castle_bonus_keys = [
+                CastleLocationNames.n1_room1,
+                CastleLocationNames.n1_room3_sealed_room_1,
+                CastleLocationNames.n1_room2_small_box,
+                CastleLocationNames.n1_entrance,
+                CastleLocationNames.n1_room4_m,
+                CastleLocationNames.n2_m_n,
+                CastleLocationNames.n2_m_m_3,
+                CastleLocationNames.n2_ne_4,
+                CastleLocationNames.n2_m_e,
+                CastleLocationNames.n2_start_1,
+                CastleLocationNames.n2_m_se_5,
+                CastleLocationNames.n3_exit_sw,
+                CastleLocationNames.n3_m_cluster_5,
+                CastleLocationNames.n3_se_cluster_5,
+                CastleLocationNames.n4_ne,
+                CastleLocationNames.n4_by_w_room_1,
+                CastleLocationNames.n4_by_w_room_2,
+                CastleLocationNames.n4_by_exit,
+            ]
+            for loc in castle_bonus_keys:
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_bonus))
 
         for loc, itm in castle_locked_items.items():
             self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
@@ -374,10 +376,12 @@ class HammerwatchWorld(World):
 
         # Pyramid of Fear Bonus Keys
         if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
-            temple_locked_items.update({
-                TempleLocationNames.pof_1_n_5: ItemName.key_bonus,
-                TempleLocationNames.pof_1_ent_5: ItemName.key_bonus,
-            })
+            temple_bonus_keys = [
+                TempleLocationNames.pof_1_n_5,
+                TempleLocationNames.pof_1_ent_5,
+            ]
+            for loc in temple_bonus_keys:
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_bonus))
 
         # Portal Accessibility rune keys
         if get_option(self.multiworld, self.player, OptionNames.portal_accessibility):
