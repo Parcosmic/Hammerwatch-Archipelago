@@ -6,7 +6,7 @@ from worlds.AutoWorld import call_all
 
 from test.TestBase import WorldTestBase
 from BaseClasses import MultiWorld, Item
-from ..Locations import all_locations
+from ..locations import all_locations
 
 
 class HammerwatchTestBase(WorldTestBase):

@@ -1,14 +1,15 @@
 import typing
 
-from .Names import ItemName, TempleLocationNames, TempleRegionNames, EntranceNames, OptionNames
-from .Items import HammerwatchItem, item_table, key_table, filler_items
-from .Locations import LocationData, CastleLocationNames, TempleLocationNames, all_locations, setup_locations
-from .Regions import create_regions, HWEntrance, HWExitData
-from .Rules import set_rules
-from .Util import Campaign, get_option, get_campaign, get_active_key_names
+from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names,\
+    entrance_names, option_names
+from .items import HammerwatchItem, item_table, key_table, filler_items
+from .locations import LocationData, all_locations, setup_locations
+from .regions import create_regions, HWEntrance, HWExitData
+from .rules import set_rules
+from .util import Campaign, get_option, get_campaign, get_active_key_names
+from .options import hammerwatch_options
 
 from BaseClasses import Item, Tutorial, ItemClassification
-from .Options import hammerwatch_options
 from ..AutoWorld import World, WebWorld
 
 
@@ -44,7 +45,7 @@ class HammerwatchWorld(World):
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
-    item_name_groups = ItemName.item_groups
+    item_name_groups = item_name.item_groups
 
     campaign: Campaign
     active_location_list: typing.Dict[str, LocationData]
@@ -78,9 +79,9 @@ class HammerwatchWorld(World):
 
         # Door type randomization
         if self.campaign == Campaign.Castle:
-            item_counts = Items.castle_item_counts
+            item_counts = items.castle_item_counts
         else:
-            item_counts = Items.temple_item_counts
+            item_counts = items.temple_item_counts
         self.door_counts = {}
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
@@ -92,7 +93,7 @@ class HammerwatchWorld(World):
 
         # Shop shuffle
         self.shop_locations = {}
-        if get_option(self.multiworld, self.player, OptionNames.shop_shuffle):
+        if get_option(self.multiworld, self.player, option_names.shop_shuffle):
             if self.campaign == Campaign.Castle:
                 shop_counts = {
                     "Combo": [1, 2, 2, 3, 4, 4, 5],
@@ -102,42 +103,42 @@ class HammerwatchWorld(World):
                     "Powerup": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
                 }
                 self.shop_locations = {
-                    CastleLocationNames.shop_p1_combo: "",
-                    CastleLocationNames.shop_p1_misc: "",
-                    CastleLocationNames.shop_p2_off: "",
-                    CastleLocationNames.shop_p2_combo: "",
-                    CastleLocationNames.shop_p3_power: "",
-                    CastleLocationNames.shop_p3_off: "",
-                    CastleLocationNames.shop_p3_def: "",
-                    CastleLocationNames.shop_p3_combo: "",
-                    CastleLocationNames.shop_p3_misc: "",
-                    CastleLocationNames.shop_b1_power: "",
-                    CastleLocationNames.shop_a1_power: "",
-                    CastleLocationNames.shop_a1_combo: "",
-                    CastleLocationNames.shop_a1_misc: "",
-                    CastleLocationNames.shop_a1_off: "",
-                    CastleLocationNames.shop_a1_def: "",
-                    CastleLocationNames.shop_a3_power: "",
-                    CastleLocationNames.shop_b2_power: "",
-                    CastleLocationNames.shop_r1_power: "",
-                    CastleLocationNames.shop_r1_misc: "",
-                    CastleLocationNames.shop_r2_combo: "",
-                    CastleLocationNames.shop_r2_off: "",
-                    CastleLocationNames.shop_r3_misc: "",
-                    CastleLocationNames.shop_r3_def: "",
-                    CastleLocationNames.shop_r3_power: "",
-                    CastleLocationNames.shop_r3_off: "",
-                    CastleLocationNames.shop_r3_combo: "",
-                    CastleLocationNames.shop_b3_power: "",
-                    CastleLocationNames.shop_c1_power: "",
-                    CastleLocationNames.shop_c2_power: "",
-                    CastleLocationNames.shop_c2_combo: "",
-                    CastleLocationNames.shop_c2_off: "",
-                    CastleLocationNames.shop_c2_def: "",
-                    CastleLocationNames.shop_c2_misc: "",
-                    CastleLocationNames.shop_c3_power: "",
-                    CastleLocationNames.shop_c2_off_2: "",
-                    CastleLocationNames.shop_c2_def_2: "",
+                    castle_location_names.shop_p1_combo: "",
+                    castle_location_names.shop_p1_misc: "",
+                    castle_location_names.shop_p2_off: "",
+                    castle_location_names.shop_p2_combo: "",
+                    castle_location_names.shop_p3_power: "",
+                    castle_location_names.shop_p3_off: "",
+                    castle_location_names.shop_p3_def: "",
+                    castle_location_names.shop_p3_combo: "",
+                    castle_location_names.shop_p3_misc: "",
+                    castle_location_names.shop_b1_power: "",
+                    castle_location_names.shop_a1_power: "",
+                    castle_location_names.shop_a1_combo: "",
+                    castle_location_names.shop_a1_misc: "",
+                    castle_location_names.shop_a1_off: "",
+                    castle_location_names.shop_a1_def: "",
+                    castle_location_names.shop_a3_power: "",
+                    castle_location_names.shop_b2_power: "",
+                    castle_location_names.shop_r1_power: "",
+                    castle_location_names.shop_r1_misc: "",
+                    castle_location_names.shop_r2_combo: "",
+                    castle_location_names.shop_r2_off: "",
+                    castle_location_names.shop_r3_misc: "",
+                    castle_location_names.shop_r3_def: "",
+                    castle_location_names.shop_r3_power: "",
+                    castle_location_names.shop_r3_off: "",
+                    castle_location_names.shop_r3_combo: "",
+                    castle_location_names.shop_b3_power: "",
+                    castle_location_names.shop_c1_power: "",
+                    castle_location_names.shop_c2_power: "",
+                    castle_location_names.shop_c2_combo: "",
+                    castle_location_names.shop_c2_off: "",
+                    castle_location_names.shop_c2_def: "",
+                    castle_location_names.shop_c2_misc: "",
+                    castle_location_names.shop_c3_power: "",
+                    castle_location_names.shop_c2_off_2: "",
+                    castle_location_names.shop_c2_def_2: "",
                 }
 
                 for loc in self.shop_locations.keys():
@@ -157,10 +158,10 @@ class HammerwatchWorld(World):
                     "Vitality": 1,
                 }
                 self.shop_locations = {
-                    TempleLocationNames.shop_combo: "",
-                    TempleLocationNames.shop_misc: "",
-                    TempleLocationNames.shop_off: "",
-                    TempleLocationNames.shop_def: "",
+                    temple_location_names.shop_combo: "",
+                    temple_location_names.shop_misc: "",
+                    temple_location_names.shop_off: "",
+                    temple_location_names.shop_def: "",
                 }
                 remaining_shops = []
                 for shop_type in shop_counts.keys():
@@ -172,8 +173,8 @@ class HammerwatchWorld(World):
                     remaining_shops.remove(self.shop_locations[loc])
 
         # Shop cost setting validation, swap if max is higher than min
-        cost_max = get_option(self.multiworld, self.player, OptionNames.shop_cost_max)
-        cost_min = get_option(self.multiworld, self.player, OptionNames.shop_cost_min)
+        cost_max = get_option(self.multiworld, self.player, option_names.shop_cost_max)
+        cost_min = get_option(self.multiworld, self.player, option_names.shop_cost_min)
         if cost_max < cost_min:
             swap = self.multiworld.shop_cost_max[self.player]
             self.multiworld.shop_cost_max[self.player] = self.multiworld.shop_cost_min[self.player]
@@ -195,8 +196,8 @@ class HammerwatchWorld(World):
         item_names: typing.List[str] = []
         itempool: typing.List[Item] = []
 
-        self.multiworld.get_location(TempleLocationNames.ev_victory, self.player) \
-            .place_locked_item(self.create_event(ItemName.ev_victory))
+        self.multiworld.get_location(temple_location_names.ev_victory, self.player) \
+            .place_locked_item(self.create_event(names.item_name.ev_victory))
 
         if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
@@ -270,180 +271,180 @@ class HammerwatchWorld(World):
 
     def place_castle_locked_items(self):
         castle_locked_items = {
-            CastleLocationNames.btn_p1_floor: ItemName.btnc_p1_floor,
-            CastleLocationNames.ev_p2_gold_gate_room_ne_switch: ItemName.ev_castle_p2_switch,
-            CastleLocationNames.ev_p2_gold_gate_room_nw_switch: ItemName.ev_castle_p2_switch,
-            CastleLocationNames.ev_p2_gold_gate_room_se_switch: ItemName.ev_castle_p2_switch,
-            CastleLocationNames.ev_p2_gold_gate_room_sw_switch: ItemName.ev_castle_p2_switch,
-            CastleLocationNames.btnc_p3_sw: ItemName.btnc_p3_e_passage,
-            CastleLocationNames.btnc_p3_arrow_hall_wall: ItemName.btnc_p3_s_passage,
-            CastleLocationNames.btnc_n2_blue_spikes: ItemName.btnc_a2_blue_spikes,
-            CastleLocationNames.btnc_a2_bspikes_tp: ItemName.btnc_a2_bspikes_tp,
-            CastleLocationNames.btnc_c2_n_open_wall: ItemName.btnc_c2_n_wall,
-            CastleLocationNames.ev_c2_n_shops_switch: ItemName.ev_castle_c2_n_shops_switch,
-            CastleLocationNames.ev_c3_rspikes_switch: ItemName.ev_castle_c3_rspikes_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_1: ItemName.ev_castle_c3_sw_hidden_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_2: ItemName.ev_castle_c3_sw_hidden_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_3: ItemName.ev_castle_c3_sw_hidden_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_4: ItemName.ev_castle_c3_sw_hidden_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_5: ItemName.ev_castle_c3_sw_hidden_switch,
-            CastleLocationNames.ev_c3_sw_hidden_switch_6: ItemName.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,
+            castle_location_names.ev_p2_gold_gate_room_ne_switch: item_name.ev_castle_p2_switch,
+            castle_location_names.ev_p2_gold_gate_room_nw_switch: item_name.ev_castle_p2_switch,
+            castle_location_names.ev_p2_gold_gate_room_se_switch: item_name.ev_castle_p2_switch,
+            castle_location_names.ev_p2_gold_gate_room_sw_switch: item_name.ev_castle_p2_switch,
+            castle_location_names.btnc_p3_sw: item_name.btnc_p3_e_passage,
+            castle_location_names.btnc_p3_arrow_hall_wall: item_name.btnc_p3_s_passage,
+            castle_location_names.btnc_n2_blue_spikes: item_name.btnc_a2_blue_spikes,
+            castle_location_names.btnc_a2_bspikes_tp: item_name.btnc_a2_bspikes_tp,
+            castle_location_names.btnc_c2_n_open_wall: item_name.btnc_c2_n_wall,
+            castle_location_names.ev_c2_n_shops_switch: item_name.ev_castle_c2_n_shops_switch,
+            castle_location_names.ev_c3_rspikes_switch: item_name.ev_castle_c3_rspikes_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_1: item_name.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_2: item_name.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_3: item_name.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_4: item_name.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_5: item_name.ev_castle_c3_sw_hidden_switch,
+            castle_location_names.ev_c3_sw_hidden_switch_6: item_name.ev_castle_c3_sw_hidden_switch,
 
-            CastleLocationNames.ev_p1_boss_switch: ItemName.ev_castle_b1_boss_switch,
-            CastleLocationNames.ev_p2_boss_switch: ItemName.ev_castle_b1_boss_switch,
-            CastleLocationNames.ev_p3_boss_switch: ItemName.ev_castle_b1_boss_switch,
-            CastleLocationNames.ev_a1_boss_switch: ItemName.ev_castle_b2_boss_switch,
-            CastleLocationNames.ev_a2_boss_switch: ItemName.ev_castle_b2_boss_switch,
-            CastleLocationNames.ev_a3_boss_switch: ItemName.ev_castle_b2_boss_switch,
-            CastleLocationNames.ev_r1_boss_switch: ItemName.ev_castle_b3_boss_switch,
-            CastleLocationNames.ev_r2_boss_switch: ItemName.ev_castle_b3_boss_switch,
-            CastleLocationNames.ev_r3_boss_switch: ItemName.ev_castle_b3_boss_switch,
-            CastleLocationNames.ev_c1_boss_switch: ItemName.ev_castle_b4_boss_switch,
-            CastleLocationNames.ev_c2_boss_switch: ItemName.ev_castle_b4_boss_switch,
-            CastleLocationNames.ev_c3_boss_switch: ItemName.ev_castle_b4_boss_switch,
+            castle_location_names.ev_p1_boss_switch: item_name.ev_castle_b1_boss_switch,
+            castle_location_names.ev_p2_boss_switch: item_name.ev_castle_b1_boss_switch,
+            castle_location_names.ev_p3_boss_switch: item_name.ev_castle_b1_boss_switch,
+            castle_location_names.ev_a1_boss_switch: item_name.ev_castle_b2_boss_switch,
+            castle_location_names.ev_a2_boss_switch: item_name.ev_castle_b2_boss_switch,
+            castle_location_names.ev_a3_boss_switch: item_name.ev_castle_b2_boss_switch,
+            castle_location_names.ev_r1_boss_switch: item_name.ev_castle_b3_boss_switch,
+            castle_location_names.ev_r2_boss_switch: item_name.ev_castle_b3_boss_switch,
+            castle_location_names.ev_r3_boss_switch: item_name.ev_castle_b3_boss_switch,
+            castle_location_names.ev_c1_boss_switch: item_name.ev_castle_b4_boss_switch,
+            castle_location_names.ev_c2_boss_switch: item_name.ev_castle_b4_boss_switch,
+            castle_location_names.ev_c3_boss_switch: item_name.ev_castle_b4_boss_switch,
 
-            CastleLocationNames.ev_beat_boss_1: ItemName.evc_beat_boss_1,
-            CastleLocationNames.ev_beat_boss_2: ItemName.evc_beat_boss_2,
-            CastleLocationNames.ev_beat_boss_3: ItemName.evc_beat_boss_3,
-            CastleLocationNames.ev_beat_boss_4: ItemName.evc_beat_boss_4,
+            castle_location_names.ev_beat_boss_1: item_name.evc_beat_boss_1,
+            castle_location_names.ev_beat_boss_2: item_name.evc_beat_boss_2,
+            castle_location_names.ev_beat_boss_3: item_name.evc_beat_boss_3,
+            castle_location_names.ev_beat_boss_4: item_name.evc_beat_boss_4,
         }
 
         # Bonus Key Locations
-        if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
+        if not get_option(self.multiworld, self.player, option_names.randomize_bonus_keys):
             castle_bonus_keys = [
-                CastleLocationNames.n1_room1,
-                CastleLocationNames.n1_room3_sealed_room_1,
-                CastleLocationNames.n1_room2_small_box,
-                CastleLocationNames.n1_entrance,
-                CastleLocationNames.n1_room4_m,
-                CastleLocationNames.n2_m_n,
-                CastleLocationNames.n2_m_m_3,
-                CastleLocationNames.n2_ne_4,
-                CastleLocationNames.n2_m_e,
-                CastleLocationNames.n2_start_1,
-                CastleLocationNames.n2_m_se_5,
-                CastleLocationNames.n3_exit_sw,
-                CastleLocationNames.n3_m_cluster_5,
-                CastleLocationNames.n3_se_cluster_5,
-                CastleLocationNames.n4_ne,
-                CastleLocationNames.n4_by_w_room_1,
-                CastleLocationNames.n4_by_w_room_2,
-                CastleLocationNames.n4_by_exit,
+                castle_location_names.n1_room1,
+                castle_location_names.n1_room3_sealed_room_1,
+                castle_location_names.n1_room2_small_box,
+                castle_location_names.n1_entrance,
+                castle_location_names.n1_room4_m,
+                castle_location_names.n2_m_n,
+                castle_location_names.n2_m_m_3,
+                castle_location_names.n2_ne_4,
+                castle_location_names.n2_m_e,
+                castle_location_names.n2_start_1,
+                castle_location_names.n2_m_se_5,
+                castle_location_names.n3_exit_sw,
+                castle_location_names.n3_m_cluster_5,
+                castle_location_names.n3_se_cluster_5,
+                castle_location_names.n4_ne,
+                castle_location_names.n4_by_w_room_1,
+                castle_location_names.n4_by_w_room_2,
+                castle_location_names.n4_by_exit,
             ]
             for loc in castle_bonus_keys:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_bonus))
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 
         for loc, itm in castle_locked_items.items():
             self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
 
     def place_tots_locked_items(self):
         temple_locked_items = {
-            TempleLocationNames.ev_c1_portal: ItemName.ev_c1_portal,
-            TempleLocationNames.ev_c2_portal: ItemName.ev_c2_portal,
-            TempleLocationNames.ev_c3_portal: ItemName.ev_c3_portal,
-            TempleLocationNames.ev_t1_portal: ItemName.ev_t1_portal,
-            TempleLocationNames.ev_t2_portal: ItemName.ev_t2_portal,
-            TempleLocationNames.ev_t3_portal: ItemName.ev_t3_portal,
-            TempleLocationNames.ev_temple_entrance_rock: ItemName.ev_open_temple_entrance_shortcut,
-            TempleLocationNames.ev_t1_n_node_n_mirrors: ItemName.evt_t1_n_mirrors,
-            TempleLocationNames.ev_t1_n_node_s_mirror: ItemName.evt_t1_s_mirror,
-            TempleLocationNames.ev_hub_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_cave1_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_cave2_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_cave3_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_temple1_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_temple2_pof_switch: ItemName.ev_pof_switch,
-            TempleLocationNames.ev_pof_1_se_room_panel: ItemName.ev_pof_1_s_walls,
-            TempleLocationNames.ev_pof_1_unlock_exit: ItemName.ev_pof_1_unlock_exit,
-            TempleLocationNames.ev_pof_2_unlock_exit: ItemName.ev_pof_2_unlock_exit,
-            TempleLocationNames.ev_pof_end: ItemName.ev_pof_complete,
-            TempleLocationNames.btn_t2_floor_blue: ItemName.btn_t2_blue_spikes,
-            TempleLocationNames.btn_t2_rune_n: ItemName.ev_t2_rune_switch,
-            TempleLocationNames.btn_t2_rune_w: ItemName.ev_t2_rune_switch,
-            TempleLocationNames.btn_t2_rune_e: ItemName.ev_t2_rune_switch,
-            TempleLocationNames.btn_t2_rune_se: ItemName.ev_t2_rune_switch,
-            TempleLocationNames.btn_t2_rune_sw: ItemName.ev_t2_rune_switch,
-            TempleLocationNames.ev_t1_n_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_t1_s_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_t2_n_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_t2_s_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_t3_n_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_t3_s_node: ItemName.ev_solar_node,
-            TempleLocationNames.ev_beat_boss_1: ItemName.evt_beat_boss_1,
-            TempleLocationNames.ev_beat_boss_2: ItemName.evt_beat_boss_2,
-            TempleLocationNames.ev_beat_boss_3: ItemName.evt_beat_boss_3,
+            temple_location_names.ev_c1_portal: item_name.ev_c1_portal,
+            temple_location_names.ev_c2_portal: item_name.ev_c2_portal,
+            temple_location_names.ev_c3_portal: item_name.ev_c3_portal,
+            temple_location_names.ev_t1_portal: item_name.ev_t1_portal,
+            temple_location_names.ev_t2_portal: item_name.ev_t2_portal,
+            temple_location_names.ev_t3_portal: item_name.ev_t3_portal,
+            temple_location_names.ev_temple_entrance_rock: item_name.ev_open_temple_entrance_shortcut,
+            temple_location_names.ev_t1_n_node_n_mirrors: item_name.evt_t1_n_mirrors,
+            temple_location_names.ev_t1_n_node_s_mirror: item_name.evt_t1_s_mirror,
+            temple_location_names.ev_hub_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_cave1_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_cave2_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_cave3_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_temple1_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_temple2_pof_switch: item_name.ev_pof_switch,
+            temple_location_names.ev_pof_1_se_room_panel: item_name.ev_pof_1_s_walls,
+            temple_location_names.ev_pof_1_unlock_exit: item_name.ev_pof_1_unlock_exit,
+            temple_location_names.ev_pof_2_unlock_exit: item_name.ev_pof_2_unlock_exit,
+            temple_location_names.ev_pof_end: item_name.ev_pof_complete,
+            temple_location_names.btn_t2_floor_blue: item_name.btn_t2_blue_spikes,
+            temple_location_names.btn_t2_rune_n: item_name.ev_t2_rune_switch,
+            temple_location_names.btn_t2_rune_w: item_name.ev_t2_rune_switch,
+            temple_location_names.btn_t2_rune_e: item_name.ev_t2_rune_switch,
+            temple_location_names.btn_t2_rune_se: item_name.ev_t2_rune_switch,
+            temple_location_names.btn_t2_rune_sw: item_name.ev_t2_rune_switch,
+            temple_location_names.ev_t1_n_node: item_name.ev_solar_node,
+            temple_location_names.ev_t1_s_node: item_name.ev_solar_node,
+            temple_location_names.ev_t2_n_node: item_name.ev_solar_node,
+            temple_location_names.ev_t2_s_node: item_name.ev_solar_node,
+            temple_location_names.ev_t3_n_node: item_name.ev_solar_node,
+            temple_location_names.ev_t3_s_node: item_name.ev_solar_node,
+            temple_location_names.ev_beat_boss_1: item_name.evt_beat_boss_1,
+            temple_location_names.ev_beat_boss_2: item_name.evt_beat_boss_2,
+            temple_location_names.ev_beat_boss_3: item_name.evt_beat_boss_3,
         }
 
         # Pyramid of Fear Bonus Keys
-        if not get_option(self.multiworld, self.player, OptionNames.randomize_bonus_keys):
+        if not get_option(self.multiworld, self.player, option_names.randomize_bonus_keys):
             temple_bonus_keys = [
-                TempleLocationNames.pof_1_n_5,
-                TempleLocationNames.pof_1_ent_5,
+                temple_location_names.pof_1_n_5,
+                temple_location_names.pof_1_ent_5,
             ]
             for loc in temple_bonus_keys:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_bonus))
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 
         # Portal Accessibility rune keys
-        if get_option(self.multiworld, self.player, OptionNames.portal_accessibility):
+        if get_option(self.multiworld, self.player, option_names.portal_accessibility):
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
                 return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event]
 
             # Cave Level 3 Rune Key
-            c3_locs = get_region_item_locs(TempleRegionNames.c3_e)
+            c3_locs = get_region_item_locs(temple_region_names.c3_e)
             # If playing exit rando we need to ensure we can always return if falling from the temple
-            if not get_option(self.multiworld, self.player, OptionNames.exit_randomization):
-                c3_locs.extend(get_region_item_locs(TempleRegionNames.cave_3_main))
+            if not get_option(self.multiworld, self.player, option_names.exit_randomization):
+                c3_locs.extend(get_region_item_locs(temple_region_names.cave_3_main))
             rune_key_locs.append(self.random.choice(c3_locs))
 
             # Cave Level 2 Rune Key
-            c2_locs = get_region_item_locs(TempleRegionNames.cave_2_main)
+            c2_locs = get_region_item_locs(temple_region_names.cave_2_main)
             rune_key_locs.append(self.random.choice(c2_locs))
 
             # Cave Level 1 Rune Key
             c1_locs = []
-            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_main)
-            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_blue_bridge)
-            c1_locs += get_region_item_locs(TempleRegionNames.cave_1_red_bridge)
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_main)
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_blue_bridge)
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_red_bridge)
             rune_key_locs.append(self.random.choice(c1_locs))
 
             # Temple Floor 1 Rune Key
             t1_locs = []
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_main)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_sw_sdoor)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_node_1)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_node_2)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_turret)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_ice_turret)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_n_of_ice_turret)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_s_of_ice_turret)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_east)
-            t1_locs += get_region_item_locs(TempleRegionNames.t1_sun_block_hall)
+            t1_locs += get_region_item_locs(temple_region_names.t1_main)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sw_sdoor)
+            t1_locs += get_region_item_locs(temple_region_names.t1_node_1)
+            t1_locs += get_region_item_locs(temple_region_names.t1_node_2)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sun_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_n_of_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_s_of_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_east)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sun_block_hall)
             rune_key_locs.append(self.random.choice(t1_locs))
 
             # Temple Floor 2 Rune Key
             t2_locs = []
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_main)
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_n_gate)
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_s_gate)
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_n_node)
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_s_node)
-            t2_locs += get_region_item_locs(TempleRegionNames.t2_ornate)
+            t2_locs += get_region_item_locs(temple_region_names.t2_main)
+            t2_locs += get_region_item_locs(temple_region_names.t2_n_gate)
+            t2_locs += get_region_item_locs(temple_region_names.t2_s_gate)
+            t2_locs += get_region_item_locs(temple_region_names.t2_n_node)
+            t2_locs += get_region_item_locs(temple_region_names.t2_s_node)
+            t2_locs += get_region_item_locs(temple_region_names.t2_ornate)
             rune_key_locs.append(self.random.choice(t2_locs))
 
             # Temple Floor 3 Rune Key
             t3_locs = []
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_main)
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_n_node_blocks)
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node_blocks_1)
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node_blocks_2)
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_s_node)
-            t3_locs += get_region_item_locs(TempleRegionNames.t3_n_node)
+            t3_locs += get_region_item_locs(temple_region_names.t3_main)
+            t3_locs += get_region_item_locs(temple_region_names.t3_n_node_blocks)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node_blocks_1)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node_blocks_2)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node)
+            t3_locs += get_region_item_locs(temple_region_names.t3_n_node)
             rune_key_locs.append(self.random.choice(t3_locs))
 
             for loc in rune_key_locs:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(ItemName.key_teleport))
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_teleport))
 
         for loc, itm in temple_locked_items.items():
             self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
@@ -454,11 +455,11 @@ class HammerwatchWorld(World):
         set_rules(self.multiworld, self.player, self.door_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:
-        if get_option(self.multiworld, self.player, OptionNames.shop_shuffle):
+        if get_option(self.multiworld, self.player, option_names.shop_shuffle):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
-        if get_option(self.multiworld, self.player, OptionNames.exit_randomization):
+        if get_option(self.multiworld, self.player, option_names.exit_randomization):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
             for entry in self.exit_spoiler_info:
                 spoiler_handle.write(f"\n{entry}")
