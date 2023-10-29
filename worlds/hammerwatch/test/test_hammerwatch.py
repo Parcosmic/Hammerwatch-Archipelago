@@ -5,7 +5,61 @@ from .. import item_name, castle_location_names, temple_location_names, option_n
 from .. import options
 
 
-class TestHammerwatch(HammerwatchTestBase):
+class TestPlankGoal(HammerwatchTestBase):
+
+    def test_plank_hunt_default(self):
+        default_plank_hunt_options = {
+            "goal": options.Goal.option_castle_plank_hunt,
+        }
+        default_plank_hunt_test = HammerwatchTestBase()
+        default_plank_hunt_test.options = default_plank_hunt_options
+        default_plank_hunt_test.world_setup()
+        default_plank_hunt_test.assertBeatable(False)
+        default_plank_hunt_test.collect_by_name([item_name.plank] * 12)
+        default_plank_hunt_test.assertBeatable(True)
+        # default_plank_hunt_test.assertAccessDependency([castle_location_names.ev_victory], [[item_name.plank] * 12])
+
+    def test_plank_hunt_double(self):
+        double_planks_options = {
+            "goal": options.Goal.option_castle_plank_hunt,
+            "plank_count": 24,
+            "planks_required_count": 24,
+        }
+        double_planks_test = HammerwatchTestBase()
+        double_planks_test.options = double_planks_options
+        double_planks_test.world_setup()
+        double_planks_test.assertBeatable(False)
+        double_planks_test.collect_by_name([item_name.plank] * 24)
+        double_planks_test.assertBeatable(True)
+
+    def test_plank_hunt_not_enough(self):
+        not_enough_planks_options = {
+            "goal": options.Goal.option_castle_plank_hunt,
+            "plank_count": 6,
+            "planks_required_count": 24,
+        }
+        not_enough_planks_test = HammerwatchTestBase()
+        not_enough_planks_test.options = not_enough_planks_options
+        not_enough_planks_test.world_setup()
+        not_enough_planks_test.assertBeatable(False)
+        not_enough_planks_test.collect_by_name([item_name.plank] * 24)
+        not_enough_planks_test.assertBeatable(True)
+
+    def test_plank_hunt_extra(self):
+        extra_planks_options = {
+            "goal": options.Goal.option_castle_plank_hunt,
+            "plank_count": 24,
+            "planks_required_count": 12,
+        }
+        extra_planks_test = HammerwatchTestBase()
+        extra_planks_test.options = extra_planks_options
+        extra_planks_test.world_setup()
+        extra_planks_test.assertBeatable(False)
+        extra_planks_test.collect_by_name([item_name.plank] * 12)
+        extra_planks_test.assertBeatable(True)
+
+
+class TestHammerwatchOptions(HammerwatchTestBase):
     option_sets: typing.Dict[str, typing.Dict[str, typing.Any]] = {
         "Castle max locations": {
             "goal": options.Goal.option_castle_escape,
@@ -96,60 +150,8 @@ class TestHammerwatch(HammerwatchTestBase):
     }
 
     def test_options(self):
-        for option_set, options in TestHammerwatch.option_sets.items():
+        for option_set, options in TestHammerwatchOptions.option_sets.items():
             test_world = HammerwatchTestBase()
             test_world.options = options
             test_world.world_setup()
             test_world.test_all_locations_are_active(option_set)
-
-    def test_plank_hunt_default(self):
-        default_plank_hunt_options = {
-            "goal": options.Goal.option_castle_plank_hunt,
-        }
-        default_plank_hunt_test = HammerwatchTestBase()
-        default_plank_hunt_test.options = default_plank_hunt_options
-        default_plank_hunt_test.world_setup()
-        default_plank_hunt_test.assertBeatable(False)
-        default_plank_hunt_test.collect_by_name([item_name.plank] * 12)
-        default_plank_hunt_test.assertBeatable(True)
-        # default_plank_hunt_test.assertAccessDependency([castle_location_names.ev_victory], [[item_name.plank] * 12])
-
-    def test_plank_hunt_double(self):
-        double_planks_options = {
-            "goal": options.Goal.option_castle_plank_hunt,
-            "plank_count": 24,
-            "planks_required_count": 24,
-        }
-        double_planks_test = HammerwatchTestBase()
-        double_planks_test.options = double_planks_options
-        double_planks_test.world_setup()
-        double_planks_test.assertBeatable(False)
-        double_planks_test.collect_by_name([item_name.plank] * 24)
-        double_planks_test.assertBeatable(True)
-
-    def test_plank_hunt_not_enough(self):
-        not_enough_planks_options = {
-            "goal": options.Goal.option_castle_plank_hunt,
-            "plank_count": 6,
-            "planks_required_count": 24,
-        }
-        not_enough_planks_test = HammerwatchTestBase()
-        not_enough_planks_test.options = not_enough_planks_options
-        not_enough_planks_test.world_setup()
-        not_enough_planks_test.assertBeatable(False)
-        not_enough_planks_test.collect_by_name([item_name.plank] * 24)
-        not_enough_planks_test.assertBeatable(True)
-
-    def test_plank_hunt_extra(self):
-        extra_planks_options = {
-            "goal": options.Goal.option_castle_plank_hunt,
-            "plank_count": 24,
-            "planks_required_count": 12,
-        }
-        extra_planks_test = HammerwatchTestBase()
-        extra_planks_test.options = extra_planks_options
-        extra_planks_test.world_setup()
-        extra_planks_test.assertBeatable(False)
-        extra_planks_test.collect_by_name([item_name.plank] * 12)
-        extra_planks_test.assertBeatable(True)
-

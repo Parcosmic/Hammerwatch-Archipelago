@@ -2,14 +2,14 @@ import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names,\
     entrance_names, option_names
-from .items import HammerwatchItem, item_table, key_table, filler_items
+from .items import HammerwatchItem, item_table, key_table, filler_items, castle_item_counts, temple_item_counts
 from .locations import LocationData, all_locations, setup_locations
 from .regions import create_regions, HWEntrance, HWExitData
 from .rules import set_rules
 from .util import Campaign, get_option, get_campaign, get_active_key_names
 from .options import hammerwatch_options
 
-from BaseClasses import Item, Tutorial, ItemClassification
+from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
 
 
@@ -79,9 +79,9 @@ class HammerwatchWorld(World):
 
         # Door type randomization
         if self.campaign == Campaign.Castle:
-            item_counts = items.castle_item_counts
+            item_counts = castle_item_counts
         else:
-            item_counts = items.temple_item_counts
+            item_counts = temple_item_counts
         self.door_counts = {}
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
@@ -90,7 +90,6 @@ class HammerwatchWorld(World):
             setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
-
         # Shop shuffle
         self.shop_locations = {}
         if get_option(self.multiworld, self.player, option_names.shop_shuffle):
@@ -193,27 +192,23 @@ class HammerwatchWorld(World):
         return HammerwatchItem(event, ItemClassification.progression, None, self.player)
 
     def create_items(self) -> None:
-        item_names: typing.List[str] = []
         itempool: typing.List[Item] = []
 
+        # First create and place our locked items so we know how many are left over
         self.multiworld.get_location(temple_location_names.ev_victory, self.player) \
-            .place_locked_item(self.create_event(names.item_name.ev_victory))
-
+            .place_locked_item(self.create_event(item_name.ev_victory))
         if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
 
         # More efficient and foolproof method to get number of required locations
-        total_available_locations = [loc for loc in self.multiworld.get_locations(self.player) if not loc.item]
-        total_required_locations = len(total_available_locations)
+        total_required_locations = len([loc for loc in self.multiworld.get_locations(self.player) if not loc.item])
 
-        # Remove items if the player starts with them
+        # Remove progression items if the player starts with them
         for precollected in self.multiworld.precollected_items[self.player]:
-            if precollected.name in self.item_counts:
-                if self.item_counts[precollected.name] <= 1:
-                    self.item_counts.pop(precollected.name)
-                else:
+            if precollected.classification & ItemClassification.progression:
+                if precollected.name in self.item_counts and self.item_counts[precollected.name] > 0:
                     self.item_counts[precollected.name] -= 1
 
         # Add items
@@ -221,15 +216,15 @@ class HammerwatchWorld(World):
         present_filler_items = []
         for item in self.item_counts:
             items += self.item_counts[item]
-            item_names += [item] * self.item_counts[item]
+            # item_names_to_create += [item] * self.item_counts[item]
             if item_table[item].classification == ItemClassification.filler and self.item_counts[item] > 0:
                 present_filler_items.append(item)
 
         # Add/remove junk items depending if we have not enough/too many locations
         junk: int = total_required_locations - items
         if junk > 0:
-            for item_name in self.random.choices(present_filler_items, k=junk):
-                self.item_counts[item_name] += 1
+            for name in self.random.choices(present_filler_items, k=junk):
+                self.item_counts[name] += 1
         else:
             for j in range(-junk):
                 junk_item = self.random.choice(present_filler_items)
@@ -244,7 +239,7 @@ class HammerwatchWorld(World):
 
         self.multiworld.itempool += itempool
 
-    def collect(self, state: "CollectionState", item: "Item") -> bool:
+    def collect(self, state: CollectionState, item: Item) -> bool:
         prog = super(HammerwatchWorld, self).collect(state, item)
         spaces = item.name.count(" ")
         if item.name.endswith("Key") and spaces > 1:
@@ -255,7 +250,7 @@ class HammerwatchWorld(World):
                 state.prog_items[key_table[add_name][0], self.player] += count * key_table[add_name][1]
         return prog
 
-    def remove(self, state: "CollectionState", item: "Item") -> bool:
+    def remove(self, state: CollectionState, item: Item) -> bool:
         prog = super(HammerwatchWorld, self).remove(state, item)
         spaces = item.name.count(" ")
         if item.name.endswith("Key") and spaces > 1:
