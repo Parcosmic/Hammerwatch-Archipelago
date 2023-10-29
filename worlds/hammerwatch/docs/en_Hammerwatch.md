@@ -13,9 +13,9 @@ however the player may have to travel to areas in a different order they would n
 ## What is the goal of Hammerwatch when randomized?
 
 There are a few goals that can be chosen in your YAML:
-* Defeat Worldfire the dragon in the Castle Hammerwatch campaign
+* Defeat all the bosses (Queen, Knight, Lich, Worldfire) in the Castle Hammerwatch campaign
 * Defeat Worldfire and collect 12 strange planks, then escape with your life in the Castle Hammerwatch campaign
-* Defeat Sha'Rand in the Temple of the Sun campaign
+* Defeat all the bosses (Dune Sharks, Krilith, Sha'Rand) in the Temple of the Sun campaign
 * Unlock and complete the Pyramid of fear in the Temple of the Sun campaign
 * Collect a certain number of strange planks in either campaign
 
@@ -55,3 +55,16 @@ hint points!
 Big bronze keys are custom items created for the Castle Hammerwatch campaign. When picked up they act as 3 bronze keys.
 They exist as an option to reduce the massive amount of required progression items in the item pool and to make
 receiving bronze keys feel more meaningful.
+
+## Client commands
+
+A few commands have been added to the client to help prevent softlocks or to provide QoL. To run a command enter it in
+the in-game chat with its arguments and hit enter. The current commands are:
+
+/help: lists all commands and their usages
+
+/tp [level_code] [start_id]: teleports you to the specified start node. With no arguments teleports to where you started the world
+
+/flag <flag_name\> [true/false]: sets the value of the given flag, with only 1 argument returns the value of the flag instead
+
+/deathlink: toggles deathlink on/off
