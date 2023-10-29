@@ -2105,7 +2105,7 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
         random_locations[castle_location_names.crloc_c2_puzzle] = -1
 
     # Goal stuff
-    if get_goal_type(multiworld, player) == GoalType.KillBosses:
+    if get_goal_type(multiworld, player) != GoalType.FullCompletion:
         remove_location(castle_location_names.b4_plank_1, item_name.diamond_red)
         remove_location(castle_location_names.b4_plank_2, item_name.diamond_red)
         remove_location(castle_location_names.b4_plank_3, item_name.diamond_red)

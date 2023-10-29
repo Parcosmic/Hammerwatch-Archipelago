@@ -408,7 +408,6 @@ hammerwatch_options: typing.Dict[str, type(Option)] = {
     option_names.extra_keys_percent: ExtraKeysPercent,
     option_names.big_bronze_key_percent: BigBronzeKeyPercent,
     option_names.shortcut_teleporter: ShortcutTeleporter,
-    option_names.portal_accessibility: PortalAccessibility,
     option_names.no_sunbeam_damage: NoSunbeamDamage,
     option_names.treasure_shuffle: TreasureShuffle,
     # option_names.consumables_vendor_locations: ConsumableMerchantChecks,

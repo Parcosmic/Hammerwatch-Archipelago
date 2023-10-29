@@ -1,7 +1,8 @@
 import typing
 from enum import Enum
 from BaseClasses import MultiWorld, Region, Entrance
-from .names import castle_region_names, temple_region_names, entrance_names, item_name, option_names
+from .names import castle_region_names, temple_region_names, temple_location_names,\
+    entrance_names, item_name, option_names
 from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, etr_base_name, connect
 from .options import ExitRandomization
@@ -70,8 +71,6 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
             world.exit_spoiler_info.append(exit.name)
 
-    # It's kinda mean to make players get their last planks or keys during the final boss,
-    # or even after when they're not sure if they can beat their game
     if get_campaign(multiworld, player) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
         if get_goal_type(multiworld, player) == GoalType.KillBosses:
@@ -133,12 +132,12 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         def portal_rule(state) -> bool:
             return state.has(item_name.key_teleport, player, 6)
 
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_c3_portal, player), portal_rule)
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_c2_portal, player), portal_rule)
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_c1_portal, player), portal_rule)
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_t1_portal, player), portal_rule)
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_t2_portal, player), portal_rule)
-        # add_rule(multiworld.get_location(TempleLocationNames.ev_t3_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_c3_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_c2_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_c1_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_t1_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_t2_portal, player), portal_rule)
+        add_rule(multiworld.get_location(temple_location_names.ev_t3_portal, player), portal_rule)
 
         # Extra rules for T1 north node blocks locations
         t1_sun_block_entr = etr_base_name(temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall)

@@ -4930,7 +4930,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False)
     connect(multiworld, player, used_names, temple_region_names.cave_3_secret, temple_region_names.cave_3_main, False)
     connect_exit(multiworld, player, used_names, temple_region_names.c3_e, temple_region_names.cave_2_main,
-                 entrance_names.t_c2_start, entrance_names.t_c1_end)  # , item_name.key_teleport, 1, True)
+                 entrance_names.t_c2_start, entrance_names.t_c1_end, item_name.key_teleport, 1, True)
 
     connect(multiworld, player, used_names, temple_region_names.cave_2_main, temple_region_names.cave_2_pumps,
             False, lever_item, lever_item_count, False)
@@ -4947,7 +4947,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # connect(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main, False)
     # Requires lower bridge switch
     connect_exit(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
-                 entrance_names.t_c3_start, entrance_names.t_c2_end)  # , item_name.key_teleport, 1, True)
+                 entrance_names.t_c3_start, entrance_names.t_c2_end, item_name.key_teleport, 1, True)
 
     connect(multiworld, player, used_names, temple_region_names.cave_1_main, temple_region_names.c1_n_puzzle, False)
     connect(multiworld, player, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, False)
@@ -4972,8 +4972,8 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
 
     connect(multiworld, player, used_names, temple_region_names.cave_1_red_bridge, temple_region_names.c1_e_puzzle, False)
     connect_exit(multiworld, player, used_names, temple_region_names.cave_1_red_bridge,
-                 temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end)  # ,
-                 # item_name.key_teleport, 1, True)
+                 temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
+                 item_name.key_teleport, 1, True)
 
     connect(multiworld, player, used_names, temple_region_names.boss_1_entrance, temple_region_names.boss_1_arena,
             True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
@@ -5036,8 +5036,8 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t1_e_puzzle, False)
 
     connect_exit(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
-                 f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end)  # ,
-                 # item_name.key_teleport, 1, True)
+                 f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
+                 item_name.key_teleport, 1, True)
     connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_nw_puzzle,
             False)
     connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_e_puzzle,
@@ -5103,7 +5103,7 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, temple_region_names.t3_s_gate, temple_region_names.t3_main, False)
     # One-way because we need to hit the button first!
     connect_exit(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
-                 entrance_names.t_t2_t3, entrance_names.t_t3_t2)  # , item_name.key_teleport, 1, True)
+                 entrance_names.t_t2_t3, entrance_names.t_t3_t2, item_name.key_teleport, 1, True)
     connect(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t3_main,
             False, item_name.mirror, 2)
     # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit

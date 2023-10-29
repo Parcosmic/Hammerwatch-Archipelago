@@ -76,6 +76,7 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
             item_name.key_silver,
             item_name.key_gold,
             item_name.mirror,
+            item_name.key_teleport,
         }
         if get_option(multiworld, player, option_names.randomize_bonus_keys):
             key_names.add(item_name.key_bonus)

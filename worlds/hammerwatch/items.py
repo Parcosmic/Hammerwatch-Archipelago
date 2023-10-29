@@ -32,7 +32,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     item_name.key_gold: ItemData(counter.count(), ItemClassification.progression),
     item_name.mirror: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.ore: ItemData(counter.count(), ItemClassification.useful),
-    item_name.key_teleport: ItemData(counter.count(), ItemClassification.useful),
+    item_name.key_teleport: ItemData(counter.count(), ItemClassification.progression),
     item_name.ankh: ItemData(counter.count(), ItemClassification.filler),
     item_name.ankh_5up: ItemData(counter.count(), ItemClassification.filler),
     item_name.ankh_7up: ItemData(counter.count(), ItemClassification.filler),
@@ -384,10 +384,6 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
             item_counts_table.pop(item_name.pickaxe)
             item_counts_table.update({item_name.pickaxe_fragment: pickaxe_fragments})
             extra_items += pickaxe_fragments - 1
-
-        # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
-        if get_option(multiworld, player, option_names.portal_accessibility):
-            item_counts_table.pop(item_name.key_teleport)
 
         # Add secret items from TotS
         if get_option(multiworld, player, option_names.randomize_secrets):
