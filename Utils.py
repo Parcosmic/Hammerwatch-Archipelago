@@ -257,15 +257,13 @@ def get_public_ipv6() -> str:
     return ip
 
 
-OptionsType = Settings  # TODO: remove ~2 versions after 0.4.1
+OptionsType = Settings  # TODO: remove when removing get_options
 
 
-@cache_argsless
-def get_default_options() -> Settings:  # TODO: remove ~2 versions after 0.4.1
-    return Settings(None)
-
-
-get_options = get_settings  # TODO: add a warning ~2 versions after 0.4.1 and remove once all games are ported
+def get_options() -> Settings:
+    # TODO: switch to Utils.deprecate after 0.4.4
+    warnings.warn("Utils.get_options() is deprecated. Use the settings API instead.", DeprecationWarning)
+    return get_settings()
 
 
 def persistent_store(category: str, key: typing.Any, value: typing.Any):
@@ -459,11 +457,21 @@ def init_logging(name: str, loglevel: typing.Union[str, int] = logging.INFO, wri
         write_mode,
         encoding="utf-8-sig")
     file_handler.setFormatter(logging.Formatter(log_format))
+
+    class Filter(logging.Filter):
+        def __init__(self, filter_name, condition):
+            super().__init__(filter_name)
+            self.condition = condition
+
+        def filter(self, record: logging.LogRecord) -> bool:
+            return self.condition(record)
+
+    file_handler.addFilter(Filter("NoStream", lambda record: not getattr(record,  "NoFile", False)))
     root_logger.addHandler(file_handler)
     if sys.stdout:
-        root_logger.addHandler(
-            logging.StreamHandler(sys.stdout)
-        )
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.addFilter(Filter("NoFile", lambda record: not getattr(record, "NoStream", False)))
+        root_logger.addHandler(stream_handler)
 
     # Relay unhandled exceptions to logger.
     if not getattr(sys.excepthook, "_wrapped", False):  # skip if already modified
@@ -670,6 +678,11 @@ def messagebox(title: str, text: str, error: bool = False) -> None:
         if zenity:
             return run(zenity, f"--title={title}", f"--text={text}", "--error" if error else "--info")
 
+    elif is_windows:
+        import ctypes
+        style = 0x10 if error else 0x0
+        return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    
     # fall back to tk
     try:
         import tkinter
