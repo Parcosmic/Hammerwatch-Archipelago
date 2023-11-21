@@ -69,7 +69,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         world = multiworld.worlds[player]
         for exit in world.level_exits:
             exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
-            world.exit_spoiler_info.append(exit.name)
+            world.exit_spoiler_info.append(f"[{exit.return_code} > {world.exit_swaps[exit.exit_code]}] {exit.name}")
 
     if get_campaign(multiworld, player) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
@@ -150,13 +150,13 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
 
 
 def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, passage_blocking_codes,
-                    code_to_exit, code_to_region, open_codes) -> bool:
+                    code_to_exit, code_to_region, open_codes_ref) -> bool:
     world = multiworld.worlds[player]
     level_exits: typing.List[HWEntrance] = world.level_exits.copy()
     if get_option(multiworld, player, option_names.exit_randomization) > 0:
         start_entrance = None
         act_range = get_option(multiworld, player, option_names.er_act_range).value
-        open_codes = open_codes.copy()
+        open_codes = open_codes_ref.copy()
 
         # Randomly choose a starting exit if the setting is one
         if get_option(multiworld, player, option_names.random_start_exit):

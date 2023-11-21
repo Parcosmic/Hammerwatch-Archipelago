@@ -72,6 +72,7 @@ class HammerwatchWorld(World):
         slot_data["Gate Types"] = self.gate_types
         slot_data["Exit Swaps"] = self.exit_swaps
         slot_data["Start Exit"] = self.start_exit
+        slot_data["portal_accessibility"] = 0  # For backwards compatibility, we removed this option
         return slot_data
 
     def generate_early(self):

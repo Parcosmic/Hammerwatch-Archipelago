@@ -75,11 +75,16 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         castle_location_names.p1_entrance_4,
         castle_location_names.p1_entrance_hall_1,
         castle_location_names.p1_entrance_hall_2,
-        castle_location_names.p1_entrance_s,
-        castle_location_names.p1_entrance_w,
         castle_location_names.p1_entrance_secret,
     ]
     p1_nw_region = create_region(multiworld, player, active_locations, castle_region_names.p1_nw, p1_nw_locs)
+
+    p1_nw_left_locs = [
+        castle_location_names.p1_entrance_s,
+        castle_location_names.p1_entrance_w,
+    ]
+    p1_nw_left_region = create_region(multiworld, player, active_locations, castle_region_names.p1_nw_left,
+                                      p1_nw_left_locs)
 
     p1_s_locations = [
         castle_location_names.p1_by_sw_bronze_gate_1,
@@ -1259,6 +1264,8 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
     ]
     a3_knife_reward_2_region = create_region(multiworld, player, active_locations, castle_region_names.a3_knife_reward_2,
                                              a3_knife_reward_2_locs)
+
+    a3_nw_stairs_region = create_region(multiworld, player, active_locations, castle_region_names.a3_nw_stairs, [])
 
     a3_w_b_bgate_locs = [
         castle_location_names.a3_pyramids_s_bgate_tp
@@ -2477,6 +2484,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         hub_region,
         p1_start_region,
         p1_nw_region,
+        p1_nw_left_region,
         p1_s_region,
         p1_sw_bronze_gate_region,
         p1_e_region,
@@ -2597,6 +2605,7 @@ def create_castle_regions(multiworld: MultiWorld, player: int, active_locations:
         a3_from_a2_region,
         a3_knife_puzzle_reward_region,
         a3_knife_reward_2_region,
+        a3_nw_stairs_region,
         a3_w_t_bgate_region,
         a3_w_r_bgate_region,
         a3_w_b_bgate_region,
@@ -2832,6 +2841,7 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
 
     connect(multiworld, player, used_names, castle_region_names.p1_start, castle_region_names.p1_nw,
             True, item_name.btnc_p1_floor, 1, False)
+    connect(multiworld, player, used_names, castle_region_names.p1_nw, castle_region_names.p1_nw_left, False)
     connect_gate(multiworld, player, used_names, castle_region_names.p1_start, castle_region_names.p1_s,
                  key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p1_0, True)
     connect_gate(multiworld, player, used_names, castle_region_names.p1_s, castle_region_names.p1_sw_bronze_gate,
@@ -3096,7 +3106,9 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     # Requires 5 spike puzzle switches
     connect(multiworld, player, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False)
     # Requires 2 spike puzzle switches
-    connect_exit(multiworld, player, used_names, castle_region_names.a3_main, castle_region_names.a2_nw,
+    connect(multiworld, player, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, False)
+    # Requires 2 spike puzzle switches
+    connect_exit(multiworld, player, used_names, castle_region_names.a3_nw_stairs, castle_region_names.a2_nw,
                  entrance_names.c_a2_3, entrance_names.c_a3_2)
     connect(multiworld, player, used_names, castle_region_names.a3_main, castle_region_names.a3_tp, False)
     # Requires floor 6 teleport switch
