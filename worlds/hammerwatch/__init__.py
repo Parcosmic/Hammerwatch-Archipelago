@@ -393,10 +393,9 @@ class HammerwatchWorld(World):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
-        if get_option(self.multiworld, self.player, option_names.exit_randomization):
-            spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
-            for entry in self.exit_spoiler_info:
-                spoiler_handle.write(f"\n{entry}")
+            # spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
+            # for entry in self.exit_spoiler_info:
+            #     spoiler_handle.write(f"\n{entry}")
 
     def extend_hint_information(self, hint_data: typing.Dict[int, typing.Dict[int, str]]):
         pass

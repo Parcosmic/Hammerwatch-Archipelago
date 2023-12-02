@@ -69,7 +69,15 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         world = multiworld.worlds[player]
         for exit in world.level_exits:
             exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
-            world.exit_spoiler_info.append(f"[{exit.return_code} > {world.exit_swaps[exit.exit_code]}] {exit.name}")
+            for level_exit in world.level_exits:
+                entrance_name = level_exit.parent_region.name
+                if level_exit.return_code is not None:
+                    entrance_name += f" [{level_exit.return_code}]"
+                    direction = "both"
+                else:
+                    direction = "entrance"
+                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
+                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, player)
 
     if get_campaign(multiworld, player) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
@@ -339,7 +347,7 @@ c_entrance_block_types = {  # (act, EntranceBlockType, required traversed region
     entrance_names.c_p1_3: (1, EntranceBlockType.Unblocked, None),
     entrance_names.c_p1_4: (1, EntranceBlockType.DeadEnd, None),
     entrance_names.c_p1_10: (1, EntranceBlockType.DeadEnd, None),
-    entrance_names.c_p1_20: (1, EntranceBlockType.DeadEnd, None),  # Portal exit, same note as 1 ^
+    entrance_names.c_p1_20: (1, EntranceBlockType.Blocked, None),
     entrance_names.c_p2_0: (1, EntranceBlockType.Unblocked, None),  # Leads to 1, 3 (2 is blocked)
     entrance_names.c_p2_1: (1, EntranceBlockType.Unblocked, None),
     entrance_names.c_p2_2: (1, EntranceBlockType.Unblocked, None),  # Leads to 0, 1,
