@@ -294,7 +294,8 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
 
                 # Set the reverse exit too if the exit is two-way
                 if open_exit.return_code is not None:
-                    link: HWEntrance = multiworld.get_entrance(code_to_exit[link_code].name, player)
+                    # link: HWEntrance = multiworld.get_entrance(code_to_exit[link_code].name, player)
+                    link: HWEntrance = code_to_exit[link_code]
                     link.connect(open_exit.parent_region)
                     multiworld.worlds[player].exit_swaps[link.exit_code] = open_exit.return_code
                     link.linked = True

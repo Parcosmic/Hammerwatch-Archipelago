@@ -1,6 +1,6 @@
 import typing
 
-from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names,\
+from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
     entrance_names, option_names
 from .items import HammerwatchItem, item_table, key_table, filler_items, castle_item_counts, temple_item_counts
 from .locations import LocationData, all_locations, setup_locations
@@ -87,7 +87,7 @@ class HammerwatchWorld(World):
         for key in get_active_key_names(self.multiworld, self.player):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
-        self.active_location_list, self.item_counts, self.random_locations =\
+        self.active_location_list, self.item_counts, self.random_locations = \
             setup_locations(self.multiworld, self.campaign, self.player)
 
     def generate_basic(self) -> None:
@@ -204,7 +204,8 @@ class HammerwatchWorld(World):
             self.place_tots_locked_items()
 
         # More efficient and foolproof method to get number of required locations
-        total_required_locations = len([loc for loc in self.multiworld.get_locations(self.player) if not loc.item])
+        total_required_locations_1 = len([loc for loc in self.multiworld.get_locations(self.player) if not loc.item])
+        total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         # Remove progression items if the player starts with them
         for precollected in self.multiworld.precollected_items[self.player]:
@@ -379,6 +380,70 @@ class HammerwatchWorld(World):
             ]
             for loc in temple_bonus_keys:
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
+
+        # Portal Accessibility rune keys
+        if get_option(self.multiworld, self.player, option_names.portal_accessibility):
+            rune_key_locs: typing.List[str] = []
+
+            def get_region_item_locs(region: str):
+                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if
+                        not loc.event]
+
+            # Cave Level 3 Rune Key
+            c3_locs = get_region_item_locs(temple_region_names.c3_e)
+            # If playing exit rando we need to ensure we can always return if falling from the temple
+            if not get_option(self.multiworld, self.player, option_names.exit_randomization):
+                c3_locs.extend(get_region_item_locs(temple_region_names.cave_3_main))
+            rune_key_locs.append(self.random.choice(c3_locs))
+
+            # Cave Level 2 Rune Key
+            c2_locs = get_region_item_locs(temple_region_names.cave_2_main)
+            rune_key_locs.append(self.random.choice(c2_locs))
+
+            # Cave Level 1 Rune Key
+            c1_locs = []
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_main)
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_blue_bridge)
+            c1_locs += get_region_item_locs(temple_region_names.cave_1_red_bridge)
+            rune_key_locs.append(self.random.choice(c1_locs))
+
+            # Temple Floor 1 Rune Key
+            t1_locs = []
+            t1_locs += get_region_item_locs(temple_region_names.t1_main)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sw_sdoor)
+            t1_locs += get_region_item_locs(temple_region_names.t1_node_1)
+            t1_locs += get_region_item_locs(temple_region_names.t1_node_2)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sun_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_n_of_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_s_of_ice_turret)
+            t1_locs += get_region_item_locs(temple_region_names.t1_east)
+            t1_locs += get_region_item_locs(temple_region_names.t1_sun_block_hall)
+            rune_key_locs.append(self.random.choice(t1_locs))
+
+            # Temple Floor 2 Rune Key
+            t2_locs = []
+            t2_locs += get_region_item_locs(temple_region_names.t2_main)
+            t2_locs += get_region_item_locs(temple_region_names.t2_n_gate)
+            t2_locs += get_region_item_locs(temple_region_names.t2_s_gate)
+            t2_locs += get_region_item_locs(temple_region_names.t2_n_node)
+            t2_locs += get_region_item_locs(temple_region_names.t2_s_node)
+            t2_locs += get_region_item_locs(temple_region_names.t2_ornate)
+            rune_key_locs.append(self.random.choice(t2_locs))
+
+            # Temple Floor 3 Rune Key
+            t3_locs = []
+            t3_locs += get_region_item_locs(temple_region_names.t3_main)
+            t3_locs += get_region_item_locs(temple_region_names.t3_n_node_blocks)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node_blocks_1)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node_blocks_2)
+            t3_locs += get_region_item_locs(temple_region_names.t3_s_node)
+            t3_locs += get_region_item_locs(temple_region_names.t3_n_node)
+            rune_key_locs.append(self.random.choice(t3_locs))
+
+            for loc in rune_key_locs:
+                self.multiworld.get_location(loc, self.player).place_locked_item(
+                    self.create_item(item_name.key_teleport))
 
         for loc, itm in temple_locked_items.items():
             self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))

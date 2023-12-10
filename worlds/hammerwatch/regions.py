@@ -2853,10 +2853,10 @@ def connect_castle_regions(multiworld: MultiWorld, player: int, random_locations
     connect_exit(multiworld, player, used_names, castle_region_names.p1_e, castle_region_names.p2_start,
                  entrance_names.c_p2_0, entrance_names.c_p1_1)
     if get_option(multiworld, player, option_names.shortcut_teleporter):
-        connect_exit(multiworld, player, used_names, castle_region_names.p1_nw, castle_region_names.p3_portal_from_p1,
+        connect_exit(multiworld, player, used_names, castle_region_names.p1_nw_left, castle_region_names.p3_portal_from_p1,
                      entrance_names.c_p3_portal, entrance_names.c_p1_20)
         connect(multiworld, player, used_names, castle_region_names.p3_portal_from_p1, castle_region_names.p3_n_gold_gate,
-                True)
+                False)
 
     connect_gate(multiworld, player, used_names, castle_region_names.p2_start, castle_region_names.p2_m,
                  key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_0, True)
@@ -4941,8 +4941,18 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     connect(multiworld, player, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, False)
     connect(multiworld, player, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False)
     connect(multiworld, player, used_names, temple_region_names.cave_3_secret, temple_region_names.cave_3_main, False)
-    connect_exit(multiworld, player, used_names, temple_region_names.c3_e, temple_region_names.cave_2_main,
-                 entrance_names.t_c2_start, entrance_names.t_c1_end, item_name.key_teleport, 1, True)
+    # If ER is on, use consume logic if Rune Keys are placed normally. If we're placing them don't use logic as we
+    # can't predict how we'll collect them. If ER is off use hardcoded logic so we have reasonable spheres
+    if get_option(multiworld, player, option_names.exit_randomization):
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            connect_exit(multiworld, player, used_names, temple_region_names.c3_e, temple_region_names.cave_2_main,
+                         entrance_names.t_c2_start, entrance_names.t_c1_end)
+        else:
+            connect_exit(multiworld, player, used_names, temple_region_names.c3_e, temple_region_names.cave_2_main,
+                         entrance_names.t_c2_start, entrance_names.t_c1_end, item_name.key_teleport, 1, True)
+    else:
+        connect_exit(multiworld, player, used_names, temple_region_names.c3_e, temple_region_names.cave_2_main,
+                     entrance_names.t_c2_start, entrance_names.t_c1_end, item_name.key_teleport, 1, False)
 
     connect(multiworld, player, used_names, temple_region_names.cave_2_main, temple_region_names.cave_2_pumps,
             False, lever_item, lever_item_count, False)
@@ -4958,8 +4968,16 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # Both require double bridge switch
     # connect(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main, False)
     # Requires lower bridge switch
-    connect_exit(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
-                 entrance_names.t_c3_start, entrance_names.t_c2_end, item_name.key_teleport, 1, True)
+    if get_option(multiworld, player, option_names.exit_randomization):
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            connect_exit(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
+                         entrance_names.t_c3_start, entrance_names.t_c2_end)
+        else:
+            connect_exit(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
+                         entrance_names.t_c3_start, entrance_names.t_c2_end, item_name.key_teleport, 1, True)
+    else:
+        connect_exit(multiworld, player, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
+                     entrance_names.t_c3_start, entrance_names.t_c2_end, item_name.key_teleport, 2, False)
 
     connect(multiworld, player, used_names, temple_region_names.cave_1_main, temple_region_names.c1_n_puzzle, False)
     connect(multiworld, player, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, False)
@@ -4983,9 +5001,18 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
             False)
 
     connect(multiworld, player, used_names, temple_region_names.cave_1_red_bridge, temple_region_names.c1_e_puzzle, False)
-    connect_exit(multiworld, player, used_names, temple_region_names.cave_1_red_bridge,
-                 temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
-                 item_name.key_teleport, 1, True)
+    if get_option(multiworld, player, option_names.exit_randomization):
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            connect_exit(multiworld, player, used_names, temple_region_names.cave_1_red_bridge,
+                         temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end)
+        else:
+            connect_exit(multiworld, player, used_names, temple_region_names.cave_1_red_bridge,
+                         temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
+                         item_name.key_teleport, 1, True)
+    else:
+        connect_exit(multiworld, player, used_names, temple_region_names.cave_1_red_bridge,
+                     temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
+                     item_name.key_teleport, 3, False)
 
     connect(multiworld, player, used_names, temple_region_names.boss_1_entrance, temple_region_names.boss_1_arena,
             True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
@@ -5047,9 +5074,22 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # Requires east jail button
     connect(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t1_e_puzzle, False)
 
-    connect_exit(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
-                 f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
-                 item_name.key_teleport, 1, True)
+    if get_option(multiworld, player, option_names.exit_randomization):
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            connect_exit(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
+                         f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end)
+            connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_main, False)
+        else:
+            connect_exit(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
+                         f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
+                         item_name.key_teleport, 1, True)
+            connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_main, False,
+                    item_name.key_teleport, 1, True)
+    else:
+        connect_exit(multiworld, player, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
+                     f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
+                     item_name.key_teleport, 4, False)
+
     connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_nw_puzzle,
             False)
     connect(multiworld, player, used_names, temple_region_names.t2_main, temple_region_names.t2_e_puzzle,
@@ -5114,8 +5154,16 @@ def connect_tots_regions(multiworld, player: int, random_locations: typing.Dict[
     # Requires south gate button
     connect(multiworld, player, used_names, temple_region_names.t3_s_gate, temple_region_names.t3_main, False)
     # One-way because we need to hit the button first!
-    connect_exit(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
-                 entrance_names.t_t2_t3, entrance_names.t_t3_t2, item_name.key_teleport, 1, True)
+    if get_option(multiworld, player, option_names.exit_randomization):
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            connect_exit(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
+                         entrance_names.t_t2_t3, entrance_names.t_t3_t2)
+        else:
+            connect_exit(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
+                         entrance_names.t_t2_t3, entrance_names.t_t3_t2, item_name.key_teleport, 1, True)
+    else:
+        connect_exit(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
+                     entrance_names.t_t2_t3, entrance_names.t_t3_t2, item_name.key_teleport, 6, False)
     connect(multiworld, player, used_names, temple_region_names.t3_main, temple_region_names.t3_main,
             False, item_name.mirror, 2)
     # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit
@@ -5259,7 +5307,7 @@ def connect_exit(multiworld: MultiWorld, player: int, used_names: typing.Dict[st
     # if get_option(multiworld, player, option_names.exit_randomization, player) == 2:
     #     connection.linked = False
     #     multiworld.worlds[player].level_exits.append(connection)
-    if get_option(multiworld, player, option_names.exit_randomization) != 1 or\
+    if get_option(multiworld, player, option_names.exit_randomization) != 1 or \
             not (exit_code.startswith("boss") or (return_code is not None and return_code.startswith("boss"))):
         connection.linked = False
         multiworld.worlds[player].level_exits.append(connection)

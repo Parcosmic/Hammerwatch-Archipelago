@@ -339,7 +339,8 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
     # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
     key_names = set()
     for key_name in active_keys:
-        if "Bronze" not in key_name and "Bonus" not in key_name:
+        # Exclude bronze keys and rune keys from getting extra items added to the pool
+        if "Bronze" not in key_name and "Rune" not in key_name:
             key_names.add(key_name)
     extra_key_percent = get_option(multiworld, player, option_names.extra_keys_percent) / 100
     for key in key_names:
@@ -369,21 +370,25 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
-        pan_fragments = get_option(multiworld, player, option_names.pan_fragments)
+        pan_fragments = get_option(multiworld, player, option_names.pan_fragments).value
         if pan_fragments > 1:
             item_counts_table.pop(item_name.pan)
             item_counts_table.update({item_name.pan_fragment: pan_fragments})
             extra_items += pan_fragments - 1
-        lever_fragments = get_option(multiworld, player, option_names.lever_fragments)
+        lever_fragments = get_option(multiworld, player, option_names.lever_fragments).value
         if lever_fragments > 1:
             item_counts_table.pop(item_name.lever)
             item_counts_table.update({item_name.lever_fragment: lever_fragments})
             extra_items += lever_fragments - 1
-        pickaxe_fragments = get_option(multiworld, player, option_names.pickaxe_fragments)
+        pickaxe_fragments = get_option(multiworld, player, option_names.pickaxe_fragments).value
         if pickaxe_fragments > 1:
             item_counts_table.pop(item_name.pickaxe)
             item_counts_table.update({item_name.pickaxe_fragment: pickaxe_fragments})
             extra_items += pickaxe_fragments - 1
+
+        # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
+        if get_option(multiworld, player, option_names.portal_accessibility):
+            item_counts_table.pop(item_name.key_teleport)
 
         # Add secret items from TotS
         if get_option(multiworld, player, option_names.randomize_secrets):
