@@ -203,8 +203,6 @@ class HammerwatchWorld(World):
         else:
             self.place_tots_locked_items()
 
-        # More efficient and foolproof method to get number of required locations
-        total_required_locations_1 = len([loc for loc in self.multiworld.get_locations(self.player) if not loc.item])
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         # Remove progression items if the player starts with them

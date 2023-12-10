@@ -2027,7 +2027,7 @@ def setup_locations(multiworld: MultiWorld, hw_map: Campaign, player: int):
     # Bonus level handling
     bonus_behavior = get_option(multiworld, player, option_names.bonus_behavior)
     if bonus_behavior == BonusChestLocationBehavior.option_necessary:  # Necessary
-        for i in range(extra_items):
+        for i in range(min(extra_items, len(bonus_locations))):
             loc = world.random.choice(list(bonus_locations.keys()))
             location_table.update({loc: bonus_locations.pop(loc)})
     elif bonus_behavior == BonusChestLocationBehavior.option_all:  # All

@@ -451,7 +451,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     # For Necessary we set the number of bonus chests equal to each extra item
     if get_option(multiworld, player, option_names.bonus_behavior) == BonusChestLocationBehavior.option_necessary:
-        item_counts_table[item_name.bonus_chest] = max(extra_items, 0)
+        item_counts_table[item_name.bonus_chest] = max(item_counts_table[item_name.bonus_chest], extra_items, 0)
 
     return item_counts_table, extra_items
 

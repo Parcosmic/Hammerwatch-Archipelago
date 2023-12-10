@@ -14,71 +14,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     multiworld.completion_condition[player] = lambda state: state.has(item_name.ev_victory, player)
     world = multiworld.worlds[player]
 
-    if get_campaign(multiworld, player) == Campaign.Castle:
-        world.start_exit = entrance_names.c_p1_start
-        entrance_block_types = c_entrance_block_types.copy()
-        passage_blocking_codes = c_passage_blocking_codes
-        # If we aren't randomizing boss entrances, move requirements down to the boss exit
-        if get_option(multiworld, player, option_names.exit_randomization) == ExitRandomization.option_no_boss_exits:
-            entrance_block_types[entrance_names.c_a1_0] = entrance_block_types[entrance_names.c_b1_0]
-            entrance_block_types[entrance_names.c_r1_0] = entrance_block_types[entrance_names.c_b2_0]
-            entrance_block_types[entrance_names.c_c1_0] = entrance_block_types[entrance_names.c_b3_0]
-    else:
-        world.start_exit = entrance_names.t_hub_start
-        entrance_block_types = t_entrance_block_types.copy()
-        passage_blocking_codes = t_passage_blocking_codes
-
-    code_to_exit = {}
-    code_to_region = {}
-    open_codes = []
-    if get_option(multiworld, player, option_names.exit_randomization) > 0:
-        for level_exit in world.level_exits:
-            if level_exit.return_code is not None:
-                code_to_exit[level_exit.return_code] = level_exit
-                code_to_region[level_exit.return_code] = level_exit.parent_region
-                open_codes.append(level_exit.return_code)
-            else:
-                code_to_exit[level_exit.exit_code] = None
-                open_codes.append(level_exit.exit_code)
-                code_to_region[level_exit.exit_code] = level_exit.target_region
-
-    tries = 0
-    stop_threshold = 100000
-    while not set_connections(multiworld, player, entrance_block_types, passage_blocking_codes,
-                              code_to_exit, code_to_region, open_codes):
-        if tries >= stop_threshold:
-            break
-        tries += 1
-    if tries >= stop_threshold:
-        raise RuntimeError("Could not generate a valid ER configuration!")
-    # print(f"Connecting exits took {tries} tries")
-
-    menu_region = multiworld.get_region(castle_region_names.menu, player)
-    # visualize_regions(menu_region, "_testing.puml", show_locations=False)
-    if get_campaign(multiworld, player) == Campaign.Castle:
-        second_region_name = castle_region_names.p1_start
-    else:
-        second_region_name = temple_region_names.hub_main
-    second_region = multiworld.get_region(second_region_name, player)
-    loop_entrances = prune_entrances(menu_region, second_region)
-
-    set_door_access_rules(multiworld, player, door_counts, loop_entrances)
-
-    # Change the names of all entrances to match where they lead if ER is on
-    if get_option(multiworld, player, option_names.exit_randomization) > 0:
-        world = multiworld.worlds[player]
-        for exit in world.level_exits:
-            exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
-            for level_exit in world.level_exits:
-                entrance_name = level_exit.parent_region.name
-                if level_exit.return_code is not None:
-                    entrance_name += f" [{level_exit.return_code}]"
-                    direction = "both"
-                else:
-                    direction = "entrance"
-                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
-                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, player)
-
+    # Set special entrance and location rules, and set world completion condition
     if get_campaign(multiworld, player) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
         if get_goal_type(multiworld, player) == GoalType.KillBosses:
@@ -90,14 +26,13 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             }
             multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
-            entr_name = ""
-            if get_option(multiworld, player, option_names.exit_randomization) > 0:
-                for exit in multiworld.get_entrances():
-                    if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
-                        entr_name = exit.name
-                        break
-            else:
-                entr_name = etr_base_name(castle_region_names.c2_main, castle_region_names.b4_start)
+            # Get name of the final boss entrance
+            entr_name = etr_base_name(castle_region_names.c2_main, castle_region_names.b4_start)
+            # if get_option(multiworld, player, option_names.exit_randomization) > 0:
+            #     for exit in multiworld.get_entrances():
+            #         if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
+            #             entr_name = exit.name
+            #             break
             add_rule(multiworld.get_entrance(entr_name, player),
                      lambda state: state.has(item_name.plank, player, 12)
                      and state.has(item_name.key_gold, player, 16)
@@ -153,6 +88,71 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
                  lambda state: state.has_all([item_name.evt_t1_n_mirrors, item_name.evt_t1_s_mirror], player))
         add_rule(multiworld.get_entrance(etr_base_name(temple_region_names.t1_east, temple_region_names.t1_node_2), player),
                  lambda state: state.has(item_name.evt_t1_n_mirrors, player))
+
+    # Set start exit and exit rando data structures
+    if get_campaign(multiworld, player) == Campaign.Castle:
+        world.start_exit = entrance_names.c_p1_start
+        entrance_block_types = c_entrance_block_types.copy()
+        passage_blocking_codes = c_passage_blocking_codes
+        # If we aren't randomizing boss entrances, move requirements down to the boss exit
+        if get_option(multiworld, player, option_names.exit_randomization) == ExitRandomization.option_no_boss_exits:
+            entrance_block_types[entrance_names.c_a1_0] = entrance_block_types[entrance_names.c_b1_0]
+            entrance_block_types[entrance_names.c_r1_0] = entrance_block_types[entrance_names.c_b2_0]
+            entrance_block_types[entrance_names.c_c1_0] = entrance_block_types[entrance_names.c_b3_0]
+    else:
+        world.start_exit = entrance_names.t_hub_start
+        entrance_block_types = t_entrance_block_types.copy()
+        passage_blocking_codes = t_passage_blocking_codes
+    code_to_exit = {}
+    code_to_region = {}
+    open_codes = []
+    if get_option(multiworld, player, option_names.exit_randomization) > 0:
+        for level_exit in world.level_exits:
+            if level_exit.return_code is not None:
+                code_to_exit[level_exit.return_code] = level_exit
+                code_to_region[level_exit.return_code] = level_exit.parent_region
+                open_codes.append(level_exit.return_code)
+            else:
+                code_to_exit[level_exit.exit_code] = None
+                open_codes.append(level_exit.exit_code)
+                code_to_region[level_exit.exit_code] = level_exit.target_region
+
+    tries = 0
+    stop_threshold = 100000
+    while not set_connections(multiworld, player, entrance_block_types, passage_blocking_codes,
+                              code_to_exit, code_to_region, open_codes):
+        if tries >= stop_threshold:
+            break
+        tries += 1
+    if tries >= stop_threshold:
+        raise RuntimeError("Could not generate a valid ER configuration!")
+    # print(f"Connecting exits took {tries} tries")
+
+    menu_region = multiworld.get_region(castle_region_names.menu, player)
+    # visualize_regions(menu_region, "_testing.puml", show_locations=False)
+    if get_campaign(multiworld, player) == Campaign.Castle:
+        second_region_name = castle_region_names.p1_start
+    else:
+        second_region_name = temple_region_names.hub_main
+    second_region = multiworld.get_region(second_region_name, player)
+    loop_entrances = prune_entrances(menu_region, second_region)
+
+    set_door_access_rules(multiworld, player, door_counts, loop_entrances)
+
+    # Change the names of all entrances to match where they lead if ER is on
+    if get_option(multiworld, player, option_names.exit_randomization) > 0:
+        world = multiworld.worlds[player]
+        for exit in world.level_exits:
+            exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
+            for level_exit in world.level_exits:
+                entrance_name = level_exit.parent_region.name
+                if level_exit.return_code is not None:
+                    entrance_name += f" [{level_exit.return_code}]"
+                    direction = "both"
+                else:
+                    direction = "entrance"
+                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
+                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, player)
 
     # visualize_regions(second_region, "_testing.puml", show_locations=False)
 
