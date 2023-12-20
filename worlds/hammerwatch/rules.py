@@ -27,13 +27,14 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
             multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
         if get_goal_type(multiworld, player) == GoalType.FullCompletion:
             # Get name of the final boss entrance
-            entr_name = etr_base_name(castle_region_names.c2_main, castle_region_names.b4_start)
+            final_boss_entr_name = etr_base_name(castle_region_names.b4_start, castle_region_names.b4_defeated)
+            final_boss_entrance = multiworld.get_entrance(final_boss_entr_name, player)
             # if get_option(multiworld, player, option_names.exit_randomization) > 0:
             #     for exit in multiworld.get_entrances():
             #         if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
             #             entr_name = exit.name
             #             break
-            add_rule(multiworld.get_entrance(entr_name, player),
+            add_rule(final_boss_entrance,
                      lambda state: state.has(item_name.plank, player, 12)
                      and state.has(item_name.key_gold, player, 16)
                      and state.has(item_name.key_silver, player, 13)
