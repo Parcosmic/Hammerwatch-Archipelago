@@ -2086,23 +2086,23 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
             pegs += world.random.randrange(2)
         random_locations[rloc_name] = pegs
 
+    puzzle_locs = {
+        castle_location_names.crloc_p2_puzzle: castle_location_names.p2_puzzle_1,
+        castle_location_names.crloc_a1_puzzle: castle_location_names.a1_puzzle_1,
+        castle_location_names.crloc_a2_puzzle: castle_location_names.a2_puzzle_1,
+        castle_location_names.crloc_r1_puzzle: castle_location_names.r1_puzzle_1,
+        castle_location_names.crloc_r2_puzzle: castle_location_names.r2_puzzle_1,
+        castle_location_names.crloc_ps_puzzle: castle_location_names.pstart_puzzle_1,
+        castle_location_names.crloc_c2_puzzle: castle_location_names.c2_puzzle_1,
+    }
+
     # Set puzzle random values
     if get_option(multiworld, player, option_names.randomize_puzzles):
-        randomize_puzzle(castle_location_names.crloc_p2_puzzle)
-        randomize_puzzle(castle_location_names.crloc_a1_puzzle)
-        randomize_puzzle(castle_location_names.crloc_a2_puzzle)
-        randomize_puzzle(castle_location_names.crloc_r1_puzzle)
-        randomize_puzzle(castle_location_names.crloc_r2_puzzle)
-        randomize_puzzle(castle_location_names.crloc_ps_puzzle)
-        randomize_puzzle(castle_location_names.crloc_c2_puzzle)
+        for rloc in puzzle_locs.keys():
+            randomize_puzzle(rloc)
     else:
-        random_locations[castle_location_names.crloc_p2_puzzle] = -1
-        random_locations[castle_location_names.crloc_a1_puzzle] = -1
-        random_locations[castle_location_names.crloc_a2_puzzle] = -1
-        random_locations[castle_location_names.crloc_r1_puzzle] = -1
-        random_locations[castle_location_names.crloc_r2_puzzle] = -1
-        random_locations[castle_location_names.crloc_ps_puzzle] = -1
-        random_locations[castle_location_names.crloc_c2_puzzle] = -1
+        for rloc in puzzle_locs.keys():
+            random_locations[rloc] = -1
 
     # Goal stuff
     if get_goal_type(multiworld, player) != GoalType.FullCompletion:
@@ -2254,13 +2254,8 @@ def choose_castle_random_locations(multiworld, player: int, location_table: typi
     ]
     location_table = keep_one_location(p3_gkey_1_locs, castle_location_names.crloc_p3_gkey)
     # Remove puzzles
-    remove_puzzle_locations(castle_location_names.p2_puzzle_1[:-1], castle_location_names.crloc_p2_puzzle)
-    remove_puzzle_locations(castle_location_names.a1_puzzle_1[:-1], castle_location_names.crloc_a1_puzzle)
-    remove_puzzle_locations(castle_location_names.a2_puzzle_1[:-1], castle_location_names.crloc_a2_puzzle)
-    remove_puzzle_locations(castle_location_names.r1_puzzle_1[:-1], castle_location_names.crloc_r1_puzzle)
-    remove_puzzle_locations(castle_location_names.r2_puzzle_1[:-1], castle_location_names.crloc_r2_puzzle)
-    remove_puzzle_locations(castle_location_names.pstart_puzzle_1[:-1], castle_location_names.crloc_ps_puzzle)
-    remove_puzzle_locations(castle_location_names.c2_puzzle_1[:-1], castle_location_names.crloc_c2_puzzle)
+    for rloc, loc in puzzle_locs.items():
+        remove_puzzle_locations(loc[:-1], rloc)
     # Enemy loot locations
     if get_option(multiworld, player, option_names.randomize_enemy_loot):
         flower_locs = [
@@ -2423,117 +2418,61 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
         random_locations[rloc_name] = pegs
 
     # Secrets
+    secret_locs = {
+        temple_location_names.rloc_c3_secret_n: temple_location_names.cave3_secret_n,
+        temple_location_names.rloc_c3_secret_nw: temple_location_names.cave3_secret_nw,
+        temple_location_names.rloc_c3_secret_s: temple_location_names.cave3_secret_s,
+        temple_location_names.rloc_c2_secret_1: temple_location_names.cave2_secret_ne,
+        temple_location_names.rloc_c2_secret_2: temple_location_names.cave2_secret_w,
+        temple_location_names.rloc_c2_secret_3: temple_location_names.cave2_secret_m,
+        temple_location_names.rloc_c1_secret_1: temple_location_names.cave1_secret_nw,
+        temple_location_names.rloc_c1_secret_2: temple_location_names.cave1_secret_n_hidden_room,
+        temple_location_names.rloc_c1_secret_3: temple_location_names.cave1_secret_ne,
+        temple_location_names.rloc_c1_secret_4: temple_location_names.cave1_secret_w,
+        temple_location_names.rloc_c1_secret_5: temple_location_names.cave1_secret_m,
+        temple_location_names.rloc_c1_secret_6: temple_location_names.cave1_secret_e,
+        temple_location_names.rloc_b1_secret: temple_location_names.boss1_secret,
+        temple_location_names.rloc_p_secret_1: temple_location_names.p_ent2_secret,
+        temple_location_names.rloc_p_secret_2: temple_location_names.p_mid3_secret_1,
+        temple_location_names.rloc_p_secret_3: temple_location_names.p_mid3_secret_2,
+        temple_location_names.rloc_p_secret_4: temple_location_names.p_mid3_secret_3,
+        temple_location_names.rloc_p_secret_5: temple_location_names.p_mid3_secret_4,
+        temple_location_names.rloc_p_secret_6: temple_location_names.p_end1_secret,
+        temple_location_names.rloc_p_secret_7: temple_location_names.p_mid5_secret,
+    }
     if get_option(multiworld, player, option_names.randomize_secrets):
-        random_locations[temple_location_names.rloc_c3_secret_n] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c3_secret_nw] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c3_secret_s] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c2_secret_1] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c2_secret_2] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c2_secret_3] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_1] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_2] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_3] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_4] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_5] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_c1_secret_6] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_b1_secret] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_1] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_2] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_3] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_4] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_5] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_6] = world.random.randrange(2)
-        random_locations[temple_location_names.rloc_p_secret_7] = world.random.randrange(2)
+        for secret_key in secret_locs.keys():
+            random_locations[secret_key] = multiworld.per_slot_randoms[player].random.randrange(2)
     else:
-        random_locations[temple_location_names.rloc_c3_secret_n] = 0
-        random_locations[temple_location_names.rloc_c3_secret_nw] = 0
-        random_locations[temple_location_names.rloc_c3_secret_s] = 0
-        random_locations[temple_location_names.rloc_c2_secret_1] = 0
-        random_locations[temple_location_names.rloc_c2_secret_2] = 0
-        random_locations[temple_location_names.rloc_c2_secret_3] = 0
-        random_locations[temple_location_names.rloc_c1_secret_1] = 0
-        random_locations[temple_location_names.rloc_c1_secret_2] = 0
-        random_locations[temple_location_names.rloc_c1_secret_3] = 0
-        random_locations[temple_location_names.rloc_c1_secret_4] = 0
-        random_locations[temple_location_names.rloc_c1_secret_5] = 0
-        random_locations[temple_location_names.rloc_c1_secret_6] = 0
-        random_locations[temple_location_names.rloc_b1_secret] = 0
-        random_locations[temple_location_names.rloc_p_secret_1] = 0
-        random_locations[temple_location_names.rloc_p_secret_2] = 0
-        random_locations[temple_location_names.rloc_p_secret_3] = 0
-        random_locations[temple_location_names.rloc_p_secret_4] = 0
-        random_locations[temple_location_names.rloc_p_secret_5] = 0
-        random_locations[temple_location_names.rloc_p_secret_6] = 0
-        random_locations[temple_location_names.rloc_p_secret_7] = 0
-    if random_locations[temple_location_names.rloc_c3_secret_n] == 0:
-        remove_secret(temple_location_names.cave3_secret_n)
-    if random_locations[temple_location_names.rloc_c3_secret_nw] == 0:
-        remove_secret(temple_location_names.cave3_secret_nw)
-    if random_locations[temple_location_names.rloc_c3_secret_s] == 0:
-        remove_secret(temple_location_names.cave3_secret_s)
-    if random_locations[temple_location_names.rloc_c2_secret_1] == 0:
-        remove_secret(temple_location_names.cave2_secret_ne)
-    if random_locations[temple_location_names.rloc_c2_secret_2] == 0:
-        remove_secret(temple_location_names.cave2_secret_w)
-    if random_locations[temple_location_names.rloc_c2_secret_3] == 0:
-        remove_secret(temple_location_names.cave2_secret_m)
-    if random_locations[temple_location_names.rloc_c1_secret_1] == 0:
-        remove_secret(temple_location_names.cave1_secret_nw)
-    if random_locations[temple_location_names.rloc_c1_secret_2] == 0:
-        remove_secret(temple_location_names.cave1_secret_n_hidden_room)
-    if random_locations[temple_location_names.rloc_c1_secret_3] == 0:
-        remove_secret(temple_location_names.cave1_secret_ne)
-    if random_locations[temple_location_names.rloc_c1_secret_4] == 0:
-        remove_secret(temple_location_names.cave1_secret_w)
-    if random_locations[temple_location_names.rloc_c1_secret_5] == 0:
-        remove_secret(temple_location_names.cave1_secret_m)
-    if random_locations[temple_location_names.rloc_c1_secret_6] == 0:
-        remove_secret(temple_location_names.cave1_secret_e)
-    if random_locations[temple_location_names.rloc_b1_secret] == 0:
-        remove_secret(temple_location_names.boss1_secret)
-    if random_locations[temple_location_names.rloc_p_secret_1] == 0:
-        remove_secret(temple_location_names.p_ent2_secret)
-    if random_locations[temple_location_names.rloc_p_secret_2] == 0:
-        remove_secret(temple_location_names.p_mid3_secret_1)
-    if random_locations[temple_location_names.rloc_p_secret_3] == 0:
-        remove_secret(temple_location_names.p_mid3_secret_2)
-    if random_locations[temple_location_names.rloc_p_secret_4] == 0:
-        remove_secret(temple_location_names.p_mid3_secret_3)
-    if random_locations[temple_location_names.rloc_p_secret_5] == 0:
-        remove_secret(temple_location_names.p_mid3_secret_4)
-    if random_locations[temple_location_names.rloc_p_secret_6] == 0:
-        remove_secret(temple_location_names.p_end1_secret)
-    if random_locations[temple_location_names.rloc_p_secret_7] == 0:
-        remove_secret(temple_location_names.p_mid5_secret)
+        for secret_key in secret_locs.keys():
+            random_locations[secret_key] = 0
+    for rloc_, loc_ in secret_locs.items():
+        if random_locations[rloc_] == 0:
+            remove_secret(loc_)
+
     # Set puzzle random values
+    puzzle_locs = {
+        temple_location_names.rloc_c3_puzzle: temple_location_names.c3_puzzle_1,
+        temple_location_names.rloc_c2_puzzle: temple_location_names.c2_puzzle_1,
+        temple_location_names.rloc_c1_puzzle_n: temple_location_names.c1_n_puzzle_1,
+        temple_location_names.rloc_c1_puzzle_e: temple_location_names.c1_e_puzzle_1,
+        temple_location_names.rloc_p_puzzle: temple_location_names.p_puzzle_1,
+        temple_location_names.rloc_t1_puzzle_w: temple_location_names.t1_w_puzzle_1,
+        temple_location_names.rloc_t1_puzzle_e: temple_location_names.t1_e_puzzle_1,
+        temple_location_names.rloc_t2_puzzle_n: temple_location_names.t2_n_puzzle_1,
+        temple_location_names.rloc_t2_puzzle_nw: temple_location_names.t2_nw_puzzle_1,
+        temple_location_names.rloc_t2_puzzle_e: temple_location_names.t2_e_puzzle_1,
+        temple_location_names.rloc_t2_puzzle_sw: temple_location_names.t2_sw_puzzle_1,
+        temple_location_names.rloc_t3_puzzle: temple_location_names.t3_puzzle_1,
+        temple_location_names.rloc_pof_puzzle: temple_location_names.pof_puzzle_1,
+    }
     if get_option(multiworld, player, option_names.randomize_puzzles):
-        randomize_puzzle(temple_location_names.rloc_c3_puzzle)
-        randomize_puzzle(temple_location_names.rloc_c2_puzzle)
-        randomize_puzzle(temple_location_names.rloc_c1_puzzle_n)
-        randomize_puzzle(temple_location_names.rloc_c1_puzzle_e)
-        randomize_puzzle(temple_location_names.rloc_p_puzzle)
-        randomize_puzzle(temple_location_names.rloc_t1_puzzle_w)
-        randomize_puzzle(temple_location_names.rloc_t1_puzzle_e)
-        randomize_puzzle(temple_location_names.rloc_t2_puzzle_n)
-        randomize_puzzle(temple_location_names.rloc_t2_puzzle_nw)
-        randomize_puzzle(temple_location_names.rloc_t2_puzzle_e)
-        randomize_puzzle(temple_location_names.rloc_t2_puzzle_sw)
-        randomize_puzzle(temple_location_names.rloc_t3_puzzle)
-        randomize_puzzle(temple_location_names.rloc_pof_puzzle)
+        for puzzle_loc in puzzle_locs.keys():
+            randomize_puzzle(puzzle_loc)
     else:
-        random_locations[temple_location_names.rloc_c3_puzzle] = -1
-        random_locations[temple_location_names.rloc_c2_puzzle] = -1
-        random_locations[temple_location_names.rloc_c1_puzzle_n] = -1
-        random_locations[temple_location_names.rloc_c1_puzzle_e] = -1
-        random_locations[temple_location_names.rloc_p_puzzle] = -1
-        random_locations[temple_location_names.rloc_t1_puzzle_w] = -1
-        random_locations[temple_location_names.rloc_t1_puzzle_e] = -1
-        random_locations[temple_location_names.rloc_t2_puzzle_n] = -1
-        random_locations[temple_location_names.rloc_t2_puzzle_nw] = -1
-        random_locations[temple_location_names.rloc_t2_puzzle_e] = -1
-        random_locations[temple_location_names.rloc_t2_puzzle_sw] = -1
-        random_locations[temple_location_names.rloc_t3_puzzle] = -1
-        random_locations[temple_location_names.rloc_pof_puzzle] = -1
+        for puzzle_loc in puzzle_locs.keys():
+            random_locations[puzzle_loc] = -1
+
     # Goal stuff
     if get_goal_type(multiworld, player) == GoalType.AltCompletion:
         remove_location(temple_location_names.hub_pof_reward, item_name.ankh)
@@ -2867,20 +2806,10 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     random_locations[temple_location_names.rloc_t3_s_beam_5] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t3_s_beam_5] == 0:
         remove_location(temple_location_names.t3_n_node_blocks_5, item_name.vendor_coin)
+
     # Remove puzzle locations
-    remove_puzzle_locations(temple_location_names.c3_puzzle_1[:-1], temple_location_names.rloc_c3_puzzle)
-    remove_puzzle_locations(temple_location_names.c2_puzzle_1[:-1], temple_location_names.rloc_c2_puzzle)
-    remove_puzzle_locations(temple_location_names.c1_n_puzzle_1[:-1], temple_location_names.rloc_c1_puzzle_n)
-    remove_puzzle_locations(temple_location_names.c1_e_puzzle_1[:-1], temple_location_names.rloc_c1_puzzle_e)
-    remove_puzzle_locations(temple_location_names.p_puzzle_1[:-1], temple_location_names.rloc_p_puzzle)
-    remove_puzzle_locations(temple_location_names.t1_w_puzzle_1[:-1], temple_location_names.rloc_t1_puzzle_w)
-    remove_puzzle_locations(temple_location_names.t1_e_puzzle_1[:-1], temple_location_names.rloc_t1_puzzle_e)
-    remove_puzzle_locations(temple_location_names.t2_n_puzzle_1[:-1], temple_location_names.rloc_t2_puzzle_n)
-    remove_puzzle_locations(temple_location_names.t2_nw_puzzle_1[:-1], temple_location_names.rloc_t2_puzzle_nw)
-    remove_puzzle_locations(temple_location_names.t2_e_puzzle_1[:-1], temple_location_names.rloc_t2_puzzle_e)
-    remove_puzzle_locations(temple_location_names.t2_sw_puzzle_1[:-1], temple_location_names.rloc_t2_puzzle_sw)
-    remove_puzzle_locations(temple_location_names.t3_puzzle_1[:-1], temple_location_names.rloc_t3_puzzle)
-    remove_puzzle_locations(temple_location_names.pof_puzzle_1[:-1], temple_location_names.rloc_pof_puzzle)
+    for rloc, loc in puzzle_locs.items():
+        remove_puzzle_locations(loc[:-1], rloc)
     # Enemy loot locations
     if get_option(multiworld, player, option_names.randomize_enemy_loot):
         flower_locs = [
