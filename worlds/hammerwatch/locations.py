@@ -2442,7 +2442,7 @@ def choose_tots_random_locations(multiworld, player: int, location_table: typing
     }
     if get_option(multiworld, player, option_names.randomize_secrets):
         for secret_key in secret_locs.keys():
-            random_locations[secret_key] = multiworld.per_slot_randoms[player].random.randrange(2)
+            random_locations[secret_key] = world.random.randrange(2)
     else:
         for secret_key in secret_locs.keys():
             random_locations[secret_key] = 0
