@@ -1,8 +1,10 @@
 import typing
 from enum import Enum
-from BaseClasses import MultiWorld
 from ..AutoWorld import World
-from .names import item_name, option_names
+from .names import item_name
+
+if typing.TYPE_CHECKING:
+    from . import HammerwatchWorld
 
 
 class Campaign(Enum):
@@ -26,22 +28,18 @@ class Counter:
         return self.counter
 
 
-def get_option(multiworld: MultiWorld, player: int, option_name: str):
-    return getattr(multiworld, option_name)[player]
+def get_campaign(world: "HammerwatchWorld") -> Campaign:
+    return Campaign(world.options.goal.value // 10)
 
 
-def get_campaign(multiworld: MultiWorld, player: int) -> Campaign:
-    return Campaign(get_option(multiworld, player, option_names.goal) // 10)
+def get_goal_type(world: "HammerwatchWorld") -> GoalType:
+    return GoalType(world.options.goal.value % 10)
 
 
-def get_goal_type(multiworld: MultiWorld, player: int) -> GoalType:
-    return GoalType(get_option(multiworld, player, option_names.goal) % 10)
-
-
-def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]:
-    campaign = get_campaign(multiworld, player)
+def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
+    campaign = get_campaign(world)
     if campaign == Campaign.Castle:
-        if get_option(multiworld, player, option_names.act_specific_keys):
+        if world.options.act_specific_keys.value:
             key_names = {
                 item_name.key_bronze_prison,
                 item_name.key_bronze_armory,
@@ -56,7 +54,7 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
                 item_name.key_gold_archives,
                 item_name.key_gold_chambers,
             }
-            if get_option(multiworld, player, option_names.randomize_bonus_keys):
+            if world.options.randomize_bonus_keys.value:
                 key_names.update({
                     item_name.key_bonus_prison,
                     item_name.key_bonus_armory,
@@ -69,7 +67,7 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
                 item_name.key_silver,
                 item_name.key_gold,
             }
-            if get_option(multiworld, player, option_names.randomize_bonus_keys):
+            if world.options.randomize_bonus_keys.value:
                 key_names.add(item_name.key_bonus)
     else:
         key_names = {
@@ -78,7 +76,7 @@ def get_active_key_names(multiworld: MultiWorld, player: int) -> typing.Set[str]
             item_name.mirror,
             item_name.key_teleport,
         }
-        if get_option(multiworld, player, option_names.randomize_bonus_keys):
+        if world.options.randomize_bonus_keys.value:
             key_names.add(item_name.key_bonus)
     return key_names
 

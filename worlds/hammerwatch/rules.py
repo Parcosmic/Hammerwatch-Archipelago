@@ -1,102 +1,104 @@
 import typing
 from enum import Enum
-from BaseClasses import MultiWorld, Region, Entrance
-from .names import castle_region_names, temple_region_names, temple_location_names,\
-    entrance_names, item_name, option_names
+from BaseClasses import Region, Entrance
+from .names import castle_region_names, temple_region_names, temple_location_names, entrance_names, item_name
 from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, etr_base_name, connect
 from .options import ExitRandomization
-from .util import GoalType, Campaign, get_goal_type, get_campaign, get_option, get_active_key_names
+from .util import GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names
 # from Utils import visualize_regions
 
+if typing.TYPE_CHECKING:
+    from . import HammerwatchWorld
 
-def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str, int]):
-    multiworld.completion_condition[player] = lambda state: state.has(item_name.ev_victory, player)
-    world = multiworld.worlds[player]
+
+def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
+    world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_victory, world.player)
+    goal = get_goal_type(world)
 
     # Set special entrance and location rules, and set world completion condition
-    if get_campaign(multiworld, player) == Campaign.Castle:
+    if get_campaign(world) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
-        if get_goal_type(multiworld, player) == GoalType.KillBosses:
+        if goal == GoalType.KillBosses:
             boss_names: typing.Set = {
                 item_name.evc_beat_boss_1,
                 item_name.evc_beat_boss_2,
                 item_name.evc_beat_boss_3,
                 item_name.evc_beat_boss_4,
             }
-            multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
-        if get_goal_type(multiworld, player) == GoalType.FullCompletion:
+            world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
+        if goal == GoalType.FullCompletion:
             # Get name of the final boss entrance
             final_boss_entr_name = etr_base_name(castle_region_names.b4_start, castle_region_names.b4_defeated)
-            final_boss_entrance = multiworld.get_entrance(final_boss_entr_name, player)
+            final_boss_entrance = world.multiworld.get_entrance(final_boss_entr_name, world.player)
             # if get_option(multiworld, player, option_names.exit_randomization) > 0:
             #     for exit in multiworld.get_entrances():
             #         if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
             #             entr_name = exit.name
             #             break
             add_rule(final_boss_entrance,
-                     lambda state: state.has(item_name.plank, player, 12)
-                     and state.has(item_name.key_gold, player, 16)
-                     and state.has(item_name.key_silver, player, 13)
-                     and state.has(item_name.key_bronze, player, 103)
-                     and state.has(item_name.key_bonus, player, 18))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, player),
-            #          lambda state: state.has(item_name.plank, player, 1))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_2, player),
-            #          lambda state: state.has(item_name.plank, player, 2))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_3, player),
-            #          lambda state: state.has(item_name.plank, player, 3))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_4, player),
-            #          lambda state: state.has(item_name.plank, player, 4))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_5, player),
-            #          lambda state: state.has(item_name.plank, player, 5))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_6, player),
-            #          lambda state: state.has(item_name.plank, player, 6))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_7, player),
-            #          lambda state: state.has(item_name.plank, player, 7))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_8, player),
-            #          lambda state: state.has(item_name.plank, player, 8))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_9, player),
-            #          lambda state: state.has(item_name.plank, player, 9))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_10, player),
-            #          lambda state: state.has(item_name.plank, player, 10))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_11, player),
-            #          lambda state: state.has(item_name.plank, player, 11))
+                     lambda state: state.has(item_name.plank, world.player, 12)
+                     and state.has(item_name.key_gold, world.player, 16)
+                     and state.has(item_name.key_silver, world.player, 13)
+                     and state.has(item_name.key_bronze, world.player, 103)
+                     and state.has(item_name.key_bonus, world.player, 18))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 1))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_2, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 2))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_3, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 3))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_4, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 4))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_5, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 5))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_6, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 6))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_7, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 7))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_8, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 8))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_9, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 9))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_10, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 10))
+            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_11, world.player),
+            #          lambda state: state.has(item_name.plank, world.player, 11))
     else:
         # Overwrite world completion condition if we need to defeat all bosses
-        if get_goal_type(multiworld, player) == GoalType.KillBosses:
+        if goal == GoalType.KillBosses:
             boss_names: typing.Set = {
                 item_name.evt_beat_boss_1,
                 item_name.evt_beat_boss_2,
                 item_name.evt_beat_boss_3,
             }
-            multiworld.completion_condition[player] = lambda state: state.has_all(boss_names, player)
+            world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
 
         # Set access rules for portal activation events
         def portal_rule(state) -> bool:
-            return state.has(item_name.key_teleport, player, 6)
+            return state.has(item_name.key_teleport, world.player, 6)
 
-        add_rule(multiworld.get_location(temple_location_names.ev_c3_portal, player), portal_rule)
-        add_rule(multiworld.get_location(temple_location_names.ev_c2_portal, player), portal_rule)
-        add_rule(multiworld.get_location(temple_location_names.ev_c1_portal, player), portal_rule)
-        add_rule(multiworld.get_location(temple_location_names.ev_t1_portal, player), portal_rule)
-        add_rule(multiworld.get_location(temple_location_names.ev_t2_portal, player), portal_rule)
-        add_rule(multiworld.get_location(temple_location_names.ev_t3_portal, player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_c3_portal, world.player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_c2_portal, world.player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_c1_portal, world.player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_t1_portal, world.player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_t2_portal, world.player), portal_rule)
+        add_rule(world.multiworld.get_location(temple_location_names.ev_t3_portal, world.player), portal_rule)
 
         # Extra rules for T1 north node blocks locations
         t1_sun_block_entr = etr_base_name(temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall)
-        add_rule(multiworld.get_entrance(t1_sun_block_entr, player),
-                 lambda state: state.has_all([item_name.evt_t1_n_mirrors, item_name.evt_t1_s_mirror], player))
-        add_rule(multiworld.get_entrance(etr_base_name(temple_region_names.t1_east, temple_region_names.t1_node_2), player),
-                 lambda state: state.has(item_name.evt_t1_n_mirrors, player))
+        add_rule(world.multiworld.get_entrance(t1_sun_block_entr, world.player),
+                 lambda state: state.has_all([item_name.evt_t1_n_mirrors, item_name.evt_t1_s_mirror], world.player))
+        add_rule(world.multiworld.get_entrance(etr_base_name(temple_region_names.t1_east, temple_region_names.t1_node_2), world.player),
+                 lambda state: state.has(item_name.evt_t1_n_mirrors, world.player))
 
     # Set start exit and exit rando data structures
-    if get_campaign(multiworld, player) == Campaign.Castle:
+    if get_campaign(world) == Campaign.Castle:
         world.start_exit = entrance_names.c_p1_start
         entrance_block_types = c_entrance_block_types.copy()
         passage_blocking_codes = c_passage_blocking_codes
         # If we aren't randomizing boss entrances, move requirements down to the boss exit
-        if get_option(multiworld, player, option_names.exit_randomization) == ExitRandomization.option_no_boss_exits:
+        if world.options.exit_randomization.value == ExitRandomization.option_no_boss_exits:
             entrance_block_types[entrance_names.c_a1_0] = entrance_block_types[entrance_names.c_b1_0]
             entrance_block_types[entrance_names.c_r1_0] = entrance_block_types[entrance_names.c_b2_0]
             entrance_block_types[entrance_names.c_c1_0] = entrance_block_types[entrance_names.c_b3_0]
@@ -107,7 +109,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
     code_to_exit = {}
     code_to_region = {}
     open_codes = []
-    if get_option(multiworld, player, option_names.exit_randomization) > 0:
+    if world.options.exit_randomization.value > 0:
         for level_exit in world.level_exits:
             if level_exit.return_code is not None:
                 code_to_exit[level_exit.return_code] = level_exit
@@ -120,7 +122,7 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
 
     tries = 0
     stop_threshold = 100000
-    while not set_connections(multiworld, player, entrance_block_types, passage_blocking_codes,
+    while not set_connections(world, entrance_block_types, passage_blocking_codes,
                               code_to_exit, code_to_region, open_codes):
         if tries >= stop_threshold:
             break
@@ -129,22 +131,21 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
         raise RuntimeError("Could not generate a valid ER configuration!")
     # print(f"Connecting exits took {tries} tries")
 
-    menu_region = multiworld.get_region(castle_region_names.menu, player)
+    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
     # visualize_regions(menu_region, "_testing.puml", show_locations=False)
-    if get_campaign(multiworld, player) == Campaign.Castle:
+    if get_campaign(world) == Campaign.Castle:
         second_region_name = castle_region_names.p1_start
     else:
         second_region_name = temple_region_names.hub_main
-    second_region = multiworld.get_region(second_region_name, player)
+    second_region = world.multiworld.get_region(second_region_name, world.player)
     loop_entrances = prune_entrances(menu_region, second_region)
 
-    set_door_access_rules(multiworld, player, door_counts, loop_entrances)
+    set_door_access_rules(world, door_counts, loop_entrances)
 
     # Change the names of all entrances to match where they lead if ER is on
-    if get_option(multiworld, player, option_names.exit_randomization) > 0:
-        world = multiworld.worlds[player]
-        for exit in world.level_exits:
-            exit.name = etr_base_name(exit.parent_region.name, exit.connected_region.name)
+    if world.options.exit_randomization.value > 0:
+        for exit_ in world.level_exits:
+            exit_.name = etr_base_name(exit_.parent_region.name, exit_.connected_region.name)
             for level_exit in world.level_exits:
                 entrance_name = level_exit.parent_region.name
                 if level_exit.return_code is not None:
@@ -153,33 +154,32 @@ def set_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str,
                 else:
                     direction = "entrance"
                 exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
-                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, player)
+                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, world.player)
 
     # visualize_regions(second_region, "_testing.puml", show_locations=False)
 
 
-def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, passage_blocking_codes,
+def set_connections(world: "HammerwatchWorld", entrance_block_types, passage_blocking_codes,
                     code_to_exit, code_to_region, open_codes_ref) -> bool:
-    world = multiworld.worlds[player]
     level_exits: typing.List[HWEntrance] = world.level_exits.copy()
-    if get_option(multiworld, player, option_names.exit_randomization) > 0:
+    if world.options.exit_randomization.value > 0:
         start_entrance = None
-        act_range = get_option(multiworld, player, option_names.er_act_range).value
+        act_range = world.options.er_act_range.value
         open_codes = open_codes_ref.copy()
 
         # Randomly choose a starting exit if the setting is one
-        if get_option(multiworld, player, option_names.random_start_exit):
-            start_act = get_option(multiworld, player, option_names.random_start_exit_act)
+        if world.options.random_start_exit.value:
+            start_act = world.options.random_start_exit_act.value
             # Cap the highest act to be 3 in the Temple campaign
-            if get_campaign(multiworld, player) == Campaign.Temple and start_act > 3:
+            if get_campaign(world) == Campaign.Temple and start_act > 3:
                 start_act = 3
             available_start_codes = [code for code in open_codes if entrance_block_types[code][0] == start_act]
             start_code = world.random.choice(available_start_codes)
             world.start_exit = start_code
             start_region = code_to_region[start_code]
-            start_entrance = connect(multiworld, player, {}, castle_region_names.menu, start_region.name, False)
+            start_entrance = connect(world, {}, castle_region_names.menu, start_region.name, False)
         else:
-            start_region = multiworld.get_region(castle_region_names.menu, player)
+            start_region = world.multiworld.get_region(castle_region_names.menu, world.player)
         entrances = start_region.exits.copy()
         traversed_regions: typing.List[str] = [start_region.name]
         needed_regions = []
@@ -298,12 +298,12 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
                     # link: HWEntrance = multiworld.get_entrance(code_to_exit[link_code].name, player)
                     link: HWEntrance = code_to_exit[link_code]
                     link.connect(open_exit.parent_region)
-                    multiworld.worlds[player].exit_swaps[link.exit_code] = open_exit.return_code
+                    world.exit_swaps[link.exit_code] = open_exit.return_code
                     link.linked = True
                     open_codes.remove(open_exit.return_code)
 
                 open_exit.connect(link_region)
-                multiworld.worlds[player].exit_swaps[open_exit.exit_code] = link_code
+                world.exit_swaps[open_exit.exit_code] = link_code
                 open_exit.linked = True
                 open_codes.remove(link_code)
 
@@ -311,10 +311,10 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
                 traversed_regions.append(link_region.name)
                 entrances.extend(link_region.exits)
         unconnected = []
-        for exit in level_exits:
+        for exit_ in level_exits:
             # Set exit names
-            if not exit.linked:
-                unconnected.append(exit)
+            if not exit_.linked:
+                unconnected.append(exit_)
         if len(unconnected) > 0:
             # print(" !!! Failed to connect entrances properly, trying again...")
             # Give up and disconnect all the entrances
@@ -323,7 +323,7 @@ def set_connections(multiworld: MultiWorld, player: int, entrance_block_types, p
                 if unconnect.linked:
                     disconnect_linked_exit(unconnect)
             # If random start exit is on we have to remove the failed entrance
-            if get_option(multiworld, player, option_names.random_start_exit):
+            if world.options.random_start_exit.value:
                 start_entrance.parent_region.exits.remove(start_entrance)
                 start_entrance.connected_region.entrances.remove(start_entrance)
             return False
@@ -543,7 +543,7 @@ def get_valid_exits(entrance_block_types, open_codes: typing.List[str], code_to_
                     needed_codes: typing.List[str], act_range=4):
     act = entrance_block_types[entrance.return_code if entrance.return_code is not None else entrance.exit_code][0]
     exit_count = len(open_exits)
-    open_exit_codes = [exit.return_code for exit in open_exits]
+    open_exit_codes = [exit_.return_code for exit_ in open_exits]
     exits: typing.List[str] = []
     valid_exits: typing.List[str] = []
     # type_match_exits: typing.Dict[int, typing.List[str]] = {}
@@ -587,7 +587,7 @@ def get_valid_exits(entrance_block_types, open_codes: typing.List[str], code_to_
             #         return type_match_exits[a]
             return type_match_exits
         else:
-            needed_exits = [exit for exit in valid_exits if exit in needed_codes]
+            needed_exits = [exit_ for exit_ in valid_exits if exit_ in needed_codes]
             return needed_exits if len(needed_exits) > 0 else valid_exits
     return exits
 
@@ -602,12 +602,12 @@ def prune_entrances(start_region: Region, next_region: Region):
     def cycle_search(node: Region, prev_node: Region, visited: typing.List[Region],
                      visited_entrances: typing.List[HWEntrance]):
         visited.append(node)
-        for exit in node.exits:
-            if exit.connected_region.name == prev_node.name or exit.connected_region.name == node.name\
-                    or exit.connected_region.name in loop_ending_region_names:
+        for exit_ in node.exits:
+            if exit_.connected_region.name == prev_node.name or exit_.connected_region.name == node.name\
+                    or exit_.connected_region.name in loop_ending_region_names:
                 continue
-            if exit.connected_region in visited:
-                index = visited.index(exit.connected_region)
+            if exit_.connected_region in visited:
+                index = visited.index(exit_.connected_region)
                 current_loop = visited[index:]
                 reverse_loop_entr = []
                 # Traverse the other way to ensure it's actually a loop
@@ -627,12 +627,12 @@ def prune_entrances(start_region: Region, next_region: Region):
                     loop_ending_region_names.append(node.name)
                     loops.append(visited[index:])
                     loop_entr = visited_entrances[index:]
-                    loop_entr.append(exit)
+                    loop_entr.append(exit_)
                     loop_entrances.append(loop_entr)
                 continue
             entrances = visited_entrances.copy()
-            entrances.append(exit)
-            cycle_search(exit.connected_region, node, visited.copy(), entrances)
+            entrances.append(exit_)
+            cycle_search(exit_.connected_region, node, visited.copy(), entrances)
 
     cycle_search(next_region, start_region, [], [])
 
@@ -668,32 +668,32 @@ def delete_entrance(entrance: HWEntrance):
     del entrance
 
 
-def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typing.Dict[str, int],
+def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int],
                           loop_entrances: typing.List[typing.List[HWEntrance]]):
     # Set dynamic key/door access rules
-    menu_region = multiworld.get_region(castle_region_names.menu, player)
+    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
 
     # Remove some entrances and add new ones to make the downstream algo not traverse some paths and to consider some
     # doors as blocking
     def add_entrance(name: str, parent_name: str, to_name: str):
-        entr = HWEntrance(player, name, multiworld.get_region(parent_name, player))
+        entr = HWEntrance(world.player, name, world.multiworld.get_region(parent_name, world.player))
         entr.parent_region.exits.append(entr)
-        entr.connect(multiworld.get_region(to_name, player))
+        entr.connect(world.multiworld.get_region(to_name, world.player))
         return entr
 
-    def copy_entrance_dest(name: str, parent_name: str, entrance: Entrance):
-        entr = HWEntrance(player, name, multiworld.get_region(parent_name, player))
+    def copy_entrance_dest(name: str, parent_name: str, entrance_to_copy: Entrance):
+        entr = HWEntrance(world.player, name, world.multiworld.get_region(parent_name, world.player))
         entr.parent_region.exits.append(entr)
-        entr.connect(entrance.connected_region)
+        entr.connect(entrance_to_copy.connected_region)
         return entr
 
-    if get_campaign(multiworld, player) == Campaign.Castle:
+    if get_campaign(world) == Campaign.Castle:
         # Disconnect level exits and pretend that you need to go through the boss switch areas to the boss
         remove_entrances = [
-            multiworld.get_entrance(etr_base_name(castle_region_names.p3_sw, castle_region_names.b1_start), player),
-            multiworld.get_entrance(etr_base_name(castle_region_names.a1_start, castle_region_names.b2_start), player),
-            multiworld.get_entrance(etr_base_name(castle_region_names.r3_exit, castle_region_names.b3_start), player),
-            multiworld.get_entrance(etr_base_name(castle_region_names.c2_main, castle_region_names.b4_start), player),
+            world.multiworld.get_entrance(etr_base_name(castle_region_names.p3_sw, castle_region_names.b1_start), world.player),
+            world.multiworld.get_entrance(etr_base_name(castle_region_names.a1_start, castle_region_names.b2_start), world.player),
+            world.multiworld.get_entrance(etr_base_name(castle_region_names.r3_exit, castle_region_names.b3_start), world.player),
+            world.multiworld.get_entrance(etr_base_name(castle_region_names.c2_main, castle_region_names.b4_start), world.player),
         ]
         add_entrances = [
             copy_entrance_dest("P1 Boss Switch", castle_region_names.p1_from_p3_n, remove_entrances[0]),
@@ -705,8 +705,8 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
             copy_entrance_dest("C2 Boss Switch", castle_region_names.c2_c3_tp, remove_entrances[3]),
             copy_entrance_dest("C3 Boss Switch", castle_region_names.c3_rspike_switch, remove_entrances[3]),
             copy_entrance_dest("C3 Portal", castle_region_names.c3_nw,
-                               multiworld.get_entrance(etr_base_name(castle_region_names.c3_sw_hidden,
-                                                                     castle_region_names.c3_fire_floor), player)),
+                               world.multiworld.get_entrance(etr_base_name(castle_region_names.c3_sw_hidden,
+                                                                     castle_region_names.c3_fire_floor), world.player)),
         ]
     else:
         remove_entrances = [
@@ -721,8 +721,8 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         remove.connected_region.entrances.remove(remove)
 
     # Set downstream costs - the keys that are required after a specific entrance
-    key_names = get_active_key_names(multiworld, player)
-    start_exits = [exit for exit in menu_region.exits if exit.connected_region.name != castle_region_names.get_planks]
+    key_names = get_active_key_names(world)
+    start_exits = [exit_ for exit_ in menu_region.exits if exit_.connected_region.name != castle_region_names.get_planks]
     for item in key_names:
         # seen = seen_start.copy()
         set_downstream_costs(item, start_exits[0], [])
@@ -741,19 +741,19 @@ def set_door_access_rules(multiworld: MultiWorld, player: int, door_counts: typi
         remove.parent_region.exits.append(remove)
         remove.connected_region.entrances.append(remove)
 
-    transitions = multiworld.get_entrances()
-    for exit in transitions:
-        if exit.player != player:
+    transitions: typing.List[HWEntrance] = world.multiworld.get_entrances()
+    for exit_ in transitions:
+        if exit_.player != world.player:
             continue
-        if exit.pass_item is None or exit.parent_region.name == exit.connected_region.name:
+        if exit_.pass_item is None or exit_.parent_region.name == exit_.connected_region.name:
             continue
         # If the items are consumed gotta use the downstream cost logic
-        if exit.items_consumed and exit.pass_item in door_counts.keys():
-            needed_keys = door_counts[exit.pass_item] - exit.downstream_count
+        if exit_.items_consumed and exit_.pass_item in door_counts.keys():
+            needed_keys = door_counts[exit_.pass_item] - exit_.downstream_count
             # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
-            add_rule(exit, lambda state, this=exit, num=needed_keys: state.has(this.pass_item, player, num), "and")
+            add_rule(exit_, lambda state, this=exit_, num=needed_keys: state.has(this.pass_item, world.player, num), "and")
         else:  # Elsewise just set the item rule normally
-            add_rule(exit, lambda state, this=exit: state.has(this.pass_item, player, this.item_count), "and")
+            add_rule(exit_, lambda state, this=exit_: state.has(this.pass_item, world.player, this.item_count), "and")
 
 
 def set_downstream_costs(item: str, entrance: HWEntrance, seen):
@@ -763,10 +763,10 @@ def set_downstream_costs(item: str, entrance: HWEntrance, seen):
     door_entrances: typing.Set[str] = set()
     cost_dict: typing.Dict[str] = {}
     if entrance.parent_region != entrance.connected_region:
-        for exit in entrance.connected_region.exits:
-            if get_entrance_id(exit) in seen and exit.connected_region.name != exit.parent_region.name:
+        for exit_ in entrance.connected_region.exits:
+            if get_entrance_id(exit_) in seen and exit_.connected_region.name != exit_.parent_region.name:
                 continue
-            entrances = set_downstream_costs(item, exit, seen)
+            entrances = set_downstream_costs(item, exit_, seen)
             cost_dict.update(entrances)
     if entrance.pass_item == item:
         # Just assume the item count is 1, doors should never cost more

@@ -1,5 +1,6 @@
 import typing
-from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, OptionList
+from dataclasses import dataclass
+from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, OptionList, PerGameCommonOptions
 from .names import option_names
 
 
@@ -379,43 +380,85 @@ class DeathLink(DeathLink):
     display_name = "Death Link"
 
 
-hammerwatch_options: typing.Dict[str, type(Option)] = {
-    option_names.goal: Goal,
-    option_names.planks_required_count: PlanksRequiredCount,
-    option_names.extra_plank_percent: ExtraPlankPercent,
-    option_names.difficulty: Difficulty,
-    option_names.exit_randomization: ExitRandomization,
-    option_names.er_act_range: ERActRange,
-    option_names.random_start_exit: StartExit,
-    option_names.random_start_exit_act: StartExitAct,
-    option_names.gate_shuffle: GateShuffle,
-    option_names.shop_shuffle: ShuffleShops,
-    option_names.shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle,
-    # option_names.shop_upgrade_level_shuffle: ShopUpgradeLevelShuffle,
-    option_names.shop_cost_min: ShopCostRandoMin,
-    option_names.shop_cost_max: ShopCostRandoMax,
-    option_names.enemy_shuffle: EnemyShuffle,
-    option_names.enemy_shuffle_act_range: EnemyShuffleBalancing,
-    option_names.bonus_behavior: BonusChestLocationBehavior,
-    option_names.randomize_bonus_keys: RandomizeBonusKeys,
-    option_names.remove_lives: RemoveExtraLives,
-    option_names.randomize_recovery_items: RandomizeRecoveryItems,
-    option_names.randomize_secrets: RandomizeSecrets,
-    option_names.randomize_puzzles: RandomizePuzzles,
-    option_names.randomize_enemy_loot: RandomizeEnemyLoot,
-    option_names.open_castle: OpenCastle,
-    option_names.act_specific_keys: ActSpecificKeys,
-    option_names.extra_keys_percent: ExtraKeysPercent,
-    option_names.big_bronze_key_percent: BigBronzeKeyPercent,
-    option_names.shortcut_teleporter: ShortcutTeleporter,
-    option_names.portal_accessibility: PortalAccessibility,
-    option_names.no_sunbeam_damage: NoSunbeamDamage,
-    option_names.treasure_shuffle: TreasureShuffle,
-    # option_names.consumables_vendor_locations: ConsumableMerchantChecks,
-    option_names.pan_fragments: PanFragments,
-    option_names.lever_fragments: LeverFragments,
-    option_names.pickaxe_fragments: PickaxeFragments,
-    option_names.trap_item_percent: TrapItemPercentage,
-    option_names.starting_life_count: StartingLifeCount,
-    option_names.death_link: DeathLink
-}
+@dataclass
+class HammerwatchOptions(PerGameCommonOptions):
+    goal: Goal
+    planks_required_count: PlanksRequiredCount
+    extra_plank_percent: ExtraPlankPercent
+    difficulty: Difficulty
+    exit_randomization: ExitRandomization
+    er_act_range: ERActRange
+    random_start_exit: StartExit
+    random_start_exit_act: StartExitAct
+    gate_shuffle: GateShuffle
+    shop_shuffle: ShuffleShops
+    shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle
+    # shop_upgrade_level_shuffle: ShopUpgradeLevelShuffle
+    shop_cost_min: ShopCostRandoMin
+    shop_cost_max: ShopCostRandoMax
+    enemy_shuffle: EnemyShuffle
+    enemy_shuffle_act_range: EnemyShuffleBalancing
+    bonus_behavior: BonusChestLocationBehavior
+    randomize_bonus_keys: RandomizeBonusKeys
+    remove_lives: RemoveExtraLives
+    randomize_recovery_items: RandomizeRecoveryItems
+    randomize_secrets: RandomizeSecrets
+    randomize_puzzles: RandomizePuzzles
+    randomize_enemy_loot: RandomizeEnemyLoot
+    open_castle: OpenCastle
+    act_specific_keys: ActSpecificKeys
+    extra_keys_percent: ExtraKeysPercent
+    big_bronze_key_percent: BigBronzeKeyPercent
+    shortcut_teleporter: ShortcutTeleporter
+    portal_accessibility: PortalAccessibility
+    no_sunbeam_damage: NoSunbeamDamage
+    treasure_shuffle: TreasureShuffle
+    # consumables_vendor_locations: ConsumableMerchantChecks
+    pan_fragments: PanFragments
+    lever_fragments: LeverFragments
+    pickaxe_fragments: PickaxeFragments
+    trap_item_percent: TrapItemPercentage
+    starting_life_count: StartingLifeCount
+    death_link: DeathLink
+
+
+client_required_options = [
+    option_names.goal,
+    option_names.planks_required_count,
+    option_names.extra_plank_percent,
+    option_names.difficulty,
+    option_names.exit_randomization,
+    option_names.er_act_range,
+    option_names.random_start_exit,
+    option_names.random_start_exit_act,
+    option_names.gate_shuffle,
+    option_names.shop_shuffle,
+    option_names.shop_upgrade_category_shuffle,
+    # option_names.shop_upgrade_level_shuffle,
+    option_names.shop_cost_min,
+    option_names.shop_cost_max,
+    option_names.enemy_shuffle,
+    option_names.enemy_shuffle_act_range,
+    # option_names.bonus_behavior,
+    option_names.randomize_bonus_keys,
+    # option_names.remove_lives,
+    option_names.randomize_recovery_items,
+    option_names.randomize_secrets,
+    option_names.randomize_puzzles,
+    option_names.randomize_enemy_loot,
+    option_names.open_castle,
+    option_names.act_specific_keys,
+    # option_names.extra_keys_percent,
+    # option_names.big_bronze_key_percent,
+    option_names.shortcut_teleporter,
+    option_names.portal_accessibility,
+    option_names.no_sunbeam_damage,
+    option_names.treasure_shuffle,
+    # option_names.consumables_vendor_locations,
+    option_names.pan_fragments,
+    option_names.lever_fragments,
+    option_names.pickaxe_fragments,
+    # option_names.trap_item_percent,
+    option_names.starting_life_count,
+    option_names.death_link,
+]

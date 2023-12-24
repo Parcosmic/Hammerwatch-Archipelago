@@ -6,8 +6,8 @@ from .items import HammerwatchItem, item_table, key_table, filler_items, castle_
 from .locations import LocationData, all_locations, setup_locations
 from .regions import create_regions, HWEntrance, HWExitData
 from .rules import set_rules
-from .util import Campaign, get_option, get_campaign, get_active_key_names
-from .options import hammerwatch_options
+from .util import Campaign, get_campaign, get_active_key_names
+from .options import HammerwatchOptions, client_required_options
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
@@ -33,7 +33,8 @@ class HammerwatchWorld(World):
     or the Temple of the Sun to stop the evil Sun Guardian Sha'Rand.
     """
     game: str = "Hammerwatch"
-    option_definitions = hammerwatch_options
+    options_dataclass = HammerwatchOptions
+    options: HammerwatchOptions
     topology_present: bool = True
     remote_start_inventory: bool = True
 
@@ -60,23 +61,18 @@ class HammerwatchWorld(World):
     start_exit: str
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
-        slot_data: typing.Dict[str, object] = {}
-        for option_name in self.option_definitions:
-            option = getattr(self.multiworld, option_name)[self.player]
-            slot_data[option_name] = option.value
-        for loc, value in self.random_locations.items():
-            slot_data[loc] = value
-        for loc, value in self.shop_locations.items():
-            slot_data[loc] = value
-        slot_data["Hammerwatch Mod Version"] = self.hw_client_version
-        slot_data["Gate Types"] = self.gate_types
-        slot_data["Exit Swaps"] = self.exit_swaps
-        slot_data["Start Exit"] = self.start_exit
-        slot_data["portal_accessibility"] = 0  # For backwards compatibility, we removed this option
-        return slot_data
+        return {
+            **self.options.as_dict(*client_required_options),
+            **self.random_locations,
+            **self.shop_locations,
+            "Hammerwatch Mod Version": self.hw_client_version,
+            "Gate Types": self.gate_types,
+            "Exit Swaps": self.exit_swaps,
+            "Start Exit": self.start_exit
+        }
 
     def generate_early(self):
-        self.campaign = get_campaign(self.multiworld, self.player)
+        self.campaign = get_campaign(self)
 
         # Door type randomization
         if self.campaign == Campaign.Castle:
@@ -84,16 +80,16 @@ class HammerwatchWorld(World):
         else:
             item_counts = temple_item_counts
         self.door_counts = {}
-        for key in get_active_key_names(self.multiworld, self.player):
+        for key in get_active_key_names(self):
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
-        self.active_location_list, self.item_counts, self.random_locations = \
-            setup_locations(self.multiworld, self.campaign, self.player)
+
+        self.active_location_list, self.item_counts, self.random_locations = setup_locations(self, self.campaign)
 
     def generate_basic(self) -> None:
         # Shop shuffle
         self.shop_locations = {}
-        if get_option(self.multiworld, self.player, option_names.shop_shuffle):
+        if self.options.shop_shuffle.value:
             if self.campaign == Campaign.Castle:
                 shop_counts = {
                     "Combo": [1, 2, 2, 3, 4, 4, 5],
@@ -173,17 +169,14 @@ class HammerwatchWorld(World):
                     remaining_shops.remove(self.shop_locations[loc])
 
         # Shop cost setting validation, swap if max is higher than min
-        cost_max = get_option(self.multiworld, self.player, option_names.shop_cost_max)
-        cost_min = get_option(self.multiworld, self.player, option_names.shop_cost_min)
-        if cost_max < cost_min:
-            swap = self.multiworld.shop_cost_max[self.player]
-            self.multiworld.shop_cost_max[self.player] = self.multiworld.shop_cost_min[self.player]
-            self.multiworld.shop_cost_min[self.player] = swap
+        if self.options.shop_cost_max.value < self.options.shop_cost_min.value:
+            swap = self.options.shop_cost_max.value
+            self.options.shop_cost_max.value = self.options.shop_cost_min.value
+            self.options.shop_cost_min.value = swap
 
     def create_regions(self) -> None:
         self.level_exits = []
-        self.gate_types = create_regions(self.multiworld, self.campaign, self.player, self.active_location_list,
-                                         self.random_locations)
+        self.gate_types = create_regions(self, self.campaign, self.active_location_list, self.random_locations)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
@@ -216,7 +209,6 @@ class HammerwatchWorld(World):
         present_filler_items = []
         for item in self.item_counts:
             items += self.item_counts[item]
-            # item_names_to_create += [item] * self.item_counts[item]
             if item_table[item].classification == ItemClassification.filler and self.item_counts[item] > 0:
                 present_filler_items.append(item)
 
@@ -245,9 +237,9 @@ class HammerwatchWorld(World):
         if item.name.endswith("Key") and spaces > 1:
             add_name = key_table[item.name][0]
             count = key_table[item.name][1]
-            state.prog_items[add_name, self.player] += count
+            state.prog_items[self.player][add_name] += count
             if item.name.startswith("Big") and spaces == 3:
-                state.prog_items[key_table[add_name][0], self.player] += count * key_table[add_name][1]
+                state.prog_items[self.player][key_table[add_name][0]] += count * key_table[add_name][1]
         return prog
 
     def remove(self, state: CollectionState, item: Item) -> bool:
@@ -256,9 +248,9 @@ class HammerwatchWorld(World):
         if item.name.endswith("Key") and spaces > 1:
             add_name = key_table[item.name][0]
             count = key_table[item.name][1]
-            state.prog_items[add_name, self.player] -= count
+            state.prog_items[self.player][add_name] -= count
             if item.name.startswith("Big") and spaces == 3:
-                state.prog_items[key_table[add_name][0], self.player] -= count * key_table[add_name][1]
+                state.prog_items[self.player][key_table[add_name][0]] -= count * key_table[add_name][1]
         return prog
 
     def get_filler_item_name(self) -> str:
@@ -305,7 +297,7 @@ class HammerwatchWorld(World):
         }
 
         # Bonus Key Locations
-        if not get_option(self.multiworld, self.player, option_names.randomize_bonus_keys):
+        if not self.options.randomize_bonus_keys.value:
             castle_bonus_keys = [
                 castle_location_names.n1_room1,
                 castle_location_names.n1_room3_sealed_room_1,
@@ -371,7 +363,7 @@ class HammerwatchWorld(World):
         }
 
         # Pyramid of Fear Bonus Keys
-        if not get_option(self.multiworld, self.player, option_names.randomize_bonus_keys):
+        if not self.options.randomize_bonus_keys.value:
             temple_bonus_keys = [
                 temple_location_names.pof_1_n_5,
                 temple_location_names.pof_1_ent_5,
@@ -380,7 +372,7 @@ class HammerwatchWorld(World):
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 
         # Portal Accessibility rune keys
-        if get_option(self.multiworld, self.player, option_names.portal_accessibility):
+        if self.options.portal_accessibility.value:
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
@@ -390,7 +382,7 @@ class HammerwatchWorld(World):
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
             # If playing exit rando we need to ensure we can always return if falling from the temple
-            if not get_option(self.multiworld, self.player, option_names.exit_randomization):
+            if not self.options.exit_randomization.value:
                 c3_locs.extend(get_region_item_locs(temple_region_names.cave_3_main))
             rune_key_locs.append(self.random.choice(c3_locs))
 
@@ -449,10 +441,10 @@ class HammerwatchWorld(World):
     def set_rules(self) -> None:
         self.exit_swaps = {}
         self.exit_spoiler_info = []
-        set_rules(self.multiworld, self.player, self.door_counts)
+        set_rules(self, self.door_counts)
 
     def write_spoiler(self, spoiler_handle) -> None:
-        if get_option(self.multiworld, self.player, option_names.shop_shuffle):
+        if self.options.shop_shuffle.value:
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")

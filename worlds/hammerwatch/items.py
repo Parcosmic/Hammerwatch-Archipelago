@@ -1,8 +1,11 @@
 import typing
-from BaseClasses import Item, ItemClassification, MultiWorld
-from .names import item_name, option_names
+from BaseClasses import Item, ItemClassification
+from .names import item_name
 from .options import BonusChestLocationBehavior
-from .util import Counter, Campaign, GoalType, get_option, get_campaign, get_goal_type, get_active_key_names
+from .util import Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names
+
+if typing.TYPE_CHECKING:
+    from . import HammerwatchWorld
 
 
 class ItemData(typing.NamedTuple):
@@ -284,25 +287,23 @@ temple_item_counts: typing.Dict[str, int] = {
 }
 
 
-def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, item_counts_table: typing.Dict[str, int]):
+def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: typing.Dict[str, int]):
     extra_items: int = 0
 
     secrets: int = item_counts_table.pop(item_name.secret)
 
-    world = multiworld.worlds[player]
-
     # Remove bonus keys from the item counts as they are placed elsewhere
-    if get_option(multiworld, player, option_names.randomize_bonus_keys) == 0:
+    if world.options.randomize_bonus_keys.value == 0:
         item_counts_table.pop(item_name.key_bonus)
 
     # Strange planks
-    if get_goal_type(multiworld, player) == GoalType.PlankHunt \
-            or get_goal_type(multiworld, player) == GoalType.FullCompletion:
+    goal = get_goal_type(world)
+    if goal == GoalType.PlankHunt or goal == GoalType.FullCompletion:
         planks_to_win = 12
-        if get_goal_type(multiworld, player) == GoalType.PlankHunt:  # Plank hunt
-            planks_to_win = get_option(multiworld, player, option_names.planks_required_count)
+        if goal == GoalType.PlankHunt:  # Plank hunt
+            planks_to_win = world.options.planks_required_count.value
         total_planks =\
-            planks_to_win + int(planks_to_win * get_option(multiworld, player, option_names.extra_plank_percent) / 100)
+            planks_to_win + int(planks_to_win * world.options.extra_plank_percent.value / 100)
         extra_items = total_planks - item_counts_table[item_name.plank]
         item_counts_table[item_name.plank] = total_planks
     else:  # Remove planks from the pool, they're not needed
@@ -332,7 +333,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         item_name.key_bonus_archives,
         item_name.key_bonus_chambers,
     }
-    active_keys = get_active_key_names(multiworld, player)
+    active_keys = get_active_key_names(world)
     for key in all_key_names:
         if key in item_counts_table.keys() and key not in active_keys:
             item_counts_table.pop(key)
@@ -342,24 +343,24 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
         # Exclude bronze keys and rune keys from getting extra items added to the pool
         if "Bronze" not in key_name and "Rune" not in key_name:
             key_names.add(key_name)
-    extra_key_percent = get_option(multiworld, player, option_names.extra_keys_percent) / 100
+    extra_key_percent = world.options.extra_keys_percent.value / 100
     for key in key_names:
         extra_keys = int(item_counts_table[key] * extra_key_percent)
         item_counts_table[key] += extra_keys
         extra_items += extra_keys
-    if get_campaign(multiworld, player) == Campaign.Temple:
+    if get_campaign(world) == Campaign.Temple:
         extra_mirrors = int(item_counts_table[item_name.mirror] * extra_key_percent)
         item_counts_table[item_name.mirror] += extra_mirrors
         extra_items += extra_mirrors
 
     # Bonus check behavior - None
-    if get_option(multiworld, player, option_names.bonus_behavior) == BonusChestLocationBehavior.option_none:
+    if world.options.bonus_behavior.value == BonusChestLocationBehavior.option_none:
         item_counts_table[item_name.bonus_chest] = 0
 
     # Consolidate bronze keys
-    big_bronze_key_percent = get_option(multiworld, player, option_names.big_bronze_key_percent) / 100
+    big_bronze_key_percent = world.options.big_bronze_key_percent.value / 100
     if campaign == Campaign.Castle and big_bronze_key_percent > 0:
-        bronze_key_names = [key for key in get_active_key_names(multiworld, player) if "Bronze" in key]
+        bronze_key_names = [key for key in get_active_key_names(world) if "Bronze" in key]
         for bronze_key in bronze_key_names:
             big_name = "Big " + bronze_key
             big_keys = int(item_counts_table[bronze_key] * big_bronze_key_percent / key_table[big_name][1])
@@ -370,28 +371,28 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments
-        pan_fragments = get_option(multiworld, player, option_names.pan_fragments).value
+        pan_fragments = world.options.pan_fragments.value
         if pan_fragments > 1:
             item_counts_table.pop(item_name.pan)
             item_counts_table.update({item_name.pan_fragment: pan_fragments})
             extra_items += pan_fragments - 1
-        lever_fragments = get_option(multiworld, player, option_names.lever_fragments).value
+        lever_fragments = world.options.lever_fragments.value
         if lever_fragments > 1:
             item_counts_table.pop(item_name.lever)
             item_counts_table.update({item_name.lever_fragment: lever_fragments})
             extra_items += lever_fragments - 1
-        pickaxe_fragments = get_option(multiworld, player, option_names.pickaxe_fragments).value
+        pickaxe_fragments = world.options.pickaxe_fragments.value
         if pickaxe_fragments > 1:
             item_counts_table.pop(item_name.pickaxe)
             item_counts_table.update({item_name.pickaxe_fragment: pickaxe_fragments})
             extra_items += pickaxe_fragments - 1
 
         # If Portal Accessibility is on then remove Rune Keys from the pool, they're placed elsewhere
-        if get_option(multiworld, player, option_names.portal_accessibility):
+        if world.options.portal_accessibility.value:
             item_counts_table.pop(item_name.key_teleport)
 
         # Add secret items from TotS
-        if get_option(multiworld, player, option_names.randomize_secrets):
+        if world.options.randomize_secrets.value:
             for s in range(secrets):
                 item = world.random.randint(0, 12)
                 if item < 8:
@@ -402,17 +403,17 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
                     item_counts_table[item_name.stat_upgrade] += 1
 
     # Remove extra lives if the option was selected
-    if get_option(multiworld, player, option_names.remove_lives):
+    if world.options.remove_lives.value:
         extra_items -= item_counts_table.pop(item_name.ankh)
         extra_items -= item_counts_table.pop(item_name.ankh_5up)
 
     # If the player has selected not to randomize recovery items, set all their counts to zero
-    if not get_option(multiworld, player, option_names.randomize_recovery_items):
+    if not world.options.randomize_recovery_items.value:
         for recovery in recovery_table.keys():
             item_counts_table[recovery] = 0
 
     # Enemy loot
-    if get_option(multiworld, player, option_names.randomize_enemy_loot):
+    if world.options.randomize_enemy_loot.value:
         miniboss_stat_upgrade_chances = [
             (0.3, item_name.stat_upgrade_health),
             (0.3, item_name.stat_upgrade_mana),
@@ -439,7 +440,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
             filler_item_count += item_counts_table[item]
 
     # Trap items
-    trap_item_percent = get_option(multiworld, player, option_names.trap_item_percent) / 100
+    trap_item_percent = world.options.trap_item_percent.value / 100
     if trap_item_percent > 0:
         for trap_item in trap_items:
             item_counts_table[trap_item] = 0
@@ -450,7 +451,7 @@ def get_item_counts(multiworld: MultiWorld, campaign: Campaign, player: int, ite
             item_counts_table[item] += 1
 
     # For Necessary we set the number of bonus chests equal to each extra item
-    if get_option(multiworld, player, option_names.bonus_behavior) == BonusChestLocationBehavior.option_necessary:
+    if world.options.bonus_behavior.value == BonusChestLocationBehavior.option_necessary:
         item_counts_table[item_name.bonus_chest] = max(item_counts_table[item_name.bonus_chest], extra_items, 0)
 
     return item_counts_table, extra_items
