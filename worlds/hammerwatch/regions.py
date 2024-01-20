@@ -5306,15 +5306,12 @@ def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     connection = HWEntrance(world.player, entrance_name, source_region, target_region,
                             pass_item, item_count, items_consumed, return_code, exit_code)
     source_region.exits.append(connection)
-    # if world.options.exit_randomization.value == 2:
-    #     connection.linked = False
-    #     world.level_exits.append(connection)
-    if world.options.exit_randomization.value != 1 or \
-            not (exit_code.startswith("boss") or (return_code is not None and return_code.startswith("boss"))):
+    if world.options.exit_randomization.value == 0 or (world.options.exit_randomization.value == 1 and
+            (exit_code.startswith("boss") or (return_code is not None and return_code.startswith("boss")))):
+        connection.connect(target_region)
+    else:
         connection.linked = False
         world.level_exits.append(connection)
-    else:
-        connection.connect(target_region)
 
     if two_way and return_code is not None:
         connect_exit(world, used_names, target, source, return_code, exit_code, pass_item, item_count,

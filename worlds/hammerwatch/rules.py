@@ -328,11 +328,7 @@ def set_connections(world: "HammerwatchWorld", entrance_block_types, passage_blo
                 start_entrance.connected_region.entrances.remove(start_entrance)
             return False
         return True
-    else:
-        # Create entrances
-        for connection in level_exits:
-            connection.connect(connection.target_region)
-        return True
+    return True
 
 
 class EntranceBlockType(Enum):
