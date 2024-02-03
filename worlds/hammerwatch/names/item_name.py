@@ -103,6 +103,74 @@ trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 trap_banner = "Banner Trap"
 
+# Temple button item names
+btn_pof = "Elevate PoF Pyramid"
+btn_c3_puzzle = "Activate CL3 Puzzle"
+btn_c2_puzzle = "Activate CL2 Puzzle"
+btn_c1_puzzle_e = "Activate CL1 East Puzzle"
+btn_c1_puzzle_w = "Activate CL1 West Puzzle"
+btn_p_puzzle = "Activate SP Puzzle"
+btn_t1_puzzle_w = "Activate TF1 West Puzzle"
+btn_t1_puzzle_e = "Activate TF1 East Puzzle"
+btn_t2_puzzle_w = "Activate TF2 West Puzzle"
+btn_t2_puzzle_e = "Activate TF2 East Puzzle"
+btn_t2_puzzle_n = "Activate TF2 North Puzzle"
+btn_t2_puzzle_s = "Activate TF2 South Puzzle"
+btn_t3_puzzle = "Activate TF3 Puzzle"
+btn_pof_puzzle = "Activate PoF Puzzle"
+btn_c3_fall_bridge = "Fix CL3 Fall Bridge"
+btn_c3_e_bridge = "Fix CL3 East Bridge"
+btn_c2_red = "Fix CL2 Red Bridge"
+btn_c2_green = "Fix CL2 Green Bridge"
+btn_c2_bridges = "Fix CL2 Double Bridge"
+btn_c2_s_bridge = "Fix CL2 Exit Bridge"
+btn_c2_pumps = "Activate Water Pumps"
+btn_c1_blue = "Fix CL1 Blue Bridge"
+btn_c1_red = "Fix CL1 Red Bridge"
+btn_c1_green = "Fix CL1 Green Bridge"
+btn_c1_tunnel = "Open CL1 Secret Tunnel"
+btn_b1_bridge = "Fix Dune Sharks Bridge"
+btn_t1_jail_n = "Open TF1 North Jail"
+btn_t1_jail_e = "Open TF1 East Jail"
+btn_t1_telarian = "Open TF1 Telarian Gate"
+btn_t1_guard = "Open TF1 Trapped Guard Gate"
+btn_t1_hall = "Open TF1 NE Node Hallway"
+btn_t1_runway = "Open TF1 Fireball Runway Passages"
+btn_t2_blue = "Disable TF2 Blue Spikes"
+btn_t2_light_bridges = "Activate TF2 Light Bridges"
+btn_t2_jones_hall_back = "Open TF2 Back of Indiana Jones Hallway"
+btn_t2_jones_hall = "Open TF2 Indiana Jones Hallway"
+btn_t2_nw_gate = "Open TF2 NW Pillar Gate"
+btn_t2_t3_gate_w = "Open TF2 Ornate Room Gate Left Side"
+btn_t2_t3_gate_e = "Open TF2 Ornate Room Gate Right Side"
+btn_t2_boulder_passage = "Open TF2 Boulder Room Secret Passage"
+btn_t2_ice_gate_w = "Open TF2 West Ice Pillar Gate"
+btn_t2_ice_gate_e = "Open TF2 East Ice Pillar Gate"
+btn_t2_boulder_room = "Open TF2 Boulder Room"
+btn_t2_portal = "Open TF2 Portal Room Shortcut"
+btn_t2_jail_e = "Open TF2 East Jail"
+btn_t2_jail_w = "Open TF2 West Jail"
+btn_t2_jail_s = "Open TF2 South Jail"
+btn_t2_s_gate_shortcut = "Open TF2 South Gate Shortcut"
+btn_t2_s_gate_hall = "Open TF2 South Gate Hall"  # Useless, mark as filler
+btn_t2_s_spikes = "Disable TF2 South Spikes"
+btn_t2_portal_gate = "Open TF2 SW Portal Gate"
+btn_t3_puzzle_room = "Open TF3 Puzzle Room"
+btn_t3_fall_1 = "Open TF3 SE Boss Fall Room"
+btn_t3_fall_2 = "Open TF3 NE Boss Fall Room"
+btn_t3_fall_3 = "Open TF3 West Boss Fall Room"
+btn_t3_pillars = "Disable TF3 Pillar Walls"
+btn_t3_gate_s = "Open TF3 South Gate"
+btn_pof_1_walls_s = "Open PoF Level 1 South Walls"
+btn_pof_1_exit = "Open PoF Level 1 Exit"
+btn_pof_2_puzzle = "Open PoF Level 2 Puzzle Room"
+btn_pof_2_exit = "Open PoF Level 2 Exit"
+btn_pof_3_start = "Open PoF Level 3 Start Room"
+btn_pof_part = "Elevate PoF Pyramid Progress"
+btn_t2_light_bridges_part = "Activate TF2 Light Bridges Progress"
+btn_t2_portal_part = "Open TF2 Portal Room Shortcut Progress"
+btn_t3_puzzle_room_part = "Open TF3 Puzzle Room Progress"
+
 # Event/Button Names
 ev_victory = "Victory"
 
@@ -138,15 +206,9 @@ ev_t1_portal = "Temple Floor 1 Activate Portal"
 ev_t2_portal = "Temple Floor 2 Activate Portal"
 ev_t3_portal = "Temple Floor 3 Activate Portal"
 ev_open_temple_entrance_shortcut = "Open Temple Entrance Shortcut"
-ev_pof_switch = "Activate PoF Switch"
 ev_solar_node = "Activate Solar Node"
 evt_t1_n_mirrors = "Temple Floor 1 North Node North Mirrors"
 evt_t1_s_mirror = "Temple Floor 1 North Node South Mirror"
-btn_t2_blue_spikes = "Temple Floor 2 Deactivate Blue Spikes"
-ev_t2_rune_switch = "Temple Floor 2 Light Bridge Rune Button"
-ev_pof_1_s_walls = "PoF Level 1 Destroy South Walls"
-ev_pof_1_unlock_exit = "PoF Level 1 Unlock Exit"
-ev_pof_2_unlock_exit = "PoF Level 2 Unlock Exit"
 ev_pof_complete = "PoF Complete"
 
 evt_beat_boss_1 = "Defeat Dune Sharks"
@@ -164,6 +226,7 @@ group_coins = "Coins"
 group_recovery = "Recovery Items"
 group_tools = "Tools"
 group_traps = "Traps"
+group_buttons = "Buttons"
 
 item_groups: typing.Dict[str, typing.Set[str]] = {
     group_chests: {
@@ -259,5 +322,73 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_fire,
         trap_confuse,
         trap_banner,
+    },
+    group_buttons: {
+        btn_pof,
+        btn_pof_part,
+        btn_c3_puzzle,
+        btn_c2_puzzle,
+        btn_c1_puzzle_e,
+        btn_c1_puzzle_w,
+        btn_p_puzzle,
+        btn_t1_puzzle_w,
+        btn_t1_puzzle_e,
+        btn_t2_puzzle_w,
+        btn_t2_puzzle_e,
+        btn_t2_puzzle_n,
+        btn_t2_puzzle_s,
+        btn_t3_puzzle,
+        btn_pof_puzzle,
+        btn_c3_fall_bridge,
+        btn_c3_e_bridge,
+        btn_c2_red,
+        btn_c2_green,
+        btn_c2_bridges,
+        btn_c2_s_bridge,
+        btn_c2_pumps,
+        btn_c1_blue,
+        btn_c1_red,
+        btn_c1_green,
+        btn_c1_tunnel,
+        btn_b1_bridge,
+        btn_t1_jail_n,
+        btn_t1_jail_e,
+        btn_t1_telarian,
+        btn_t1_guard,
+        btn_t1_hall,
+        btn_t1_runway,
+        btn_t2_blue,
+        btn_t2_light_bridges,
+        btn_t2_light_bridges_part,
+        btn_t2_jones_hall_back,
+        btn_t2_jones_hall,
+        btn_t2_nw_gate,
+        btn_t2_t3_gate_w,
+        btn_t2_t3_gate_e,
+        btn_t2_boulder_passage,
+        btn_t2_ice_gate_w,
+        btn_t2_ice_gate_e,
+        btn_t2_boulder_room,
+        btn_t2_portal,
+        btn_t2_portal_part,
+        btn_t2_jail_e,
+        btn_t2_jail_w,
+        btn_t2_jail_s,
+        btn_t2_s_gate_shortcut,
+        btn_t2_s_gate_hall,
+        btn_t2_s_spikes,
+        btn_t2_portal_gate,
+        btn_t3_puzzle_room,
+        btn_t3_puzzle_room_part,
+        btn_t3_fall_1,
+        btn_t3_fall_2,
+        btn_t3_fall_3,
+        btn_t3_pillars,
+        btn_t3_gate_s,
+        btn_pof_1_walls_s,
+        btn_pof_1_exit,
+        btn_pof_2_puzzle,
+        btn_pof_2_exit,
+        btn_pof_3_start,
     },
 }

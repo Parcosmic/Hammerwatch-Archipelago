@@ -82,7 +82,7 @@ tool_table: typing.Dict[str, ItemData] = {
 
 special_table: typing.Dict[str, ItemData] = {
     item_name.sonic_ring: ItemData(counter.count(), ItemClassification.filler),
-    item_name.serious_health: ItemData(counter.count(), ItemClassification.filler)
+    item_name.serious_health: ItemData(counter.count(), ItemClassification.useful)
 }
 
 counter = Counter(id_start + 0x100 - 1)
@@ -121,13 +121,97 @@ custom_table: typing.Dict[str, ItemData] = {
     item_name.key_bronze_big_chambers: ItemData(counter.count(), ItemClassification.progression),
 }
 
+counter = Counter(id_start + 0x300 - 1)
+castle_button_table: typing.Dict[str, ItemData] = {
+
+}
+
+counter = Counter(id_start + 0x400 - 1)
+temple_button_table: typing.Dict[str, ItemData] = {
+    item_name.btn_pof: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c3_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_puzzle_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_puzzle_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_p_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_puzzle_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_puzzle_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_puzzle_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_puzzle_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_puzzle_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_puzzle_s: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c3_fall_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c3_e_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_red: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_green: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_bridges: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_s_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_pumps: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_blue: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_red: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_green: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c1_tunnel: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_b1_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_jail_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_jail_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_telarian: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_guard: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_hall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_runway: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_blue: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_light_bridges: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_jones_hall_back: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_jones_hall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_nw_gate: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_t3_gate_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_t3_gate_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_boulder_passage: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_ice_gate_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_ice_gate_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_boulder_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_portal: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_jail_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_jail_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_jail_s: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_s_gate_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_s_gate_hall: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btn_t2_s_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t2_portal_gate: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_puzzle_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_fall_1: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_fall_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_fall_3: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_pillars: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_gate_s: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_1_walls_s: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_1_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_2_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_pof_3_start: ItemData(counter.count(), ItemClassification.progression),
+
+    item_name.btn_pof_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btn_t2_light_bridges_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btn_t2_portal_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btn_t3_puzzle_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+}
+# for itm, data in temple_button_table.items():
+#     print(f"{itm}:{data.code}")
+
+button_table = {
+    **castle_button_table,
+    **temple_button_table,
+}
+
 item_table: typing.Dict[str, ItemData] = {
     **collectable_table,
     **recovery_table,
     **tool_table,
     **special_table,
     **custom_table,
-    **trap_table
+    **trap_table,
+    **button_table,
 }
 
 stat_upgrade_items: typing.List[str] = [
@@ -239,6 +323,9 @@ castle_item_counts: typing.Dict[str, int] = {
     item_name.key_bonus_chambers: 4,
 }
 
+castle_button_counts: typing.Dict[str, int] = {
+}
+
 temple_item_counts: typing.Dict[str, int] = {
     item_name.bonus_chest: 75,
     item_name.key_bonus: 2,
@@ -284,6 +371,13 @@ temple_item_counts: typing.Dict[str, int] = {
     item_name.loot_tower: 19,
     item_name.loot_flower: 8,
     item_name.loot_mini_flower: 51,
+}
+
+temple_button_counts: typing.Dict[str, int] = {
+    item_name.btn_pof_part: 24,
+    item_name.btn_t2_light_bridges_part: 5,
+    item_name.btn_t2_portal_part: 2,
+    item_name.btn_t3_puzzle_room_part: 4,
 }
 
 

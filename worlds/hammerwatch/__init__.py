@@ -2,8 +2,10 @@ import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
     entrance_names, option_names
-from .items import HammerwatchItem, item_table, key_table, filler_items, castle_item_counts, temple_item_counts
-from .locations import LocationData, all_locations, setup_locations
+from .items import (HammerwatchItem, item_table, key_table, filler_items, castle_item_counts, temple_item_counts,
+                    castle_button_table, temple_button_table)
+from .locations import (LocationData, all_locations, setup_locations, temple_event_switches,
+                        castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
 from .regions import create_regions, HWEntrance, HWExitData
 from .rules import set_rules
 from .util import Campaign, get_campaign, get_active_key_names
@@ -11,6 +13,7 @@ from .options import HammerwatchOptions, client_required_options
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
+from Fill import fill_restrictive
 
 
 class HammerwatchWeb(WebWorld):
@@ -51,6 +54,7 @@ class HammerwatchWorld(World):
     campaign: Campaign
     active_location_list: typing.Dict[str, LocationData]
     item_counts: typing.Dict[str, int]
+    world_itempool: typing.List[Item]
     random_locations: typing.Dict[str, int]
     shop_locations: typing.Dict[str, str]
     door_counts: typing.Dict[str, int]
@@ -102,15 +106,17 @@ class HammerwatchWorld(World):
         return HammerwatchItem(event, ItemClassification.progression, None, self.player)
 
     def create_items(self) -> None:
-        itempool: typing.List[Item] = []
+        self.world_itempool = []
 
         # First create and place our locked items so we know how many are left over
         self.multiworld.get_location(temple_location_names.ev_victory, self.player) \
             .place_locked_item(self.create_event(item_name.ev_victory))
         if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
+            button_item_names = list(castle_button_items.values())
         else:
             self.place_tots_locked_items()
+            button_item_names = list(temple_button_items.values())
 
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
@@ -120,32 +126,45 @@ class HammerwatchWorld(World):
                 if precollected.name in self.item_counts and self.item_counts[precollected.name] > 0:
                     self.item_counts[precollected.name] -= 1
 
+        # If buttonsanity is set to shuffle prevent button items from being created here
+        items_to_place_later = 0
+        item_counts = {}
+        if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+            for item, count in self.item_counts.items():
+                if item in button_item_names:
+                    items_to_place_later += count
+                    continue
+                item_counts[item] = count
+            # item_counts = {item: count for item, count in self.item_counts.items() if item not in button_item_names}
+        else:
+            item_counts = self.item_counts
+
         # Add items
         items = 0
         present_filler_items = []
-        for item in self.item_counts:
-            items += self.item_counts[item]
-            if item_table[item].classification == ItemClassification.filler and self.item_counts[item] > 0:
+        for item in item_counts:
+            items += item_counts[item]
+            if item_table[item].classification == ItemClassification.filler and item_counts[item] > 0:
                 present_filler_items.append(item)
 
         # Add/remove junk items depending if we have not enough/too many locations
-        junk: int = total_required_locations - items
+        junk: int = total_required_locations - items - items_to_place_later
         if junk > 0:
             for name in self.random.choices(present_filler_items, k=junk):
-                self.item_counts[name] += 1
+                item_counts[name] += 1
         else:
             for j in range(-junk):
                 junk_item = self.random.choice(present_filler_items)
-                self.item_counts[junk_item] -= 1
-                if self.item_counts[junk_item] == 0:
+                item_counts[junk_item] -= 1
+                if item_counts[junk_item] == 0:
                     present_filler_items.remove(junk_item)
 
         # Create items and add to item pool
-        for item in self.item_counts:
-            for i in range(self.item_counts[item]):
-                itempool.append(self.create_item(item))
+        for item in item_counts:
+            for i in range(item_counts[item]):
+                self.world_itempool.append(self.create_item(item))
 
-        self.multiworld.itempool += itempool
+        self.multiworld.itempool += self.world_itempool
 
     def collect(self, state: CollectionState, item: Item) -> bool:
         prog = super(HammerwatchWorld, self).collect(state, item)
@@ -173,7 +192,13 @@ class HammerwatchWorld(World):
         return self.random.choice(tuple(filler_items))
 
     def place_castle_locked_items(self):
-        castle_locked_items = {
+        castle_events = {
+            castle_location_names.ev_beat_boss_1: item_name.evc_beat_boss_1,
+            castle_location_names.ev_beat_boss_2: item_name.evc_beat_boss_2,
+            castle_location_names.ev_beat_boss_3: item_name.evc_beat_boss_3,
+            castle_location_names.ev_beat_boss_4: item_name.evc_beat_boss_4,
+        }
+        castle_switches = {
             castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,
             castle_location_names.ev_p2_gold_gate_room_ne_switch: item_name.ev_castle_p2_switch,
             castle_location_names.ev_p2_gold_gate_room_nw_switch: item_name.ev_castle_p2_switch,
@@ -205,11 +230,6 @@ class HammerwatchWorld(World):
             castle_location_names.ev_c1_boss_switch: item_name.ev_castle_b4_boss_switch,
             castle_location_names.ev_c2_boss_switch: item_name.ev_castle_b4_boss_switch,
             castle_location_names.ev_c3_boss_switch: item_name.ev_castle_b4_boss_switch,
-
-            castle_location_names.ev_beat_boss_1: item_name.evc_beat_boss_1,
-            castle_location_names.ev_beat_boss_2: item_name.evc_beat_boss_2,
-            castle_location_names.ev_beat_boss_3: item_name.evc_beat_boss_3,
-            castle_location_names.ev_beat_boss_4: item_name.evc_beat_boss_4,
         }
 
         # Bonus Key Locations
@@ -237,11 +257,18 @@ class HammerwatchWorld(World):
             for loc in castle_bonus_keys:
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 
-        for loc, itm in castle_locked_items.items():
-            self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
+        for loc, itm in castle_events.items():
+            location = self.multiworld.get_location(loc, self.player)
+            location.address = None
+            location.place_locked_item(self.create_event(itm))
+        if not self.options.buttonsanity.value:
+            for loc, itm in castle_switches.items():
+                location = self.multiworld.get_location(loc, self.player)
+                location.address = None
+                location.place_locked_item(self.create_event(itm))
 
     def place_tots_locked_items(self):
-        temple_locked_items = {
+        temple_events = {
             temple_location_names.ev_c1_portal: item_name.ev_c1_portal,
             temple_location_names.ev_c2_portal: item_name.ev_c2_portal,
             temple_location_names.ev_c3_portal: item_name.ev_c3_portal,
@@ -251,22 +278,7 @@ class HammerwatchWorld(World):
             temple_location_names.ev_temple_entrance_rock: item_name.ev_open_temple_entrance_shortcut,
             temple_location_names.ev_t1_n_node_n_mirrors: item_name.evt_t1_n_mirrors,
             temple_location_names.ev_t1_n_node_s_mirror: item_name.evt_t1_s_mirror,
-            temple_location_names.ev_hub_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_cave1_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_cave2_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_cave3_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_temple1_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_temple2_pof_switch: item_name.ev_pof_switch,
-            temple_location_names.ev_pof_1_se_room_panel: item_name.ev_pof_1_s_walls,
-            temple_location_names.ev_pof_1_unlock_exit: item_name.ev_pof_1_unlock_exit,
-            temple_location_names.ev_pof_2_unlock_exit: item_name.ev_pof_2_unlock_exit,
             temple_location_names.ev_pof_end: item_name.ev_pof_complete,
-            temple_location_names.btn_t2_floor_blue: item_name.btn_t2_blue_spikes,
-            temple_location_names.btn_t2_rune_n: item_name.ev_t2_rune_switch,
-            temple_location_names.btn_t2_rune_w: item_name.ev_t2_rune_switch,
-            temple_location_names.btn_t2_rune_e: item_name.ev_t2_rune_switch,
-            temple_location_names.btn_t2_rune_se: item_name.ev_t2_rune_switch,
-            temple_location_names.btn_t2_rune_sw: item_name.ev_t2_rune_switch,
             temple_location_names.ev_t1_n_node: item_name.ev_solar_node,
             temple_location_names.ev_t1_s_node: item_name.ev_solar_node,
             temple_location_names.ev_t2_n_node: item_name.ev_solar_node,
@@ -287,13 +299,28 @@ class HammerwatchWorld(World):
             for loc in temple_bonus_keys:
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 
+        # Event/button items
+        for loc, itm in temple_events.items():
+            location = self.multiworld.get_location(loc, self.player)
+            location.address = None
+            location.place_locked_item(self.create_event(itm))
+        if not self.options.buttonsanity.value:
+            for loc, itm in temple_event_switches.items():
+                location = self.multiworld.get_location(loc, self.player)
+                location.address = None
+                location.place_locked_item(self.create_event(itm))
+
         # Portal Accessibility rune keys
         if self.options.portal_accessibility.value:
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
-                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if
-                        not loc.event]
+                if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+                    return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
+                            if not loc.event and loc.name not in temple_button_locations]
+                else:
+                    return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
+                            if not loc.event]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
@@ -350,9 +377,6 @@ class HammerwatchWorld(World):
             for loc in rune_key_locs:
                 self.multiworld.get_location(loc, self.player).place_locked_item(
                     self.create_item(item_name.key_teleport))
-
-        for loc, itm in temple_locked_items.items():
-            self.multiworld.get_location(loc, self.player).place_locked_item(self.create_event(itm))
 
     def set_rules(self) -> None:
         # self.exit_swaps = {}
@@ -447,6 +471,31 @@ class HammerwatchWorld(World):
             swap = self.options.shop_cost_max.value
             self.options.shop_cost_max.value = self.options.shop_cost_min.value
             self.options.shop_cost_min.value = swap
+
+    def pre_fill(self) -> None:
+        if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+            if get_campaign(self) == Campaign.Castle:
+                button_locations = list(castle_button_locations.keys())
+                button_item_names = list(castle_button_table.keys())
+            else:
+                button_locations = list(temple_button_locations.keys())
+                button_item_names = list(temple_button_table.keys())
+            valid_locs = list(self.multiworld.get_unfilled_locations_for_players(button_locations, [self.player]))
+            button_items = []
+            for item in button_item_names:
+                if item not in self.item_counts:
+                    continue
+                for i in range(self.item_counts[item]):
+                    button_items.append(self.create_item(item))
+            non_button_prog_items = [item for item in self.world_itempool
+                                    if item.classification & ItemClassification.progression]
+            non_button_state = CollectionState(self.multiworld)
+            for prog_item in non_button_prog_items:
+                non_button_state.collect(prog_item)
+            self.random.shuffle(valid_locs)
+            self.random.shuffle(button_items)
+            fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
+                             True, False, True, None, False, False, "Button Shuffle")
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.options.shop_shuffle.value:

@@ -2,7 +2,7 @@ import typing
 
 from . import HammerwatchTestBase
 from .. import item_name, castle_location_names, temple_location_names, option_names
-from .. import options
+from .. import options, locations, items
 
 
 class TestPlankGoal(HammerwatchTestBase):
@@ -151,7 +151,29 @@ class TestHammerwatchOptions(HammerwatchTestBase):
 
     def test_options(self):
         for option_set, options in TestHammerwatchOptions.option_sets.items():
-            test_world = HammerwatchTestBase()
-            test_world.options = options
-            test_world.world_setup()
-            test_world.test_all_locations_are_active(option_set)
+            with self.subTest(option_set):
+                test_world = HammerwatchTestBase()
+                test_world.options = options
+                test_world.world_setup()
+                test_world.test_all_locations_are_active(option_set)
+
+
+class TestButtonsanityOff(HammerwatchTestBase):
+    options = {
+        option_names.goal: options.Goal.option_temple_all_bosses,
+        option_names.buttonsanity: options.Buttonsanity.option_off,
+    }
+
+    def test_temple_no_button_items_in_non_button_locations(self):
+        self.test_fill()
+
+        locs = [loc for loc in self.multiworld.get_locations(1)]
+        for location in locs:
+            if location.name not in locations.all_locations:
+                continue
+            loc_type = locations.all_locations[location.name].classification
+            if (loc_type == locations.LocationClassification.Button
+                    or loc_type == locations.LocationClassification.Buttoninsanity):
+                self.assertTrue(location.item.name in items.temple_button_table)
+            else:
+                self.assertFalse(location.item.name in items.temple_button_table)

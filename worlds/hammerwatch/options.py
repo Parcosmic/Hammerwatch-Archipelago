@@ -131,6 +131,21 @@ class RandomizeEnemyLoot(Toggle):
     default = False
 
 
+class Buttonsanity(Choice):
+    """Whether the effects of buttons and switches are shuffled into the item pool
+    Shuffle: all effects from buttons and switches will be shuffled only amongst your own button and switch locations
+    Normal: button effects can be found anywhere in the multiworld
+    Insanity: button effects will be split into progressive versions based on the number of buttons required to trigger the effect in vanilla
+    """
+    display_name = "Buttonsanity"
+    # category = "Generation"
+    option_off = 0
+    option_shuffle = 1
+    option_normal = 2
+    option_insanity = 3
+    default = 0
+
+
 class ExitRandomization(Choice):
     """Randomizes where level exits and portals lead
     No Boss Exits: exits to boss levels will not be shuffled
@@ -405,6 +420,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     randomize_secrets: RandomizeSecrets
     randomize_puzzles: RandomizePuzzles
     randomize_enemy_loot: RandomizeEnemyLoot
+    buttonsanity: Buttonsanity
     open_castle: OpenCastle
     act_specific_keys: ActSpecificKeys
     extra_keys_percent: ExtraKeysPercent
@@ -446,6 +462,7 @@ client_required_options = [
     option_names.randomize_secrets,
     option_names.randomize_puzzles,
     option_names.randomize_enemy_loot,
+    option_names.buttonsanity,
     option_names.open_castle,
     option_names.act_specific_keys,
     # option_names.extra_keys_percent,

@@ -1,11 +1,4 @@
-import typing
-from argparse import Namespace
-from test.general import gen_steps
-from worlds import AutoWorld
-from worlds.AutoWorld import call_all
-
-from test.TestBase import WorldTestBase
-from BaseClasses import MultiWorld, Item
+from test.bases import WorldTestBase
 from ..locations import all_locations
 
 

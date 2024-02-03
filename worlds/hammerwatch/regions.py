@@ -2,6 +2,7 @@ import typing
 from enum import Enum
 from collections import namedtuple
 from BaseClasses import Region, Entrance
+from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names
@@ -3504,15 +3505,13 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     get_planks_locations = []
     if goal == GoalType.PlankHunt:
         get_planks_locations.append(temple_location_names.ev_victory)
-    get_planks_region = create_region(world, active_locations, temple_region_names.get_planks,
-                                      get_planks_locations)
+    get_planks_region = create_region(world, active_locations, temple_region_names.get_planks, get_planks_locations)
 
     hub_main_locations = [
         temple_location_names.hub_front_of_pof,
         temple_location_names.hub_behind_temple_entrance
     ]
-    dunes_main_region = create_region(world, active_locations, temple_region_names.hub_main,
-                                      hub_main_locations)
+    dunes_main_region = create_region(world, active_locations, temple_region_names.hub_main, hub_main_locations)
 
     dunes_rocks_locations = [
         temple_location_names.hub_behind_shops,
@@ -3522,10 +3521,13 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.hub_field_south,
         temple_location_names.hub_field_nw,
         temple_location_names.hub_field_north,
-        temple_location_names.ev_hub_pof_switch
+        temple_location_names.btn_hub_pof_1,
+        temple_location_names.btn_hub_pof_2,
+        temple_location_names.btn_hub_pof_3,
+        temple_location_names.btn_hub_pof_4,
+        temple_location_names.btn_hub_pof,
     ]
-    dunes_rocks_region = create_region(world, active_locations, temple_region_names.hub_rocks,
-                                       dunes_rocks_locations)
+    dunes_rocks_region = create_region(world, active_locations, temple_region_names.hub_rocks, dunes_rocks_locations)
 
     dunes_pyramid_locations = [
         temple_location_names.hub_pof_reward
@@ -3555,9 +3557,10 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c3_tower_plant_small_4,
         temple_location_names.c3_tower_plant_small_5,
         temple_location_names.c3_tower_plant_small_6,
+        temple_location_names.btn_c3_puzzle,
+        temple_location_names.btn_c3_bridge,
     ]
-    cave3_main_region = create_region(world, active_locations, temple_region_names.cave_3_main,
-                                      cave3_main_locations)
+    cave3_main_region = create_region(world, active_locations, temple_region_names.cave_3_main, cave3_main_locations)
 
     c3_puzzle_locs = [
         temple_location_names.c3_puzzle_1,
@@ -3582,10 +3585,10 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.cave3_fall_nw,
         temple_location_names.cave3_fall_ne,
         temple_location_names.cave3_fall_sw,
-        temple_location_names.cave3_fall_se
+        temple_location_names.cave3_fall_se,
+        temple_location_names.btn_c3_floor_fall,
     ]
-    cave3_fall_region = create_region(world, active_locations, temple_region_names.cave_3_fall,
-                                      cave3_fall_locations)
+    cave3_fall_region = create_region(world, active_locations, temple_region_names.cave_3_fall, cave3_fall_locations)
 
     cave3_fields_locations = [
         temple_location_names.cave3_captain,
@@ -3597,13 +3600,16 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     c3_e_water_locs = [
         temple_location_names.cave3_fields_r,
     ]
-    c3_e_water_region = create_region(world, active_locations, temple_region_names.c3_e_water,
-                                      c3_e_water_locs)
+    c3_e_water_region = create_region(world, active_locations, temple_region_names.c3_e_water, c3_e_water_locs)
 
     cave3_portal_locations = [
         temple_location_names.cave3_portal_l,
         temple_location_names.cave3_portal_r,
-        temple_location_names.ev_cave3_pof_switch
+        temple_location_names.btn_c3_pof_1,
+        temple_location_names.btn_c3_pof_2,
+        temple_location_names.btn_c3_pof_3,
+        temple_location_names.btn_c3_pof_4,
+        temple_location_names.btn_c3_pof,
     ]
     cave3_portal_region = create_region(world, active_locations, temple_region_names.cave_3_portal,
                                         cave3_portal_locations)
@@ -3676,22 +3682,27 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c2_tower_plant_small_20,
         temple_location_names.c2_tower_plant_small_21,
         temple_location_names.c2_tower_plant_small_23,
+        temple_location_names.btn_c2_red,
+        temple_location_names.btn_c2_green,
+        temple_location_names.btn_c2_pumps,
         temple_location_names.ev_c2_portal,
     ]
-    cave2_main_region = create_region(world, active_locations, temple_region_names.cave_2_main,
-                                      cave2_main_locations)
+    cave2_main_region = create_region(world, active_locations, temple_region_names.cave_2_main, cave2_main_locations)
 
     cave2_pumps_locations = [
         temple_location_names.cave2_pumps_wall_r,
         temple_location_names.cave2_pumps_wall_l,
         temple_location_names.cave2_water_n_r_1,
         temple_location_names.cave2_water_n_l,
-        temple_location_names.ev_cave2_pof_switch,
+        temple_location_names.btn_c2_pof,
         temple_location_names.cave2_water_n_r_2,
         temple_location_names.cave2_water_s,
+        temple_location_names.btn_c2_pof_1,
+        temple_location_names.btn_c2_pof_2,
+        temple_location_names.btn_c2_pof_3,
+        temple_location_names.btn_c2_pof_4,
     ]
-    cave2_pumps_region = create_region(world, active_locations, temple_region_names.cave_2_pumps,
-                                       cave2_pumps_locations)
+    cave2_pumps_region = create_region(world, active_locations, temple_region_names.cave_2_pumps, cave2_pumps_locations)
 
     cave_2_red_bridge_locations = [
         temple_location_names.cave2_red_bridge_1,
@@ -3731,6 +3742,9 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c2_tower_plant_small_16,
         temple_location_names.c2_tower_plant_small_19,
         temple_location_names.c2_tower_plant_small_22,
+        temple_location_names.btn_c2_bridges,
+        temple_location_names.btn_c2_s_bridge,
+        temple_location_names.btn_c2_puzzle,
     ]
     c2_sw_region = create_region(world, active_locations, temple_region_names.c2_sw, c2_sw_locs)
 
@@ -3777,9 +3791,10 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c1_tower_plant_small_8,
         temple_location_names.c1_tower_plant_small_11,
         temple_location_names.c1_tower_plant_small_12,
+        temple_location_names.btn_c1_blue,
+        temple_location_names.btn_c1_puzzle_w
     ]
-    cave1_main_region = create_region(world, active_locations, temple_region_names.cave_1_main,
-                                      cave1_main_locations)
+    cave1_main_region = create_region(world, active_locations, temple_region_names.cave_1_main, cave1_main_locations)
 
     c1_n_puzzle_locs = [
         temple_location_names.c1_n_puzzle_1,
@@ -3787,8 +3802,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c1_n_puzzle_3,
         temple_location_names.c1_n_puzzle_4,
     ]
-    c1_n_puzzle_region = create_region(world, active_locations, temple_region_names.c1_n_puzzle,
-                                       c1_n_puzzle_locs)
+    c1_n_puzzle_region = create_region(world, active_locations, temple_region_names.c1_n_puzzle, c1_n_puzzle_locs)
 
     cave1_blue_bridge_locations = [
         temple_location_names.cave1_ne_hidden_room_1,
@@ -3821,7 +3835,13 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c1_tower_plant_small_10,
         temple_location_names.c1_tower_plant_small_13,
         temple_location_names.c1_tower_plant_small_14,
-        temple_location_names.ev_cave1_pof_switch,
+        temple_location_names.btn_c1_red,
+        temple_location_names.btn_c1_pof_1,
+        temple_location_names.btn_c1_pof_2,
+        temple_location_names.btn_c1_pof_3,
+        temple_location_names.btn_c1_pof_4,
+        temple_location_names.btn_c1_wall,
+        temple_location_names.btn_c1_pof,
     ]
     cave1_blue_bridge_region = create_region(world, active_locations, temple_region_names.cave_1_blue_bridge,
                                              cave1_blue_bridge_locations)
@@ -3842,6 +3862,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.cave1_se_2,
         temple_location_names.cave1_e_1,
         temple_location_names.cave1_secret_e,
+        temple_location_names.btn_c1_puzzle_e,
     ]
     cave1_red_bridge_region = create_region(world, active_locations, temple_region_names.cave_1_red_bridge,
                                             cave1_red_bridge_locations)
@@ -3852,15 +3873,13 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.c1_e_puzzle_3,
         temple_location_names.c1_e_puzzle_4,
     ]
-    c1_e_puzzle_region = create_region(world, active_locations, temple_region_names.c1_e_puzzle,
-                                       c1_e_puzzle_locs)
+    c1_e_puzzle_region = create_region(world, active_locations, temple_region_names.c1_e_puzzle, c1_e_puzzle_locs)
 
     cave1_green_bridge_locations = [
         temple_location_names.cave1_green_bridge_1,
         temple_location_names.cave1_green_bridge_2,
     ]
-    cave1_green_bridge_region = create_region(world, active_locations,
-                                              temple_region_names.cave_1_green_bridge,
+    cave1_green_bridge_region = create_region(world, active_locations, temple_region_names.cave_1_green_bridge,
                                               cave1_green_bridge_locations)
 
     c1_storage_locs = [
@@ -3878,9 +3897,9 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.cave1_water_s_3,
         temple_location_names.cave1_water_s_4,
         temple_location_names.cave1_water_s_5,
+        temple_location_names.btn_c1_green,
     ]
-    cave1_pumps_region = create_region(world, active_locations, temple_region_names.cave_1_pumps,
-                                       cave1_pumps_locations)
+    cave1_pumps_region = create_region(world, active_locations, temple_region_names.cave_1_pumps, cave1_pumps_locations)
 
     cave1_temple_locations = [
         temple_location_names.cave1_temple_hall_1,
@@ -3931,6 +3950,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.boss1_bridge,
         temple_location_names.boss1_bridge_n,
         temple_location_names.boss1_secret,
+        temple_location_names.btn_b1_bridge,
     ]
     b1_back_region = create_region(world, active_locations, temple_region_names.b1_back, b1_back_locs)
 
@@ -3964,9 +3984,9 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.p_tower_plant_small_4,
         temple_location_names.p_tower_plant_small_5,
         temple_location_names.p_tower_plant_small_6,
+        temple_location_names.btn_p_puzzle,
     ]
-    passage_mid_region = create_region(world, active_locations, temple_region_names.passage_mid,
-                                       passage_mid_locations)
+    passage_mid_region = create_region(world, active_locations, temple_region_names.passage_mid, passage_mid_locations)
 
     passage_puzzle_locations = [
         temple_location_names.p_puzzle_1,
@@ -3982,8 +4002,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.p_end3_1,
         temple_location_names.p_end3_2,
     ]
-    passage_end_region = create_region(world, active_locations, temple_region_names.passage_end,
-                                       passage_end_locations)
+    passage_end_region = create_region(world, active_locations, temple_region_names.passage_end, passage_end_locations)
 
     temple_entrance_region = create_region(world, active_locations, temple_region_names.temple_entrance, [])
 
@@ -3992,8 +4011,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.temple_entrance_r,
         temple_location_names.ev_temple_entrance_rock,
     ]
-    temple_entrance_back_region = create_region(world, active_locations,
-                                                temple_region_names.temple_entrance_back,
+    temple_entrance_back_region = create_region(world, active_locations, temple_region_names.temple_entrance_back,
                                                 temple_entrance_back_locations)
 
     t1_main_locations = [
@@ -4011,6 +4029,8 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_sw_hidden_room_2,
         temple_location_names.t1_sw_hidden_room_3,
         temple_location_names.t1_sw_hidden_room_4,
+        temple_location_names.btn_t1_puzzle_w,
+        temple_location_names.btn_t1_wall_guard,
     ]
     t1_main_region = create_region(world, active_locations, temple_region_names.t1_main, t1_main_locations)
 
@@ -4020,8 +4040,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_w_puzzle_3,
         temple_location_names.t1_w_puzzle_4,
     ]
-    t1_w_puzzle_region = create_region(world, active_locations, temple_region_names.t1_w_puzzle,
-                                       t1_w_puzzle_locs)
+    t1_w_puzzle_region = create_region(world, active_locations, temple_region_names.t1_w_puzzle, t1_w_puzzle_locs)
 
     t1_sw_sdoor_locations = [
         temple_location_names.t1_sw_sdoor_1,
@@ -4030,14 +4049,12 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_sw_sdoor_4,
         temple_location_names.t1_sw_sdoor_5,
     ]
-    t1_sw_cache_region = create_region(world, active_locations, temple_region_names.t1_sw_sdoor,
-                                       t1_sw_sdoor_locations)
+    t1_sw_cache_region = create_region(world, active_locations, temple_region_names.t1_sw_sdoor, t1_sw_sdoor_locations)
 
     t1_node_1_locations = [
         temple_location_names.ev_t1_s_node
     ]
-    t1_node_1_region = create_region(world, active_locations, temple_region_names.t1_node_1,
-                                     t1_node_1_locations)
+    t1_node_1_region = create_region(world, active_locations, temple_region_names.t1_node_1, t1_node_1_locations)
 
     t1_w_locations = [
         temple_location_names.t1_double_gate_1,
@@ -4052,9 +4069,15 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_mana_drain_fire_trap,
         temple_location_names.t1_mana_drain_fire_trap_reward_1,
         temple_location_names.t1_mana_drain_fire_trap_reward_2,
-        temple_location_names.t1_mana_drain_fire_trap_passage,
+        temple_location_names.btn_t1_wall_runway,
     ]
     t1_w_region = create_region(world, active_locations, temple_region_names.t1_w, t1_w_locations)
+
+    t1_runway_halls_locations = [
+        temple_location_names.t1_mana_drain_fire_trap_passage,
+    ]
+    t1_runway_halls_region = create_region(world, active_locations, temple_region_names.t1_runway_halls,
+                                           t1_runway_halls_locations)
 
     t1_sun_turret_locations = [
         temple_location_names.t1_double_gate_behind_block,
@@ -4095,9 +4118,9 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_telarian_3,
         temple_location_names.t1_telarian_4,
         temple_location_names.t1_telarian_5,
+        temple_location_names.btn_t1_wall_telarian,
     ]
-    t1_telarian_region = create_region(world, active_locations, temple_region_names.t1_telarian,
-                                       t1_telarian_locs)
+    t1_telarian_region = create_region(world, active_locations, temple_region_names.t1_telarian, t1_telarian_locs)
 
     t1_n_of_ice_turret_locations = [
         temple_location_names.t1_n_cache_by_ice_turret_1,
@@ -4105,9 +4128,9 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_n_cache_by_ice_turret_3,
         temple_location_names.t1_n_cache_by_ice_turret_4,
         temple_location_names.t1_n_cache_by_ice_turret_5,
+        temple_location_names.btn_t1_wall_n_jail,
     ]
-    t1_n_of_ice_turret_region = create_region(world, active_locations,
-                                              temple_region_names.t1_n_of_ice_turret,
+    t1_n_of_ice_turret_region = create_region(world, active_locations, temple_region_names.t1_n_of_ice_turret,
                                               t1_n_of_ice_turret_locations)
 
     t1_s_of_ice_turret_locations = [
@@ -4115,8 +4138,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_s_cache_by_ice_turret_2,
         temple_location_names.t1_s_cache_by_ice_turret_3,
     ]
-    t1_s_of_ice_turret_region = create_region(world, active_locations,
-                                              temple_region_names.t1_s_of_ice_turret,
+    t1_s_of_ice_turret_region = create_region(world, active_locations, temple_region_names.t1_s_of_ice_turret,
                                               t1_s_of_ice_turret_locations)
 
     t1_east_locations = [
@@ -4127,15 +4149,26 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_ice_block_chamber_3,
         temple_location_names.t1_node_2_1,
         temple_location_names.t1_node_2_2,
-        temple_location_names.t1_node_2_passage_1,
-        temple_location_names.t1_node_2_passage_2,
-        temple_location_names.t1_node_2_passage_3,
-        temple_location_names.ev_temple1_pof_switch,
+        temple_location_names.btn_t1_pof,
         temple_location_names.t1_miniboss_mummy_1,
         temple_location_names.t1_miniboss_mummy_2,
+        temple_location_names.btn_t1_pof_1,
+        temple_location_names.btn_t1_pof_2,
+        temple_location_names.btn_t1_pof_3,
+        temple_location_names.btn_t1_pof_4,
+        temple_location_names.btn_t1_puzzle_e,
+        temple_location_names.btn_t1_wall_n_hall,
+        temple_location_names.btn_t1_wall_e_jail,
         temple_location_names.ev_t1_n_node_s_mirror,
     ]
     t1_east_region = create_region(world, active_locations, temple_region_names.t1_east, t1_east_locations)
+
+    t1_ne_hall_locations = [
+        temple_location_names.t1_node_2_passage_1,
+        temple_location_names.t1_node_2_passage_2,
+        temple_location_names.t1_node_2_passage_3,
+    ]
+    t1_ne_hall_region = create_region(world, active_locations, temple_region_names.t1_ne_hall, t1_ne_hall_locations)
 
     t1_e_puzzle_locs = [
         temple_location_names.t1_e_puzzle_1,
@@ -4143,8 +4176,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t1_e_puzzle_3,
         temple_location_names.t1_e_puzzle_4,
     ]
-    t1_e_puzzle_region = create_region(world, active_locations, temple_region_names.t1_e_puzzle,
-                                       t1_e_puzzle_locs)
+    t1_e_puzzle_region = create_region(world, active_locations, temple_region_names.t1_e_puzzle, t1_e_puzzle_locs)
 
     t1_jail_e_locs = [
         temple_location_names.t1_e_gold_beetles,
@@ -4163,21 +4195,18 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     t1_node_2_locations = [
         temple_location_names.ev_t1_n_node
     ]
-    t1_node_2_region = create_region(world, active_locations, temple_region_names.t1_node_2,
-                                     t1_node_2_locations)
+    t1_node_2_region = create_region(world, active_locations, temple_region_names.t1_node_2, t1_node_2_locations)
 
     t1_telarian_melt_ice_locations = [
         temple_location_names.t1_telarian_ice
     ]
-    t1_telarian_melt_ice_region = create_region(world, active_locations,
-                                                temple_region_names.t1_telarian_melt_ice,
+    t1_telarian_melt_ice_region = create_region(world, active_locations, temple_region_names.t1_telarian_melt_ice,
                                                 t1_telarian_melt_ice_locations)
 
     t1_ice_chamber_melt_ice_locations = [
         temple_location_names.t1_ice_block_chamber_ice
     ]
-    t1_ice_chamber_melt_ice_region = create_region(world, active_locations,
-                                                   temple_region_names.t1_ice_chamber_melt_ice,
+    t1_ice_chamber_melt_ice_region = create_region(world, active_locations, temple_region_names.t1_ice_chamber_melt_ice,
                                                    t1_ice_chamber_melt_ice_locations)
     # Dynamically place portal event location
     t1_portal_loc = HammerwatchLocation(world.player, temple_location_names.ev_t1_portal)
@@ -4240,8 +4269,17 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_se_banner_chamber_4,
         temple_location_names.t2_se_banner_chamber_5,
         temple_location_names.t2_se_fireball_hall,
+        temple_location_names.btn_t2_runes,
         temple_location_names.btn_t2_rune_e,
         temple_location_names.btn_t2_rune_se,
+        temple_location_names.btn_t2_puzzle_w,
+        temple_location_names.btn_t2_puzzle_e,
+        temple_location_names.btn_t2_wall_w_ice_gate,
+        temple_location_names.btn_t2_wall_e_ice_gate,
+        temple_location_names.btn_t2_wall_jail_e,
+        temple_location_names.btn_t2_portal,
+        temple_location_names.btn_t2_wall_portal_w,
+        temple_location_names.btn_t2_wall_portal_e,
         temple_location_names.t2_miniboss_mummy_e_1,
         temple_location_names.t2_miniboss_mummy_e_2,
         temple_location_names.t2_miniboss_mummy_w_1,
@@ -4259,8 +4297,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_nw_puzzle_3,
         temple_location_names.t2_nw_puzzle_4,
     ]
-    t2_nw_puzzle_region = create_region(world, active_locations, temple_region_names.t2_nw_puzzle,
-                                        t2_nw_puzzle_locs)
+    t2_nw_puzzle_region = create_region(world, active_locations, temple_region_names.t2_nw_puzzle, t2_nw_puzzle_locs)
 
     t2_e_puzzle_locs = [
         temple_location_names.t2_e_puzzle_1,
@@ -4268,25 +4305,21 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_e_puzzle_3,
         temple_location_names.t2_e_puzzle_4,
     ]
-    t2_e_puzzle_region = create_region(world, active_locations, temple_region_names.t2_e_puzzle,
-                                       t2_e_puzzle_locs)
+    t2_e_puzzle_region = create_region(world, active_locations, temple_region_names.t2_e_puzzle, t2_e_puzzle_locs)
 
     t2_melt_ice_locations = [
     ]
-    t2_melt_ice_region = create_region(world, active_locations, temple_region_names.t2_melt_ice,
-                                       t2_melt_ice_locations)
+    t2_melt_ice_region = create_region(world, active_locations, temple_region_names.t2_melt_ice, t2_melt_ice_locations)
 
     t2_w_ice_gate_locs = [
         temple_location_names.t2_w_ice_block_gate,
     ]
-    t2_w_ice_gate_region = create_region(world, active_locations, temple_region_names.t2_w_ice_gate,
-                                         t2_w_ice_gate_locs)
+    t2_w_ice_gate_region = create_region(world, active_locations, temple_region_names.t2_w_ice_gate, t2_w_ice_gate_locs)
 
     t2_e_ice_gate_locs = [
         temple_location_names.t2_e_ice_block_gate,
     ]
-    t2_e_ice_gate_region = create_region(world, active_locations, temple_region_names.t2_e_ice_gate,
-                                         t2_e_ice_gate_locs)
+    t2_e_ice_gate_region = create_region(world, active_locations, temple_region_names.t2_e_ice_gate, t2_e_ice_gate_locs)
 
     t2_n_gate_locations = [
         temple_location_names.t2_nw_ice_turret_1,
@@ -4297,9 +4330,11 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_nw_gate_3,
         temple_location_names.t2_tower_ice_1,
         temple_location_names.t2_tower_ice_2,
+        temple_location_names.btn_t2_puzzle_n,
+        temple_location_names.btn_t2_wall_nw_gate,
+        temple_location_names.btn_t2_wall_jones_hall,
     ]
-    t2_n_gate_region = create_region(world, active_locations, temple_region_names.t2_n_gate,
-                                     t2_n_gate_locations)
+    t2_n_gate_region = create_region(world, active_locations, temple_region_names.t2_n_gate, t2_n_gate_locations)
 
     t2_n_puzzle_locs = [
         temple_location_names.t2_n_puzzle_1,
@@ -4307,8 +4342,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_n_puzzle_3,
         temple_location_names.t2_n_puzzle_4,
     ]
-    t2_n_puzzle_region = create_region(world, active_locations, temple_region_names.t2_n_puzzle,
-                                       t2_n_puzzle_locs)
+    t2_n_puzzle_region = create_region(world, active_locations, temple_region_names.t2_n_puzzle, t2_n_puzzle_locs)
 
     t2_nw_button_gate_locs = [
         temple_location_names.t2_nw_gate_1,
@@ -4325,13 +4359,14 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_s_sunbeam_2,
         temple_location_names.t2_sw_jail_1,
         temple_location_names.t2_sw_jail_2,
-        temple_location_names.btn_t2_rune_sw,
-        temple_location_names.ev_temple2_pof_switch,
         temple_location_names.t2_tower_mana_3,
+        temple_location_names.btn_t2_rune_sw,
         temple_location_names.btn_t2_floor_blue,
+        temple_location_names.btn_t2_puzzle_s,
+        temple_location_names.btn_t2_wall_s_gate_shortcut,
+        temple_location_names.btn_t2_wall_s_gate_hall,
     ]
-    t2_s_gate_region = create_region(world, active_locations, temple_region_names.t2_s_gate,
-                                     t2_s_gate_locations)
+    t2_s_gate_region = create_region(world, active_locations, temple_region_names.t2_s_gate, t2_s_gate_locations)
 
     t2_sw_puzzle_locs = [
         temple_location_names.t2_sw_puzzle_1,
@@ -4339,20 +4374,20 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_sw_puzzle_3,
         temple_location_names.t2_sw_puzzle_4,
     ]
-    t2_sw_puzzle_region = create_region(world, active_locations, temple_region_names.t2_sw_puzzle,
-                                        t2_sw_puzzle_locs)
+    t2_sw_puzzle_region = create_region(world, active_locations, temple_region_names.t2_sw_puzzle, t2_sw_puzzle_locs)
 
     t2_n_node_locations = [
+        temple_location_names.btn_t2_wall_n_node,
         temple_location_names.ev_t2_n_node,
     ]
-    t2_n_node_region = create_region(world, active_locations, temple_region_names.t2_n_node,
-                                     t2_n_node_locations)
+    t2_n_node_region = create_region(world, active_locations, temple_region_names.t2_n_node, t2_n_node_locations)
 
     t2_boulder_room_locs = [
         temple_location_names.t2_boulder_room_1,
         temple_location_names.t2_boulder_room_2,
         temple_location_names.t2_boulder_room_block,
-        temple_location_names.btn_t2_rune_w
+        temple_location_names.btn_t2_rune_w,
+        temple_location_names.btn_t2_wall_boulder_room,
     ]
     t2_boulder_room_region = create_region(world, active_locations, temple_region_names.t2_boulder_room,
                                            t2_boulder_room_locs)
@@ -4360,6 +4395,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     t2_n_hidden_hall_locs = [
         temple_location_names.t2_mana_drain_fire_trap_1,
         temple_location_names.t2_mana_drain_fire_trap_2,
+        temple_location_names.btn_t2_wall_n_hidden_hall,
     ]
     t2_n_hidden_hall_region = create_region(world, active_locations, temple_region_names.t2_n_hidden_hall,
                                             t2_n_hidden_hall_locs)
@@ -4367,14 +4403,12 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     t2_jones_hall_locs = [
         temple_location_names.t2_jones_hallway,
     ]
-    t2_jones_hall_region = create_region(world, active_locations, temple_region_names.t2_jones_hall,
-                                         t2_jones_hall_locs)
+    t2_jones_hall_region = create_region(world, active_locations, temple_region_names.t2_jones_hall, t2_jones_hall_locs)
 
     t2_s_node_locations = [
         temple_location_names.ev_t2_s_node
     ]
-    t2_s_node_region = create_region(world, active_locations, temple_region_names.t2_s_node,
-                                     t2_s_node_locations)
+    t2_s_node_region = create_region(world, active_locations, temple_region_names.t2_s_node, t2_s_node_locations)
 
     t2_jail_sw_locs = [
         temple_location_names.t2_gold_beetle_barricade,
@@ -4382,39 +4416,45 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_w_gold_beetle_room_2,
         temple_location_names.t2_w_gold_beetle_room_3,
         temple_location_names.t2_w_gold_beetle_room_4,
+        temple_location_names.btn_t2_wall_jail_w,
     ]
-    t2_jail_sw_region = create_region(world, active_locations, temple_region_names.t2_jail_sw,
-                                      t2_jail_sw_locs)
+    t2_jail_sw_region = create_region(world, active_locations, temple_region_names.t2_jail_sw, t2_jail_sw_locs)
 
     t2_sdoor_gate_locs = [
         temple_location_names.t2_sw_gate,
     ]
-    t2_sdoor_gate_region = create_region(world, active_locations, temple_region_names.t2_sdoor_gate,
-                                         t2_sdoor_gate_locs)
+    t2_sdoor_gate_region = create_region(world, active_locations, temple_region_names.t2_sdoor_gate, t2_sdoor_gate_locs)
 
     t2_pof_locs = [
         temple_location_names.t2_left_of_pof_switch_1,
         temple_location_names.t2_left_of_pof_switch_2,
+        temple_location_names.btn_t2_pof_1,
+        temple_location_names.btn_t2_pof_2,
+        temple_location_names.btn_t2_pof_3,
+        temple_location_names.btn_t2_pof_4,
+        temple_location_names.btn_t2_wall_pof,
+        temple_location_names.btn_t2_pof,
     ]
     t2_pof_region = create_region(world, active_locations, temple_region_names.t2_pof, t2_pof_locs)
 
     t2_pof_spikes_locs = [
         temple_location_names.t2_right_of_pof_switch
     ]
-    t2_pof_spikes_region = create_region(world, active_locations, temple_region_names.t2_pof_spikes,
-                                         t2_pof_spikes_locs)
+    t2_pof_spikes_region = create_region(world, active_locations, temple_region_names.t2_pof_spikes, t2_pof_spikes_locs)
 
     t2_jail_s_locs = [
+        temple_location_names.btn_t2_wall_jail_s,
     ]
     t2_jail_s_region = create_region(world, active_locations, temple_region_names.t2_jail_s, t2_jail_s_locs)
 
     t2_ornate_locations = [
-        temple_location_names.btn_t2_rune_n
+        temple_location_names.btn_t2_rune_n,
+        temple_location_names.btn_t2_wall_t3_gate_e,
     ]
-    t2_ornate_region = create_region(world, active_locations, temple_region_names.t2_ornate,
-                                     t2_ornate_locations)
+    t2_ornate_region = create_region(world, active_locations, temple_region_names.t2_ornate, t2_ornate_locations)
 
     t2_light_bridge_w_locations = [
+        temple_location_names.btn_t2_floor_portal,
     ]
     t2_light_bridge_w_region = create_region(world, active_locations, temple_region_names.t2_light_bridge_w,
                                              t2_light_bridge_w_locations)
@@ -4423,15 +4463,15 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_se_light_bridge_1,
         temple_location_names.t2_se_light_bridge_2,
     ]
-    t2_light_bridges_se_region = create_region(world, active_locations,
-                                               temple_region_names.t2_light_bridges_se, t2_light_bridges_se_locations)
+    t2_light_bridges_se_region = create_region(world, active_locations, temple_region_names.t2_light_bridges_se,
+                                               t2_light_bridges_se_locations)
 
     t2_light_bridges_s_locations = [
         temple_location_names.t2_s_light_bridge_1,
         temple_location_names.t2_s_light_bridge_2,
     ]
-    t2_light_bridges_s_region = create_region(world, active_locations,
-                                              temple_region_names.t2_light_bridges_s, t2_light_bridges_s_locations)
+    t2_light_bridges_s_region = create_region(world, active_locations, temple_region_names.t2_light_bridges_s,
+                                              t2_light_bridges_s_locations)
 
     t2_portal_gate_locs = [
         temple_location_names.t2_portal_gate,
@@ -4446,6 +4486,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t2_floor3_cache_4,
         temple_location_names.t2_floor3_cache_5,
         temple_location_names.t2_floor3_cache_6,
+        temple_location_names.btn_t2_wall_t3_gate_w,
     ]
     t2_ornate_t3_region = create_region(world, active_locations, temple_region_names.t2_ornate_t3,
                                         t2_ornate_t3_locations)
@@ -4487,7 +4528,10 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     ]
     t3_main_region = create_region(world, active_locations, temple_region_names.t3_main, t3_main_locations)
 
-    t3_blockade_s_region = create_region(world, active_locations, temple_region_names.t3_blockade_s, [])
+    t3_blockade_s_locs = [
+        temple_location_names.btn_t3_wall_gate_s,
+    ]
+    t3_blockade_s_region = create_region(world, active_locations, temple_region_names.t3_blockade_s, t3_blockade_s_locs)
 
     t3_s_gate_locs = [
         temple_location_names.t3_s_gate,
@@ -4500,6 +4544,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t3_n_node_blocks_3,
         temple_location_names.t3_n_node_blocks_4,
         temple_location_names.t3_n_node_blocks_5,
+        temple_location_names.btn_t3_wall_blockade,
     ]
     t3_n_node_blocks_region = create_region(world, active_locations, temple_region_names.t3_n_node_blocks,
                                             t3_n_node_blocks_locations)
@@ -4507,8 +4552,19 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     t3_gates_locs = [
         temple_location_names.t3_tower_ice_2,
         temple_location_names.t3_tower_ice_3,
+        temple_location_names.btn_t3_levers,
+        temple_location_names.btn_t3_lever_1,
+        temple_location_names.btn_t3_lever_2,
+        temple_location_names.btn_t3_lever_3,
+        temple_location_names.btn_t3_lever_4,
     ]
     t3_gates_region = create_region(world, active_locations, temple_region_names.t3_gates, t3_gates_locs)
+
+    t3_puzzle_room_locs = [
+        temple_location_names.btn_t3_puzzle,
+    ]
+    t3_puzzle_room_region = create_region(world, active_locations, temple_region_names.t3_puzzle_room,
+                                          t3_puzzle_room_locs)
 
     t3_puzzle_locs = [
         temple_location_names.t3_puzzle_1,
@@ -4521,23 +4577,20 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     t3_n_node_locations = [
         temple_location_names.ev_t3_n_node
     ]
-    t3_n_node_region = create_region(world, active_locations, temple_region_names.t3_n_node,
-                                     t3_n_node_locations)
+    t3_n_node_region = create_region(world, active_locations, temple_region_names.t3_n_node, t3_n_node_locations)
 
     t3_s_node_blocks_1_locations = [
         temple_location_names.t3_s_node_cache_1,
         temple_location_names.t3_s_node_cache_2,
         temple_location_names.t3_s_node_cache_3,
     ]
-    t3_s_node_blocks_1_region = create_region(world, active_locations,
-                                              temple_region_names.t3_s_node_blocks_1,
+    t3_s_node_blocks_1_region = create_region(world, active_locations, temple_region_names.t3_s_node_blocks_1,
                                               t3_s_node_blocks_1_locations)
 
     t3_s_node_blocks_2_locations = [
         temple_location_names.t3_m_balcony_corridor,
     ]
-    t3_s_node_blocks_2_region = create_region(world, active_locations,
-                                              temple_region_names.t3_s_node_blocks_2,
+    t3_s_node_blocks_2_region = create_region(world, active_locations, temple_region_names.t3_s_node_blocks_2,
                                               t3_s_node_blocks_2_locations)
 
     t3_s_node_locations = [
@@ -4546,13 +4599,13 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t3_n_node_3,
         temple_location_names.ev_t3_s_node,
     ]
-    t3_s_node_region = create_region(world, active_locations, temple_region_names.t3_s_node,
-                                     t3_s_node_locations)
+    t3_s_node_region = create_region(world, active_locations, temple_region_names.t3_s_node, t3_s_node_locations)
 
     t3_boss_fall_1_locations = [
         temple_location_names.t3_boss_fall_1_1,
         temple_location_names.t3_boss_fall_1_2,
         temple_location_names.t3_boss_fall_1_3,
+        temple_location_names.btn_t3_wall_fall_1,
     ]
     t3_boss_fall_1_region = create_region(world, active_locations, temple_region_names.t3_boss_fall_1,
                                           t3_boss_fall_1_locations)
@@ -4561,6 +4614,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t3_boss_fall_2_1,
         temple_location_names.t3_boss_fall_2_2,
         temple_location_names.t3_boss_fall_2_3,
+        temple_location_names.btn_t3_wall_fall_2,
     ]
     t3_boss_fall_2_region = create_region(world, active_locations, temple_region_names.t3_boss_fall_2,
                                           t3_boss_fall_2_locations)
@@ -4570,6 +4624,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.t3_boss_fall_3_2,
         temple_location_names.t3_boss_fall_3_3,
         temple_location_names.t3_boss_fall_3_4,
+        temple_location_names.btn_t3_wall_fall_3,
     ]
     t3_boss_fall_3_region = create_region(world, active_locations, temple_region_names.t3_boss_fall_3,
                                           t3_boss_fall_3_locations)
@@ -4592,11 +4647,10 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.pof_1_sw_left_10,
         temple_location_names.pof_1_sw_left_11,
     ]
-    pof_1_main_region = create_region(world, active_locations, temple_region_names.pof_1_main,
-                                      pof_1_main_locations)
+    pof_1_main_region = create_region(world, active_locations, temple_region_names.pof_1_main, pof_1_main_locations)
 
     pof_1_se_room_locations = [
-        temple_location_names.ev_pof_1_se_room_panel,
+        temple_location_names.btn_pof_1_panel_se,
     ]
     pof_1_se_room_region = create_region(world, active_locations, temple_region_names.pof_1_se_room,
                                          pof_1_se_room_locations)
@@ -4621,8 +4675,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
 
     pof_1_sw_gate_locs = [
     ]
-    pof_1_sw_gate_region = create_region(world, active_locations, temple_region_names.pof_1_sw_gate,
-                                         pof_1_sw_gate_locs)
+    pof_1_sw_gate_region = create_region(world, active_locations, temple_region_names.pof_1_sw_gate, pof_1_sw_gate_locs)
 
     pof_1_nw_locs = [
         temple_location_names.pof_1_confuse_corner_1,
@@ -4642,7 +4695,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.pof_1_n_7,
         temple_location_names.pof_1_n_8,
         temple_location_names.pof_1_n_9,
-        temple_location_names.ev_pof_1_unlock_exit
+        temple_location_names.btn_pof_1_panel_n
     ]
     pof_1_n_room_region = create_region(world, active_locations, temple_region_names.pof_1_n_room,
                                         pof_1_n_room_locations)
@@ -4684,22 +4737,22 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.pof_2_sw_3,
         temple_location_names.pof_2_sw_4,
     ]
-    pof_2_main_region = create_region(world, active_locations, temple_region_names.pof_2_main,
-                                      pof_2_main_locations)
+    pof_2_main_region = create_region(world, active_locations, temple_region_names.pof_2_main, pof_2_main_locations)
 
     pof_2_n_locations = [
         temple_location_names.pof_2_ne_1,
         temple_location_names.pof_2_ne_2,
         temple_location_names.pof_2_ne_3,
         temple_location_names.pof_2_ne_4,
+        temple_location_names.btn_pof_2_panel_e,
     ]
     pof_2_n_region = create_region(world, active_locations, temple_region_names.pof_2_n, pof_2_n_locations)
 
     pof_2_puzzle_locs = [
-        temple_location_names.ev_pof_2_unlock_exit
+        temple_location_names.btn_pof_2_panel_w,
+        temple_location_names.btn_pof_puzzle,
     ]
-    pof_2_puzzle_region = create_region(world, active_locations, temple_region_names.pof_2_puzzle,
-                                        pof_2_puzzle_locs)
+    pof_2_puzzle_region = create_region(world, active_locations, temple_region_names.pof_2_puzzle, pof_2_puzzle_locs)
 
     pof_puzzle_locs = [
         temple_location_names.pof_puzzle_1,
@@ -4707,21 +4760,19 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.pof_puzzle_3,
         temple_location_names.pof_puzzle_4,
     ]
-    pof_puzzle_region = create_region(world, active_locations, temple_region_names.pof_puzzle,
-                                      pof_puzzle_locs)
+    pof_puzzle_region = create_region(world, active_locations, temple_region_names.pof_puzzle, pof_puzzle_locs)
 
     pof_2_exit_locations = [
     ]
-    pof_2_exit_region = create_region(world, active_locations, temple_region_names.pof_2_exit,
-                                      pof_2_exit_locations)
+    pof_2_exit_region = create_region(world, active_locations, temple_region_names.pof_2_exit, pof_2_exit_locations)
 
     pof_3_start_locs = [
         temple_location_names.pof_3_safety_room_1,
         temple_location_names.pof_3_safety_room_2,
         temple_location_names.pof_3_safety_room_3,
+        temple_location_names.btn_pof_3_panel,
     ]
-    pof_3_start_region = create_region(world, active_locations, temple_region_names.pof_3_start,
-                                       pof_3_start_locs)
+    pof_3_start_region = create_region(world, active_locations, temple_region_names.pof_3_start, pof_3_start_locs)
 
     pof_3_main_locations = [
         temple_location_names.pof_3_end_1,
@@ -4733,33 +4784,28 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     ]
     if goal == GoalType.AltCompletion:
         pof_3_main_locations.append(temple_location_names.ev_victory)
-    pof_3_main_region = create_region(world, active_locations, temple_region_names.pof_3_main,
-                                      pof_3_main_locations)
+    pof_3_main_region = create_region(world, active_locations, temple_region_names.pof_3_main, pof_3_main_locations)
 
     b3_main_region = create_region(world, active_locations, temple_region_names.b3_main, [])
     b3_platform_1_locs = [
         temple_location_names.b3_tower_fire_2,
     ]
-    b3_platform_1_region = create_region(world, active_locations, temple_region_names.b3_platform_1,
-                                         b3_platform_1_locs)
+    b3_platform_1_region = create_region(world, active_locations, temple_region_names.b3_platform_1, b3_platform_1_locs)
     b3_platform_2_locs = [
         temple_location_names.b3_tower_fire_1,
     ]
-    b3_platform_2_region = create_region(world, active_locations, temple_region_names.b3_platform_2,
-                                         b3_platform_2_locs)
+    b3_platform_2_region = create_region(world, active_locations, temple_region_names.b3_platform_2, b3_platform_2_locs)
     b3_platform_3_locs = [
         temple_location_names.b3_tower_fire_3,
     ]
-    b3_platform_3_region = create_region(world, active_locations, temple_region_names.b3_platform_3,
-                                         b3_platform_3_locs)
+    b3_platform_3_region = create_region(world, active_locations, temple_region_names.b3_platform_3, b3_platform_3_locs)
 
     b3_defeated_locations = [
         temple_location_names.ev_beat_boss_3,
     ]
     if goal == GoalType.KillBosses:
         b3_defeated_locations.append(temple_location_names.ev_victory)
-    b3_defeated_region = create_region(world, active_locations, temple_region_names.b3_defeated,
-                                       b3_defeated_locations)
+    b3_defeated_region = create_region(world, active_locations, temple_region_names.b3_defeated, b3_defeated_locations)
 
     world.multiworld.regions += [
         menu_region,
@@ -4807,6 +4853,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         t1_w_puzzle_region,
         t1_sw_cache_region,
         t1_w_region,
+        t1_runway_halls_region,
         t1_node_1_region,
         t1_node_2_region,
         t1_sun_turret_region,
@@ -4815,6 +4862,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         t1_n_of_ice_turret_region,
         t1_s_of_ice_turret_region,
         t1_east_region,
+        t1_ne_hall_region,
         t1_e_puzzle_region,
         t1_jail_e_region,
         t1_sun_block_hall_region,
@@ -4855,6 +4903,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         t3_s_gate_region,
         t3_n_node_blocks_region,
         t3_gates_region,
+        t3_puzzle_room_region,
         t3_puzzle_region,
         t3_n_node_region,
         t3_s_node_blocks_1_region,
@@ -4897,15 +4946,15 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     }
 
     pan_item = item_name.pan
-    lever_item = item_name.lever
+    # lever_item = item_name.lever
     pickaxe_item = item_name.pickaxe
     pan_item_count = world.options.pan_fragments.value
-    lever_item_count = world.options.lever_fragments.value
+    # lever_item_count = world.options.lever_fragments.value
     pickaxe_item_count = world.options.pickaxe_fragments.value
     if pan_item_count > 1:
         pan_item = item_name.pan_fragment
-    if lever_item_count > 1:
-        lever_item = item_name.lever_fragment
+    # if lever_item_count > 1:
+    #     lever_item = item_name.lever_fragment
     if pickaxe_item_count > 1:
         pickaxe_item = item_name.pickaxe_fragment
 
@@ -4913,8 +4962,11 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     if not (world.options.exit_randomization.value and world.options.random_start_exit.value):
         connect(world, used_names, temple_region_names.menu, temple_region_names.hub_main, False)
 
+    buttonsanity = world.options.buttonsanity.value > 0
+
     connect(world, used_names, temple_region_names.hub_main, temple_region_names.hub_rocks,
-            True, pickaxe_item, pickaxe_item_count, False)
+            False, pickaxe_item, pickaxe_item_count, False)
+    # Actually one-way because you need to talk to Lyron to clear the rocks, and he's on the shop side
     connect_exit(world, used_names, temple_region_names.hub_rocks, temple_region_names.cave_3_fall,
                  entrance_names.t_c1_fall_surface, None)
     # For the temple entrances in the hub
@@ -4936,14 +4988,16 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect_exit(world, used_names, temple_region_names.library, temple_region_names.cave_3_main,
                  entrance_names.t_c1_start, None)
     connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.cave_3_fields,
-            False, lever_item, lever_item_count, False)
+            False, item_name.btn_c2_pumps, 1, False)
     connect(world, used_names, temple_region_names.c3_e, temple_region_names.c3_e_water,
-            False, lever_item, lever_item_count, False)
+            False, item_name.btn_c2_pumps, 1, False)
     connect(world, used_names, temple_region_names.c3_e_water, temple_region_names.cave_3_main, False)
-
-    connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_puzzle, False)
-    connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, False)
-    connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False)
+    connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_puzzle, False,
+            item_name.btn_c3_puzzle, 1, False, buttonsanity)
+    connect_or(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, True,
+              [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps])
+    connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False,
+            item_name.btn_c3_fall_bridge, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_3_secret, temple_region_names.cave_3_main, False)
     # If ER is on, use consume logic if Rune Keys are placed normally. If we're placing them don't use logic as we
     # can't predict how we'll collect them. If ER is off use hardcoded logic so we have reasonable spheres
@@ -4959,14 +5013,26 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
                      entrance_names.t_c2_start, entrance_names.t_c1_end, item_name.key_teleport, 1, False)
 
     connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.cave_2_pumps,
-            False, lever_item, lever_item_count, False)
-    connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_red_bridge, False)
-    # Requires red switch
-    connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_green_bridge, False)
-    connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_sw, True)
+            False, item_name.btn_c2_pumps, 1, False)
+    connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_red_bridge, False,
+            item_name.btn_c2_red, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_green_bridge, False,
+            item_name.btn_c2_green, 1, False, buttonsanity)
+    if buttonsanity:
+        connect_or(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_sw, False,
+                   [item_name.btn_c2_green, item_name.btn_c2_s_bridge])
+        connect(world, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main, False)
+        # Can go through the breakable wall
+        connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_double_bridge, True,
+                item_name.btn_c2_bridges, 1, False)
+        connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_double_bridge, True,
+                item_name.btn_c2_bridges, 1, False)
+    else:
+        connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_sw, True)
+        connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_double_bridge, False)
     # Both require green switch
-    connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_puzzle, False)
-    connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_double_bridge, False)
+    connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_puzzle, False,
+            item_name.btn_c2_puzzle, 1, False, buttonsanity)
     # Two-way
     # connect_generic(multiworld, player, used_names, temple_region_names.c2_double_bridge, temple_region_names.cave_2_main)
     # Both require double bridge switch
@@ -4983,28 +5049,32 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
         connect_exit(world, used_names, temple_region_names.c2_sw, temple_region_names.cave_1_main,
                      entrance_names.t_c3_start, entrance_names.t_c2_end, item_name.key_teleport, 2, False)
 
-    connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.c1_n_puzzle, False)
-    connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, False)
-    # Requires blue switch, two-way
-    connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_red_bridge,
-            False)
-    # Requires red switch, two-way
-    connect(world, used_names, temple_region_names.cave_1_blue_bridge,
-            temple_region_names.c1_secret_hall, False)
-    # Requires wall switch
+    connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.c1_n_puzzle, False,
+            item_name.btn_c1_puzzle_w, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, buttonsanity,
+            item_name.btn_c1_blue, 1, False, buttonsanity)
+    c1_no_e_shortcut = random_locations[temple_location_names.rloc_c1_hall_e] >= 2
+    connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_red_bridge, buttonsanity,
+            item_name.btn_c1_red, 1, False, c1_no_e_shortcut and buttonsanity)
+    if buttonsanity:
+        connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_green_bridge, True,
+                item_name.btn_c1_green, 1, False)
+        connect(world, used_names, temple_region_names.cave_1_green_bridge, temple_region_names.c1_storage_island, True,
+                item_name.btn_c1_green, 1, False)
+    else:
+        connect(world, used_names, temple_region_names.cave_1_pumps, temple_region_names.cave_1_green_bridge, False)
+    connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.c1_secret_hall, False,
+            item_name.btn_c1_tunnel, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_pumps,
-            True, lever_item, lever_item_count, False)
-    connect(world, used_names, temple_region_names.cave_1_pumps, temple_region_names.cave_1_green_bridge,
-            False)
-    # Symbolic connection, requires green switch which is underwater
+            True, item_name.btn_c2_pumps, 1, False)
     connect(world, used_names, temple_region_names.cave_1_pumps, temple_region_names.c1_storage_island, False)
     connect_exit(world, used_names, temple_region_names.c1_storage_island, temple_region_names.boss2_main,
                  entrance_names.t_b2, entrance_names.t_c3_boss)
     # Technically a level exit, but we need to be able to go to the defeated room from anywhere rip
-    connect(world, used_names, temple_region_names.boss2_main, temple_region_names.boss2_defeated,
-            False)
+    connect(world, used_names, temple_region_names.boss2_main, temple_region_names.boss2_defeated, False)
 
-    connect(world, used_names, temple_region_names.cave_1_red_bridge, temple_region_names.c1_e_puzzle, False)
+    connect(world, used_names, temple_region_names.cave_1_red_bridge, temple_region_names.c1_e_puzzle, False,
+            item_name.btn_c1_puzzle_e, 1, False, buttonsanity)
     if world.options.exit_randomization.value:
         if world.options.portal_accessibility.value:
             connect_exit(world, used_names, temple_region_names.cave_1_red_bridge,
@@ -5023,8 +5093,8 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.boss_1_arena, temple_region_names.boss_1_defeated, False)
     connect_gate(world, used_names, temple_region_names.boss_1_arena, temple_region_names.b1_back,
                  item_name.key_gold, gate_codes, gate_counts, gate_names.t_b1_0, True)
-    # connect_generic(multiworld, player, used_names, temple_region_names.b1_back, temple_region_names.boss_1_entrance)
-    # Requires boss 1 bridge switch
+    connect(world, used_names, temple_region_names.b1_back, temple_region_names.boss_1_entrance, buttonsanity,
+            item_name.btn_b1_bridge, 1, False, buttonsanity)
 
     passage_entrance = entrance_names.t_p_ent_start if random_locations[temple_location_names.rloc_passage_entrance] == 0\
         else entrance_names.t_p_ent_start_2
@@ -5033,7 +5103,8 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     passage_mid = f"passage|{random_locations[temple_location_names.rloc_passage_middle] + 1}0"
     connect_exit(world, used_names, temple_region_names.passage_entrance, temple_region_names.passage_mid,
                  passage_mid, entrance_names.t_p_ent_exit)
-    connect(world, used_names, temple_region_names.passage_mid, temple_region_names.passage_puzzle, False)
+    connect(world, used_names, temple_region_names.passage_mid, temple_region_names.passage_puzzle, False,
+            item_name.btn_p_puzzle, 1, False, buttonsanity)
     passage_end = f"passage|1{random_locations[temple_location_names.rloc_passage_end] + 1}0"
     connect_exit(world, used_names, temple_region_names.passage_mid, temple_region_names.passage_end,
                  passage_end, f"passage|{random_locations[temple_location_names.rloc_passage_middle] + 1}1")
@@ -5045,23 +5116,27 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect_exit(world, used_names, temple_region_names.temple_entrance_back, temple_region_names.t1_main,
                  entrance_names.t_t1_start, entrance_names.t_t_ent_temple)
 
-    connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_w_puzzle, False)
+    connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_w_puzzle, False,
+            item_name.btn_t1_puzzle_w, 1, False, buttonsanity)
     connect_gate(world, used_names, temple_region_names.t1_main, temple_region_names.t1_sw_sdoor,
                  item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_3, False)
     connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_node_1,
             False, item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t1_node_1, temple_region_names.t1_w, False)
-    connect(world, used_names, temple_region_names.t1_w, temple_region_names.t1_main, False)
-    connect_exit(world, used_names, temple_region_names.t1_w, temple_region_names.cave_3_secret,
+    connect(world, used_names, temple_region_names.t1_w, temple_region_names.t1_runway_halls, buttonsanity,
+            item_name.btn_t1_runway, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t1_runway_halls, temple_region_names.t1_main, buttonsanity,
+            item_name.btn_t1_runway, 1, False, buttonsanity)
+    connect_exit(world, used_names, temple_region_names.t1_runway_halls, temple_region_names.cave_3_secret,
                  entrance_names.t_c1_fall_temple, None)
     connect_gate(world, used_names, temple_region_names.t1_w, temple_region_names.t1_sun_turret,
                  item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_1, False)
     connect_gate(world, used_names, temple_region_names.t1_w, temple_region_names.t1_ice_turret,
                  item_name.key_gold, gate_codes, gate_counts, gate_names.t_t1_4, True)
-    connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_telarian, False)
-    # Requires telarian button
-    connect(world, used_names, temple_region_names.t1_ice_turret,
-            temple_region_names.t1_telarian_melt_ice, False, item_name.evt_beat_boss_2, 1, False)
+    connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_telarian, False,
+            item_name.btn_t1_telarian, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_telarian_melt_ice, False,
+            item_name.evt_beat_boss_2, 1, False)
     connect_gate(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_n_of_ice_turret,
                  item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_0, False)
     connect_gate(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_s_of_ice_turret,
@@ -5072,11 +5147,14 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             False, item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_node_2,
             False, item_name.mirror, 1)  # For future reference both these have extra stuff set in Rules.py
-    connect(world, used_names, temple_region_names.t1_east,
-            temple_region_names.t1_ice_chamber_melt_ice, False, item_name.evt_beat_boss_2, 1, False)
-    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_jail_e, False)
-    # Requires east jail button
-    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_e_puzzle, False)
+    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_ice_chamber_melt_ice, False,
+            item_name.evt_beat_boss_2, 1, False)
+    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_jail_e, False,
+            item_name.btn_t1_jail_e, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_e_puzzle, False,
+            item_name.btn_t1_puzzle_e, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_ne_hall, False,
+            item_name.btn_t1_hall, 1, False, buttonsanity)
 
     if world.options.exit_randomization.value:
         if world.options.portal_accessibility.value:
@@ -5094,70 +5172,78 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
                      f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
                      item_name.key_teleport, 4, False)
 
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_nw_puzzle,
-            False)
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_e_puzzle,
-            False)
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_nw_puzzle, False,
+            item_name.btn_t2_puzzle_w, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_e_puzzle, False,
+            item_name.btn_t2_puzzle_e, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_melt_ice,
             True, item_name.evt_beat_boss_2, 1, False)
-    connect(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_w_ice_gate, False)
-    # Requires west ice gate button
-    connect(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_e_ice_gate, False)
-    # Requires east ice gate button
+    connect(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_w_ice_gate, False,
+            item_name.btn_t2_ice_gate_w, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_e_ice_gate, False,
+            item_name.btn_t2_ice_gate_e, 1, False, buttonsanity)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_n_gate,
                  item_name.key_silver, gate_codes, gate_counts, gate_names.t_t2_0, False)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_s_gate,
                  item_name.key_silver, gate_codes, gate_counts, gate_names.t_t2_1, False)
-    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sdoor_gate, False)
-    # Requires south door gate button
+    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sdoor_gate, False,
+            item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
+    # Technically should be two-way, but you have to have been to t2_main before getting here so it's not needed
     connect_gate(world, used_names, temple_region_names.t2_main, temple_region_names.t2_ornate,
                  item_name.key_gold, gate_codes, gate_counts, gate_names.t_t2_2, False)
-    connect(world, used_names, temple_region_names.t2_ornate, temple_region_names.t2_ornate_gate, False)
-    # Requires east ornate wall button. Note we make this one-way because you have to access the other side to cross
-    connect(world, used_names, temple_region_names.t2_ornate_t3, temple_region_names.t2_ornate_gate, False)
-    # Requires west ornate wall button. Note we make this one-way because you have to access the other side to cross
-    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_n_puzzle, False)
-    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_n_node,
-            False, item_name.mirror, 3)
-    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_nw_button_gate, False)
-    # Requires nw gate button
-    connect(world, used_names, temple_region_names.t2_n_node, temple_region_names.t2_boulder_room, False)
-    # From north gate, requires north node button
-    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_jail_sw,
-            False, item_name.btn_t2_blue_spikes, 1, False)
-    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_n_hidden_hall,
-            False)
-    # Requires hidden hall button
-    connect(world, used_names, temple_region_names.t2_n_hidden_hall, temple_region_names.t2_jones_hall, False)
-    # Requires jones hall button
-    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sw_puzzle, False)
-    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_s_node,
-            False,  item_name.mirror, 4)
+    connect(world, used_names, temple_region_names.t2_ornate, temple_region_names.t2_ornate_gate, buttonsanity,
+            item_name.btn_t2_t3_gate_e, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_ornate_t3, temple_region_names.t2_ornate_gate, buttonsanity,
+            item_name.btn_t2_t3_gate_w, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_n_puzzle, False,
+            item_name.btn_t2_puzzle_n, 1, False, buttonsanity)
+    # connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_jones_hall, False,
+    #         item_name.btn_t2_jones_hall, 1, False, buttonsanity)
+    #  Technically possible, but you'll likely need to play as Paladin to escape with your life
+    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_n_node, False,
+            item_name.mirror, 3)
+    connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_nw_button_gate, False,
+            item_name.btn_t2_nw_gate, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_n_node, temple_region_names.t2_boulder_room, False,
+            item_name.btn_t2_boulder_room, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_jail_sw, False,
+            item_name.btn_t2_blue, 1, False)
+    connect(world, used_names, temple_region_names.t2_jail_sw, temple_region_names.t2_s_gate, buttonsanity,
+            item_name.btn_t2_jail_w, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_n_hidden_hall,False,
+            item_name.btn_t2_s_gate_hall, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_n_hidden_hall, temple_region_names.t2_jones_hall, False,
+            item_name.btn_t2_jones_hall_back, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sw_puzzle, False,
+            item_name.btn_t2_puzzle_s, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_s_node, False,
+            item_name.mirror, 4)
     connect(world, used_names, temple_region_names.t2_s_node, temple_region_names.t2_pof, False)
     # Technically you only need 3 mirrors to get here, but this is safer logic
-    connect(world, used_names, temple_region_names.t2_pof, temple_region_names.t2_jail_s, False)
-    # Requires pof wall button
-    connect(world, used_names, temple_region_names.t2_jail_s, temple_region_names.t2_pof_spikes, False)
-    # Requires pof south jail wall button
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridges_se,
-            False, item_name.ev_t2_rune_switch, 5, False)
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridges_s,
-            False, item_name.ev_t2_rune_switch, 5, False)
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridge_w,
-            False, item_name.ev_t2_rune_switch, 5, False)
-    connect(world, used_names, temple_region_names.t2_light_bridge_w, temple_region_names.t2_portal_gate, False)
-    # Requires portal floor switch
-    connect(world, used_names, temple_region_names.t2_portal_gate, temple_region_names.t2_main, False)
-    # Requires portal floor switch
+    connect(world, used_names, temple_region_names.t2_pof, temple_region_names.t2_jail_s, False,
+            item_name.btn_t2_jail_s, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_pof_spikes, False,
+            item_name.btn_t2_s_spikes, 1, False, buttonsanity)
+    # Same reasoning making this from main as the south gate shortcut
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridges_se, False,
+            item_name.btn_t2_light_bridges, 1, False)
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridges_s, False,
+            item_name.btn_t2_light_bridges, 1, False)
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridge_w, False,
+            item_name.btn_t2_light_bridges, 1, False)
+    connect(world, used_names, temple_region_names.t2_light_bridge_w, temple_region_names.t2_portal_gate, buttonsanity,
+            item_name.btn_t2_portal_gate, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_portal_gate, temple_region_names.t2_main, buttonsanity,
+            item_name.btn_t2_portal_gate, 1, False, buttonsanity)
     connect_exit(world, used_names, temple_region_names.t2_light_bridge_w, temple_region_names.cave_3_portal,
                  entrance_names.t_c1_portal, entrance_names.t_t2_w_portal)
     connect_exit(world, used_names, temple_region_names.t2_light_bridges_s, temple_region_names.cave_1_temple,
                  entrance_names.t_c3_temple, entrance_names.t_t2_s_light_bridge)
 
-    connect(world, used_names, temple_region_names.t3_blockade_s, temple_region_names.t3_s_gate, False)
-    # Requires south gate button
-    connect(world, used_names, temple_region_names.t3_s_gate, temple_region_names.t3_main, False)
-    # One-way because we need to hit the button first!
+    connect(world, used_names, temple_region_names.t3_blockade_s, temple_region_names.t3_s_gate, buttonsanity,
+            item_name.btn_t3_gate_s, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t3_s_gate, temple_region_names.t3_main, buttonsanity,
+            item_name.btn_t3_gate_s, 1, False, buttonsanity)
     if world.options.exit_randomization.value:
         if world.options.portal_accessibility.value:
             connect_exit(world, used_names, temple_region_names.t3_main, temple_region_names.t2_ornate_t3,
@@ -5171,13 +5257,20 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_main,
             False, item_name.mirror, 2)
     # Wonky logic, we treat this like a dead end as players could waste their mirrors on this with no benefit
-    connect(world, used_names, temple_region_names.t3_s_node_blocks_2,
-            temple_region_names.t3_n_node_blocks, False, item_name.mirror, 1)
+    connect(world, used_names, temple_region_names.t3_s_node_blocks_2, temple_region_names.t3_n_node_blocks, False,
+            item_name.mirror, 1)
     # After wasting mirrors everywhere else only this one will turn on the beam to break the blockade
     connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_blockade_s, False)
-    connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_gates, False)
-    # Requires gates button
-    connect(world, used_names, temple_region_names.t3_gates, temple_region_names.t3_puzzle, False)
+    if buttonsanity:
+        connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_gates, False,
+                item_name.btn_t3_pillars, 1, False)
+        connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_puzzle_room, False,
+                item_name.btn_t3_puzzle_room, 1, False)
+    else:
+        connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_gates, False)
+        connect(world, used_names, temple_region_names.t3_gates, temple_region_names.t3_puzzle_room, False)
+    connect(world, used_names, temple_region_names.t3_puzzle_room, temple_region_names.t3_puzzle, False,
+            item_name.btn_t3_puzzle, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_n_node, False)
     connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_s_node_blocks_1,
             False, item_name.mirror, 2)
@@ -5185,38 +5278,52 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             False, item_name.mirror, 1)
     # More wonky logic, I hope everything works out!
     connect(world, used_names, temple_region_names.t3_s_node_blocks_2, temple_region_names.t3_s_node, False)
+    connect(world, used_names, temple_region_names.t3_boss_fall_1, temple_region_names.t3_main, buttonsanity,
+            item_name.btn_t3_fall_1, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t3_boss_fall_2, temple_region_names.t3_main, buttonsanity,
+            item_name.btn_t3_fall_2, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t3_boss_fall_3, temple_region_names.t3_main, buttonsanity,
+            item_name.btn_t3_fall_3, 1, False, buttonsanity)
 
-    connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
-                 entrance_names.t_n1_1_start, entrance_names.t_hub_pof, item_name.ev_pof_switch, 6, False, False)
+    if world.options.buttonsanity != world.options.buttonsanity.option_insanity:
+        connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
+                     entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
+                     item_name.btn_pof, 6, False, False)
+    else:
+        connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
+                     entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
+                     item_name.btn_pof_part, 24, False, False)
     connect_exit(world, used_names, temple_region_names.pof_1_main, temple_region_names.hub_main,
                  entrance_names.t_hub_pof, entrance_names.t_n1_1_start, None, 1, False, False)
     # Going back to the hub has no entrance requirements
     connect_exit(world, used_names, temple_region_names.pof_1_main, temple_region_names.pof_1_se_room,
                  entrance_names.t_n1_1_se, entrance_names.t_n1_1_sw)
     connect(world, used_names, temple_region_names.pof_1_se_room, temple_region_names.pof_1_se_room_top, False,
-            item_name.ev_pof_1_s_walls, 1, False)
+            item_name.btn_pof_1_walls_s, 1, False)
     connect(world, used_names, temple_region_names.pof_1_main, temple_region_names.pof_1_sw_gate, False,
-            item_name.ev_pof_1_s_walls, 1, False)
-    connect(world, used_names, temple_region_names.pof_1_sw_gate, temple_region_names.pof_1_nw,
-            False, item_name.key_bonus)
+            item_name.btn_pof_1_walls_s, 1, False)
+    connect(world, used_names, temple_region_names.pof_1_sw_gate, temple_region_names.pof_1_nw, False,
+            item_name.key_bonus)
     connect_exit(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_n_room,
                  entrance_names.t_n1_1_n, entrance_names.t_n1_1_ne)
-    connect(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_exit_hall,
-            True, item_name.ev_pof_1_unlock_exit, 1, False)
-    connect(world, used_names, temple_region_names.pof_1_exit_hall, temple_region_names.pof_1_gate_2,
-            True, item_name.key_bonus)
+    connect(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_exit_hall, True,
+            item_name.btn_pof_1_exit, 1, False)
+    connect(world, used_names, temple_region_names.pof_1_exit_hall, temple_region_names.pof_1_gate_2, True,
+            item_name.key_bonus)
     connect_exit(world, used_names, temple_region_names.pof_1_gate_2, temple_region_names.pof_2_main,
                  entrance_names.t_n1_2_start, None)  # entrance_names.t_n1_20)
     connect_exit(world, used_names, temple_region_names.pof_2_main, temple_region_names.pof_2_n,
                  entrance_names.t_n1_2_n, entrance_names.t_n1_2_nw)
-    connect(world, used_names, temple_region_names.pof_2_n, temple_region_names.pof_2_puzzle, False)
-    connect(world, used_names, temple_region_names.pof_2_puzzle, temple_region_names.pof_puzzle, False)
-    # Requires bonus panel
-    connect(world, used_names, temple_region_names.pof_2_main, temple_region_names.pof_2_exit,
-            False, item_name.ev_pof_2_unlock_exit, 1, False)
+    connect(world, used_names, temple_region_names.pof_2_n, temple_region_names.pof_2_puzzle, False,
+            item_name.btn_pof_2_puzzle, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.pof_2_puzzle, temple_region_names.pof_puzzle, False,
+            item_name.btn_pof_puzzle, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.pof_2_main, temple_region_names.pof_2_exit, False,
+            item_name.btn_pof_2_exit, 1, False)
     connect_exit(world, used_names, temple_region_names.pof_2_exit, temple_region_names.pof_3_start,
                  entrance_names.t_n1_3_start, None)  # entrance_names.t_n1_100)
-    connect(world, used_names, temple_region_names.pof_3_start, temple_region_names.pof_3_main, False)
+    connect(world, used_names, temple_region_names.pof_3_start, temple_region_names.pof_3_main, False,
+            item_name.btn_pof_3_start, 1, False, buttonsanity)
     connect_exit(world, used_names, temple_region_names.pof_3_main, temple_region_names.hub_main,
                  entrance_names.t_hub_pof_return, None)
 
@@ -5227,16 +5334,21 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.b3_platform_2, temple_region_names.b3_platform_3, False)
     connect(world, used_names, temple_region_names.b3_platform_3, temple_region_names.b3_defeated, False)
 
-    # These are also ignored 
-    connect(world, used_names, temple_region_names.b3_platform_1, temple_region_names.t3_boss_fall_1, False)
-    # connect(world, used_names, temple_region_names.t3_boss_fall_1, temple_region_names.t3_main, False)
-    connect(world, used_names, temple_region_names.b3_platform_2, temple_region_names.t3_boss_fall_2, False)
-    # connect(world, used_names, temple_region_names.t3_boss_fall_2, temple_region_names.t3_main, False)
-    connect(world, used_names, temple_region_names.b3_platform_3, temple_region_names.t3_boss_fall_3, False)
-    # connect(world, used_names, temple_region_names.t3_boss_fall_3, temple_region_names.t3_main, False)
+    # For the kill final boss goal and ER it's kinda silly to randomize the fall exits, but I feel it's good for others
+    if get_goal_type(world) == GoalType.KillBosses:
+        connect(world, used_names, temple_region_names.b3_platform_1, temple_region_names.t3_boss_fall_1, False)
+        connect(world, used_names, temple_region_names.b3_platform_2, temple_region_names.t3_boss_fall_2, False)
+        connect(world, used_names, temple_region_names.b3_platform_3, temple_region_names.t3_boss_fall_3, False)
+    else:
+        connect_exit(world, used_names, temple_region_names.b3_platform_1, temple_region_names.t3_boss_fall_1,
+                     entrance_names.t_t3_fall_1, None, None, 1, False)
+        connect_exit(world, used_names, temple_region_names.b3_platform_2, temple_region_names.t3_boss_fall_2,
+                     entrance_names.t_t3_fall_2, None, None, 1, False)
+        connect_exit(world, used_names, temple_region_names.b3_platform_3, temple_region_names.t3_boss_fall_3,
+                     entrance_names.t_t3_fall_3, None, None, 1, False)
 
-    connect(world, used_names, temple_region_names.menu, temple_region_names.get_planks,
-            False, item_name.plank, world.options.planks_required_count.value, False)
+    connect(world, used_names, temple_region_names.menu, temple_region_names.get_planks, False,
+            item_name.plank, world.options.planks_required_count.value, False)
 
 
 def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData], name: str,
@@ -5253,20 +5365,50 @@ def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, 
 
 
 def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str,
-            two_way: bool, pass_item: str = None, item_count=1, items_consumed=True):
+            two_way: bool, pass_item: str = None, item_count=1, items_consumed=True, use_pass_item=True):
+    source_region = world.multiworld.get_region(source, world.player)
+    target_region = world.multiworld.get_region(target, world.player)
+
+    entrance_name = get_entrance_name(used_names, source, target)
+
+    if not use_pass_item:
+        pass_item = None
+
+    rule_item = None
+    if pass_item and not items_consumed:
+        rule_item = pass_item
+        # pass_item = None
+
+    connection = HWEntrance(world.player, entrance_name, source_region, target_region,
+                            pass_item, item_count, items_consumed, None)
+    # if rule_item and use_pass_item:
+    #     add_rule(connection, lambda state: state.has(rule_item, world.player, item_count), "and")
+
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    if two_way:
+        connect(world, used_names, target, source, False, pass_item, item_count, items_consumed, use_pass_item)
+
+    return connection
+
+
+def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
+               pass_items: typing.List[str]):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
     entrance_name = get_entrance_name(used_names, source, target)
 
     connection = HWEntrance(world.player, entrance_name, source_region, target_region,
-                            pass_item, item_count, items_consumed, None)
+                            None, 1, False, None)
+    add_rule(connection, lambda state: state.has_any(pass_items, world.player), "and")
 
     source_region.exits.append(connection)
     connection.connect(target_region)
 
     if two_way:
-        connect(world, used_names, target, source, False, pass_item, item_count, items_consumed)
+        connect_or(world, used_names, target, source, False, pass_items)
 
     return connection
 

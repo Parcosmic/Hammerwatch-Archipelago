@@ -1,10 +1,11 @@
 import typing
 
-from BaseClasses import Location
+from BaseClasses import Location, ItemClassification
 from .names import castle_location_names, temple_location_names, item_name
 from .options import BonusChestLocationBehavior, Difficulty
 from .util import Counter, GoalType, Campaign, get_goal_type
-from .items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
+from .items import (castle_item_counts, temple_item_counts, temple_button_counts,
+                    recovery_table, get_item_counts, id_start)
 from enum import Enum
 
 if typing.TYPE_CHECKING:
@@ -18,6 +19,8 @@ class LocationClassification(Enum):
     Bonus = 3
     Shop = 4
     EnemyLoot = 5
+    Button = 6
+    Buttoninsanity = 7
 
 
 class LocationData(typing.NamedTuple):
@@ -1338,9 +1341,17 @@ castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
     castle_location_names.b4_miniboss_lich_2: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
+castle_button_locations: typing.Dict[str, LocationData] = {
+
+}
+
+castle_button_items: typing.Dict[str, str] = {
+}
+
 castle_locations: typing.Dict[str, LocationData] = {
     **castle_pickup_locations,
     **castle_enemy_loot_locations,
+    **castle_button_locations,
 }
 
 counter = Counter(id_start)
@@ -1983,9 +1994,263 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     temple_location_names.b3_tower_fire_3: LocationData(counter.count(), LocationClassification.EnemyLoot),
 }
 
+temple_button_locations: typing.Dict[str, LocationData] = {
+    temple_location_names.btn_hub_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_hub_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_hub_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_hub_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_hub_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c3_floor_fall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c3_bridge: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c3_puzzle: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c3_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c3_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c3_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c3_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c3_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c2_red: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_green: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_bridges: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_s_bridge: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_pumps: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_puzzle: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c2_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c2_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c2_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c2_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c1_blue: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c1_red: LocationData(counter.count(2), LocationClassification.Button),
+    temple_location_names.btn_c1_green: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c1_puzzle_w: LocationData(counter.count(2), LocationClassification.Button),
+    temple_location_names.btn_c1_puzzle_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c1_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_c1_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c1_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c1_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c1_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_c1_wall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_b1_bridge: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_p_puzzle: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_puzzle_w: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_puzzle_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t1_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t1_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t1_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t1_wall_n_jail: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_wall_telarian: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_wall_n_hall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_wall_guard: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_wall_runway: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t1_wall_e_jail: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_floor_blue: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_puzzle_n: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_puzzle_w: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_puzzle_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_puzzle_s: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_pof_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_pof_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_pof_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_pof_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_rune_n: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_rune_se: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_rune_sw: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_rune_w: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_rune_e: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_wall_n_hidden_hall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_nw_gate: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_jones_hall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_t3_gate_w: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_t3_gate_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_boulder_room: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_w_ice_gate: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_n_node: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_portal_w: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_wall_portal_e: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t2_wall_jail_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_jail_w: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_s_gate_shortcut: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_s_gate_hall: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_e_ice_gate: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_pof: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_wall_jail_s: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_lever_2: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t3_lever_1: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t3_lever_3: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t3_lever_4: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    temple_location_names.btn_t3_puzzle: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_wall_fall_2: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_wall_fall_3: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_wall_blockade: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_wall_fall_1: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_wall_gate_s: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_puzzle: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_1_panel_se: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_1_panel_n: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_2_panel_e: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_2_panel_w: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_pof_3_panel: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_floor_portal: LocationData(counter.count(), LocationClassification.Button),
+
+    temple_location_names.btn_t2_runes: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t2_portal: LocationData(counter.count(), LocationClassification.Button),
+    temple_location_names.btn_t3_levers: LocationData(counter.count(), LocationClassification.Button),
+}
+
+temple_combo_button_locations: typing.List[str] = [
+    temple_location_names.btn_hub_pof,
+    temple_location_names.btn_c3_pof,
+    temple_location_names.btn_c2_pof,
+    temple_location_names.btn_c1_pof,
+    temple_location_names.btn_t1_pof,
+    temple_location_names.btn_t2_pof,
+    # temple_location_names.btn_t2_runes,
+    # temple_location_names.btn_t2_portal,
+    # temple_location_names.btn_t3_levers,
+]
+
+# These locked items correspond to buttons that require logic even with buttonsanity off
+temple_event_switches = {
+    temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
+    temple_location_names.btn_c2_pumps: item_name.btn_c2_pumps,
+    temple_location_names.btn_hub_pof: item_name.btn_pof,
+    temple_location_names.btn_c1_pof: item_name.btn_pof,
+    temple_location_names.btn_c2_pof: item_name.btn_pof,
+    temple_location_names.btn_c3_pof: item_name.btn_pof,
+    temple_location_names.btn_t1_pof: item_name.btn_pof,
+    temple_location_names.btn_t2_pof: item_name.btn_pof,
+    temple_location_names.btn_pof_1_panel_se: item_name.btn_pof_1_walls_s,
+    temple_location_names.btn_pof_1_panel_n: item_name.btn_pof_1_exit,
+    temple_location_names.btn_pof_2_panel_w: item_name.btn_pof_2_exit,
+    temple_location_names.btn_t2_floor_blue: item_name.btn_t2_blue,
+    temple_location_names.btn_t2_runes: item_name.btn_t2_light_bridges,
+    temple_location_names.btn_t2_rune_n: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_w: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_e: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
+}
+
+temple_button_items: typing.Dict[str, str] = {
+    temple_location_names.btn_hub_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_hub_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_hub_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_hub_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_c3_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_c3_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_c3_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_c3_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_c2_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_c2_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_c2_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_c2_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_c1_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_c1_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_c1_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_c1_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_t1_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_t1_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_t1_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_t1_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_t2_pof_1: item_name.btn_pof_part,
+    temple_location_names.btn_t2_pof_2: item_name.btn_pof_part,
+    temple_location_names.btn_t2_pof_3: item_name.btn_pof_part,
+    temple_location_names.btn_t2_pof_4: item_name.btn_pof_part,
+    temple_location_names.btn_c3_floor_fall: item_name.btn_c3_fall_bridge,
+    temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
+    temple_location_names.btn_c3_puzzle: item_name.btn_c3_puzzle,
+    temple_location_names.btn_c2_red: item_name.btn_c2_red,
+    temple_location_names.btn_c2_green: item_name.btn_c2_green,
+    temple_location_names.btn_c2_bridges: item_name.btn_c2_bridges,
+    temple_location_names.btn_c2_s_bridge: item_name.btn_c2_s_bridge,
+    temple_location_names.btn_c2_pumps: item_name.btn_c2_pumps,
+    temple_location_names.btn_c2_puzzle: item_name.btn_c2_puzzle,
+    temple_location_names.btn_c1_blue: item_name.btn_c1_blue,
+    temple_location_names.btn_c1_red: item_name.btn_c1_red,
+    temple_location_names.btn_c1_green: item_name.btn_c1_green,
+    temple_location_names.btn_c1_puzzle_e: item_name.btn_c1_puzzle_e,
+    temple_location_names.btn_c1_puzzle_w: item_name.btn_c1_puzzle_w,
+    temple_location_names.btn_c1_wall: item_name.btn_c1_tunnel,
+    temple_location_names.btn_b1_bridge: item_name.btn_b1_bridge,
+    temple_location_names.btn_p_puzzle: item_name.btn_p_puzzle,
+    temple_location_names.btn_t1_puzzle_e: item_name.btn_t1_puzzle_e,
+    temple_location_names.btn_t1_puzzle_w: item_name.btn_t1_puzzle_w,
+    temple_location_names.btn_t1_wall_n_jail: item_name.btn_t1_jail_n,
+    temple_location_names.btn_t1_wall_e_jail: item_name.btn_t1_jail_e,
+    temple_location_names.btn_t1_wall_telarian: item_name.btn_t1_telarian,
+    temple_location_names.btn_t1_wall_guard: item_name.btn_t1_guard,
+    temple_location_names.btn_t1_wall_n_hall: item_name.btn_t1_hall,
+    temple_location_names.btn_t1_wall_runway: item_name.btn_t1_runway,
+    temple_location_names.btn_t2_floor_blue: item_name.btn_t2_blue,
+    temple_location_names.btn_t2_puzzle_n: item_name.btn_t2_puzzle_n,
+    temple_location_names.btn_t2_puzzle_e: item_name.btn_t2_puzzle_e,
+    temple_location_names.btn_t2_puzzle_s: item_name.btn_t2_puzzle_s,
+    temple_location_names.btn_t2_puzzle_w: item_name.btn_t2_puzzle_w,
+    temple_location_names.btn_t2_rune_n: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_e: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_w: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
+    temple_location_names.btn_t2_wall_n_hidden_hall: item_name.btn_t2_jones_hall_back,
+    temple_location_names.btn_t2_wall_nw_gate: item_name.btn_t2_nw_gate,
+    temple_location_names.btn_t2_wall_jones_hall: item_name.btn_t2_jones_hall,
+    temple_location_names.btn_t2_wall_t3_gate_e: item_name.btn_t2_t3_gate_e,
+    temple_location_names.btn_t2_wall_t3_gate_w: item_name.btn_t2_t3_gate_w,
+    temple_location_names.btn_t2_wall_boulder_room: item_name.btn_t2_boulder_passage,
+    temple_location_names.btn_t2_wall_w_ice_gate: item_name.btn_t2_ice_gate_w,
+    temple_location_names.btn_t2_wall_e_ice_gate: item_name.btn_t2_ice_gate_e,
+    temple_location_names.btn_t2_wall_n_node: item_name.btn_t2_boulder_room,
+    temple_location_names.btn_t2_wall_portal_w: item_name.btn_t2_portal_part,
+    temple_location_names.btn_t2_wall_portal_e: item_name.btn_t2_portal_part,
+    temple_location_names.btn_t2_wall_jail_w: item_name.btn_t2_jail_w,
+    temple_location_names.btn_t2_wall_jail_e: item_name.btn_t2_jail_e,
+    temple_location_names.btn_t2_wall_jail_s: item_name.btn_t2_s_spikes,
+    temple_location_names.btn_t2_wall_s_gate_shortcut: item_name.btn_t2_s_gate_shortcut,
+    temple_location_names.btn_t2_wall_s_gate_hall: item_name.btn_t2_s_gate_hall,
+    temple_location_names.btn_t2_wall_pof: item_name.btn_t2_jail_s,
+    temple_location_names.btn_t2_floor_portal: item_name.btn_t2_portal_gate,
+    temple_location_names.btn_t3_lever_1: item_name.btn_t3_puzzle_room_part,
+    temple_location_names.btn_t3_lever_2: item_name.btn_t3_puzzle_room_part,
+    temple_location_names.btn_t3_lever_3: item_name.btn_t3_puzzle_room_part,
+    temple_location_names.btn_t3_lever_4: item_name.btn_t3_puzzle_room_part,
+    temple_location_names.btn_t3_puzzle: item_name.btn_t3_puzzle,
+    temple_location_names.btn_t3_wall_fall_1: item_name.btn_t3_fall_1,
+    temple_location_names.btn_t3_wall_fall_2: item_name.btn_t3_fall_2,
+    temple_location_names.btn_t3_wall_fall_3: item_name.btn_t3_fall_3,
+    temple_location_names.btn_t3_wall_blockade: item_name.btn_t3_pillars,
+    temple_location_names.btn_t3_wall_gate_s: item_name.btn_t3_gate_s,
+    temple_location_names.btn_pof_puzzle: item_name.btn_pof_puzzle,
+    temple_location_names.btn_pof_1_panel_se: item_name.btn_pof_1_walls_s,
+    temple_location_names.btn_pof_1_panel_n: item_name.btn_pof_1_exit,
+    temple_location_names.btn_pof_2_panel_e: item_name.btn_pof_2_puzzle,
+    temple_location_names.btn_pof_2_panel_w: item_name.btn_pof_2_exit,
+    temple_location_names.btn_pof_3_panel: item_name.btn_pof_3_start,
+
+    temple_location_names.btn_hub_pof: item_name.btn_pof,
+    temple_location_names.btn_c3_pof: item_name.btn_pof,
+    temple_location_names.btn_c2_pof: item_name.btn_pof,
+    temple_location_names.btn_c1_pof: item_name.btn_pof,
+    temple_location_names.btn_t1_pof: item_name.btn_pof,
+    temple_location_names.btn_t2_pof: item_name.btn_pof,
+    temple_location_names.btn_t2_runes: item_name.btn_t2_light_bridges,
+    temple_location_names.btn_t2_portal: item_name.btn_t2_portal,
+    temple_location_names.btn_t3_levers: item_name.btn_t3_puzzle_room,
+}
+
+temple_part_items: typing.Set[str] = {
+    item_name.btn_pof_part,
+    item_name.btn_t2_light_bridges_part,
+    item_name.btn_t2_portal_part,
+    item_name.btn_t3_puzzle_room_part,
+}
+
 temple_locations: typing.Dict[str, LocationData] = {
     **temple_pickup_locations,
     **temple_enemy_loot_locations,
+    **temple_button_locations,
 }
 
 all_locations: typing.Dict[str, LocationData] = {
@@ -2008,6 +2273,28 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     else:  # Need a default case for this else tests will complain
         item_counts.update(temple_item_counts)
         hw_map_locations = get_temple_locations(world)
+        button_items = {}
+        if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:
+            for loc, itm in temple_button_items.items():
+                if loc in temple_combo_button_locations:
+                    continue
+                if itm not in button_items:
+                    button_items[itm] = 0
+                button_items[itm] += 1
+            # button_items = {itm: 1 for loc, itm in temple_button_items.items()
+            #                 if loc not in temple_combo_button_locations}
+            # for button, count in temple_button_counts:
+            #     button_items[button] = count
+        elif world.options.buttonsanity.value > 0:
+            for loc, itm in temple_button_items.items():
+                if temple_button_locations[loc].classification == LocationClassification.Buttoninsanity:
+                    continue
+                if itm not in button_items:
+                    button_items[itm] = 0
+                button_items[itm] += 1
+            # button_items = {temple_button_items[loc]: 1 for loc, data in temple_button_locations.items()
+            #                 if data.classification != LocationClassification.Buttoninsanity}
+        item_counts.update(button_items)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
     for name, data in hw_map_locations.items():
@@ -2041,6 +2328,7 @@ def get_castle_locations(world: "HammerwatchWorld"):
     location_table.update(castle_pickup_locations)
     if world.options.randomize_enemy_loot.value:
         location_table.update(castle_enemy_loot_locations)
+    location_table.update(castle_button_locations)
 
     return location_table
 
@@ -2050,6 +2338,21 @@ def get_temple_locations(world: "HammerwatchWorld"):
     location_table.update(temple_pickup_locations)
     if world.options.randomize_enemy_loot.value:
         location_table.update(temple_enemy_loot_locations)
+
+    button_locations: typing.Dict[str, LocationData] = {}
+    if world.options.buttonsanity == world.options.buttonsanity.option_off:
+        # Only add buttons that need locked items for logic
+        # button_locations.update({loc: data for loc, data in temple_button_locations.items() if loc in temple_event_switches})
+        button_locations.update({loc: temple_button_locations[loc] for loc in temple_event_switches.keys()})
+    elif world.options.buttonsanity != world.options.buttonsanity.option_insanity:
+        # Add non-insanity buttons and the combo function buttons
+        button_locations = {loc: data for loc, data in temple_button_locations.items()
+                            if data.classification != LocationClassification.Buttoninsanity}
+        button_locations.update({loc: temple_button_locations[loc] for loc in temple_combo_button_locations})
+    else:
+        button_locations.update({loc: data for loc, data in temple_button_locations.items()
+                                 if loc not in temple_combo_button_locations})
+    location_table.update(button_locations)
 
     return location_table
 
@@ -2381,12 +2684,17 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
 def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
                                  item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
+    buttonsanity = world.options.buttonsanity.value > 0
 
     def remove_location(location: str, loc_item: str):
         if not world.options.randomize_recovery_items.value and loc_item in recovery_table.keys():
             return
         location_table.pop(location)
         item_counts[loc_item] -= 1
+
+    def remove_button(location: str):
+        location_table.pop(location)
+        item_counts[temple_button_items[location]] -= 1
 
     def remove_secret(secret_location: str):
         if secret_location in location_table.keys():
@@ -2535,9 +2843,14 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         remove_location(temple_location_names.cave1_secret_tunnel_1, item_name.ankh)
         remove_location(temple_location_names.cave1_secret_tunnel_2, item_name.steak)
         remove_location(temple_location_names.cave1_secret_tunnel_3, item_name.mana_2)
+        if buttonsanity:
+            remove_button(temple_location_names.btn_c1_wall)
+    random_locations[temple_location_names.rloc_c1_hall_e] = world.random.randrange(4)
     random_locations[temple_location_names.rloc_c1_exit] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_c1_exit] == 0:
         random_locations[temple_location_names.rloc_c1_puzzle_e] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_c1_puzzle_e)
     # Passage
     random_locations[temple_location_names.rloc_passage_entrance] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_passage_entrance] == 0:
@@ -2579,7 +2892,6 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         mid_locations_to_remove.remove(temple_location_names.p_mid1_1)
         mid_locations_to_remove.remove(temple_location_names.p_mid1_2)
         item_counts[item_name.chest_wood] += 2
-        random_locations[temple_location_names.rloc_p_puzzle] = -1
     elif random_locations[temple_location_names.rloc_passage_middle] == 1:
         mid_locations_to_remove.remove(temple_location_names.p_mid2_1)
         mid_locations_to_remove.remove(temple_location_names.p_mid2_2)
@@ -2587,7 +2899,6 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         mid_locations_to_remove.remove(temple_location_names.p_mid2_4)
         item_counts[item_name.mana_2] += 1
         item_counts[item_name.mana_1] += 3
-        random_locations[temple_location_names.rloc_p_puzzle] = -1
     elif random_locations[temple_location_names.rloc_passage_middle] == 2:
         mid_locations_to_remove.remove(temple_location_names.p_mid3_secret_1)
         mid_locations_to_remove.remove(temple_location_names.p_mid3_secret_2)
@@ -2607,14 +2918,17 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         item_counts[item_name.ankh] += 1
         item_counts[item_name.orange] += 1
         item_counts[item_name.apple] += 2
-        random_locations[temple_location_names.rloc_p_puzzle] = -1
     else:
         mid_locations_to_remove.remove(temple_location_names.p_mid5_1)
         mid_locations_to_remove.remove(temple_location_names.p_mid5_2)
         item_counts[item_name.chest_wood] += 1
         item_counts[item_name.stat_upgrade] += 1
         mid_locations_to_remove.remove(temple_location_names.p_mid5_secret)
+    # Remove puzzle locations
+    if random_locations[temple_location_names.rloc_passage_middle] != 2:
         random_locations[temple_location_names.rloc_p_puzzle] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_p_puzzle)
     for loc in mid_locations_to_remove:
         if temple_locations[loc].classification == LocationClassification.Secret:
             remove_secret(loc)
@@ -2717,8 +3031,12 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
     random_locations[temple_location_names.rloc_t1_puzzle_spawn] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t1_puzzle_spawn] == 0:
         random_locations[temple_location_names.rloc_t1_puzzle_e] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_t1_puzzle_e)
     else:
         random_locations[temple_location_names.rloc_t1_puzzle_w] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_t1_puzzle_w)
     # Temple Level 2
     t2_keystone_locations: typing.List[str] = [
         temple_location_names.t2_se_banner_chamber_5,
@@ -2734,12 +3052,21 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
     random_locations[temple_location_names.rloc_t2_portal] = world.random.randrange(4)
     if random_locations[temple_location_names.rloc_t2_portal] != 2:
         remove_location(temple_location_names.t2_teleporter, item_name.stat_upgrade)
+        if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:
+            remove_button(temple_location_names.btn_t2_wall_portal_w)
+            remove_button(temple_location_names.btn_t2_wall_portal_e)
+        elif world.options.buttonsanity.value > 0:
+            remove_button(temple_location_names.btn_t2_portal)
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] = world.random.randrange(2)
     random_locations[temple_location_names.rloc_t2_w_hidden_room] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] == 0:
         random_locations[temple_location_names.rloc_t2_puzzle_e] = -1  # Turn off east puzzle
+        if buttonsanity:
+            remove_button(temple_location_names.btn_t2_puzzle_e)
     else:
         random_locations[temple_location_names.rloc_t2_puzzle_nw] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_t2_puzzle_w)
         random_locations[temple_location_names.rloc_t2_w_hidden_room] = 1
     if random_locations[temple_location_names.rloc_t2_w_hidden_room] != 0:
         # Prevent items from appearing behind the west puzzle in the cache
@@ -2751,8 +3078,12 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_2] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t2_puzzle_spawn_2] == 0:
         random_locations[temple_location_names.rloc_t2_puzzle_n] = -1
+        if buttonsanity:
+            remove_location(temple_location_names.btn_t2_puzzle_n, item_name.btn_t2_puzzle_n)
     else:
         random_locations[temple_location_names.rloc_t2_puzzle_sw] = -1
+        if buttonsanity:
+            remove_button(temple_location_names.btn_t2_puzzle_s)
     random_locations[temple_location_names.rloc_t2_jones_reward] = world.random.randrange(2)
     t2_gold_key_locations: typing.List[str] = [
         temple_location_names.t2_right_of_pof_switch,
@@ -2760,8 +3091,7 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         temple_location_names.t2_boulder_room_2,
     ]
     if random_locations[temple_location_names.rloc_t2_jones_reward] == 0:
-        location_table = keep_one_location(t2_gold_key_locations,
-                                           temple_location_names.rloc_t2_gold_key)
+        location_table = keep_one_location(t2_gold_key_locations, temple_location_names.rloc_t2_gold_key)
     else:
         item_counts[item_name.stat_upgrade] -= 1
         for loc in t2_gold_key_locations:
@@ -2788,6 +3118,11 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
         temple_location_names.t2_e_ice_block_gate
     ]
     location_table = keep_one_location(t2_pickaxe_locations, temple_location_names.rloc_t2_pickaxe)
+    if buttonsanity:
+        if random_locations[temple_location_names.rloc_t2_pickaxe] == 0:
+            remove_button(temple_location_names.btn_t2_wall_e_ice_gate)
+        else:
+            remove_button(temple_location_names.btn_t2_wall_w_ice_gate)
     # Temple Level 3
     random_locations[temple_location_names.rloc_t3_s_beam_1] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t3_s_beam_1] == 0:

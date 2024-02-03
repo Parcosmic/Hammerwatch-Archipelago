@@ -6,15 +6,99 @@ from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, etr_base_name, connect
 from .options import ExitRandomization
 from .util import GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names
-# from Utils import visualize_regions
+from Utils import visualize_regions
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
 def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
-    world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_victory, world.player)
+    set_extra_rules(world)
+
+    # Set start exit and exit rando data structures
+    if get_campaign(world) == Campaign.Castle:
+        world.start_exit = entrance_names.c_p1_start
+        entrance_block_types = c_entrance_block_types.copy()
+        passage_blocking_codes = c_passage_blocking_codes
+        # If we aren't randomizing boss entrances, move requirements down to the boss exit
+        if world.options.exit_randomization.value == ExitRandomization.option_no_boss_exits:
+            entrance_block_types[entrance_names.c_a1_0] = entrance_block_types[entrance_names.c_b1_0]
+            entrance_block_types[entrance_names.c_r1_0] = entrance_block_types[entrance_names.c_b2_0]
+            entrance_block_types[entrance_names.c_c1_0] = entrance_block_types[entrance_names.c_b3_0]
+    else:
+        world.start_exit = entrance_names.t_hub_start
+        entrance_block_types = t_entrance_block_types.copy()
+        passage_blocking_codes = t_passage_blocking_codes
+
+    # If buttonsanity is on, convert blocked types into unblocked and remove passage blocking codes
+    if world.options.buttonsanity.value > 0:
+        for blocked_entrance in entrance_block_types:
+            if blocked_entrance in buttonsanity_entrance_data_exclusions:
+                continue
+            old_data = entrance_block_types[blocked_entrance]
+            block_type = old_data[1]
+            if block_type == EntranceBlockType.Blocked:
+                block_type = EntranceBlockType.Unblocked
+            new_data = (old_data[0], block_type, None)
+            entrance_block_types[blocked_entrance] = new_data
+        passage_blocking_codes = {}
+
+    code_to_exit = {}
+    code_to_region = {}
+    open_codes = []
+    if world.options.exit_randomization.value > 0:
+        for level_exit in world.level_exits:
+            if level_exit.return_code is not None:
+                code_to_exit[level_exit.return_code] = level_exit
+                code_to_region[level_exit.return_code] = level_exit.parent_region
+                open_codes.append(level_exit.return_code)
+            else:
+                code_to_exit[level_exit.exit_code] = None
+                open_codes.append(level_exit.exit_code)
+                code_to_region[level_exit.exit_code] = level_exit.target_region
+
+    tries = 0
+    stop_threshold = 100000
+    while not set_connections(world, entrance_block_types, passage_blocking_codes,
+                              code_to_exit, code_to_region, open_codes):
+        if tries >= stop_threshold:
+            break
+        tries += 1
+    if tries >= stop_threshold:
+        raise RuntimeError("Could not generate a valid ER configuration!")
+    # print(f"Connecting exits took {tries} tries")
+
+    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
+    visualize_regions(menu_region, "_testing.puml", show_locations=False)
+    if get_campaign(world) == Campaign.Castle:
+        second_region_name = castle_region_names.p1_start
+    else:
+        second_region_name = temple_region_names.hub_main
+    second_region = world.multiworld.get_region(second_region_name, world.player)
+    loop_entrances = prune_entrances(menu_region, second_region)
+
+    set_door_access_rules(world, door_counts, loop_entrances)
+
+    # Change the names of all entrances to match where they lead if ER is on
+    if world.options.exit_randomization.value > 0:
+        for exit_ in world.level_exits:
+            exit_.name = etr_base_name(exit_.parent_region.name, exit_.connected_region.name)
+            for level_exit in world.level_exits:
+                entrance_name = level_exit.parent_region.name
+                if level_exit.return_code is not None:
+                    entrance_name += f" [{level_exit.return_code}]"
+                    direction = "both"
+                else:
+                    direction = "entrance"
+                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
+                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, world.player)
+
+    # visualize_regions(second_region, "_testing.puml", show_locations=False)
+
+
+def set_extra_rules(world: "HammerwatchWorld"):
     goal = get_goal_type(world)
+    world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_victory, world.player)
 
     # Set special entrance and location rules, and set world completion condition
     if get_campaign(world) == Campaign.Castle:
@@ -38,10 +122,10 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
             #             break
             add_rule(final_boss_entrance,
                      lambda state: state.has(item_name.plank, world.player, 12)
-                     and state.has(item_name.key_gold, world.player, 16)
-                     and state.has(item_name.key_silver, world.player, 13)
-                     and state.has(item_name.key_bronze, world.player, 103)
-                     and state.has(item_name.key_bonus, world.player, 18))
+                                   and state.has(item_name.key_gold, world.player, 16)
+                                   and state.has(item_name.key_silver, world.player, 13)
+                                   and state.has(item_name.key_bronze, world.player, 103)
+                                   and state.has(item_name.key_bonus, world.player, 18))
             # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, world.player),
             #          lambda state: state.has(item_name.plank, world.player, 1))
             # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_2, world.player),
@@ -89,74 +173,32 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
         t1_sun_block_entr = etr_base_name(temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall)
         add_rule(world.multiworld.get_entrance(t1_sun_block_entr, world.player),
                  lambda state: state.has_all([item_name.evt_t1_n_mirrors, item_name.evt_t1_s_mirror], world.player))
-        add_rule(world.multiworld.get_entrance(etr_base_name(temple_region_names.t1_east, temple_region_names.t1_node_2), world.player),
-                 lambda state: state.has(item_name.evt_t1_n_mirrors, world.player))
+        add_rule(world.multiworld.get_entrance(
+                etr_base_name(temple_region_names.t1_east, temple_region_names.t1_node_2), world.player),
+            lambda state: state.has(item_name.evt_t1_n_mirrors, world.player))
 
-    # Set start exit and exit rando data structures
-    if get_campaign(world) == Campaign.Castle:
-        world.start_exit = entrance_names.c_p1_start
-        entrance_block_types = c_entrance_block_types.copy()
-        passage_blocking_codes = c_passage_blocking_codes
-        # If we aren't randomizing boss entrances, move requirements down to the boss exit
-        if world.options.exit_randomization.value == ExitRandomization.option_no_boss_exits:
-            entrance_block_types[entrance_names.c_a1_0] = entrance_block_types[entrance_names.c_b1_0]
-            entrance_block_types[entrance_names.c_r1_0] = entrance_block_types[entrance_names.c_b2_0]
-            entrance_block_types[entrance_names.c_c1_0] = entrance_block_types[entrance_names.c_b3_0]
-    else:
-        world.start_exit = entrance_names.t_hub_start
-        entrance_block_types = t_entrance_block_types.copy()
-        passage_blocking_codes = t_passage_blocking_codes
-    code_to_exit = {}
-    code_to_region = {}
-    open_codes = []
-    if world.options.exit_randomization.value > 0:
-        for level_exit in world.level_exits:
-            if level_exit.return_code is not None:
-                code_to_exit[level_exit.return_code] = level_exit
-                code_to_region[level_exit.return_code] = level_exit.parent_region
-                open_codes.append(level_exit.return_code)
-            else:
-                code_to_exit[level_exit.exit_code] = None
-                open_codes.append(level_exit.exit_code)
-                code_to_region[level_exit.exit_code] = level_exit.target_region
+        # Button logic
+        lever_fragments: int = world.options.lever_fragments.value
+        if lever_fragments > 1:
+            add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps, world.player),
+                     lambda state: state.has(item_name.lever_fragment, world.player, lever_fragments))
+        else:
+            add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps, world.player),
+                     lambda state: state.has(item_name.lever, world.player))
 
-    tries = 0
-    stop_threshold = 100000
-    while not set_connections(world, entrance_block_types, passage_blocking_codes,
-                              code_to_exit, code_to_region, open_codes):
-        if tries >= stop_threshold:
-            break
-        tries += 1
-    if tries >= stop_threshold:
-        raise RuntimeError("Could not generate a valid ER configuration!")
-    # print(f"Connecting exits took {tries} tries")
-
-    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
-    # visualize_regions(menu_region, "_testing.puml", show_locations=False)
-    if get_campaign(world) == Campaign.Castle:
-        second_region_name = castle_region_names.p1_start
-    else:
-        second_region_name = temple_region_names.hub_main
-    second_region = world.multiworld.get_region(second_region_name, world.player)
-    loop_entrances = prune_entrances(menu_region, second_region)
-
-    set_door_access_rules(world, door_counts, loop_entrances)
-
-    # Change the names of all entrances to match where they lead if ER is on
-    if world.options.exit_randomization.value > 0:
-        for exit_ in world.level_exits:
-            exit_.name = etr_base_name(exit_.parent_region.name, exit_.connected_region.name)
-            for level_exit in world.level_exits:
-                entrance_name = level_exit.parent_region.name
-                if level_exit.return_code is not None:
-                    entrance_name += f" [{level_exit.return_code}]"
-                    direction = "both"
-                else:
-                    direction = "entrance"
-                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
-                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, world.player)
-
-    # visualize_regions(second_region, "_testing.puml", show_locations=False)
+        if world.options.buttonsanity.value > 0:
+            add_rule(world.multiworld.get_location(temple_location_names.btn_t1_wall_guard, world.player),
+                     lambda state: state.has(item_name.btn_t1_guard, world.player))
+            if world.random_locations[temple_location_names.rloc_t2_portal] == 2:
+                add_rule(world.multiworld.get_location(temple_location_names.t2_teleporter, world.player),
+                         lambda state: state.has(item_name.btn_t2_portal, world.player))
+        if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:
+            add_rule(world.multiworld.get_location(temple_location_names.btn_t2_runes, world.player),
+                     lambda state: state.has(item_name.btn_t2_light_bridges_part, world.player, 5))
+            add_rule(world.multiworld.get_location(temple_location_names.btn_t2_portal, world.player),
+                     lambda state: state.has(item_name.btn_t2_portal_part, world.player, 2))
+            add_rule(world.multiworld.get_location(temple_location_names.btn_t3_levers, world.player),
+                     lambda state: state.has(item_name.btn_t3_puzzle_room_part, world.player, 4))
 
 
 def set_connections(world: "HammerwatchWorld", entrance_block_types, passage_blocking_codes,
@@ -436,7 +478,27 @@ c_passage_blocking_codes = {
     castle_region_names.b3_defeated: entrance_names.c_b3_0,
 }
 
-t_entrance_block_types = {  # (act, EntranceBlockType)
+node_regions = [
+    temple_region_names.t1_node_1,
+    temple_region_names.t1_node_2,
+    temple_region_names.t2_n_node,
+    temple_region_names.t2_s_node,
+    temple_region_names.t3_n_node,
+    temple_region_names.t3_s_node,
+    temple_region_names.boss2_defeated,
+]
+
+pyramid_regions = [
+    temple_region_names.hub_rocks,
+    temple_region_names.cave_3_portal,
+    temple_region_names.cave_2_pumps,
+    temple_region_names.cave_1_blue_bridge,
+    temple_region_names.t1_east,
+    temple_region_names.t2_pof,
+    temple_region_names.boss2_defeated,
+]
+
+t_entrance_block_types = {  # (act, EntranceBlockType, required traversed regions)
     entrance_names.t_hub_t_ent: (1, EntranceBlockType.Unblocked, None),
     entrance_names.t_hub_library: (1, EntranceBlockType.Unblocked, None),
     entrance_names.t_hub_t3: (1, EntranceBlockType.Blocked, None),
@@ -449,7 +511,7 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
     # entrance_names.t_lib_end: (1, EntranceBlockType.Unblocked, None),
     entrance_names.t_c1_start: (1, EntranceBlockType.OneWay, None),
     entrance_names.t_c1_end: (1, EntranceBlockType.Unblocked, None),  # Can't get back to the start, but can get to hub portal
-    entrance_names.t_c1_fall_surface: (1, EntranceBlockType.OneWay, [temple_region_names.cave_3_main]),
+    entrance_names.t_c1_fall_surface: (1, EntranceBlockType.OneWay, None),
     # Not actually required, to enforce that the right exits in the hub will have items
     entrance_names.t_c1_portal: (1, EntranceBlockType.DeadEnd, [temple_region_names.boss2_defeated]),
     entrance_names.t_c1_fall_temple: (1, EntranceBlockType.OneWay, None),
@@ -482,8 +544,8 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
     entrance_names.t_t1_end: (3, EntranceBlockType.Unblocked, None),  # Technically unblocked, but it's kinda hard
     entrance_names.t_t2_start_1: (3, EntranceBlockType.Blocked, None),
     entrance_names.t_t2_start_2: (3, EntranceBlockType.Blocked, None),
-    entrance_names.t_t2_w_portal: (3, EntranceBlockType.Unblocked,
-                                  [temple_region_names.boss2_defeated]),  # Can go through the gate to the main area
+    entrance_names.t_t2_w_portal: (3, EntranceBlockType.Unblocked, None),
+                                  # [temple_region_names.boss2_defeated]),  # Can go through the gate to the main area
     entrance_names.t_t2_s_light_bridge: (3, EntranceBlockType.Blocked, None),  # Need glass walk
     entrance_names.t_t2_t3: (3, EntranceBlockType.Blocked, None),  # Need column gate on the other side
     entrance_names.t_t3_start_1: (3, EntranceBlockType.Unblocked,
@@ -496,15 +558,15 @@ t_entrance_block_types = {  # (act, EntranceBlockType)
     entrance_names.t_t3_start_3: (3, EntranceBlockType.Unblocked,
                                  [temple_region_names.cave_1_main, temple_region_names.cave_2_main,
                                   temple_region_names.cave_3_main]),
+    entrance_names.t_t3_fall_1: (3, EntranceBlockType.OneWay, node_regions),
+    entrance_names.t_t3_fall_2: (3, EntranceBlockType.OneWay, node_regions),
+    entrance_names.t_t3_fall_3: (3, EntranceBlockType.OneWay, node_regions),
     entrance_names.t_c3_temple: (3, EntranceBlockType.DeadEnd, [temple_region_names.boss2_defeated]),
     entrance_names.t_t3_t2: (3, EntranceBlockType.Blocked, None),  # Could be blocked, so we assume worst case
     entrance_names.t_t_ent_hub: (3, EntranceBlockType.Blocked, None),
     entrance_names.t_t_ent_temple: (3, EntranceBlockType.Unblocked, None),
     entrance_names.t_t_ent_p: (3, EntranceBlockType.Unblocked, None),
-    entrance_names.t_n1_1_start: (3, EntranceBlockType.Unblocked,
-                                 [temple_region_names.cave_3_portal, temple_region_names.cave_2_pumps,
-                                  temple_region_names.cave_1_blue_bridge, temple_region_names.t1_east,
-                                  temple_region_names.t2_s_gate, temple_region_names.boss2_defeated]),
+    entrance_names.t_n1_1_start: (3, EntranceBlockType.Unblocked, pyramid_regions),
     entrance_names.t_n1_1_sw: (3, EntranceBlockType.Unblocked, None),
     entrance_names.t_n1_1_n: (3, EntranceBlockType.DeadEnd, [temple_region_names.pof_1_se_room]),
     entrance_names.t_n1_2_start: (3, EntranceBlockType.OneWay,
@@ -532,6 +594,16 @@ t_passage_blocking_codes = {
     temple_region_names.pof_2_n: entrance_names.t_n1_2_n,
     temple_region_names.pof_1_se_room: entrance_names.t_n1_1_se,
 }
+
+buttonsanity_entrance_data_exclusions = [
+    # entrance_names.t_hub_t3,
+    # entrance_names.t_t_ent_hub,
+    entrance_names.t_c3_end,
+    entrance_names.t_b2,
+    entrance_names.t_n1_1_n,
+    entrance_names.t_n1_2_start,
+    entrance_names.t_n1_3_start,
+]
 
 
 def get_valid_exits(entrance_block_types, open_codes: typing.List[str], code_to_region: typing.Dict[str, Region],
