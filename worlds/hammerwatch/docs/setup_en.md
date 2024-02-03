@@ -42,7 +42,7 @@ To make sure your config file is formatted correctly you can check it on the YAM
 6. Select "OK". After you have been connected verify that the correct information is shown at the bottom of the main menu
 7. Navigate the menus to set up playing the game as normal (note: selecting "Single" on the main menu will redirect
 you to the Archipelago-specific menu, continue setup using this menu)
-8. After the level has generated you may select your hero's color, then select "Play" to start playing!
+8. After the level has generated you may select your hero's color and class, then select "Play" to start playing!
 
 When later reconnecting to a server you have previously played on, if a save exists for that game you may resume it on
 the main menu by selecting "Resume".
