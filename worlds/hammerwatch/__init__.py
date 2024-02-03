@@ -78,6 +78,26 @@ class HammerwatchWorld(World):
     def generate_early(self):
         self.campaign = get_campaign(self)
 
+        exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives, option_names.mod_double_lives],
+                                [option_names.mod_1_hp, option_names.mod_no_hp_pickups],
+                                [option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen],
+                                [option_names.mod_no_mana_regen, option_names.mod_5x_mana_regen]]
+
+        # Validate game modifiers
+        exclude_mods = []
+        for mod, value in self.options.game_modifiers.value.items():
+            if value:
+                if mod in exclude_mods:
+                    self.options.game_modifiers.value[mod] = False
+                    continue
+                for ex_list in exclusive_mod_groups:
+                    if mod not in ex_list:
+                        continue
+                    for ex_mod in ex_list:
+                        if ex_mod in exclude_mods:
+                            continue
+                        exclude_mods.append(ex_mod)
+
         # Door type randomization
         if self.campaign == Campaign.Castle:
             item_counts = castle_item_counts

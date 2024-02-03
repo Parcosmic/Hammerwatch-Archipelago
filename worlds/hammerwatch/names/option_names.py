@@ -37,4 +37,21 @@ lever_fragments = "lever_fragments"
 pickaxe_fragments = "pickaxe_fragments"
 trap_item_percent = "trap_item_percent"
 starting_life_count = "starting_life_count"
+game_modifiers = "game_modifiers"
 death_link = "death_link"
+
+mod_no_extra_lives = "no_extra_lives"
+mod_1_hp = "1_hp"
+mod_shared_hp_pool = "shared_hp_pool"
+mod_no_hp_pickups = "no_hp_pickups"
+mod_no_mana_regen = "no_mana_regen"
+mod_reverse_hp_regen = "reverse_hp_regen"
+mod_infinite_lives = "infinite_lives"
+mod_hp_regen = "hp_regen"
+mod_double_damage = "double_damage"
+mod_double_lives = "double_lives"
+mod_5x_mana_regen = "5x_mana_regen"
+
+game_modifier_names = [mod_no_extra_lives, mod_1_hp, mod_shared_hp_pool, mod_no_hp_pickups, mod_no_mana_regen,
+                       mod_reverse_hp_regen,
+                       mod_infinite_lives, mod_hp_regen, mod_double_damage, mod_double_lives, mod_5x_mana_regen]

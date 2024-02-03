@@ -1,6 +1,6 @@
 import typing
 from BaseClasses import Item, ItemClassification
-from .names import item_name
+from .names import item_name, option_names
 from .options import BonusChestLocationBehavior
 from .util import Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names
 
@@ -496,6 +496,17 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
                 else:
                     item_counts_table[item_name.stat_upgrade] += 1
 
+    # Handle game modifiers, removing extra lives and hp pickups
+    if (world.options.game_modifiers.value.get(option_names.mod_no_extra_lives, False)
+            or world.options.game_modifiers.value.get(option_names.mod_infinite_lives, False)):
+        world.options.remove_lives.value = True
+    if (world.options.game_modifiers.value.get(option_names.mod_1_hp, False)
+            or world.options.game_modifiers.value.get(option_names.mod_no_hp_pickups, False)):
+        extra_items -= item_counts_table.pop(item_name.apple, 0)
+        extra_items -= item_counts_table.pop(item_name.orange, 0)
+        extra_items -= item_counts_table.pop(item_name.steak, 0)
+        extra_items -= item_counts_table.pop(item_name.fish, 0)
+
     # Remove extra lives if the option was selected
     if world.options.remove_lives.value:
         extra_items -= item_counts_table.pop(item_name.ankh)
@@ -504,7 +515,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not world.options.randomize_recovery_items.value:
         for recovery in recovery_table.keys():
-            item_counts_table[recovery] = 0
+            extra_items -= item_counts_table.pop(recovery, 0)
 
     # Enemy loot
     if world.options.randomize_enemy_loot.value:

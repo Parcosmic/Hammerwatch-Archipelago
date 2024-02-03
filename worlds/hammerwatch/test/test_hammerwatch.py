@@ -177,3 +177,32 @@ class TestButtonsanityOff(HammerwatchTestBase):
                 self.assertTrue(location.item.name in items.temple_button_table)
             else:
                 self.assertFalse(location.item.name in items.temple_button_table)
+
+
+class TestGameModifiers(HammerwatchTestBase):
+    options = {
+        option_names.game_modifiers: {
+             option_names.mod_infinite_lives: True,
+             option_names.mod_hp_regen: True,
+             option_names.mod_1_hp: True,
+             option_names.mod_no_extra_lives: True,
+             option_names.mod_double_lives: True,
+             option_names.mod_double_damage: False,
+        }
+    }
+
+    def test_disable_correct_modifiers(self):
+        world_options: options.HammerwatchOptions = self.multiworld.worlds[1].options
+
+        self.assertTrue(world_options.game_modifiers.value[option_names.mod_infinite_lives],
+                        "The game modifier \"infinite lives\" should be True")
+        self.assertTrue(world_options.game_modifiers.value[option_names.mod_hp_regen],
+                        "The game modifier \"hp regen\" should be True")
+        self.assertFalse(world_options.game_modifiers.value[option_names.mod_1_hp],
+                         "The game modifier \"1 hp\" should be changed to False")
+        self.assertFalse(world_options.game_modifiers.value[option_names.mod_no_extra_lives],
+                         "The game modifier \"no extra lives\" should be changed to False")
+        self.assertFalse(world_options.game_modifiers.value[option_names.mod_double_lives],
+                         "The game modifier \"double lives\" should be changed to False")
+        self.assertFalse(world_options.game_modifiers.value[option_names.mod_double_damage],
+                         "The game modifier \"double damage\" should not be changed from False")
