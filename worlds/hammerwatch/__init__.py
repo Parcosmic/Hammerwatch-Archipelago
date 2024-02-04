@@ -129,8 +129,6 @@ class HammerwatchWorld(World):
         self.world_itempool = []
 
         # First create and place our locked items so we know how many are left over
-        self.multiworld.get_location(temple_location_names.ev_victory, self.player) \
-            .place_locked_item(self.create_event(item_name.ev_victory))
         if self.campaign == Campaign.Castle:
             self.place_castle_locked_items()
             button_item_names = list(castle_button_items.values())
@@ -217,6 +215,7 @@ class HammerwatchWorld(World):
             castle_location_names.ev_beat_boss_2: item_name.evc_beat_boss_2,
             castle_location_names.ev_beat_boss_3: item_name.evc_beat_boss_3,
             castle_location_names.ev_beat_boss_4: item_name.evc_beat_boss_4,
+            castle_location_names.ev_escape: item_name.evc_escaped,
         }
         castle_switches = {
             castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,

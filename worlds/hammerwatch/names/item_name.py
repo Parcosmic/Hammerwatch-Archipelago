@@ -172,6 +172,7 @@ btn_t2_portal_part = "Open TF2 Portal Room Shortcut Progress"
 btn_t3_puzzle_room_part = "Open TF3 Puzzle Room Progress"
 
 # Event/Button Names
+evc_escaped = "Escaped Castle Hammerwatch"
 ev_victory = "Victory"
 
 btnc_p1_floor = "Prison Floor 1 Open Passage"

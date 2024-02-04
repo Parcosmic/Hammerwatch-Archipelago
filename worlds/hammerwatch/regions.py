@@ -2449,16 +2449,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.b4_plank_11,
         castle_location_names.ev_beat_boss_4,
     ]
-    if goal == GoalType.KillBosses:
-        b4_defeated_locations.append(castle_location_names.ev_victory)
     b4_defeated_region = create_region(world, active_locations, castle_region_names.b4_defeated,
                                        b4_defeated_locations)
-
-    get_planks_locations = []
-    if goal == GoalType.PlankHunt:
-        get_planks_locations.append(castle_location_names.ev_victory)
-    get_planks_region = create_region(world, active_locations, castle_region_names.get_planks,
-                                      get_planks_locations)
 
     e1_main_locations = []
     e1_main_region = create_region(world, active_locations, castle_region_names.e1_main, e1_main_locations)
@@ -2476,13 +2468,13 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     e3_main_region = create_region(world, active_locations, castle_region_names.e3_main, e3_main_locations)
 
     e4_main_locations = [
-        castle_location_names.e4_main
+        castle_location_names.e4_main,
     ]
     e4_main_region = create_region(world, active_locations, castle_region_names.e4_main, e4_main_locations)
 
-    escaped_locations = []
-    if goal == GoalType.FullCompletion:
-        escaped_locations.append(castle_location_names.ev_victory)
+    escaped_locations = [
+        castle_location_names.ev_escape,
+    ]
     escaped_region = create_region(world, active_locations, castle_region_names.escaped, escaped_locations)
 
     world.multiworld.regions += [
@@ -2736,7 +2728,6 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         e3_main_region,
         e4_main_region,
         escaped_region,
-        get_planks_region
     ]
 
 
@@ -3492,20 +3483,10 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect(world, used_names, castle_region_names.e3_main, castle_region_names.e4_main, False)
     connect(world, used_names, castle_region_names.e4_main, castle_region_names.escaped, False)
 
-    connect(world, used_names, castle_region_names.menu, castle_region_names.get_planks,
-            False, item_name.plank, world.options.planks_required_count.value, False)
-
 
 def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData],
                         random_locations: typing.Dict[str, int]):
-    goal = get_goal_type(world)
-
     menu_region = create_region(world, active_locations, temple_region_names.menu, None)
-
-    get_planks_locations = []
-    if goal == GoalType.PlankHunt:
-        get_planks_locations.append(temple_location_names.ev_victory)
-    get_planks_region = create_region(world, active_locations, temple_region_names.get_planks, get_planks_locations)
 
     hub_main_locations = [
         temple_location_names.hub_front_of_pof,
@@ -4780,10 +4761,8 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         temple_location_names.pof_3_end_3,
         temple_location_names.pof_3_end_4,
         temple_location_names.pof_3_end_5,
-        temple_location_names.ev_pof_end
+        temple_location_names.ev_pof_end,
     ]
-    if goal == GoalType.AltCompletion:
-        pof_3_main_locations.append(temple_location_names.ev_victory)
     pof_3_main_region = create_region(world, active_locations, temple_region_names.pof_3_main, pof_3_main_locations)
 
     b3_main_region = create_region(world, active_locations, temple_region_names.b3_main, [])
@@ -4803,8 +4782,6 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     b3_defeated_locations = [
         temple_location_names.ev_beat_boss_3,
     ]
-    if goal == GoalType.KillBosses:
-        b3_defeated_locations.append(temple_location_names.ev_victory)
     b3_defeated_region = create_region(world, active_locations, temple_region_names.b3_defeated, b3_defeated_locations)
 
     world.multiworld.regions += [
@@ -4932,7 +4909,6 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         b3_platform_2_region,
         b3_platform_3_region,
         b3_defeated_region,
-        get_planks_region
     ]
 
 
@@ -5346,9 +5322,6 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
                      entrance_names.t_t3_fall_2, None, None, 1, False)
         connect_exit(world, used_names, temple_region_names.b3_platform_3, temple_region_names.t3_boss_fall_3,
                      entrance_names.t_t3_fall_3, None, None, 1, False)
-
-    connect(world, used_names, temple_region_names.menu, temple_region_names.get_planks, False,
-            item_name.plank, world.options.planks_required_count.value, False)
 
 
 def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData], name: str,

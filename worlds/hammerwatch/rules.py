@@ -98,7 +98,9 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
 
 def set_extra_rules(world: "HammerwatchWorld"):
     goal = get_goal_type(world)
-    world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_victory, world.player)
+    if goal == GoalType.PlankHunt:
+        world.multiworld.completion_condition[world.player] =\
+            lambda state: state.has(item_name.plank, world.player, world.options.planks_required_count.value)
 
     # Set special entrance and location rules, and set world completion condition
     if get_campaign(world) == Campaign.Castle:
@@ -111,7 +113,8 @@ def set_extra_rules(world: "HammerwatchWorld"):
                 item_name.evc_beat_boss_4,
             }
             world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
-        if goal == GoalType.FullCompletion:
+        elif goal == GoalType.FullCompletion:
+            world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.evc_escaped, world.player)
             # Get name of the final boss entrance
             final_boss_entr_name = etr_base_name(castle_region_names.b4_start, castle_region_names.b4_defeated)
             final_boss_entrance = world.multiworld.get_entrance(final_boss_entr_name, world.player)
@@ -157,6 +160,8 @@ def set_extra_rules(world: "HammerwatchWorld"):
                 item_name.evt_beat_boss_3,
             }
             world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
+        elif goal == GoalType.AltCompletion:
+            world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_pof_complete, world.player)
 
         # Set access rules for portal activation events
         def portal_rule(state) -> bool:

@@ -396,8 +396,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         planks_to_win = 12
         if goal == GoalType.PlankHunt:  # Plank hunt
             planks_to_win = world.options.planks_required_count.value
-        total_planks =\
-            planks_to_win + int(planks_to_win * world.options.extra_plank_percent.value / 100)
+        total_planks = planks_to_win + int(planks_to_win * world.options.extra_plank_percent.value / 100)
         extra_items = total_planks - item_counts_table[item_name.plank]
         item_counts_table[item_name.plank] = total_planks
     else:  # Remove planks from the pool, they're not needed

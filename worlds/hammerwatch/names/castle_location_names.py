@@ -1428,5 +1428,7 @@ ev_beat_boss_2 = "Defeat Knight"
 ev_beat_boss_3 = "Defeat Lich"
 ev_beat_boss_4 = "Defeat Dragon"
 
+ev_escape = "Castle Entrance Bridge"
+
 # Shared Event Locations
 ev_victory = "Victory"
