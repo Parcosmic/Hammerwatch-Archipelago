@@ -147,6 +147,13 @@ class TestHammerwatchOptions(HammerwatchTestBase):
             "exit_randomization": options.ExitRandomization.option_all,
             option_names.random_start_exit: options.StartExit.option_true,
         },
+        "Castle Floor Master Keys": {
+            option_names.key_mode: options.KeyMode.option_floor_master,
+        },
+        "Temple Floor Master Keys": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.key_mode: options.KeyMode.option_floor_master,
+        },
     }
 
     def test_options(self):

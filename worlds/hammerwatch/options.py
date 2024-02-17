@@ -292,6 +292,19 @@ class ActSpecificKeys(Toggle):
     default = True
 
 
+class KeyMode(Choice):
+    """Changes the behavior of keys
+    Vanilla: keys can be used anywhere on their respective gates
+    Act Specific: replaces keys with versions that can only be used on a specific act
+    Floor Master: consolidates keys on a floor into a single item that unlocks all gates of that type on an entire floor
+    """
+    display_name = "Key Mode"
+    option_vanilla = 0
+    option_act_specific = 1
+    option_floor_master = 2
+    default = 1
+
+
 class BigBronzeKeyPercent(Range):
     """(Castle only) What percentage of bronze keys get converted into big bronze keys, which act as 3 bronze keys each
     """
@@ -430,6 +443,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     buttonsanity: Buttonsanity
     open_castle: OpenCastle
     act_specific_keys: ActSpecificKeys
+    key_mode: KeyMode
     extra_keys_percent: ExtraKeysPercent
     big_bronze_key_percent: BigBronzeKeyPercent
     shortcut_teleporter: ShortcutTeleporter
@@ -472,7 +486,8 @@ client_required_options = [
     option_names.randomize_enemy_loot,
     option_names.buttonsanity,
     option_names.open_castle,
-    option_names.act_specific_keys,
+    # option_names.act_specific_keys,
+    option_names.key_mode,
     # option_names.extra_keys_percent,
     # option_names.big_bronze_key_percent,
     option_names.shortcut_teleporter,

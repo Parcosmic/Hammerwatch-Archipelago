@@ -1,11 +1,12 @@
 import typing
 from enum import Enum
 from BaseClasses import Region, Entrance
-from .names import castle_region_names, temple_region_names, temple_location_names, entrance_names, item_name
+from .names import (castle_region_names, temple_region_names, castle_location_names, temple_location_names,
+                    entrance_names, item_name)
 from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, etr_base_name, connect
 from .options import ExitRandomization
-from .util import GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names
+from .util import GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity
 from Utils import visualize_regions
 
 if typing.TYPE_CHECKING:
@@ -69,7 +70,10 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     # print(f"Connecting exits took {tries} tries")
 
     menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
-    visualize_regions(menu_region, "_testing.puml", show_locations=False)
+    # state = world.multiworld.get_all_state(False)
+    # state.update_reachable_regions(world.player)
+    # visualize_regions(menu_region, "_testing.puml", show_locations=False,
+    #                   highlight_regions=state.reachable_regions[world.player])
     if get_campaign(world) == Campaign.Castle:
         second_region_name = castle_region_names.p1_start
     else:
@@ -123,34 +127,70 @@ def set_extra_rules(world: "HammerwatchWorld"):
             #         if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
             #             entr_name = exit.name
             #             break
-            add_rule(final_boss_entrance,
-                     lambda state: state.has(item_name.plank, world.player, 12)
-                                   and state.has(item_name.key_gold, world.player, 16)
-                                   and state.has(item_name.key_silver, world.player, 13)
-                                   and state.has(item_name.key_bronze, world.player, 103)
-                                   and state.has(item_name.key_bonus, world.player, 18))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_1, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 1))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_2, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 2))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_3, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 3))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_4, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 4))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_5, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 5))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_6, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 6))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_7, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 7))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_8, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 8))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_9, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 9))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_10, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 10))
-            # add_rule(multiworld.get_location(CastleLocationNames.b4_plank_11, world.player),
-            #          lambda state: state.has(item_name.plank, world.player, 11))
+            # add_rule(final_boss_entrance,
+            #          lambda state: state.has(item_name.plank, world.player, 12)
+            #                        and state.has(item_name.key_gold, world.player, 16)
+            #                        and state.has(item_name.key_silver, world.player, 13)
+            #                        and state.has(item_name.key_bronze, world.player, 103)
+            #                        and state.has(item_name.key_bonus, world.player, 18))
+            # Exclude all locations that are in the escape sequence
+            escape_locations = [
+                castle_location_names.b4_plank_1,
+                castle_location_names.b4_plank_2,
+                castle_location_names.b4_plank_3,
+                castle_location_names.b4_plank_4,
+                castle_location_names.b4_plank_5,
+                castle_location_names.b4_plank_6,
+                castle_location_names.b4_plank_7,
+                castle_location_names.b4_plank_8,
+                castle_location_names.b4_plank_9,
+                castle_location_names.b4_plank_10,
+                castle_location_names.b4_plank_11,
+                castle_location_names.e2_entrance,
+                castle_location_names.e2_end,
+                castle_location_names.e3_entrance_1,
+                castle_location_names.e3_entrance_2,
+                castle_location_names.e4_main,
+            ]
+            world.options.exclude_locations.value.update(escape_locations)
+        # Buttonsanity additional rules
+        if world.options.buttonsanity.value > 0:
+            boss_gate_locs = {
+                castle_location_names.btn_p3_boss_door: item_name.btnc_b1_boss,
+                castle_location_names.btn_a1_boss_door: item_name.btnc_b2_boss,
+                castle_location_names.btn_r3_boss_door: item_name.btnc_b3_boss,
+            }
+            a2_bgate_tp = world.multiworld.get_location(castle_location_names.a2_ne_l_bgate, world.player)
+            if get_buttonsanity_insanity(world):
+                # Boss gate button location logic
+                for loc, item in boss_gate_locs.items():
+                    add_rule(world.multiworld.get_location(loc, world.player),
+                             lambda state: state.has(f"{item} Progress", world.player, 12), "and")
+                # Armory Floor 5 NE gates teleport item
+                add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates_part, world.player, 4), "and")
+            else:
+                # Boss gate button location logic
+                for loc, item in boss_gate_locs.items():
+                    add_rule(world.multiworld.get_location(loc, world.player),
+                             lambda state: state.has(item, world.player, 3), "and")
+                # Armory Floor 5 NE gates teleport item
+                add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates, world.player), "and")
+                # Rune sequence
+                c12_seq_loc = world.multiworld.get_location(castle_location_names.btn_c3_rune, world.player)
+                c12_seq_loc_n = world.multiworld.get_location(castle_location_names.btn_c3_rune_n, world.player)
+                add_rule(c12_seq_loc, lambda state: state.can_reach(c12_seq_loc_n, "Location", world.player), "and")
+            misc_loc_logic = {
+                castle_location_names.a2_pyramid_1: item_name.btnc_a2_pyramid_nw,
+                castle_location_names.a3_pyramid: item_name.btnc_a3_pyramid_ne,
+                castle_location_names.a2_pyramid_3: item_name.btnc_a2_pyramid_se,
+                castle_location_names.a2_pyramid_4: item_name.btnc_a2_pyramid_sw,
+                castle_location_names.r3_e_tp: item_name.btnc_r3_tp_ne_b,
+                castle_location_names.r3_e_secret_tp: item_name.btnc_r3_tp_ne_t,
+            }
+            for loc_name, item in misc_loc_logic.items():
+                add_rule(world.multiworld.get_location(loc_name, world.player),
+                         lambda state: state.has(item, world.player), "and")
+
     else:
         # Overwrite world completion condition if we need to defeat all bosses
         if goal == GoalType.KillBosses:
@@ -814,14 +854,16 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
         remove.parent_region.exits.append(remove)
         remove.connected_region.entrances.append(remove)
 
-    transitions: typing.List[HWEntrance] = world.multiworld.get_entrances()
+    transitions: typing.List[HWEntrance] = world.multiworld.get_entrances(world.player)
     for exit_ in transitions:
         if exit_.player != world.player:
             continue
         if exit_.pass_item is None or exit_.parent_region.name == exit_.connected_region.name:
             continue
         # If the items are consumed gotta use the downstream cost logic
-        if exit_.items_consumed and exit_.pass_item in door_counts.keys():
+        if exit_.items_consumed:
+            if exit_.pass_item not in door_counts.keys():
+                continue  # If the item isn't in door_counts then it's being excluded and we don't set logic
             needed_keys = door_counts[exit_.pass_item] - exit_.downstream_count
             # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
             add_rule(exit_, lambda state, this=exit_, num=needed_keys: state.has(this.pass_item, world.player, num), "and")
@@ -836,8 +878,10 @@ def set_downstream_costs(item: str, entrance: HWEntrance, seen):
     door_entrances: typing.Set[str] = set()
     cost_dict: typing.Dict[str] = {}
     if entrance.parent_region != entrance.connected_region:
-        for exit_ in entrance.connected_region.exits:
-            if get_entrance_id(exit_) in seen and exit_.connected_region.name != exit_.parent_region.name:
+        help = list(entrance.connected_region.exits)
+        for exit_ in help:
+            exit_id = get_entrance_id(exit_)
+            if exit_id in seen and exit_.connected_region.name != exit_.parent_region.name or exit_id in cost_dict:
                 continue
             entrances = set_downstream_costs(item, exit_, seen)
             cost_dict.update(entrances)

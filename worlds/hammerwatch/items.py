@@ -2,7 +2,7 @@ import typing
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
 from .options import BonusChestLocationBehavior
-from .util import Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names
+from .util import Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -121,9 +121,199 @@ custom_table: typing.Dict[str, ItemData] = {
     item_name.key_bronze_big_chambers: ItemData(counter.count(), ItemClassification.progression),
 }
 
+castle_floor_master_keys: typing.Dict[str, ItemData] = {}
+castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Bronze Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
+castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Silver Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
+castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Gold Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
+castle_floor_master_keys.update({f"{castle_act_names[k]} Master Bonus Key": ItemData(counter.count(), ItemClassification.progression) for k in range(4)})
+
+temple_floor_master_keys: typing.Dict[str, ItemData] = {
+    item_name.key_silver_temple_1: ItemData(counter.count(), ItemClassification.progression),
+    item_name.key_silver_temple_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.key_gold_b1: ItemData(counter.count(), ItemClassification.progression),
+    item_name.key_gold_temple_1: ItemData(counter.count(), ItemClassification.progression),
+    item_name.key_gold_temple_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.key_bonus_pof: ItemData(counter.count(), ItemClassification.progression),
+}
+
 counter = Counter(id_start + 0x300 - 1)
 castle_button_table: typing.Dict[str, ItemData] = {
-
+    item_name.btnc_b1_boss: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b1_boss_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_b2_boss: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b2_boss_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_b3_boss: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b3_boss_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_b4_boss: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b4_boss_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_pstart_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p1_floor: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_spike_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_spike_puzzle_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_red_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_open_w_jail: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_tp_jail: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_e_save: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_tp_w: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_tp_w_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_rune_sequence: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_rune_sequence_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_m_stairs: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_shortcut_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_shortcut_s: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_boss_door: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_sgate_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_red_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_blue_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_e_passage: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_s_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_portal: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_portal_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p3_open_bonus: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_open_bonus_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p3_start: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_shop: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_bonus_side: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_sw_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_open_n_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_s_passage: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_s_exit_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_s_exit_r: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p3_nw_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n1_cache_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n1_cache_ne: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n1_hall_top: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n1_hall_bottom: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b1_left: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b1_right: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_boss_door: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_tp_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_m_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_red_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_sw_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_open_se_cache: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_open_se_cache_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_a1_open_m_cache: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_open_ne_cache: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_open_se_wall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_open_se_rune: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_pyramid_nw: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_bspikes_tp: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_open_bonus: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_pyramid_ne: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_pyramid_sw: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_pyramid_se: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_tp_ne: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_tp_sw: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_tp_se: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_tp_ne_gates: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_tp_ne_gates_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_a2_open_w_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_open_shortcut: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_a2_open_se_room_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_open_se_room_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a2_blue_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n2_open_se_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n2_open_ne_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_n2_open_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_knife: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_knife_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_a3_tp_m: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_bgate_tp: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_knife_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_knife_2_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_a3_open_m_stairs: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_start_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a3_open_start_e: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_w_wall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_n_wall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_nw_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_m_ledge: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_r1_open_l_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_start_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_e_wall: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_open_exits: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r1_ne_shortcut: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_r1_w_shortcut: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_r1_open_se_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_bs_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_bs_r: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_fire_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_s_r: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_fire_b: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_s_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_puzzle_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_r2_nw_shortcut: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_r2_open_start: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_spikes_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_light_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_ne_cache: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r2_open_spikes_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_boss_door: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_passage_room_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_tp_nw: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_ne_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_passage_room_2_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_ne_l: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_s_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_s_r: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_open_bs: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_simon: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_bonus_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_bonus_bridge_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_r3_bonus: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_bonus_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_r3_passage_end: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_passage_room_1: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_tp_ne_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_tp_ne_b: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_simon_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_simon_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_r3_sw_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_r3_passage: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c1_n_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c1_red_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c1_red_spike_turrets: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c1_red_flame_turrets: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c1_s_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c1_sw_exit: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_pstart_bridge: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_pstart_bridge_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_c2_sw_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_n_shops: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_w_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_bonus: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_bonus_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_c2_tp_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_tp_spikes_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_c2_bonus_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_bonus_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_c2_n_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_n_red_flame_turret_on: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c2_blue_spike_turret: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c2_open_puzzle: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_e_shop: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c2_s_red_flame_turret: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c2_s_shortcut: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c3_e_shortcut: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_sw_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_sw_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_c3_red_spikes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_blue_fire_turrets_on: ItemData(counter.count(), ItemClassification.trap),
+    item_name.btnc_c3_tp_m: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_red_spike_turrets: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c3_tp_se: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_open_w_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_c3_open_s_hall: ItemData(counter.count(), ItemClassification.progression),
 }
 
 counter = Counter(id_start + 0x400 - 1)
@@ -196,8 +386,6 @@ temple_button_table: typing.Dict[str, ItemData] = {
     item_name.btn_t2_portal_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.btn_t3_puzzle_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
 }
-# for itm, data in temple_button_table.items():
-#     print(f"{itm}:{data.code}")
 
 button_table = {
     **castle_button_table,
@@ -210,6 +398,8 @@ item_table: typing.Dict[str, ItemData] = {
     **tool_table,
     **special_table,
     **custom_table,
+    **castle_floor_master_keys,
+    **temple_floor_master_keys,
     **trap_table,
     **button_table,
 }
@@ -233,17 +423,12 @@ trap_items: typing.List[str] = [
 
 big_key_amount = 3
 key_table: typing.Dict[str, typing.Tuple[str, int]] = {
-    # item_name.key_bronze: (item_name.key_bronze, 1),
-    # item_name.key_silver: (item_name.key_silver, 1),
-    # item_name.key_gold: (item_name.key_gold, 1),
-    # item_name.key_bonus: (item_name.key_bonus, 1),
+    item_name.key_bronze_big: (item_name.key_bronze, big_key_amount),
 
-    item_name.key_bronze_big: (item_name.key_bronze, 3),
-
-    item_name.key_bronze_big_prison: (item_name.key_bronze_prison, 3),
-    item_name.key_bronze_big_armory: (item_name.key_bronze_armory, 3),
-    item_name.key_bronze_big_archives: (item_name.key_bronze_archives, 3),
-    item_name.key_bronze_big_chambers: (item_name.key_bronze_chambers, 3),
+    item_name.key_bronze_big_prison: (item_name.key_bronze_prison, big_key_amount),
+    item_name.key_bronze_big_armory: (item_name.key_bronze_armory, big_key_amount),
+    item_name.key_bronze_big_archives: (item_name.key_bronze_archives, big_key_amount),
+    item_name.key_bronze_big_chambers: (item_name.key_bronze_chambers, big_key_amount),
 
     item_name.key_bronze_prison: (item_name.key_bronze, 1),
     item_name.key_bronze_armory: (item_name.key_bronze, 1),
@@ -264,8 +449,6 @@ key_table: typing.Dict[str, typing.Tuple[str, int]] = {
     item_name.key_bonus_armory: (item_name.key_bonus, 1),
     item_name.key_bonus_archives: (item_name.key_bonus, 1),
     item_name.key_bonus_chambers: (item_name.key_bonus, 1),
-
-    # item_name.key_teleport: (item_name.key_teleport, 1),
 }
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -324,6 +507,28 @@ castle_item_counts: typing.Dict[str, int] = {
 }
 
 castle_button_counts: typing.Dict[str, int] = {
+    item_name.btnc_b1_boss_part: 4,
+    item_name.btnc_b2_boss_part: 4,
+    item_name.btnc_b3_boss_part: 4,
+    item_name.btnc_b4_boss_part: 4,
+    item_name.btnc_p2_spike_puzzle_part: 9,
+    item_name.btnc_p2_tp_w_part: 4,
+    item_name.btnc_p2_rune_sequence_part: 4,
+    item_name.btnc_p3_portal_part: 5,
+    item_name.btnc_p3_open_bonus_part: 9,
+    item_name.btnc_a1_open_se_cache_part: 4,
+    item_name.btnc_a2_tp_ne_gates_part: 4,
+    item_name.btnc_a3_open_knife_part: 5,
+    item_name.btnc_a3_open_knife_2_part: 2,
+    item_name.btnc_r2_open_puzzle_part: 4,
+    item_name.btnc_r3_bonus_bridge_part: 4,
+    item_name.btnc_r3_bonus_part: 6,
+    item_name.btnc_r3_simon_room_part: 5,
+    item_name.btnc_pstart_bridge_part: 4,
+    item_name.btnc_c2_bonus_part: 8,
+    item_name.btnc_c2_tp_spikes_part: 4,
+    item_name.btnc_c2_bonus_room_part: 5,
+    item_name.btnc_c3_sw_room_part: 6,
 }
 
 temple_item_counts: typing.Dict[str, int] = {
@@ -430,37 +635,49 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     for key in all_key_names:
         if key in item_counts_table.keys() and key not in active_keys:
             item_counts_table.pop(key)
-    # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
-    key_names = set()
-    for key_name in active_keys:
-        # Exclude bronze keys and rune keys from getting extra items added to the pool
-        if "Bronze" not in key_name and "Rune" not in key_name:
-            key_names.add(key_name)
-    extra_key_percent = world.options.extra_keys_percent.value / 100
-    for key in key_names:
-        extra_keys = int(item_counts_table[key] * extra_key_percent)
-        item_counts_table[key] += extra_keys
-        extra_items += extra_keys
-    if get_campaign(world) == Campaign.Temple:
-        extra_mirrors = int(item_counts_table[item_name.mirror] * extra_key_percent)
-        item_counts_table[item_name.mirror] += extra_mirrors
-        extra_items += extra_mirrors
+        # For if we want to do more randomization with act specific keys, need to remove mirrors and rune keys though
+        # else:
+        #     world.key_item_counts[key] = 0
+
+    if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+        if get_campaign(world) == Campaign.Castle:
+            master_key_dict = castle_floor_master_keys
+        else:
+            master_key_dict = temple_floor_master_keys
+        # item_counts_table.update({master_key: 1 for master_key in master_key_dict.keys()})
+        world.key_item_counts.update({master_key: 0 for master_key in master_key_dict.keys()})
+    else:
+        # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
+        key_names = set()
+        for key_name in active_keys:
+            # Exclude bronze keys and rune keys from getting extra items added to the pool
+            if "Bronze" not in key_name and key_name != item_name.key_teleport:
+                key_names.add(key_name)
+        extra_key_percent = world.options.extra_keys_percent.value / 100
+        for key in key_names:
+            extra_keys = int(item_counts_table[key] * extra_key_percent)
+            item_counts_table[key] += extra_keys
+            extra_items += extra_keys
+        if get_campaign(world) == Campaign.Temple:
+            extra_mirrors = int(item_counts_table[item_name.mirror] * extra_key_percent)
+            item_counts_table[item_name.mirror] += extra_mirrors
+            extra_items += extra_mirrors
+
+        # Consolidate bronze keys
+        big_bronze_key_percent = world.options.big_bronze_key_percent.value / 100
+        if campaign == Campaign.Castle and big_bronze_key_percent > 0:
+            bronze_key_names = [key for key in active_keys if "Bronze" in key]
+            for bronze_key in bronze_key_names:
+                big_name = "Big " + bronze_key
+                big_keys = int(item_counts_table[bronze_key] * big_bronze_key_percent / key_table[big_name][1])
+                if big_keys > 0:
+                    item_counts_table[big_name] = big_keys
+                    item_counts_table[bronze_key] -= big_keys * key_table[big_name][1]
+                    extra_items -= big_keys * key_table[big_name][1] - big_keys
 
     # Bonus check behavior - None
-    if world.options.bonus_behavior.value == BonusChestLocationBehavior.option_none:
+    if world.options.bonus_behavior.value == world.options.bonus_behavior.option_none:
         item_counts_table[item_name.bonus_chest] = 0
-
-    # Consolidate bronze keys
-    big_bronze_key_percent = world.options.big_bronze_key_percent.value / 100
-    if campaign == Campaign.Castle and big_bronze_key_percent > 0:
-        bronze_key_names = [key for key in get_active_key_names(world) if "Bronze" in key]
-        for bronze_key in bronze_key_names:
-            big_name = "Big " + bronze_key
-            big_keys = int(item_counts_table[bronze_key] * big_bronze_key_percent / key_table[big_name][1])
-            if big_keys > 0:
-                item_counts_table[big_name] = big_keys
-                item_counts_table[bronze_key] -= big_keys * key_table[big_name][1]
-                extra_items -= big_keys * key_table[big_name][1] - big_keys
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments

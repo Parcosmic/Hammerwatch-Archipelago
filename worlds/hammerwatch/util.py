@@ -7,6 +7,14 @@ if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
+castle_act_names = [
+    "Prison",
+    "Armory",
+    "Archives",
+    "Chambers",
+]
+
+
 class Campaign(Enum):
     Castle = 0
     Temple = 1
@@ -36,10 +44,17 @@ def get_goal_type(world: "HammerwatchWorld") -> GoalType:
     return GoalType(world.options.goal.value % 10)
 
 
+def get_buttonsanity_insanity(world: "HammerwatchWorld") -> bool:
+    return (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
+            or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
+
+
 def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
     campaign = get_campaign(world)
     if campaign == Campaign.Castle:
-        if world.options.act_specific_keys.value:
+        if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+            key_names = set()
+        elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
             key_names = {
                 item_name.key_bronze_prison,
                 item_name.key_bronze_armory,
@@ -71,13 +86,16 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
                 key_names.add(item_name.key_bonus)
     else:
         key_names = {
-            item_name.key_silver,
-            item_name.key_gold,
             item_name.mirror,
             item_name.key_teleport,
         }
-        if world.options.randomize_bonus_keys.value:
-            key_names.add(item_name.key_bonus)
+        if world.options.key_mode.value != world.options.key_mode.option_floor_master:
+            key_names.update({
+                item_name.key_silver,
+                item_name.key_gold,
+            })
+            if world.options.randomize_bonus_keys.value:
+                key_names.add(item_name.key_bonus)
     return key_names
 
 

@@ -6,7 +6,8 @@ from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names
-from .util import GoalType, Campaign, get_goal_type, get_random_element
+from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_active_key_names,
+                   get_buttonsanity_insanity)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -176,7 +177,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     p1_from_p3_n_locations = [
         castle_location_names.p1_p3_n_bridge,
         castle_location_names.p1_p3_n_across_bridge,
-        castle_location_names.ev_p1_boss_switch
+        castle_location_names.btn_p1_boss,
+        castle_location_names.btn_p1_boss_1,
+        castle_location_names.btn_p1_boss_2,
+        castle_location_names.btn_p1_boss_3,
+        castle_location_names.btn_p1_boss_4,
     ]
     p1_from_p3_n_region = create_region(world, active_locations, castle_region_names.p1_from_p3_n,
                                         p1_from_p3_n_locations)
@@ -207,10 +212,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_nw_island_3,
         castle_location_names.p2_nw_island_4,
         castle_location_names.p2_nw_island_5,
+        castle_location_names.btn_p2_wall_shortcut_1,
     ]
     p2_m_region = create_region(world, active_locations, castle_region_names.p2_m, p2_m_locations)
 
     p2_p1_return_locs = [
+        castle_location_names.btn_p2_wall_from_p1,
     ]
     p2_p1_return_region = create_region(world, active_locations, castle_region_names.p2_p1_return,
                                         p2_p1_return_locs)
@@ -222,10 +229,17 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_spike_puzzle_ne_2,
         castle_location_names.p2_spike_puzzle_ne_3,
         castle_location_names.p2_spike_puzzle_e,
+        castle_location_names.btn_p2_floor_red,
+        castle_location_names.btn_p2_floor_spike_puzzle_e_1,
+        castle_location_names.btn_p2_floor_spike_puzzle_e_2,
+        castle_location_names.btn_p2_floor_spike_puzzle_e_3,
     ]
     p2_n_region = create_region(world, active_locations, castle_region_names.p2_n, p2_n_locations)
 
     p2_spike_puzzle_bottom_locs = [
+        castle_location_names.btn_p2_floor_spike_puzzle_s_1,
+        castle_location_names.btn_p2_floor_spike_puzzle_s_2,
+        castle_location_names.btn_p2_floor_spike_puzzle_s_3,
     ]
     p2_spike_puzzle_bottom_region = create_region(world, active_locations,
                                                   castle_region_names.p2_spike_puzzle_bottom,
@@ -242,6 +256,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     p2_spike_puzzle_top_locs = [
         castle_location_names.p2_spike_puzzle_n_1,
         castle_location_names.p2_spike_puzzle_n_2,
+        castle_location_names.btn_p2_floor_spike_puzzle_n_1,
+        castle_location_names.btn_p2_floor_spike_puzzle_n_2,
+        castle_location_names.btn_p2_floor_spike_puzzle_n_3,
     ]
     p2_spike_puzzle_top_region = create_region(world, active_locations,
                                                castle_region_names.p2_spike_puzzle_top,
@@ -264,6 +281,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_e_of_ne_save_1,
         castle_location_names.p2_e_of_ne_save_2,
         castle_location_names.p2_tower_plant_2,
+        castle_location_names.btn_p2_puzzle,
+        castle_location_names.btn_p2_floor_e_save,
     ]
     p2_red_switch_region = create_region(world, active_locations, castle_region_names.p2_red_switch,
                                          p2_red_switch_locations)
@@ -324,26 +343,39 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_miniboss_tick_1,
         castle_location_names.p2_miniboss_tick_2,
         castle_location_names.p2_tower_plant_1,
-        castle_location_names.ev_p2_gold_gate_room_sw_switch,
-        castle_location_names.ev_p2_boss_switch,
+        castle_location_names.btn_p2_rune_sequence,
+        castle_location_names.btn_p2_rune_sequence_3,
+        castle_location_names.btn_p2_wall_shortcut_2,
+        castle_location_names.btn_p2_boss,
+        castle_location_names.btn_p2_boss_1,
+        castle_location_names.btn_p2_boss_2,
+        castle_location_names.btn_p2_boss_3,
+        castle_location_names.btn_p2_boss_4,
+        castle_location_names.btn_p2_floor_tp_item_1,
+        castle_location_names.btn_p2_floor_tp_item_2,
+        castle_location_names.btn_p2_rune_puzzle,
+        castle_location_names.btn_p2_rune_puzzle_1,
+        castle_location_names.btn_p2_rune_puzzle_2,
+        castle_location_names.btn_p2_rune_puzzle_3,
+        castle_location_names.btn_p2_rune_puzzle_4,
     ]
     p2_s_region = create_region(world, active_locations, castle_region_names.p2_s, p2_s_locations)
 
     p2_e_bronze_gate_2_locations = [
-        castle_location_names.ev_p2_gold_gate_room_ne_switch
+        castle_location_names.btn_p2_rune_sequence_2
     ]
     p2_e_bronze_gate_2_region = create_region(world, active_locations,
                                               castle_region_names.p2_e_bronze_gate_2,
                                               p2_e_bronze_gate_2_locations)
 
     p2_m_bronze_gate_locations = [
-        castle_location_names.ev_p2_gold_gate_room_nw_switch
+        castle_location_names.btn_p2_rune_sequence_1
     ]
     p2_m_bronze_gate_region = create_region(world, active_locations, castle_region_names.p2_m_bronze_gate,
                                             p2_m_bronze_gate_locations)
 
     p2_se_bronze_gate_locations = [
-        castle_location_names.ev_p2_gold_gate_room_se_switch
+        castle_location_names.btn_p2_rune_sequence_4
     ]
     p2_se_bronze_gate_region = create_region(world, active_locations, castle_region_names.p2_se_bronze_gate,
                                              p2_se_bronze_gate_locations)
@@ -380,6 +412,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     p2_end_region = create_region(world, active_locations, castle_region_names.p2_end, p2_end_locations)
 
     p3_start_door_locs = [
+        castle_location_names.btn_p3_wall_start,
     ]
     p3_start_door_region = create_region(world, active_locations, castle_region_names.p3_start_door,
                                          p3_start_door_locs)
@@ -409,12 +442,20 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p3_nw_sw_1,
         castle_location_names.p3_nw_sw_2,
         castle_location_names.p3_nw_se,
-        castle_location_names.p3_nw_closed_room,
         castle_location_names.p3_tower_plant_1,
+        castle_location_names.btn_p3_floor,
+        castle_location_names.btn_p3_wall_start_n,
+        castle_location_names.btn_p3_wall_start_nw,
     ]
     p3_start_region = create_region(world, active_locations, castle_region_names.p3_start, p3_start_locs)
 
+    p3_start_shop_locs = [
+        # Shop
+    ]
+    p3_start_shop_region = create_region(world, active_locations, castle_region_names.p3_start_shop, p3_start_shop_locs)
+
     p3_nw_closed_room_locs = [
+        castle_location_names.p3_nw_closed_room,
     ]
     p3_nw_closed_room_region = create_region(world, active_locations, castle_region_names.p3_nw_closed_room,
                                              p3_nw_closed_room_locs)
@@ -479,28 +520,55 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p3_tower_plant_5,
         castle_location_names.p3_tower_plant_6,
         castle_location_names.p3_tower_plant_7,
+        castle_location_names.btn_p3_floor_red,
+        castle_location_names.btn_p3_floor_blue,
+        castle_location_names.btn_p3_floor_arrow_hall,
+        castle_location_names.btn_p3_wall_bonus_nw,
+        castle_location_names.btn_p3_wall_bonus_ne,
+        castle_location_names.btn_p3_wall_bonus_s,
+        castle_location_names.btn_p3_wall_bonus_se,
     ]
     p3_n_gold_gate_region = create_region(world, active_locations, castle_region_names.p3_n_gold_gate,
                                           p3_n_gold_gate_locs)
 
     p3_rspikes_locs = [
         castle_location_names.p3_red_spike_room,
+        castle_location_names.btn_p3_wall_bonus_w_2,
     ]
     p3_rspikes_region = create_region(world, active_locations, castle_region_names.p3_rspikes,
                                       p3_rspikes_locs)
 
     p3_rspikes_room_locs = [
         castle_location_names.p3_tower_plant_4,
+        castle_location_names.btn_p3_wall_bonus_w_1,
+        castle_location_names.btn_p3_seq_bonus,
     ]
     p3_rspikes_room_region = create_region(world, active_locations, castle_region_names.p3_rspikes_room,
                                            p3_rspikes_room_locs)
 
+    p3_bspikes_locs = [
+        # Shop location
+    ]
+    p3_bspikes_region = create_region(world, active_locations, castle_region_names.p3_bspikes,
+                                      p3_bspikes_locs)
+
     p3_bonus_locs = [
+        castle_location_names.btn_p3_wall_bonus,
+        castle_location_names.btn_p3_rune_bonus,
+        castle_location_names.btn_p3_rune_bonus_1,
+        castle_location_names.btn_p3_rune_bonus_2,
+        castle_location_names.btn_p3_rune_bonus_3,
+        castle_location_names.btn_p3_rune_bonus_4,
+        castle_location_names.btn_p3_rune_bonus_5,
+        castle_location_names.btn_p3_rune_bonus_6,
+        castle_location_names.btn_p3_rune_bonus_7,
+        castle_location_names.btn_p3_rune_bonus_8,
+        castle_location_names.btn_p3_rune_bonus_9,
     ]
     p3_bonus_region = create_region(world, active_locations, castle_region_names.p3_bonus, p3_bonus_locs)
 
     p3_arrow_hall_secret_locs = [
-        castle_location_names.btnc_p3_arrow_hall_wall,
+        castle_location_names.btn_p3_wall_secret_arrow_hall,
     ]
     p3_arrow_hall_secret_region = create_region(world, active_locations,
                                                 castle_region_names.p3_arrow_hall_secret, p3_arrow_hall_secret_locs)
@@ -533,11 +601,15 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p3_s_of_boss_door,
         castle_location_names.p3_tower_plant_3,
         castle_location_names.p3_tower_plant_8,
-        castle_location_names.btnc_p3_sw,
+        castle_location_names.btn_p3_boss_door,
+        castle_location_names.btn_p3_floor_sw,
+        castle_location_names.btn_p3_wall_sw,
+        castle_location_names.btn_p3_wall_boss_door,
     ]
     p3_sw_region = create_region(world, active_locations, castle_region_names.p3_sw, p3_sw_locs)
 
     p3_exit_s_locs = [
+        castle_location_names.btn_p3_wall_to_p1_s,
     ]
     p3_exit_s_region = create_region(world, active_locations, castle_region_names.p3_exit_s, p3_exit_s_locs)
 
@@ -550,7 +622,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
                                                 castle_region_names.p3_hidden_arrow_hall, p3_hidden_arrow_hall_locs)
 
     p3_s_gold_gate_locs = [
-        castle_location_names.ev_p3_boss_switch
+        castle_location_names.btn_p3_boss_s,
+        castle_location_names.btn_p3_boss_s_1,
+        castle_location_names.btn_p3_boss_s_2,
+        castle_location_names.btn_p3_boss_s_3,
+        castle_location_names.btn_p3_boss_s_4,
     ]
     p3_s_gold_gate_region = create_region(world, active_locations, castle_region_names.p3_s_gold_gate,
                                           p3_s_gold_gate_locs)
@@ -589,6 +665,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n1_room2_s_2,
         castle_location_names.n1_room2_s_3,
         castle_location_names.n1_room2_n_secret_room,
+        castle_location_names.btn_n1_panel_n,
     ]
     n1_room2_region = create_region(world, active_locations, castle_region_names.n1_room2, n1_room2_locs)
 
@@ -631,6 +708,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n1_room3_w_18,
         castle_location_names.n1_room3_w_19,
         castle_location_names.n1_room3_w_20,
+        castle_location_names.btn_n1_panel_e_1,
+        castle_location_names.btn_n1_panel_e_2,
     ]
     n1_room3_region = create_region(world, active_locations, castle_region_names.n1_room3, n1_room3_locs)
 
@@ -644,6 +723,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
                                            n1_room3_unlock_locs)
 
     n1_room3_hall_locs = [
+        castle_location_names.btn_n1_panel_s,
     ]
     n1_room3_hall_region = create_region(world, active_locations, castle_region_names.n1_room3_hall,
                                          n1_room3_hall_locs)
@@ -659,14 +739,18 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     n1_room4_region = create_region(world, active_locations, castle_region_names.n1_room4, n1_room4_locs)
 
+    n1_exit_region = create_region(world, active_locations, castle_region_names.n1_exit, [])
+
     b1_start_locs = [
-        castle_location_names.b1_behind_portal
+        castle_location_names.b1_behind_portal,
     ]
     b1_start_region = create_region(world, active_locations, castle_region_names.b1_start, b1_start_locs)
 
     b1_arena_locs = [
         castle_location_names.b1_arena_1,
-        castle_location_names.b1_arena_2
+        castle_location_names.b1_arena_2,
+        castle_location_names.btn_b1_1,
+        castle_location_names.btn_b1_2,
     ]
     b1_arena_region = create_region(world, active_locations, castle_region_names.b1_arena, b1_arena_locs)
 
@@ -682,6 +766,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     b1_exit_region = create_region(world, active_locations, castle_region_names.b1_exit, b1_exit_locs)
 
     a1_start_locs = [
+        castle_location_names.btn_a1_wall_start,
+        castle_location_names.btn_a1_boss_door,
     ]
     a1_start_region = create_region(world, active_locations, castle_region_names.a1_start, a1_start_locs)
 
@@ -728,13 +814,21 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a1_ne_3,
         castle_location_names.a1_e_e,
         castle_location_names.a1_e_se,
-        castle_location_names.a1_ne_ice_tower_secret,
         castle_location_names.a1_miniboss_skeleton_1,
         castle_location_names.a1_miniboss_skeleton_2,
         castle_location_names.a1_tower_ice_3,
         castle_location_names.a1_tower_ice_4,
+        castle_location_names.btn_a1_floor_tp_n,
+        castle_location_names.btn_a1_floor_red,
+        castle_location_names.btn_a1_wall_red_spikes,
     ]
     a1_e_region = create_region(world, active_locations, castle_region_names.a1_e, a1_e_locs)
+
+    a1_ne_cache_locs = [
+        castle_location_names.a1_ne_ice_tower_secret,
+    ]
+    a1_ne_cache_region = create_region(world, active_locations, castle_region_names.a1_ne_cache,
+                                         a1_ne_cache_locs)
 
     a1_e_sw_bgate_locs = []
     a1_e_sw_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_sw_bgate,
@@ -744,7 +838,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     a1_e_s_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_s_bgate,
                                         a1_e_s_bgate_locs)
 
-    a1_e_se_bgate_locs = []
+    a1_e_se_bgate_locs = [
+        castle_location_names.btn_a1_wall_se,
+    ]
     a1_e_se_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_se_bgate,
                                          a1_e_se_bgate_locs)
 
@@ -753,7 +849,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
                                         a1_e_e_bgate_locs)
 
     a1_rune_room_locs = [
-
+        castle_location_names.btn_a1_rune,
+        castle_location_names.btn_a1_rune_1,
+        castle_location_names.btn_a1_rune_2,
+        castle_location_names.btn_a1_rune_3,
+        castle_location_names.btn_a1_rune_4,
     ]
     a1_rune_room_region = create_region(world, active_locations, castle_region_names.a1_rune_room,
                                         a1_rune_room_locs)
@@ -819,7 +919,15 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a1_w_save_2,
         castle_location_names.a1_tower_ice_1,
         castle_location_names.a1_tower_ice_2,
-        castle_location_names.ev_a1_boss_switch,
+        castle_location_names.btn_a1_boss,
+        castle_location_names.btn_a1_boss_1,
+        castle_location_names.btn_a1_boss_2,
+        castle_location_names.btn_a1_boss_3,
+        castle_location_names.btn_a1_boss_4,
+        castle_location_names.btn_a1_floor_shortcut,
+        castle_location_names.btn_a1_floor_sw,
+        castle_location_names.btn_a1_puzzle,
+        castle_location_names.btn_a1_wall_m_cache,
     ]
     a1_w_region = create_region(world, active_locations, castle_region_names.a1_w, a1_w_locs)
 
@@ -886,6 +994,10 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a2_e_of_s_save_4,
         castle_location_names.a2_tower_ice_3,
         castle_location_names.a2_tower_ice_5,
+        castle_location_names.btn_a2_floor_sw,
+        castle_location_names.btn_a2_floor_tp_se,
+        castle_location_names.btn_a2_puzzle,
+        castle_location_names.btn_a2_wall_sw,
     ]
     a2_start_region = create_region(world, active_locations, castle_region_names.a2_start, a2_start_locs)
 
@@ -959,8 +1071,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a2_miniboss_skeleton_2,
         castle_location_names.a2_tower_ice_2,
         castle_location_names.a2_tower_ice_4,
-        castle_location_names.ev_a2_boss_switch,
-        castle_location_names.btnc_a2_bspikes_tp,
+        castle_location_names.btn_a2_boss,
+        castle_location_names.btn_a2_boss_1,
+        castle_location_names.btn_a2_boss_2,
+        castle_location_names.btn_a2_boss_3,
+        castle_location_names.btn_a2_boss_4,
+        castle_location_names.btn_a2_floor_tp_n,
+        castle_location_names.btn_a2_floor_secret_e,
+        castle_location_names.btn_a2_wall_e,
     ]
     a2_ne_region = create_region(world, active_locations, castle_region_names.a2_ne, a2_ne_locs)
 
@@ -977,6 +1095,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     a2_ne_r_bgate_locs = [
         castle_location_names.a2_ne_r_bgate_1,
         castle_location_names.a2_ne_r_bgate_2,
+        castle_location_names.btn_a2_rune,
+        castle_location_names.btn_a2_rune_1,
+        castle_location_names.btn_a2_rune_2,
+        castle_location_names.btn_a2_rune_3,
+        castle_location_names.btn_a2_rune_4,
     ]
     a2_ne_r_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_r_bgate,
                                          a2_ne_r_bgate_locs)
@@ -1003,6 +1126,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a2_e_ice_tower_6,
         castle_location_names.a2_s_of_e_bgate,
         castle_location_names.a2_tower_ice_6,
+        castle_location_names.btn_a2_wall_se,
     ]
     a2_e_region = create_region(world, active_locations, castle_region_names.a2_e, a2_e_locs)
 
@@ -1019,6 +1143,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a2_nw_ice_tower,
         castle_location_names.a2_by_w_a1_stair,
         castle_location_names.a2_tower_ice_1,
+        castle_location_names.btn_a2_floor_pyramid_nw,
+        castle_location_names.btn_a2_floor_pyramid_ne,
+        castle_location_names.btn_a2_floor_pyramid_sw,
+        castle_location_names.btn_a2_floor_pyramid_se,
+        castle_location_names.btn_a2_floor_pyramid_m,
+        castle_location_names.btn_a2_wall_nw,
     ]
     a2_nw_region = create_region(world, active_locations, castle_region_names.a2_nw, a2_nw_locs)
 
@@ -1062,6 +1192,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_m_se_3,
         castle_location_names.n2_m_se_4,
         castle_location_names.n2_m_se_5,
+        castle_location_names.btn_n2_panel_n,
     ]
     n2_m_region = create_region(world, active_locations, castle_region_names.n2_m, n2_m_locs)
 
@@ -1079,7 +1210,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_nw_bottom_2,
         castle_location_names.n2_nw_bottom_3,
         castle_location_names.n2_nw_bottom_4,
-        castle_location_names.btnc_n2_blue_spikes,
+        castle_location_names.btn_n2_floor_blue,
     ]
     n2_nw_region = create_region(world, active_locations, castle_region_names.n2_nw, n2_nw_locs)
 
@@ -1158,10 +1289,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_ne_2,
         castle_location_names.n2_ne_3,
         castle_location_names.n2_ne_4,
+        castle_location_names.btn_n2_panel_ne,
     ]
     n2_ne_region = create_region(world, active_locations, castle_region_names.n2_ne, n2_ne_locs)
 
     n2_se_locs = [
+        castle_location_names.btn_n2_panel_se,
     ]
     n2_se_region = create_region(world, active_locations, castle_region_names.n2_se, n2_se_locs)
 
@@ -1173,6 +1306,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a3_sw_1,
         castle_location_names.a3_sw_2,
         castle_location_names.a3_sw_3,
+        castle_location_names.btn_a3_wall_start,
     ]
     a3_start_region = create_region(world, active_locations, castle_region_names.a3_start, a3_start_locs)
 
@@ -1240,7 +1374,19 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a3_tower_ice_7,
         castle_location_names.a3_tower_ice_8,
         castle_location_names.a3_tower_ice_9,
-        castle_location_names.ev_a3_boss_switch,
+        castle_location_names.btn_a3_boss,
+        castle_location_names.btn_a3_boss_1,
+        castle_location_names.btn_a3_boss_2,
+        castle_location_names.btn_a3_boss_3,
+        castle_location_names.btn_a3_boss_4,
+        castle_location_names.btn_a3_floor_knife_1,
+        castle_location_names.btn_a3_floor_knife_2,
+        castle_location_names.btn_a3_floor_knife_3,
+        castle_location_names.btn_a3_floor_knife_4,
+        castle_location_names.btn_a3_floor_knife_5,
+        castle_location_names.btn_a3_floor_tp_m,
+        castle_location_names.btn_a3_wall_end,
+        castle_location_names.btn_a3_seq_knife,
     ]
     a3_main_region = create_region(world, active_locations, castle_region_names.a3_main, a3_main_locs)
 
@@ -1250,17 +1396,25 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     a3_tp_region = create_region(world, active_locations, castle_region_names.a3_tp, a3_tp_locs)
 
     a3_from_a2_locs = [
-        # Bgate teleport button
+        castle_location_names.btn_a3_wall_from_a2,
     ]
-    a3_from_a2_region = create_region(world, active_locations, castle_region_names.a3_from_a2,
-                                      a3_from_a2_locs)
+    a3_from_a2_region = create_region(world, active_locations, castle_region_names.a3_from_a2, a3_from_a2_locs)
+
+    a3_from_a2_wall_locs = [
+        castle_location_names.btn_a3_floor_stairs_in_wall,
+    ]
+    a3_from_a2_wall_region = create_region(world, active_locations, castle_region_names.a3_from_a2_wall,
+                                           a3_from_a2_wall_locs)
 
     a3_knife_puzzle_reward_locs = [
         castle_location_names.a3_knife_puzzle_reward_l_5,
         castle_location_names.a3_knife_puzzle_reward_r,
+        castle_location_names.btn_a3_wall_knife_1,
+        castle_location_names.btn_a3_wall_knife_2,
+        castle_location_names.btn_a3_seq_knife_2,
     ]
-    a3_knife_puzzle_reward_region = create_region(world, active_locations,
-                                                  castle_region_names.a3_knife_puzzle_reward, a3_knife_puzzle_reward_locs)
+    a3_knife_puzzle_reward_region = create_region(world, active_locations, castle_region_names.a3_knife_puzzle_reward,
+                                                  a3_knife_puzzle_reward_locs)
 
     a3_knife_reward_2_locs = [
         castle_location_names.a3_knife_puzzle_reward_l_1,
@@ -1274,10 +1428,16 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     a3_nw_stairs_region = create_region(world, active_locations, castle_region_names.a3_nw_stairs, [])
 
     a3_w_b_bgate_locs = [
-        castle_location_names.a3_pyramids_s_bgate_tp
+
     ]
     a3_w_b_bgate_region = create_region(world, active_locations, castle_region_names.a3_w_b_bgate,
                                         a3_w_b_bgate_locs)
+
+    a3_w_b_bgate_tp_locs = [
+        castle_location_names.a3_pyramids_s_bgate_tp
+    ]
+    a3_w_b_bgate_tp_region = create_region(world, active_locations, castle_region_names.a3_w_b_bgate_tp,
+                                           a3_w_b_bgate_tp_locs)
 
     a3_w_t_bgate_locs = []
     a3_w_t_bgate_region = create_region(world, active_locations, castle_region_names.a3_w_t_bgate,
@@ -1333,7 +1493,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     r1_start_region = create_region(world, active_locations, castle_region_names.r1_start, r1_start_locs)
 
-    r1_se_ggate_locs = []
+    r1_se_ggate_locs = [
+        castle_location_names.btn_r1_floor_se,
+    ]
     r1_se_ggate_region = create_region(world, active_locations, castle_region_names.r1_se_ggate,
                                        r1_se_ggate_locs)
 
@@ -1352,6 +1514,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_e_knife_trap_6,
         castle_location_names.r1_e_knife_trap_7,
         castle_location_names.r1_e_s,
+        castle_location_names.btn_r1_floor_e,
     ]
     r1_e_region = create_region(world, active_locations, castle_region_names.r1_e, r1_e_locs)
 
@@ -1372,12 +1535,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_e_n_2,
         castle_location_names.r1_e_n_3,
         castle_location_names.r1_tower_plant_2,
+        castle_location_names.btn_r1_wall_ne,
     ]
     r1_e_n_bgate_region = create_region(world, active_locations, castle_region_names.r1_e_n_bgate,
                                         r1_e_n_bgate_locs)
 
     r1_e_sgate_locs = [
-        castle_location_names.r1_e_sgate
+        castle_location_names.r1_e_sgate,
+        castle_location_names.btn_r1_wall_se,
     ]
     r1_e_sgate_region = create_region(world, active_locations, castle_region_names.r1_e_sgate,
                                       r1_e_sgate_locs)
@@ -1393,6 +1558,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_ne_ggate_2,
         castle_location_names.r1_ne_ggate_3,
         castle_location_names.r1_ne_ggate_4,
+        castle_location_names.btn_r1_floor_ne,
     ]
     r1_ne_ggate_region = create_region(world, active_locations, castle_region_names.r1_ne_ggate,
                                        r1_ne_ggate_locs)
@@ -1400,13 +1566,19 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r1_nw_locs = [
         castle_location_names.r1_nw_1,
         castle_location_names.r1_nw_2,
+        castle_location_names.r1_tower_plant_1,
+        castle_location_names.btn_r1_floor_nw,
+    ]
+    r1_nw_region = create_region(world, active_locations, castle_region_names.r1_nw, r1_nw_locs)
+
+    r1_puzzle_locs = [
         castle_location_names.r1_puzzle_1,
         castle_location_names.r1_puzzle_2,
         castle_location_names.r1_puzzle_3,
         castle_location_names.r1_puzzle_4,
-        castle_location_names.r1_tower_plant_1,
+        castle_location_names.btn_r1_puzzle,
     ]
-    r1_nw_region = create_region(world, active_locations, castle_region_names.r1_nw, r1_nw_locs)
+    r1_puzzle_region = create_region(world, active_locations, castle_region_names.r1_puzzle, r1_puzzle_locs)
 
     r1_nw_hidden_locs = [
         castle_location_names.r1_nw_hidden_1,
@@ -1415,7 +1587,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r1_nw_hidden_region = create_region(world, active_locations, castle_region_names.r1_nw_hidden,
                                         r1_nw_hidden_locs)
 
-    r1_nw_ggate_locs = []
+    r1_nw_ggate_locs = [
+        castle_location_names.btn_r1_floor_nw_hidden,
+    ]
     r1_nw_ggate_region = create_region(world, active_locations, castle_region_names.r1_nw_ggate,
                                        r1_nw_ggate_locs)
 
@@ -1443,34 +1617,44 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_sw_ggate_2,
         castle_location_names.r1_tower_plant_3,
         castle_location_names.r1_tower_plant_4,
+        castle_location_names.btn_r1_wall_w,
     ]
     r1_sw_region = create_region(world, active_locations, castle_region_names.r1_sw, r1_sw_locs)
 
     r1_w_sgate_locs = [  # Shop region
+        castle_location_names.btn_r1_floor_w_shop,
     ]
     r1_w_sgate_region = create_region(world, active_locations, castle_region_names.r1_w_sgate,
                                       r1_w_sgate_locs)
 
-    r1_sw_ggate_locs = []
+    r1_sw_ggate_locs = [
+        castle_location_names.btn_r1_floor_w_s,
+    ]
     r1_sw_ggate_region = create_region(world, active_locations, castle_region_names.r1_sw_ggate,
                                        r1_sw_ggate_locs)
 
-    r1_exit_l_locs = []
+    r1_exit_l_locs = [
+        castle_location_names.btn_r1_floor_exit,
+    ]
     r1_exit_l_region = create_region(world, active_locations, castle_region_names.r1_exit_l, r1_exit_l_locs)
 
     r1_exit_r_locs = []
     r1_exit_r_region = create_region(world, active_locations, castle_region_names.r1_exit_r, r1_exit_r_locs)
 
     r2_start_locs = [
-        castle_location_names.r2_start
+        castle_location_names.r2_start,
+        castle_location_names.btn_r2_wall_start,
     ]
     r2_start_region = create_region(world, active_locations, castle_region_names.r2_start, r2_start_locs)
 
     r2_bswitch_locs = [
-        castle_location_names.ev_r1_boss_switch
+        castle_location_names.btn_r2_boss_e,
+        castle_location_names.btn_r2_boss_e_1,
+        castle_location_names.btn_r2_boss_e_2,
+        castle_location_names.btn_r2_boss_e_3,
+        castle_location_names.btn_r2_boss_e_4,
     ]
-    r2_bswitch_region = create_region(world, active_locations, castle_region_names.r2_bswitch,
-                                      r2_bswitch_locs)
+    r2_bswitch_region = create_region(world, active_locations, castle_region_names.r2_bswitch, r2_bswitch_locs)
 
     r2_m_locs = [
         castle_location_names.r2_n_3,
@@ -1528,6 +1712,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_tower_plant_2,
         castle_location_names.r2_tower_plant_3,
         castle_location_names.r2_tower_plant_4,
+        castle_location_names.btn_r2_floor_ne,
+        castle_location_names.btn_r2_wall_nw,
     ]
     r2_m_region = create_region(world, active_locations, castle_region_names.r2_m, r2_m_locs)
 
@@ -1535,12 +1721,18 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_nw_spike_trap_1,
         castle_location_names.r2_nw_spike_trap_2,
         castle_location_names.r2_tower_plant_1,
+        castle_location_names.btn_r2_floor_nw,
     ]
     r2_nw_region = create_region(world, active_locations, castle_region_names.r2_nw, r2_nw_locs)
 
     r2_n_locs = [
         castle_location_names.r2_n_closed_room,
-        castle_location_names.ev_r2_boss_switch,
+        castle_location_names.btn_r2_boss_n,
+        castle_location_names.btn_r2_boss_n_1,
+        castle_location_names.btn_r2_boss_n_2,
+        castle_location_names.btn_r2_boss_n_3,
+        castle_location_names.btn_r2_boss_n_4,
+        castle_location_names.btn_r2_floor_boss_rune,
     ]
     r2_n_region = create_region(world, active_locations, castle_region_names.r2_n, r2_n_locs)
 
@@ -1550,6 +1742,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_e_3,
         castle_location_names.r2_e_4,
         castle_location_names.r2_e_5,
+        castle_location_names.btn_r2_floor_e,
     ]
     r2_e_region = create_region(world, active_locations, castle_region_names.r2_e, r2_e_locs)
 
@@ -1557,7 +1750,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r2_w_bgate_region = create_region(world, active_locations, castle_region_names.r2_w_bgate,
                                       r2_w_bgate_locs)
 
-    r2_sgate_locs = []
+    r2_sgate_locs = [
+        castle_location_names.btn_r2_floor_gate_s,
+    ]
     r2_sgate_region = create_region(world, active_locations, castle_region_names.r2_sgate, r2_sgate_locs)
 
     r2_s_locs = [
@@ -1574,6 +1769,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_sw_11,
         castle_location_names.r2_sw_12,
         castle_location_names.r2_tower_plant_5,
+        castle_location_names.btn_r2_floor_sw_hidden,
+        castle_location_names.btn_r2_floor_sw,
     ]
     r2_s_region = create_region(world, active_locations, castle_region_names.r2_s, r2_s_locs)
 
@@ -1583,13 +1780,26 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_s_knife_trap_3,
         castle_location_names.r2_s_knife_trap_4,
         castle_location_names.r2_s_knife_trap_5,
+        castle_location_names.btn_r2_wall_spike_island_n,
+        castle_location_names.btn_r2_wall_spike_island_s,
     ]
     r2_spike_island_region = create_region(world, active_locations, castle_region_names.r2_spike_island,
                                            r2_spike_island_locs)
 
-    r2_sw_bridge_locs = []
-    r2_sw_bridge_region = create_region(world, active_locations, castle_region_names.r2_sw_bridge,
-                                        r2_sw_bridge_locs)
+    r2_sw_bridge_locs = [
+        castle_location_names.btn_r2_rune,
+        castle_location_names.btn_r2_rune_1,
+        castle_location_names.btn_r2_rune_2,
+        castle_location_names.btn_r2_rune_3,
+        castle_location_names.btn_r2_rune_4,
+    ]
+    r2_sw_bridge_region = create_region(world, active_locations, castle_region_names.r2_sw_bridge, r2_sw_bridge_locs)
+
+    r2_puzzle_room_locs = [
+        castle_location_names.btn_r2_puzzle,
+    ]
+    r2_puzzle_room_region = create_region(world, active_locations, castle_region_names.r2_puzzle_room,
+                                          r2_puzzle_room_locs)
 
     r2_puzzle_locs = [
         castle_location_names.r2_puzzle_1,
@@ -1606,6 +1816,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
 
     r2_from_r3_locs = [
         castle_location_names.r2_ne_knife_trap_end,
+        castle_location_names.btn_r2_wall_ne,
     ]
     r2_from_r3_region = create_region(world, active_locations, castle_region_names.r2_from_r3,
                                       r2_from_r3_locs)
@@ -1618,8 +1829,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r2_ne_cache_region = create_region(world, active_locations, castle_region_names.r2_ne_cache,
                                        r2_ne_cache_locs)
 
-    r2_ggate_locs = []
+    r2_ggate_locs = [
+        castle_location_names.btn_r2_floor_gate_w,
+    ]
     r2_ggate_region = create_region(world, active_locations, castle_region_names.r2_ggate, r2_ggate_locs)
+
+    r2_exit_region = create_region(world, active_locations, castle_region_names.r2_exit, [])
 
     r3_main_locs = [
         castle_location_names.r3_ne_knife_trap_1,
@@ -1675,13 +1890,21 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r3_tower_plant_8,
         castle_location_names.r3_tower_plant_9,
         castle_location_names.r3_tower_plant_10,
-        castle_location_names.ev_r3_boss_switch,
+        castle_location_names.btn_r3_floor_ne,
+        castle_location_names.btn_r3_floor_s,
+        castle_location_names.btn_r3_floor_se,
+        castle_location_names.btn_r3_wall_ne_1,
+        castle_location_names.btn_r3_wall_ne_2,
+        castle_location_names.btn_r3_wall_seq_n,
+        castle_location_names.btn_r3_wall_seq_w,
+        castle_location_names.btn_r3_wall_seq_m,
     ]
     r3_main_region = create_region(world, active_locations, castle_region_names.r3_main, r3_main_locs)
 
     r3_ne_room_locs = [
         castle_location_names.r3_e_secret_tp,
         castle_location_names.r3_e_tp,
+        castle_location_names.btn_r3_floor_ne_room,
     ]
     r3_ne_room_region = create_region(world, active_locations, castle_region_names.r3_ne_room,
                                       r3_ne_room_locs)
@@ -1689,6 +1912,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r3_s_room_locs = [
         castle_location_names.r3_s_shops_room_1,
         castle_location_names.r3_s_shops_room_2,
+        castle_location_names.btn_r3_floor_s_room,
     ]
     r3_s_room_region = create_region(world, active_locations, castle_region_names.r3_s_room, r3_s_room_locs)
 
@@ -1705,11 +1929,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r3_e_ggate_hallway_2,
         castle_location_names.r3_e_ggate_hallway_3,
         castle_location_names.r3_tower_plant_3,
+        castle_location_names.btn_r3_floor_gate_nw,
     ]
     r3_e_ggate_region = create_region(world, active_locations, castle_region_names.r3_e_ggate,
                                       r3_e_ggate_locs)
 
     r3_sw_bgate_locs = [
+        castle_location_names.btn_r3_floor_sw_gate,
+        castle_location_names.btn_r3_wall_sw_gate,
     ]
     r3_sw_bgate_region = create_region(world, active_locations, castle_region_names.r3_sw_bgate,
                                        r3_sw_bgate_locs)
@@ -1721,12 +1948,38 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r3_sw_wall_r_region = create_region(world, active_locations, castle_region_names.r3_sw_wall_r,
                                         r3_sw_wall_r_locs)
 
-    r3_sw_wall_l_locs = [
-        castle_location_names.r3_w_passage_behind_spikes,
-        castle_location_names.r3_w_passage_s_closed_room,
+    r3_secret_hall_locs = [
+        castle_location_names.btn_r3_floor_passage,
     ]
-    r3_sw_wall_l_region = create_region(world, active_locations, castle_region_names.r3_sw_wall_l,
-                                        r3_sw_wall_l_locs)
+    r3_secret_hall_region = create_region(world, active_locations, castle_region_names.r3_passage,
+                                          r3_secret_hall_locs)
+
+    r3_secret_hall_room_1_locs = [
+        castle_location_names.r3_w_passage_s_closed_room,
+        castle_location_names.btn_r3_wall_passage_room_1,
+    ]
+    r3_secret_hall_room_1_region = create_region(world, active_locations, castle_region_names.r3_passage_room_1,
+                                                 r3_secret_hall_room_1_locs)
+
+    r3_secret_hall_room_2_locs = [
+        castle_location_names.r3_w_passage_behind_spikes,
+        castle_location_names.btn_r3_floor_passage_room_2,
+    ]
+    r3_secret_hall_room_2_region = create_region(world, active_locations, castle_region_names.r3_passage_room_2,
+                                                 r3_secret_hall_room_2_locs)
+
+    r3_secret_hall_room_2_spikes_locs = [
+        castle_location_names.btn_r3_wall_passage_room_2,
+    ]
+    r3_secret_hall_room_2_spikes_region = create_region(world, active_locations,
+                                                        castle_region_names.r3_passage_spikes,
+                                                        r3_secret_hall_room_2_spikes_locs)
+
+    r3_secret_hall_end_locs = [
+        castle_location_names.btn_r3_floor_passage_end,
+    ]
+    r3_secret_hall_end_region = create_region(world, active_locations, castle_region_names.r3_passage_end,
+                                              r3_secret_hall_end_locs)
 
     r3_nw_tp_locs = [
         castle_location_names.r3_nw_tp,
@@ -1735,6 +1988,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
 
     r3_se_cache_locs = [
         castle_location_names.r3_e_fire_floor_secret,
+        castle_location_names.btn_r3_wall_seq_ne,
     ]
     r3_se_cache_region = create_region(world, active_locations, castle_region_names.r3_se_cache,
                                        r3_se_cache_locs)
@@ -1743,13 +1997,34 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r3_boss_switch_room_1,
         castle_location_names.r3_boss_switch_room_2,
         castle_location_names.r3_boss_switch_room_3,
+        castle_location_names.btn_r3_boss,
+        castle_location_names.btn_r3_boss_1,
+        castle_location_names.btn_r3_boss_2,
+        castle_location_names.btn_r3_boss_3,
+        castle_location_names.btn_r3_boss_4,
+        castle_location_names.btn_r3_wall_seq_se,
+        castle_location_names.btn_r3_seq_simon,
     ]
     r3_boss_switch_region = create_region(world, active_locations, castle_region_names.r3_boss_switch,
                                           r3_boss_switch_locs)
 
-    r3_rune_room_locs = []
+    r3_rune_room_locs = [
+        castle_location_names.btn_r3_floor_simon,
+    ]
     r3_rune_room_region = create_region(world, active_locations, castle_region_names.r3_rune_room,
                                         r3_rune_room_locs)
+
+    r3_simon_says_locs = [
+        castle_location_names.btn_r3_simon,
+        castle_location_names.btn_r3_simon_1,
+        castle_location_names.btn_r3_simon_2,
+        castle_location_names.btn_r3_simon_3,
+        castle_location_names.btn_r3_simon_4,
+        castle_location_names.btn_r3_simon_5,
+        castle_location_names.btn_r3_simon_6,
+    ]
+    r3_simon_says_region = create_region(world, active_locations, castle_region_names.r3_simon_says,
+                                         r3_simon_says_locs)
 
     r3_bonus_locs = []
     r3_bonus_region = create_region(world, active_locations, castle_region_names.r3_bonus, r3_bonus_locs)
@@ -1767,6 +2042,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r3_bonus_return_locs = [
         castle_location_names.r3_bonus_return_1,
         castle_location_names.r3_bonus_return_2,
+        castle_location_names.btn_r3_rune,
+        castle_location_names.btn_r3_rune_1,
+        castle_location_names.btn_r3_rune_2,
+        castle_location_names.btn_r3_rune_3,
+        castle_location_names.btn_r3_rune_4,
     ]
     r3_bonus_return_region = create_region(world, active_locations, castle_region_names.r3_bonus_return,
                                            r3_bonus_return_locs)
@@ -1777,7 +2057,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     r3_bonus_return_bridge_region = create_region(world, active_locations,
                                                   castle_region_names.r3_bonus_return_bridge, r3_bonus_return_bridge_locs)
 
-    r3_exit_locs = []
+    r3_exit_locs = [
+        castle_location_names.btn_r3_boss_door,
+    ]
     r3_exit_region = create_region(world, active_locations, castle_region_names.r3_exit, r3_exit_locs)
 
     n3_main_locs = [
@@ -1893,9 +2175,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c1_ne_knife_traps_1,
         castle_location_names.c1_ne_knife_traps_2,
         castle_location_names.c1_tower_plant_1,
-        castle_location_names.c1_tower_ice_1,
         castle_location_names.c1_tower_ice_2,
         castle_location_names.c1_tower_ice_3,
+        castle_location_names.btn_c1_floor_n,
+        castle_location_names.btn_c1_floor_red,
+        castle_location_names.btn_c1_wall_red,
     ]
     c1_start_region = create_region(world, active_locations, castle_region_names.c1_start, c1_start_locs)
 
@@ -1908,6 +2192,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     c1_n_spikes_locs = [
         castle_location_names.c1_n_spikes_1,
         castle_location_names.c1_n_spikes_2,
+        castle_location_names.c1_tower_ice_1,
     ]
     c1_n_spikes_region = create_region(world, active_locations, castle_region_names.c1_n_spikes,
                                        c1_n_spikes_locs)
@@ -1927,7 +2212,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     c1_w_region = create_region(world, active_locations, castle_region_names.c1_w, c1_w_locs)
 
     c1_sgate_locs = [
-        castle_location_names.c1_sgate
+        castle_location_names.c1_sgate,
+        castle_location_names.btn_c1_wall_portal,
     ]
     c1_sgate_region = create_region(world, active_locations, castle_region_names.c1_sgate, c1_sgate_locs)
 
@@ -1936,8 +2222,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     c1_prison_stairs_region = create_region(world, active_locations, castle_region_names.c1_prison_stairs,
                                             c1_prison_stairs_locs)
-    # Symbolic region containing the button to open the shortcut to the east area
+
     c1_s_bgate_locs = [
+        castle_location_names.btn_c1_wall_s_gate,
     ]
     c1_s_bgate_region = create_region(world, active_locations, castle_region_names.c1_s_bgate,
                                       c1_s_bgate_locs)
@@ -1945,6 +2232,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     c1_ledge_locs = [
         castle_location_names.c1_ledge_1,
         castle_location_names.c1_ledge_2,
+        castle_location_names.btn_c1_wall_ledge,
     ]
     c1_ledge_region = create_region(world, active_locations, castle_region_names.c1_ledge, c1_ledge_locs)
 
@@ -1956,9 +2244,20 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
                                         c1_tp_island_locs)
 
     pstart_start_locs = [
+        castle_location_names.btn_pstart_rune,
+        castle_location_names.btn_pstart_rune_1,
+        castle_location_names.btn_pstart_rune_2,
+        castle_location_names.btn_pstart_rune_3,
+        castle_location_names.btn_pstart_rune_4,
     ]
     pstart_start_region = create_region(world, active_locations, castle_region_names.pstart_start,
                                         pstart_start_locs)
+
+    pstart_puzzle_island_locs = [
+        castle_location_names.btn_pstart_puzzle,
+    ]
+    pstart_puzzle_island_region = create_region(world, active_locations, castle_region_names.pstart_puzzle_island,
+                                                pstart_puzzle_island_locs)
 
     pstart_puzzle_locs = [
         castle_location_names.pstart_puzzle_1,
@@ -2065,12 +2364,27 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c2_tower_ice_11,
         castle_location_names.c2_by_e_shops_2_1,
         castle_location_names.c2_by_e_shops_2_2,
-        castle_location_names.ev_c2_boss_switch
+        castle_location_names.btn_c2_boss_w,
+        castle_location_names.btn_c2_boss_w_1,
+        castle_location_names.btn_c2_boss_w_2,
+        castle_location_names.btn_c2_boss_w_3,
+        castle_location_names.btn_c2_boss_w_4,
+        castle_location_names.btn_c2_floor_sw,
+        castle_location_names.btn_c2_floor_w,
+        castle_location_names.btn_c2_rune,
+        castle_location_names.btn_c2_rune_1,
+        castle_location_names.btn_c2_rune_2,
+        castle_location_names.btn_c2_rune_3,
+        castle_location_names.btn_c2_rune_4,
+        castle_location_names.btn_c2_wall_red_n,
+        castle_location_names.btn_c2_wall_blue,
+        castle_location_names.btn_c2_wall_red_s,
+        castle_location_names.btn_c2_wall_s_save,
     ]
     c2_main_region = create_region(world, active_locations, castle_region_names.c2_main, c2_main_locs)
 
     c2_exit_bgate_locs = [
-        castle_location_names.btnc_c2_n_open_wall,
+        castle_location_names.btn_c2_wall_n_exit_gate,
     ]
     c2_exit_bgate_region = create_region(world, active_locations, castle_region_names.c2_exit_bgate,
                                          c2_exit_bgate_locs)
@@ -2119,13 +2433,23 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     c2_w_shops_3_region = create_region(world, active_locations, castle_region_names.c2_w_shops_3,
                                         c2_w_shops_3_locs)
 
-    c2_e_shops_1_locs = []
+    c2_e_shops_1_locs = [
+        castle_location_names.btn_c2_wall_portal_shop,
+    ]
     c2_e_shops_1_region = create_region(world, active_locations, castle_region_names.c2_e_shops_1,
                                         c2_e_shops_1_locs)
 
-    c2_e_shops_2_locs = []
+    c2_e_shops_2_locs = [
+        castle_location_names.btn_c2_wall_e_shop,
+    ]
     c2_e_shops_2_region = create_region(world, active_locations, castle_region_names.c2_e_shops_2,
                                         c2_e_shops_2_locs)
+
+    c2_puzzle_room_locs = [
+        castle_location_names.btn_c2_puzzle,
+    ]
+    c2_puzzle_room_region = create_region(world, active_locations, castle_region_names.c2_puzzle_room,
+                                          c2_puzzle_room_locs)
 
     c2_puzzle_locs = [
         castle_location_names.c2_puzzle_1,
@@ -2154,6 +2478,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c2_tower_ice_6,
         castle_location_names.c2_tower_ice_7,
         castle_location_names.c2_tower_ice_8,
+        castle_location_names.btn_c2_wall_seq_nw,
+        castle_location_names.btn_c2_wall_seq_ne,
+        castle_location_names.btn_c2_wall_seq_w,
+        castle_location_names.btn_c2_wall_seq_s,
+        castle_location_names.btn_c2_wall_seq_e,
+        castle_location_names.btn_c2_seq_bonus,
     ]
     c2_n_region = create_region(world, active_locations, castle_region_names.c2_n, c2_n_locs)
 
@@ -2162,7 +2492,17 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     c2_n_wall_region = create_region(world, active_locations, castle_region_names.c2_n_wall, c2_n_wall_locs)
 
-    c2_bonus_locs = []
+    c2_bonus_locs = [
+        castle_location_names.btn_c2_rune_bonus,
+        castle_location_names.btn_c2_rune_bonus_1,
+        castle_location_names.btn_c2_rune_bonus_2,
+        castle_location_names.btn_c2_rune_bonus_3,
+        castle_location_names.btn_c2_rune_bonus_4,
+        castle_location_names.btn_c2_rune_bonus_5,
+        castle_location_names.btn_c2_rune_bonus_6,
+        castle_location_names.btn_c2_rune_bonus_7,
+        castle_location_names.btn_c2_rune_bonus_8,
+    ]
     c2_bonus_region = create_region(world, active_locations, castle_region_names.c2_bonus, c2_bonus_locs)
 
     c2_bonus_return_locs = [
@@ -2172,13 +2512,17 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
                                            c2_bonus_return_locs)
 
     c2_tp_island_locs = [
-        castle_location_names.ev_c1_boss_switch
+        castle_location_names.btn_c2_boss_e,
+        castle_location_names.btn_c2_boss_e_1,
+        castle_location_names.btn_c2_boss_e_2,
+        castle_location_names.btn_c2_boss_e_3,
+        castle_location_names.btn_c2_boss_e_4,
     ]
     c2_tp_island_region = create_region(world, active_locations, castle_region_names.c2_tp_island,
                                         c2_tp_island_locs)
 
     c2_c3_tp_locs = [
-        castle_location_names.ev_c2_n_shops_switch
+        castle_location_names.btn_c2_floor_t_hall,
     ]
     c2_c3_tp_region = create_region(world, active_locations, castle_region_names.c2_c3_tp, c2_c3_tp_locs)
 
@@ -2269,13 +2613,15 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     n4_e_region = create_region(world, active_locations, castle_region_names.n4_e, n4_e_locs)
 
+    n4_exit_region = create_region(world, active_locations, castle_region_names.n4_exit, [])
+
     c3_main_locs = [
         castle_location_names.c3_start_e
     ]
     c3_main_region = create_region(world, active_locations, castle_region_names.c3_start, c3_main_locs)
 
     c3_rspike_switch_locs = [
-        castle_location_names.ev_c3_rspikes_switch
+        castle_location_names.btn_c3_wall_red
     ]
     c3_rspike_switch_region = create_region(world, active_locations, castle_region_names.c3_rspike_switch,
                                             c3_rspike_switch_locs)
@@ -2308,10 +2654,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c3_tower_ice_8,
         castle_location_names.c3_tower_ice_9,
         castle_location_names.c3_tower_ice_10,
-        castle_location_names.ev_c3_sw_hidden_switch_3,
-        castle_location_names.ev_c3_sw_hidden_switch_4,
-        castle_location_names.ev_c3_sw_hidden_switch_5,
-        castle_location_names.ev_c3_sw_hidden_switch_6,
+        castle_location_names.btn_c3_rune,
+        castle_location_names.btn_c3_rune_e,
+        castle_location_names.btn_c3_rune_se,
+        castle_location_names.btn_c3_rune_w,
+        castle_location_names.btn_c3_rune_s,
+        castle_location_names.btn_c3_floor,
+        castle_location_names.btn_c3_wall_blue,
+        castle_location_names.btn_c3_wall_w,
     ]
     c3_rspikes_region = create_region(world, active_locations, castle_region_names.c3_rspikes,
                                       c3_rspikes_locs)
@@ -2321,7 +2671,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     c3_m_wall_region = create_region(world, active_locations, castle_region_names.c3_m_wall, c3_m_wall_locs)
 
-    c3_m_shop_locs = []
+    c3_m_shop_locs = [
+        castle_location_names.btn_c3_wall_shop,
+    ]
     c3_m_shop_region = create_region(world, active_locations, castle_region_names.c3_m_shop, c3_m_shop_locs)
 
     c3_m_tp_locs = [
@@ -2353,19 +2705,26 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c3_tower_ice_3,
         castle_location_names.c3_tower_ice_4,
         castle_location_names.c3_tower_ice_6,
-        castle_location_names.ev_c3_sw_hidden_switch_1,
-        castle_location_names.ev_c3_sw_hidden_switch_2,
-        castle_location_names.ev_c3_boss_switch
+        castle_location_names.btn_c3_rune_n,
+        castle_location_names.btn_c3_rune_ne,
+        castle_location_names.btn_c3_boss,
+        castle_location_names.btn_c3_boss_1,
+        castle_location_names.btn_c3_boss_2,
+        castle_location_names.btn_c3_boss_3,
+        castle_location_names.btn_c3_boss_4,
     ]
     c3_nw_region = create_region(world, active_locations, castle_region_names.c3_nw, c3_nw_locs)
 
     c3_sw_hidden_locs = [
-        castle_location_names.c3_sw_hidden
+        castle_location_names.c3_sw_hidden,
+        castle_location_names.btn_c3_wall_sw_hidden,
     ]
     c3_sw_hidden_region = create_region(world, active_locations, castle_region_names.c3_sw_hidden,
                                         c3_sw_hidden_locs)
 
-    c3_se_hidden_locs = []
+    c3_se_hidden_locs = [
+        castle_location_names.btn_c3_wall_se_hidden,
+    ]
     c3_se_hidden_region = create_region(world, active_locations, castle_region_names.c3_se_hidden,
                                         c3_se_hidden_locs)
 
@@ -2382,6 +2741,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.c3_fire_floor_1,
         castle_location_names.c3_fire_floor_2,
         castle_location_names.c3_fire_floor_3,
+        castle_location_names.btn_c3_wall_fire_floor,
     ]
     c3_fire_floor_region = create_region(world, active_locations, castle_region_names.c3_fire_floor,
                                          c3_fire_floor_locs)
@@ -2473,8 +2833,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     e4_main_region = create_region(world, active_locations, castle_region_names.e4_main, e4_main_locations)
 
     escaped_locations = [
-        castle_location_names.ev_escape,
     ]
+    if world.options.goal == world.options.goal.option_castle_escape:
+        escaped_locations.append(castle_location_names.ev_escape)
     escaped_region = create_region(world, active_locations, castle_region_names.escaped, escaped_locations)
 
     world.multiworld.regions += [
@@ -2512,6 +2873,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         p2_end_region,
         p3_start_door_region,
         p3_start_region,
+        p3_start_shop_region,
         p3_nw_closed_room_region,
         p3_nw_n_bronze_gate_region,
         p3_nw_s_bronze_gate_region,
@@ -2520,6 +2882,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         p3_n_gold_gate_region,
         p3_rspikes_region,
         p3_rspikes_room_region,
+        p3_bspikes_region,
         p3_bonus_region,
         p3_arrow_hall_secret_region,
         p3_spikes_s_region,
@@ -2536,6 +2899,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         n1_room3_unlock_region,
         n1_room3_hall_region,
         n1_room4_region,
+        n1_exit_region,
         b1_start_region,
         b1_arena_region,
         b1_defeated_region,
@@ -2546,6 +2910,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         a1_start_shop_e_region,
         a1_se_region,
         a1_e_region,
+        a1_ne_cache_region,
         a1_e_sw_bgate_region,
         a1_e_s_bgate_region,
         a1_e_se_bgate_region,
@@ -2601,12 +2966,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         a3_main_region,
         a3_tp_region,
         a3_from_a2_region,
+        a3_from_a2_wall_region,
         a3_knife_puzzle_reward_region,
         a3_knife_reward_2_region,
         a3_nw_stairs_region,
         a3_w_t_bgate_region,
         a3_w_r_bgate_region,
         a3_w_b_bgate_region,
+        a3_w_b_bgate_tp_region,
         a3_n_l_bgate_region,
         a3_n_r_bgate_region,
         a3_e_l_bgate_region,
@@ -2626,6 +2993,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         r1_se_wall_region,
         r1_ne_ggate_region,
         r1_nw_region,
+        r1_puzzle_region,
         r1_nw_hidden_region,
         r1_nw_ggate_region,
         r1_sw_region,
@@ -2643,11 +3011,13 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         r2_s_region,
         r2_spike_island_region,
         r2_sw_bridge_region,
+        r2_puzzle_room_region,
         r2_puzzle_region,
         r2_w_region,
         r2_from_r3_region,
         r2_ne_cache_region,
         r2_ggate_region,
+        r2_exit_region,
         r3_main_region,
         r3_ne_room_region,
         r3_s_room_region,
@@ -2655,11 +3025,16 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         r3_e_ggate_region,
         r3_sw_bgate_region,
         r3_sw_wall_r_region,
-        r3_sw_wall_l_region,
+        r3_secret_hall_region,
+        r3_secret_hall_room_1_region,
+        r3_secret_hall_room_2_region,
+        r3_secret_hall_room_2_spikes_region,
+        r3_secret_hall_end_region,
         r3_nw_tp_region,
         r3_se_cache_region,
         r3_boss_switch_region,
         r3_rune_room_region,
+        r3_simon_says_region,
         r3_bonus_region,
         r3_l_shop_sgate_region,
         r3_r_shop_sgate_region,
@@ -2683,6 +3058,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         c1_ledge_region,
         c1_tp_island_region,
         pstart_start_region,
+        pstart_puzzle_island_region,
         pstart_puzzle_region,
         c2_main_region,
         c2_sw_wall_region,
@@ -2694,6 +3070,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         c2_w_shops_3_region,
         c2_e_shops_1_region,
         c2_e_shops_2_region,
+        c2_puzzle_room_region,
         c2_puzzle_region,
         c2_exit_bgate_region,
         c2_n_region,
@@ -2707,6 +3084,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         n4_nw_region,
         n4_w_region,
         n4_e_region,
+        n4_exit_region,
         c3_main_region,
         c3_rspike_switch_region,
         c3_rspikes_region,
@@ -2735,95 +3113,55 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
                            gate_codes: typing.Dict[str, str]):
     used_names: typing.Dict[str, int] = {}
     gate_counts: typing.Dict[str, int] = {
-        item_name.key_bronze: 0,
-        item_name.key_silver: 0,
-        item_name.key_gold: 0,
+        item_name.key_bronze: 103,
+        item_name.key_silver: 13,
+        item_name.key_gold: 16,
     }
     prison_gate_items: typing.Dict[str, int] = {
-        item_name.key_bronze_prison: 0,
-        item_name.key_silver_prison: 0,
-        item_name.key_gold_prison: 0,
+        item_name.key_bronze_prison: 12,
+        item_name.key_silver_prison: 2,
+        item_name.key_gold_prison: 4,
     }
     armory_gate_items: typing.Dict[str, int] = {
-        item_name.key_bronze_armory: 0,
-        item_name.key_silver_armory: 0,
-        item_name.key_gold_armory: 0,
+        item_name.key_bronze_armory: 29,
+        item_name.key_silver_armory: 3,
+        item_name.key_gold_armory: 2,
     }
     archives_gate_items: typing.Dict[str, int] = {
-        item_name.key_bronze_archives: 0,
-        item_name.key_silver_archives: 0,
-        item_name.key_gold_archives: 0,
+        item_name.key_bronze_archives: 20,
+        item_name.key_silver_archives: 5,
+        item_name.key_gold_archives: 7,
     }
     chambers_gate_items: typing.Dict[str, int] = {
-        item_name.key_bronze_chambers: 0,
-        item_name.key_silver_chambers: 0,
-        item_name.key_gold_chambers: 0,
+        item_name.key_bronze_chambers: 42,
+        item_name.key_silver_chambers: 3,
+        item_name.key_gold_chambers: 3,
     }
 
-    if world.options.act_specific_keys.value:
-        key_bronze_prison = item_name.key_bronze_prison
-        key_silver_prison = item_name.key_silver_prison
-        key_gold_prison = item_name.key_gold_prison
-        key_bonus_prison = item_name.key_bonus_prison
-
-        key_bronze_armory = item_name.key_bronze_armory
-        key_silver_armory = item_name.key_silver_armory
-        key_gold_armory = item_name.key_gold_armory
-        key_bonus_armory = item_name.key_bonus_armory
-
-        key_bronze_archives = item_name.key_bronze_archives
-        key_silver_archives = item_name.key_silver_archives
-        key_gold_archives = item_name.key_gold_archives
-        key_bonus_archives = item_name.key_bonus_archives
-
-        key_bronze_chambers = item_name.key_bronze_chambers
-        key_silver_chambers = item_name.key_silver_chambers
-        key_gold_chambers = item_name.key_gold_chambers
-        key_bonus_chambers = item_name.key_bonus_chambers
-
-        if not world.options.randomize_bonus_keys.value:
-            key_bonus_prison = item_name.key_bonus
-            key_bonus_armory = item_name.key_bonus
-            key_bonus_archives = item_name.key_bonus
-            key_bonus_chambers = item_name.key_bonus
+    if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+        key_bronze = [f"{castle_act_names[i//3]} Floor {i+1} Master Bronze Key" for i in range(12)]
+        key_silver = [f"{castle_act_names[i//3]} Floor {i+1} Master Silver Key" for i in range(12)]
+        key_gold = [f"{castle_act_names[i//3]} Floor {i+1} Master Gold Key" for i in range(12)]
+        key_bonus = [f"{castle_act_names[b]} Master Bonus Key" for b in range(4)]
+    elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
+        key_bronze = [f"{castle_act_names[i//3]} Bronze Key" for i in range(12)]
+        key_silver = [f"{castle_act_names[i//3]} Silver Key" for i in range(12)]
+        key_gold = [f"{castle_act_names[i//3]} Gold Key" for i in range(12)]
+        key_bonus = [f"{castle_act_names[b]} Bonus Key" for b in range(4)]
     else:
-        key_bronze_prison = item_name.key_bronze
-        key_silver_prison = item_name.key_silver
-        key_gold_prison = item_name.key_gold
-        key_bonus_prison = item_name.key_bonus
-
-        key_bronze_armory = item_name.key_bronze
-        key_silver_armory = item_name.key_silver
-        key_gold_armory = item_name.key_gold
-        key_bonus_armory = item_name.key_bonus
-
-        key_bronze_archives = item_name.key_bronze
-        key_silver_archives = item_name.key_silver
-        key_gold_archives = item_name.key_gold
-        key_bonus_archives = item_name.key_bonus
-
-        key_bronze_chambers = item_name.key_bronze
-        key_silver_chambers = item_name.key_silver
-        key_gold_chambers = item_name.key_gold
-        key_bonus_chambers = item_name.key_bonus
+        key_bronze = [item_name.key_bronze for _ in range(12)]
+        key_silver = [item_name.key_silver for _ in range(12)]
+        key_gold = [item_name.key_gold for _ in range(12)]
+        key_bonus = [item_name.key_bonus for _ in range(4)]
 
         prison_gate_items = gate_counts
         armory_gate_items = gate_counts
         archives_gate_items = gate_counts
         chambers_gate_items = gate_counts
 
-    prison_gate_items[key_bronze_prison] += 12
-    armory_gate_items[key_bronze_armory] += 29
-    archives_gate_items[key_bronze_archives] += 20
-    chambers_gate_items[key_bronze_chambers] += 42
-    prison_gate_items[key_silver_prison] += 2
-    armory_gate_items[key_silver_armory] += 3
-    archives_gate_items[key_silver_archives] += 5
-    chambers_gate_items[key_silver_chambers] += 3
-    prison_gate_items[key_gold_prison] += 4
-    armory_gate_items[key_gold_armory] += 2
-    archives_gate_items[key_gold_archives] += 7
-    chambers_gate_items[key_gold_chambers] += 3
+    buttonsanity = world.options.buttonsanity.value > 0
+    buttonsanity_insanity = (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
+                             or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
     if not world.options.exit_randomization.value or not world.options.random_start_exit.value:
@@ -2835,17 +3173,18 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
         connect(world, used_names, castle_region_names.hub, castle_region_names.r1_start, True)
         connect(world, used_names, castle_region_names.hub, castle_region_names.c1_start, True)
 
+    # Prison Floor 1
     connect(world, used_names, castle_region_names.p1_start, castle_region_names.p1_nw,
             True, item_name.btnc_p1_floor, 1, False)
     connect(world, used_names, castle_region_names.p1_nw, castle_region_names.p1_nw_left, False)
     connect_gate(world, used_names, castle_region_names.p1_start, castle_region_names.p1_s,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p1_0, True)
+                 key_bronze[0], gate_codes, prison_gate_items, gate_names.c_p1_0, True)
     connect_gate(world, used_names, castle_region_names.p1_s, castle_region_names.p1_sw_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p1_3, False)
+                 key_bronze[0], gate_codes, prison_gate_items, gate_names.c_p1_3, False)
     connect_gate(world, used_names, castle_region_names.p1_s, castle_region_names.p1_e,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p1_2, True)
+                 key_bronze[0], gate_codes, prison_gate_items, gate_names.c_p1_2, True)
     connect_gate(world, used_names, castle_region_names.p1_e, castle_region_names.p1_m_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p1_1, False)
+                 key_bronze[0], gate_codes, prison_gate_items, gate_names.c_p1_1, False)
     connect_exit(world, used_names, castle_region_names.p1_e, castle_region_names.p2_start,
                  entrance_names.c_p2_0, entrance_names.c_p1_1)
     if world.options.shortcut_teleporter.value:
@@ -2854,322 +3193,434 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
         connect(world, used_names, castle_region_names.p3_portal_from_p1, castle_region_names.p3_n_gold_gate,
                 False)
 
+    # Prison Floor 2
     connect_gate(world, used_names, castle_region_names.p2_start, castle_region_names.p2_m,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_0, True)
+                 key_bronze[1], gate_codes, prison_gate_items, gate_names.c_p2_0, True)
     connect_exit(world, used_names, castle_region_names.p2_m, castle_region_names.p1_from_p2,
                  entrance_names.c_p1_2, entrance_names.c_p2_1)
     connect_exit(world, used_names, castle_region_names.p1_from_p2, castle_region_names.p2_p1_return,
                  entrance_names.c_p2_2, entrance_names.c_p1_3)
-    # connect_generic(multiworld, player, used_names, castle_region_names.p2_p1_return, castle_region_names.p2_m)
-    # Requires return wall button
+    connect(world, used_names, castle_region_names.p2_p1_return, castle_region_names.p2_m, buttonsanity,
+            item_name.btnc_p2_m_stairs, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n,
-                 key_silver_prison, gate_codes, prison_gate_items, gate_names.c_p2_5, True)
-    connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False)
-    # Requires spike button 5
-    connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_top, False)
-    # Requires spike buttons (4, 5, 9) or (5, 7, 6)
-    connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_left, False)
-    # Requires spike buttons (4, 5, 9) or (5, 7, 6, 1 ,9)
-    connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_red_switch, False)
-    # Requires red spike button, also two-way
-    connect(world, used_names, castle_region_names.p2_red_switch, castle_region_names.p2_puzzle, False)
-    # Requires puzzle button
+                 key_silver[1], gate_codes, prison_gate_items, gate_names.c_p2_5, True)
+    if buttonsanity:
+        p2_shortcut = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n, True)
+        p2_shortcut_items = [
+            item_name.btnc_p2_shortcut_n,
+            item_name.btnc_p2_shortcut_s,
+        ]
+        add_rule(p2_shortcut, lambda state: state.has_all(p2_shortcut_items, world.player))
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False,
+                item_name.btnc_p2_spike_puzzle_part, 3, False, buttonsanity)
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_top, False,
+                item_name.btnc_p2_spike_puzzle_part, 6, False, buttonsanity)
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_left, False,
+                item_name.btnc_p2_spike_puzzle_part, 6, False, buttonsanity)
+    else:
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False,
+                item_name.btnc_p2_spike_puzzle, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_top, False,
+                item_name.btnc_p2_spike_puzzle, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_left, False,
+                item_name.btnc_p2_spike_puzzle, 1, False, buttonsanity)
+    # The spike puzzle is passable
+    connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_red_switch, True,
+            item_name.btnc_p2_red_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    connect(world, used_names, castle_region_names.p2_red_switch, castle_region_names.p2_puzzle, False,
+            item_name.btnc_p2_puzzle, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.p2_red_switch, castle_region_names.p2_e_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_1, False)
-    connect(world, used_names, castle_region_names.p2_red_switch, castle_region_names.p2_e_save, False)
-    # Requires east save button, also two-way
-    # connect_generic(multiworld, player, used_names, castle_region_names.p2_m, castle_region_names.p2_e_save)
-    # Requires east save button
+                 key_bronze[1], gate_codes, prison_gate_items, gate_names.c_p2_1, False)
+    connect(world, used_names, castle_region_names.p2_red_switch, castle_region_names.p2_e_save, True,
+            item_name.btnc_p2_e_save, 1, False, buttonsanity)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.p2_e_save, castle_region_names.p2_m, True,
+                item_name.btnc_p2_e_save, 1, False)
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s,
-                 key_gold_prison, gate_codes, prison_gate_items, gate_names.c_p2_4, True)
+                 key_gold[1], gate_codes, prison_gate_items, gate_names.c_p2_4, True)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_e_bronze_gate_2,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_7, False)
+                 key_bronze[1], gate_codes, prison_gate_items, gate_names.c_p2_7, False)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_m_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_6, False)
+                 key_bronze[1], gate_codes, prison_gate_items, gate_names.c_p2_6, False)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_se_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p2_2, False)
-    connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_gg_room_reward,
-            False, item_name.ev_castle_p2_switch, 4, False)
-    connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_w_treasure, False)
-    # Requires treasure west wall button
-    connect(world, used_names, castle_region_names.p2_w_treasure, castle_region_names.p2_w_treasure_tp, False)
-    # Requires treasure east wall button
-    connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_tp_puzzle, False)
-    # Requires tp puzzle buttons
+                 key_bronze[1], gate_codes, prison_gate_items, gate_names.c_p2_2, False)
+    if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
+        connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_gg_room_reward,
+                False, item_name.btnc_p2_rune_sequence, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_gg_room_reward,
+                False, item_name.btnc_p2_rune_sequence_part, 4, False)
+    connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_w_treasure, False,
+            item_name.btnc_p2_open_w_jail, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.p2_w_treasure, castle_region_names.p2_w_treasure_tp, False,
+            item_name.btnc_p2_tp_jail, 1, False, buttonsanity)
+    if get_buttonsanity_insanity(world):
+        connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_tp_puzzle, False,
+                item_name.btnc_p2_tp_w_part, 4, False)
+    else:
+        connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_tp_puzzle, False,
+                item_name.btnc_p2_tp_w, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_end,
-                 key_gold_prison, gate_codes, prison_gate_items, gate_names.c_p2_3, True)
+                 key_gold[1], gate_codes, prison_gate_items, gate_names.c_p2_3, True)
     connect_exit(world, used_names, castle_region_names.p2_end, castle_region_names.p3_start_door,
                  entrance_names.c_p3_0, entrance_names.c_p2_3)
 
-    connect(world, used_names, castle_region_names.p3_start_door, castle_region_names.p3_start, False)
-    # Actually *not* two-way! The button prevents backtracking for now
-    # Requires entrance button
-    connect(world, used_names, castle_region_names.p3_start, castle_region_names.p3_nw_closed_room, False)
-    # Requires room open button
+    # Prison Floor 3
+    connect(world, used_names, castle_region_names.p3_start_door, castle_region_names.p3_start, buttonsanity,
+            item_name.btnc_p3_start, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.p3_start, castle_region_names.p3_start_shop, False,
+            item_name.btnc_p3_shop, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.p3_start, castle_region_names.p3_nw_closed_room, False,
+            item_name.btnc_p3_nw_room, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.p3_start, castle_region_names.p3_nw_n_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p3_1, False)
+                 key_bronze[2], gate_codes, prison_gate_items, gate_names.c_p3_1, False)
     connect_gate(world, used_names, castle_region_names.p3_start, castle_region_names.p3_nw_s_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p3_0, False)
-    connect_gate(world, used_names, castle_region_names.p3_start, castle_region_names.p3_silver_gate,
-                 key_silver_prison, gate_codes, prison_gate_items, gate_names.c_p3_3, True)
-    # Requires start spike switch
+                 key_bronze[2], gate_codes, prison_gate_items, gate_names.c_p3_0, False)
+    p3_sgate_entrs = connect_gate(world, used_names, castle_region_names.p3_start, castle_region_names.p3_silver_gate,
+                                  key_silver[2], gate_codes, prison_gate_items, gate_names.c_p3_3, True)
+    if buttonsanity:
+        for entr in p3_sgate_entrs:
+            add_rule(entr, lambda state: state.has(item_name.btnc_p3_sgate_spikes, world.player), "and")
+        connect(world, used_names, castle_region_names.p3_start, castle_region_names.p3_rspikes, True,
+                item_name.btnc_p3_red_spikes, 1, False)
+        connect(world, used_names, castle_region_names.p3_rspikes_room, castle_region_names.p3_start, True,
+                item_name.btnc_p3_open_n_shortcut, 1, False)
+    # Both sets of spikes passable
     connect_exit(world, used_names, castle_region_names.p3_silver_gate, castle_region_names.p1_from_p3_s,
                  entrance_names.c_p1_4, entrance_names.c_p3_1)
     connect_gate(world, used_names, castle_region_names.p3_start, castle_region_names.p3_n_gold_gate,
-                 key_gold_prison, gate_codes, prison_gate_items, gate_names.c_p3_4, True)
-    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_rspikes, False)
-    # Requires red spikes button, two-way
-    connect(world, used_names, castle_region_names.p3_rspikes, castle_region_names.p3_rspikes_room, False)
-    # Requires middle room unlock button, from p3_n_gold_gate, two-way. This also connects p3_start to p3_n_gold_gate!
-    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_bonus, False)
-    # Requires 5 bonus switches
-    connect_exit(world, used_names, castle_region_names.p3_bonus, castle_region_names.n1_start,
-                 entrance_names.c_n1_0, entrance_names.c_p3_b_ent)
-    # Requires 9 bonus buttons
+                 key_gold[2], gate_codes, prison_gate_items, gate_names.c_p3_4, True)
+    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_rspikes, buttonsanity,
+            item_name.btnc_p3_red_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_rspikes_room, buttonsanity,
+            item_name.btnc_p3_open_n_shortcut, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_bspikes, buttonsanity,
+            item_name.btnc_p3_blue_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_bonus, True,
+                item_name.btnc_p3_open_bonus_part, 5, False)
+        connect_exit(world, used_names, castle_region_names.p3_bonus, castle_region_names.n1_start,
+                     entrance_names.c_n1_0, entrance_names.c_p3_b_ent,
+                     item_name.btnc_p3_portal_part, 9, False)
+    else:
+        connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_bonus, buttonsanity,
+                item_name.btnc_p3_open_bonus, 1, False, buttonsanity)
+        if buttonsanity:
+            connect_exit(world, used_names, castle_region_names.p3_bonus, castle_region_names.n1_start,
+                         entrance_names.c_n1_0, entrance_names.c_p3_b_ent,
+                         item_name.btnc_p3_portal, 1, False)
+        else:
+            connect_exit(world, used_names, castle_region_names.p3_bonus, castle_region_names.n1_start,
+                         entrance_names.c_n1_0, entrance_names.c_p3_b_ent)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.p3_bonus, castle_region_names.p3_bspikes, True,
+                item_name.btnc_p3_bonus_side, 1, False)
     connect_gate(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_s_bronze_gate,
-                 key_bronze_prison, gate_codes, prison_gate_items, gate_names.c_p3_2, False)
-    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_spikes_s, False)
-    # Requires spike switch
-    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_sw, False)
-    # Requires spike switch, also two-way
-    connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_exit_s, False)
-    # Requires exit button, two-way
+                 key_bronze[2], gate_codes, prison_gate_items, gate_names.c_p3_2, False)
+    connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_spikes_s, buttonsanity,
+            item_name.btnc_p3_s_spikes, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.p3_spikes_s, castle_region_names.p3_sw, buttonsanity,
+            item_name.btnc_p3_s_spikes, 1, False, buttonsanity)
+    # Both connections have spikes that can be passed
+    connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_exit_s, buttonsanity,
+            item_name.btnc_p3_s_exit_l, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.p3_exit_s, castle_region_names.p1_from_p3_n,
                  entrance_names.c_p1_10, entrance_names.c_p3_10)
-    connect(world, used_names, castle_region_names.p3_exit_s, castle_region_names.p3_n_gold_gate, False)
-    # Requires exit shortcut button, two-way
+    connect(world, used_names, castle_region_names.p3_exit_s, castle_region_names.p3_n_gold_gate, buttonsanity,
+            item_name.btnc_p3_s_exit_r, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.p3_n_gold_gate, castle_region_names.p3_arrow_hall_secret,
             False, item_name.btnc_p3_e_passage, 1, False)
     connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_hidden_arrow_hall, False,
             item_name.btnc_p3_s_passage, 1, False)
     connect_gate(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_s_gold_gate,
-                 key_gold_prison, gate_codes, prison_gate_items, gate_names.c_p3_5, False)
-    connect_exit(world, used_names, castle_region_names.p3_sw, castle_region_names.b1_start,
-                 entrance_names.c_b1_0, entrance_names.c_p3_boss, item_name.ev_castle_b1_boss_switch, 3, False)
+                 key_gold[2], gate_codes, prison_gate_items, gate_names.c_p3_5, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_n_gold_gate, True,
+                item_name.btnc_p3_sw_shortcut, 1, False)
+        connect_exit(world, used_names, castle_region_names.p3_sw, castle_region_names.b1_start,
+                     entrance_names.c_b1_0, entrance_names.c_p3_boss, item_name.btnc_p3_boss_door, 1, False)
+    else:
+        connect_exit(world, used_names, castle_region_names.p3_sw, castle_region_names.b1_start,
+                     entrance_names.c_b1_0, entrance_names.c_p3_boss, item_name.btnc_b1_boss, 3, False)
 
-    # if multiworld.randomize_bonus_keys[player]:
-    connect(world, used_names, castle_region_names.n1_start, castle_region_names.n1_room1,
-            False, key_bonus_prison)
-    connect(world, used_names, castle_region_names.n1_room1, castle_region_names.n1_room2,
-            False, key_bonus_prison)
-    connect(world, used_names, castle_region_names.n1_room2, castle_region_names.n1_room2_unlock, False)
-    # Requires room 2 panel
-    connect(world, used_names, castle_region_names.n1_room2, castle_region_names.n1_room3,
-            False, key_bonus_prison)
-    connect(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_unlock, False)
-    # Requires room 3 west panel
-    connect(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_hall, False)
-    # Requires room 3 east panel or room 3 hall panel
-    connect(world, used_names, castle_region_names.n1_room3_hall, castle_region_names.n1_room4,
-            False, key_bonus_prison)
-    connect_exit(world, used_names, castle_region_names.n1_room4, castle_region_names.p3_bonus_return,
-                 entrance_names.c_p3_b_return, None, key_bonus_prison)
+    # Prison Bonus
+    connect_gate(world, used_names, castle_region_names.n1_start, castle_region_names.n1_room1, key_bonus[0])
+    connect_gate(world, used_names, castle_region_names.n1_room1, castle_region_names.n1_room2, key_bonus[0])
+    connect(world, used_names, castle_region_names.n1_room2, castle_region_names.n1_room2_unlock, False,
+            item_name.btnc_n1_cache_n, 1, False, buttonsanity)
+    connect_gate(world, used_names, castle_region_names.n1_room2, castle_region_names.n1_room3, key_bonus[0])
+    connect(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_unlock, False,
+            item_name.btnc_n1_cache_ne, 1, False, buttonsanity)
+    connect_or(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_hall, False,
+               [item_name.btnc_n1_hall_top, item_name.btnc_n1_hall_bottom], buttonsanity)
+    connect_gate(world, used_names, castle_region_names.n1_room3_hall, castle_region_names.n1_room4, key_bonus[0])
+    connect_gate(world, used_names, castle_region_names.n1_room4, castle_region_names.n1_exit, key_bonus[0])
+    connect_exit(world, used_names, castle_region_names.n1_exit, castle_region_names.p3_bonus_return,
+                 entrance_names.c_p3_b_return, None)
     connect(world, used_names, castle_region_names.p3_bonus_return, castle_region_names.p3_bonus, False)
-    # else:
-    #     connect_generic(multiworld, player, used_names, castle_region_names.n1_start, castle_region_names.n1_room1)
-    #     connect_generic(multiworld, player, used_names, castle_region_names.n1_room1, castle_region_names.n1_room2)
-    #     connect_generic(multiworld, player, used_names, castle_region_names.n1_room2, castle_region_names.n1_room3)
-    #     connect_generic(multiworld, player, used_names, castle_region_names.n1_room3, castle_region_names.n1_room4)
-    #     connect_generic(multiworld, player, used_names, castle_region_names.n1_room4, castle_region_names.p3_bonus_return,
-    #                     True)
 
-    connect(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False)
+    # Boss 1
+    connect_or(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False,
+               [item_name.btnc_b1_left, item_name.btnc_b1_right], buttonsanity)
+    # Technically only need 1 button functional for the fight to not be super terrible
     connect(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False)
     connect(world, used_names, castle_region_names.b1_defeated, castle_region_names.b1_exit, False)
     connect_exit(world, used_names, castle_region_names.b1_exit, castle_region_names.a1_start,
                  entrance_names.c_a1_0, entrance_names.c_b1_1)
 
-    connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_se, False)
+    # Armory Floor 4
+    connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_se, buttonsanity,
+            item_name.btnc_a1_open_se_wall, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.a1_start, castle_region_names.a1_start_shop_w,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_3, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_3, False)
     connect_gate(world, used_names, castle_region_names.a1_start, castle_region_names.a1_start_shop_m,
-                 key_gold_armory, gate_codes, armory_gate_items, gate_names.c_a1_7, False)
+                 key_gold[3], gate_codes, armory_gate_items, gate_names.c_a1_7, False)
     connect_gate(world, used_names, castle_region_names.a1_start, castle_region_names.a1_start_shop_e,
-                 key_gold_armory, gate_codes, armory_gate_items, gate_names.c_a1_8, False)
+                 key_gold[3], gate_codes, armory_gate_items, gate_names.c_a1_8, False)
     connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a2_start,
                  entrance_names.c_a2_0, entrance_names.c_a1_a2)
     connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a3_main,
                  entrance_names.c_a3_0, entrance_names.c_a1_a3)
-    # Requires start wall switch
+    if buttonsanity:
+        connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.b2_start,
+                     entrance_names.c_b2_0, entrance_names.c_a1_boss, item_name.btnc_a1_boss_door, 1, False)
+    else:
+        connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.b2_start,
+                     entrance_names.c_b2_0, entrance_names.c_a1_boss, item_name.btnc_b2_boss, 3, False)
     connect_gate(world, used_names, castle_region_names.a1_se, castle_region_names.a1_e,
-                 key_silver_armory, gate_codes, armory_gate_items, gate_names.c_a1_6, True)
+                 key_silver[3], gate_codes, armory_gate_items, gate_names.c_a1_6, True)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_12, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_12, False)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_s_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_4, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_4, False)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_5, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_5, False)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_e_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_14, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_14, False)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_ne_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_13, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_13, False)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_n_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_10, False)
-    connect(world, used_names, castle_region_names.a1_e_se_bgate, castle_region_names.a1_rune_room, False)
-    # Requires se gate wall switch
-    connect(world, used_names, castle_region_names.a1_rune_room, castle_region_names.a1_se_cache, False)
-    # Requires 4 rune switches
-    connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_red_spikes, False)
-    # Requires red spike switch
-    connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_tp_n, False)
-    # Requires tp switch
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_10, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_rune_room, False,
+                item_name.btnc_a1_open_se_rune, 1, False)
+        if buttonsanity_insanity:
+            connect(world, used_names, castle_region_names.a1_e_se_bgate, castle_region_names.a1_se_cache, False,
+                    item_name.btnc_a1_open_se_cache_part, 4, False)
+        else:
+            connect(world, used_names, castle_region_names.a1_e_se_bgate, castle_region_names.a1_se_cache, False,
+                    item_name.btnc_a1_open_se_cache, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.a1_e_se_bgate, castle_region_names.a1_rune_room, False)
+        connect(world, used_names, castle_region_names.a1_rune_room, castle_region_names.a1_se_cache, False)
+    connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_red_spikes, False,
+            item_name.btnc_a1_red_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_ne_cache, False,
+            item_name.btnc_a1_open_ne_cache, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a1_e, castle_region_names.a1_tp_n, False,
+            item_name.btnc_a1_tp_n, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_w,
-                 key_silver_armory, gate_codes, armory_gate_items, gate_names.c_a1_15, True)
+                 key_silver[3], gate_codes, armory_gate_items, gate_names.c_a1_15, True)
     connect_gate(world, used_names, castle_region_names.a1_w, castle_region_names.a1_nw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_0, True)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_0, True)
     connect_gate(world, used_names, castle_region_names.a1_w, castle_region_names.a1_w_ne_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_9, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_9, False)
     connect_gate(world, used_names, castle_region_names.a1_w, castle_region_names.a1_w_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_2, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_2, False)
     connect_gate(world, used_names, castle_region_names.a1_w, castle_region_names.a1_w_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_1, False)
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_1, False)
     connect_gate(world, used_names, castle_region_names.a1_w, castle_region_names.a1_w_sw_bgate_1,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a1_11, False)
-    connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_puzzle, False)
-    connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_sw_spikes, False)
-    # Requires spike switch, can also reach from a1_start
+                 key_bronze[3], gate_codes, armory_gate_items, gate_names.c_a1_11, False)
+    connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_puzzle, False,
+            item_name.btnc_a1_puzzle, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_n_bgate, buttonsanity,
+            item_name.btnc_a1_open_m_cache, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_sw_spikes, buttonsanity,
+            item_name.btnc_a1_sw_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.a1_w, castle_region_names.a1_e, True,
+                item_name.btnc_a1_m_shortcut, 1, False)
+        connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_sw_spikes, False,
+                item_name.btnc_a1_sw_spikes, 1, False)
+        # Spikes passable
 
-    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_tp_sw, False)
-    # Requires floor 5 sw teleport switch
-    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_tp_se, False)
-    # Requires floor 5 se teleport switch
-    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_puzzle, False)
-    # Requires floor 5 puzzle switch
+    # Armory Floor 5
+    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_tp_sw, False,
+            item_name.btnc_a2_tp_sw, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_tp_se, False,
+            item_name.btnc_a2_tp_se, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_puzzle, False,
+            item_name.btnc_a2_puzzle, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.a2_start, castle_region_names.a2_sw_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_3, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_3, False)
     connect_gate(world, used_names, castle_region_names.a2_start, castle_region_names.a2_s_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_4, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_4, False)
     connect_gate(world, used_names, castle_region_names.a2_start, castle_region_names.a2_se_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_5, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_5, False)
     connect_gate(world, used_names, castle_region_names.a2_start, castle_region_names.a2_s_save_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_10, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_10, False)
     connect_gate(world, used_names, castle_region_names.a2_start, castle_region_names.a2_ne,
-                 key_silver_armory, gate_codes, armory_gate_items, gate_names.c_a2_6, True)
+                 key_silver[4], gate_codes, armory_gate_items, gate_names.c_a2_6, True)
     connect_gate(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_ne_m_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_7, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_7, False)
     connect_gate(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_ne_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_1, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_1, False)
     connect_gate(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_ne_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_0, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_0, False)
     connect_gate(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_ne_b_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_8, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_8, False)
     connect_gate(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_ne_save_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_9, False)
-    connect(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_tp_ne, False)
-    # Requires floor 5 ne teleport switch
-    connect(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_e, False)
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_9, False)
+    connect(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_tp_ne, False,
+            item_name.btnc_a2_tp_ne, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_e, buttonsanity,
+            item_name.btnc_a2_open_se_room_t, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a2_ne, castle_region_names.a2_e, buttonsanity,
+            item_name.btnc_a2_open_se_room_t, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.a2_e, castle_region_names.a2_e_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a2_2, False)
-    connect_exit(world, used_names, castle_region_names.a2_nw, castle_region_names.n2_start,
-                 entrance_names.c_n2_0, entrance_names.c_a2_88)
-    # Requires bonus portal switch
+                 key_bronze[4], gate_codes, armory_gate_items, gate_names.c_a2_2, False)
+    if buttonsanity:
+        connect_exit(world, used_names, castle_region_names.a2_nw, castle_region_names.n2_start,
+                     entrance_names.c_n2_0, entrance_names.c_a2_88,
+                     item_name.btnc_a2_open_bonus, 1, False)
+        connect(world, used_names, castle_region_names.a2_start, castle_region_names.a2_e, False,
+                item_name.btnc_a2_open_se_room_l, 1, False)
+    else:
+        connect_exit(world, used_names, castle_region_names.a2_nw, castle_region_names.n2_start,
+                     entrance_names.c_n2_0, entrance_names.c_a2_88)
     connect_exit(world, used_names, castle_region_names.a2_nw, castle_region_names.a1_from_a2,
                  entrance_names.c_a1_1, entrance_names.c_a2_1)
-    connect(world, used_names, castle_region_names.a2_nw, castle_region_names.a2_blue_spikes,
-            False, item_name.btnc_a2_blue_spikes, 1, False)
-    connect(world, used_names, castle_region_names.a2_blue_spikes, castle_region_names.a2_blue_spikes_tp,
-            False, item_name.btnc_a2_bspikes_tp, 1, False)
-    # Requires floor 5 blue spikes teleport switch
-    connect(world, used_names, castle_region_names.a2_nw, castle_region_names.a2_to_a3, False)
-    # Requires floor 6 passage open switch
+    connect(world, used_names, castle_region_names.a2_nw, castle_region_names.a2_blue_spikes, False,
+            item_name.btnc_a2_blue_spikes, 1, False)
+    # Spikes passable
+    connect(world, used_names, castle_region_names.a2_blue_spikes, castle_region_names.a2_blue_spikes_tp, False,
+            item_name.btnc_a2_bspikes_tp, 1, False)
+    connect(world, used_names, castle_region_names.a2_nw, castle_region_names.a2_to_a3, True,
+            item_name.btnc_a2_open_w_exit, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.a2_to_a3, castle_region_names.a3_from_a2,
                  entrance_names.c_a3_1, entrance_names.c_a2_2)
 
-    connect(world, used_names, castle_region_names.n2_start, castle_region_names.n2_m,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_nw,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_n,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_e,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_s,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_w,
-            False, key_bonus_armory)
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_se, False)
-    # Requires bonus 2 open se room panel
-    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_ne, False)
-    # Requires bonus 2 open ne room panel
-    connect(world, used_names, castle_region_names.n2_ne, castle_region_names.n2_exit, False)
-    # Requires bonus 2 open exit panel
+    # Armory Bonus
+    connect_gate(world, used_names, castle_region_names.n2_start, castle_region_names.n2_m, key_bonus[1])
+    connect_gate(world, used_names, castle_region_names.n2_m, castle_region_names.n2_nw, key_bonus[1])
+    connect_gate(world, used_names, castle_region_names.n2_m, castle_region_names.n2_n, key_bonus[1])
+    connect_gate(world, used_names, castle_region_names.n2_m, castle_region_names.n2_e, key_bonus[1])
+    connect_gate(world, used_names, castle_region_names.n2_m, castle_region_names.n2_s, key_bonus[1])
+    connect_gate(world, used_names, castle_region_names.n2_m, castle_region_names.n2_w, key_bonus[1])
+    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_se, False,
+            item_name.btnc_n2_open_se_room, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_ne, False,
+            item_name.btnc_n2_open_ne_room, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.n2_m, castle_region_names.n2_exit, False,
+            item_name.btnc_n2_open_exit, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.n2_exit, castle_region_names.a2_bonus_return,
                  entrance_names.c_a2_10, None)
 
-    connect(world, used_names, castle_region_names.a3_start, castle_region_names.a3_main, True)
-    # Requires open start top wall switch or open start right wall switch
-    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_puzzle_reward, False)
-    # Requires 5 spike puzzle switches
-    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False)
-    # Requires 2 spike puzzle switches
-    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, False)
-    # Requires 2 spike puzzle switches
+    # Armory Floor 6
+    connect_or(world, used_names, castle_region_names.a3_start, castle_region_names.a3_main, True,
+               [item_name.btnc_a3_open_start_n, item_name.btnc_a3_open_start_e], buttonsanity)
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_puzzle_reward, False,
+                item_name.btnc_a3_open_knife_part, 5, False)
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False,
+                item_name.btnc_a3_open_knife_2_part, 2, False)
+    else:
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_puzzle_reward, False,
+                item_name.btnc_a3_open_knife, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False,
+                item_name.btnc_a3_open_knife_2, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, buttonsanity,
+            item_name.btnc_a3_open_knife_2, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.a3_nw_stairs, castle_region_names.a2_nw,
                  entrance_names.c_a2_3, entrance_names.c_a3_2)
-    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_tp, False)
-    # Requires floor 6 teleport switch
-    # connect_generic(multiworld, player, used_names, castle_region_names.a3_from_a2, castle_region_names.a3_main)
-    # Requires floor 6 from floor 5 open passage switch
-    connect_gate(world, used_names, castle_region_names.a3_from_a2, castle_region_names.a3_w_b_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_5, False)
-    # Don't forget to add extra thing in rules requiring the teleport button for the item inside
+    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_tp, False,
+            item_name.btnc_a3_tp_m, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a3_from_a2, castle_region_names.a3_from_a2_wall, buttonsanity,
+            item_name.btnc_a3_open_m_stairs, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.a3_from_a2_wall, castle_region_names.a3_main, buttonsanity,
+            item_name.btnc_a3_open_m_stairs, 1, False, buttonsanity)
+    connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_w_b_bgate,
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_5, False)
+    connect(world, used_names, castle_region_names.a3_w_b_bgate, castle_region_names.a3_w_b_bgate_tp, False,
+            item_name.btnc_a3_bgate_tp, 1, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_w_t_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_2, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_2, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_w_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_4, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_4, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_n_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_1, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_1, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_n_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_0, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_0, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_e_l_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_3, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_3, False)
     connect_gate(world, used_names, castle_region_names.a3_main, castle_region_names.a3_e_r_bgate,
-                 key_bronze_armory, gate_codes, armory_gate_items, gate_names.c_a3_6, False)
+                 key_bronze[5], gate_codes, armory_gate_items, gate_names.c_a3_6, False)
 
-    connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.b2_start,
-                 entrance_names.c_b2_0, entrance_names.c_a1_boss, item_name.ev_castle_b2_boss_switch, 3, False)
+    # Boss 2
     connect(world, used_names, castle_region_names.b2_start, castle_region_names.b2_arena, False)
     connect(world, used_names, castle_region_names.b2_arena, castle_region_names.b2_defeated, False)
     connect(world, used_names, castle_region_names.b2_defeated, castle_region_names.b2_exit, False)
     connect_exit(world, used_names, castle_region_names.b2_exit, castle_region_names.r1_start,
                  entrance_names.c_r1_0, entrance_names.c_b2_1)
 
+    # Archives Floor 7
     connect_gate(world, used_names, castle_region_names.r1_start, castle_region_names.r1_se_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r1_2, False)
-    connect(world, used_names, castle_region_names.r1_se_ggate, castle_region_names.r1_e, False)
-    # Requires floor 7 open east passage
+                 key_gold[6], gate_codes, archives_gate_items, gate_names.c_r1_2, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.r1_start, castle_region_names.r1_e, True,
+                item_name.btnc_r1_open_e_wall, 1, False)
+        connect(world, used_names, castle_region_names.r1_start, castle_region_names.r1_se_wall, False,
+                item_name.btnc_r1_open_se_room, 1, False)
+        connect(world, used_names, castle_region_names.r1_e_n_bgate, castle_region_names.r1_nw, True,
+                item_name.btnc_r1_open_n_wall, 1, False)
+        connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_sw, True,
+                item_name.btnc_r1_open_w_wall, 1, False)
+        connect(world, used_names, castle_region_names.r1_w_sgate, castle_region_names.r1_start_wall, False,
+                item_name.btnc_r1_open_start_room, 1, False)
+        connect(world, used_names, castle_region_names.r1_sw, castle_region_names.r1_exit_l, True,
+                item_name.btnc_r1_open_l_exit, 1, False)
+        connect(world, used_names, castle_region_names.r1_start, castle_region_names.r1_exit_l, True,
+                item_name.btnc_r1_open_exits, 1, False)
+        connect(world, used_names, castle_region_names.r1_start, castle_region_names.r1_exit_r, True,
+                item_name.btnc_r1_open_exits, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.r1_se_ggate, castle_region_names.r1_e, False)
+        connect(world, used_names, castle_region_names.r1_e_sgate, castle_region_names.r1_se_wall, False)
+        connect(world, used_names, castle_region_names.r1_ne_ggate, castle_region_names.r1_nw, False)
+        connect(world, used_names, castle_region_names.r1_nw_ggate, castle_region_names.r1_sw, False)
+        connect(world, used_names, castle_region_names.r1_w_sgate, castle_region_names.r1_start_wall, False)
+        connect(world, used_names, castle_region_names.r1_sw_ggate, castle_region_names.r1_exit_l, False)
+        connect(world, used_names, castle_region_names.r1_exit_l, castle_region_names.r1_exit_r, False)
     connect_gate(world, used_names, castle_region_names.r1_e, castle_region_names.r1_e_s_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r1_5, False)
+                 key_bronze[6], gate_codes, archives_gate_items, gate_names.c_r1_5, False)
     connect_gate(world, used_names, castle_region_names.r1_e, castle_region_names.r1_e_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, gate_names.c_r1_7, False)
-    connect(world, used_names, castle_region_names.r1_e_sgate, castle_region_names.r1_se_wall, False)
-    # Requires floor 7 open right wall
+                 key_silver[6], gate_codes, archives_gate_items, gate_names.c_r1_7, False)
     connect_gate(world, used_names, castle_region_names.r1_e, castle_region_names.r1_e,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r1_4, False)
+                 key_bronze[6], gate_codes, archives_gate_items, gate_names.c_r1_4, False)
     # Technically this also leads to e_n_bgate, but doing this should logically be equivalent (hopefully)
     connect_gate(world, used_names, castle_region_names.r1_e, castle_region_names.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r1_6, True)
+                 key_bronze[6], gate_codes, archives_gate_items, gate_names.c_r1_6, True)
     # Internal gate
     connect_gate(world, used_names, castle_region_names.r1_e_n_bgate, castle_region_names.r1_e_n_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r1_3, False)
+                 key_bronze[6], gate_codes, archives_gate_items, gate_names.c_r1_3, False)
     connect_gate(world, used_names, castle_region_names.r1_e_n_bgate, castle_region_names.r1_ne_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r1_1, False)
-    connect(world, used_names, castle_region_names.r1_ne_ggate, castle_region_names.r1_nw, False)
-    # Requires floor 7 open North passage
-    connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_nw_hidden, False)
-    # Requires floor 7 open hidden room
+                 key_gold[6], gate_codes, archives_gate_items, gate_names.c_r1_1, False)
+    connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_puzzle, False,
+            item_name.btnc_r1_puzzle, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_nw_hidden, False,
+            item_name.btnc_r1_open_nw_room, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.r1_nw_hidden, castle_region_names.r1_nw_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r1_0, False)
-    connect(world, used_names, castle_region_names.r1_nw_ggate, castle_region_names.r1_sw, False)
-    # Requires floor 7 open west passage
+                 key_gold[6], gate_codes, archives_gate_items, gate_names.c_r1_0, False)
     connect_gate(world, used_names, castle_region_names.r1_sw, castle_region_names.r1_w_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, gate_names.c_r1_10, False)
-    connect(world, used_names, castle_region_names.r1_w_sgate, castle_region_names.r1_start_wall, False)
-    # Requires floor 7 open start wall
+                 key_silver[6], gate_codes, archives_gate_items, gate_names.c_r1_10, False)
     connect_gate(world, used_names, castle_region_names.r1_sw, castle_region_names.r1_sw_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r1_11, False)
-    connect(world, used_names, castle_region_names.r1_sw_ggate, castle_region_names.r1_exit_l, False)
-    # From sw requires floor 7 open left exit
+                 key_gold[6], gate_codes, archives_gate_items, gate_names.c_r1_11, False)
     # Internal bronze gate
     r1_internals = [
         gate_names.c_r1_8,
@@ -3177,17 +3628,17 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in r1_internals:
         connect_gate(world, used_names, castle_region_names.r1_sw, castle_region_names.r1_sw,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
+                     key_bronze[6], gate_codes, archives_gate_items, gate, False)
     connect_exit(world, used_names, castle_region_names.r1_exit_l, castle_region_names.r2_start,
                  entrance_names.c_r2_0, entrance_names.c_r1_1)
-    connect(world, used_names, castle_region_names.r1_exit_l, castle_region_names.r1_exit_r, False)
-    # From start requires floor 7 open right exit
     connect_exit(world, used_names, castle_region_names.r1_exit_r, castle_region_names.r2_bswitch,
                  entrance_names.c_r2_1, entrance_names.c_r1_2)
 
-    connect(world, used_names, castle_region_names.r2_start, castle_region_names.r2_m, False)
+    # Archives Floor 8
+    connect(world, used_names, castle_region_names.r2_start, castle_region_names.r2_m, buttonsanity,
+            item_name.btnc_r2_open_start, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.r2_m, castle_region_names.r2_w_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r2_0, False)
+                 key_bronze[7], gate_codes, archives_gate_items, gate_names.c_r2_0, False)
     # Internal bronze gates
     r2_internals = [
         gate_names.c_r2_6,
@@ -3198,56 +3649,82 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in r2_internals:
         connect_gate(world, used_names, castle_region_names.r2_m, castle_region_names.r2_m,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
-    connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_e, False)
-    # Requires open east passage top or open east passage bottom
+                     key_bronze[7], gate_codes, archives_gate_items, gate, False)
+    if buttonsanity:
+        connect_or(world, used_names, castle_region_names.r2_m, castle_region_names.r2_e, False,
+                   [item_name.btnc_r2_open_fire_t, item_name.btnc_r2_open_fire_b], True)
+        connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_n, False,
+                item_name.btnc_r2_open_bs_r, 1, False)
+        connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_spike_island, True,
+                item_name.btnc_r2_open_spikes_t, 1, False)
+        connect_or(world, used_names, castle_region_names.r2_m, castle_region_names.r2_s, False,
+                   [item_name.btnc_r2_open_s_r, item_name.btnc_r2_open_s_l], True)
+        connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_sw_bridge, False,
+                item_name.btnc_r2_light_bridge, 1, False)
+        if buttonsanity_insanity:
+            r2_puzzle_item = item_name.btnc_r2_open_puzzle_part
+        else:
+            r2_puzzle_item = item_name.btnc_r2_open_puzzle
+        connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_puzzle_room, False,
+                r2_puzzle_item, 1, False)
+        connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_ggate, False,
+                item_name.btnc_r2_open_exit, 1, False)
+        connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_exit, False,
+                item_name.btnc_r2_open_exit, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_e, False)
+        connect(world, used_names, castle_region_names.r2_sgate, castle_region_names.r2_s, False)
+        connect(world, used_names, castle_region_names.r2_spike_island, castle_region_names.r2_sw_bridge, False)
+        connect(world, used_names, castle_region_names.r2_sw_bridge, castle_region_names.r2_puzzle_room, False)
+        connect(world, used_names, castle_region_names.r2_ggate, castle_region_names.r2_exit, False)
     connect_gate(world, used_names, castle_region_names.r2_m, castle_region_names.r2_nw,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r2_7, False)  # True for button rando
-    connect(world, used_names, castle_region_names.r2_nw, castle_region_names.r2_n, False)  # True
-    # Requires open north room left
-    # Or requires open north room right from r2_m
+                 key_bronze[7], gate_codes, archives_gate_items, gate_names.c_r2_7, False)
+    connect(world, used_names, castle_region_names.r2_nw, castle_region_names.r2_n, buttonsanity,
+            item_name.btnc_r2_open_bs_l, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.r2_m, castle_region_names.r2_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, gate_names.c_r2_5, False)
-    connect(world, used_names, castle_region_names.r2_sgate, castle_region_names.r2_s, False)
-    # Requires silver gate floor button
-    connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_spike_island, False)
-    # Requires open spike island passage
-    connect(world, used_names, castle_region_names.r2_spike_island, castle_region_names.r2_sw_bridge, False)
-    # Requires open sw bridge from r2_s
-    connect(world, used_names, castle_region_names.r2_sw_bridge, castle_region_names.r2_puzzle, False)
-    # Requires open puzzle room
-    connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_w, False)
-    # Requires open west passage
-    connect(world, used_names, castle_region_names.r2_from_r3, castle_region_names.r2_ne_cache, False)
-    # Requires open cache passage
+                 key_silver[7], gate_codes, archives_gate_items, gate_names.c_r2_5, False)
+    connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_spike_island, buttonsanity,
+            item_name.btnc_r2_open_spikes_l, 1, False, buttonsanity)
+    # Spike turrets passable
+    connect(world, used_names, castle_region_names.r2_puzzle_room, castle_region_names.r2_puzzle, False)
+    connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_w, False,
+            item_name.btnc_r2_open_s_l, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.r2_from_r3, castle_region_names.r2_ne_cache, False,
+            item_name.btnc_r2_open_ne_cache, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.r2_m, castle_region_names.r2_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r2_4, False)  # True
-    # Can also access with open exit button, it removes the wall
-    connect_exit(world, used_names, castle_region_names.r2_ggate, castle_region_names.r3_main,
+                 key_gold[7], gate_codes, archives_gate_items, gate_names.c_r2_4, False)
+    connect_exit(world, used_names, castle_region_names.r2_exit, castle_region_names.r3_main,
                  entrance_names.c_r3_0, entrance_names.c_r2_2)
-    # Requires open exit button
 
-    connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_ne_room, False)
-    # Requires open ne room
-    connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_s_room, False)
-    # Requires open south room
+    # Archives Floor 9
+    connect_or(world, used_names, castle_region_names.r3_main, castle_region_names.r3_ne_room, False,
+               [item_name.btnc_r3_open_ne_l, item_name.btnc_r3_open_ne_t], buttonsanity)
+    connect_or(world, used_names, castle_region_names.r3_main, castle_region_names.r3_s_room, False,
+               [item_name.btnc_r3_open_s_r, item_name.btnc_r3_open_s_t], buttonsanity)
     connect_gate(world, used_names, castle_region_names.r3_s_room, castle_region_names.r3_l_shop_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, gate_names.c_r3_5, False)
+                 key_silver[8], gate_codes, archives_gate_items, gate_names.c_r3_5, False)
     connect_gate(world, used_names, castle_region_names.r3_s_room, castle_region_names.r3_r_shop_sgate,
-                 key_silver_archives, gate_codes, archives_gate_items, gate_names.c_r3_4, False)
+                 key_silver[8], gate_codes, archives_gate_items, gate_names.c_r3_4, False)
     connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_se_cache, False)
-    # Requires open se cache room
-    connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_boss_switch, False)
-    # Requires open boss switch room
-    connect(world, used_names, castle_region_names.r3_boss_switch, castle_region_names.r3_rune_room, False)
-    # Requires 5 open simon says room switch
-    connect(world, used_names, castle_region_names.r3_rune_room, castle_region_names.r3_bonus, False)
-    # Requires 6 simon says switch
+    connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_boss_switch, False,
+            item_name.btnc_r3_open_bs, 1, False, buttonsanity)
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.r3_boss_switch, castle_region_names.r3_rune_room, False,
+                item_name.btnc_r3_simon_room_part, 5, False, True)
+        connect(world, used_names, castle_region_names.r3_simon_says, castle_region_names.r3_bonus, False,
+                item_name.btnc_r3_bonus_part, 6, False, True)
+    else:
+        connect(world, used_names, castle_region_names.r3_boss_switch, castle_region_names.r3_rune_room, False,
+                item_name.btnc_r3_simon_room, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.r3_simon_says, castle_region_names.r3_bonus, False,
+                item_name.btnc_r3_bonus, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.r3_rune_room, castle_region_names.r3_simon_says, False,
+            item_name.btnc_r3_simon, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.r3_bonus, castle_region_names.n3_main,
                  entrance_names.c_n3_0, None)  # entrance_names.c_r3_b_ent)
-    # Requires open bonus entrance passage  # We can make this one-way because we can't get locked here
+    # We can make this one-way because we can't get locked here
     connect_gate(world, used_names, castle_region_names.r3_main, castle_region_names.r3_sw_bgate,
-                 key_bronze_archives, gate_codes, archives_gate_items, gate_names.c_r3_1, False)
+                 key_bronze[8], gate_codes, archives_gate_items, gate_names.c_r3_1, False)
     # Internal bronze gates
     r3_internals = [
         gate_names.c_r3_0,
@@ -3259,47 +3736,80 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in r3_internals:
         connect_gate(world, used_names, castle_region_names.r3_main, castle_region_names.r3_main,
-                     key_bronze_archives, gate_codes, archives_gate_items, gate, False)
-    connect(world, used_names, castle_region_names.r3_sw_bgate, castle_region_names.r3_sw_wall_l, False)
-    # Requires left sw button
-    connect(world, used_names, castle_region_names.r3_sw_bgate, castle_region_names.r3_sw_wall_r, False)
-    # Requires right sw button
-    connect(world, used_names, castle_region_names.r3_sw_wall_l, castle_region_names.r3_nw_tp, False)
-    # Requires nw tp button
-    connect(world, used_names, castle_region_names.r3_bonus_return, castle_region_names.r3_bonus_return_bridge,
-            False)
+                     key_bronze[8], gate_codes, archives_gate_items, gate, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_passage, False,
+                item_name.btnc_r3_passage, 1, False)
+        connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_sw_wall_r, False,
+                item_name.btnc_r3_sw_room, 1, False)
+        connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_passage_room_1, False,
+                item_name.btnc_r3_passage_room_1, 1, False)
+        connect(world, used_names, castle_region_names.r3_passage_room_2, castle_region_names.r3_passage_spikes, True,
+                item_name.btnc_r3_passage_room_2_spikes, 1, False)
+        connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_passage_spikes, False,
+                item_name.btnc_r3_passage_room_2_spikes, 1, False)
+        # Spikes passable
+        connect(world, used_names, castle_region_names.r3_passage, castle_region_names.r3_passage_end, False,
+                item_name.btnc_r3_passage_end, 1, False)
+        connect(world, used_names, castle_region_names.r3_main, castle_region_names.r3_nw_tp, False,
+                item_name.btnc_r3_tp_nw, 1, False)
+        if buttonsanity_insanity:
+            connect(world, used_names, castle_region_names.r3_bonus_return, castle_region_names.r3_bonus_return_bridge,
+                    False, item_name.btnc_r3_bonus_bridge_part, 4, False)
+        else:
+            connect(world, used_names, castle_region_names.r3_bonus_return, castle_region_names.r3_bonus_return_bridge,
+                    False, item_name.btnc_r3_bonus_bridge, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.r3_sw_bgate, castle_region_names.r3_passage, False)
+        connect(world, used_names, castle_region_names.r3_sw_bgate, castle_region_names.r3_sw_wall_r, False)
+        connect(world, used_names, castle_region_names.r3_passage_room_2, castle_region_names.r3_passage_spikes, False)
+        # Spikes passable from main
+        connect(world, used_names, castle_region_names.r3_passage_room_2, castle_region_names.r3_passage_end, False)
+        connect(world, used_names, castle_region_names.r3_passage_end, castle_region_names.r3_nw_tp, False)
+        connect(world, used_names, castle_region_names.r3_bonus_return, castle_region_names.r3_bonus_return_bridge,
+                False)
+    connect(world, used_names, castle_region_names.r3_passage, castle_region_names.r3_passage_room_1, False)
+    connect(world, used_names, castle_region_names.r3_passage, castle_region_names.r3_passage_room_2, buttonsanity,
+            item_name.btnc_r3_passage_room_2, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.r3_bonus_return, castle_region_names.r2_from_r3,
                  entrance_names.c_r2_200, entrance_names.c_r3_250)
     connect_gate(world, used_names, castle_region_names.r3_main, castle_region_names.r3_e_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r3_6, False)
+                 key_gold[8], gate_codes, archives_gate_items, gate_names.c_r3_6, False)
     connect_gate(world, used_names, castle_region_names.r3_main, castle_region_names.r3_w_ggate,
-                 key_gold_archives, gate_codes, archives_gate_items, gate_names.c_r3_3, True)
-    connect(world, used_names, castle_region_names.r3_w_ggate, castle_region_names.r3_exit, False)
-    # Requires open boss switch room
-    connect_exit(world, used_names, castle_region_names.r3_exit, castle_region_names.b3_start,
-                 entrance_names.c_b3_0, entrance_names.c_r3_boss, item_name.ev_castle_b3_boss_switch, 3, False)
+                 key_gold[8], gate_codes, archives_gate_items, gate_names.c_r3_3, True)
+    connect(world, used_names, castle_region_names.r3_w_ggate, castle_region_names.r3_exit, False,
+            item_name.btnc_r3_open_exit, 1, False, buttonsanity)
+    if buttonsanity:
+        connect_exit(world, used_names, castle_region_names.r3_exit, castle_region_names.b3_start,
+                     entrance_names.c_b3_0, entrance_names.c_r3_boss, item_name.btnc_r3_boss_door, 1, False)
+    else:
+        connect_exit(world, used_names, castle_region_names.r3_exit, castle_region_names.b3_start,
+                     entrance_names.c_b3_0, entrance_names.c_r3_boss, item_name.btnc_b3_boss, 3, False)
 
+    # Archives Bonus
     connect_exit(world, used_names, castle_region_names.n3_main, castle_region_names.n3_tp_room,
                  entrance_names.c_n3_80, entrance_names.c_n3_12)
     connect_exit(world, used_names, castle_region_names.n3_main, castle_region_names.r3_bonus_return,
                  entrance_names.c_r3_b_return, None)
     # Internal bronze gates
     for i in range(3):
-        connect(world, used_names, castle_region_names.n3_main, castle_region_names.n3_main,
-                False, key_bonus_archives)
+        connect_gate(world, used_names, castle_region_names.n3_main, castle_region_names.n3_main, key_bonus[2])
 
+    # Boss 3
     connect(world, used_names, castle_region_names.b3_start, castle_region_names.b3_arena, False)
     connect(world, used_names, castle_region_names.b3_arena, castle_region_names.b3_defeated, False)
     connect(world, used_names, castle_region_names.b3_defeated, castle_region_names.b3_exit, False)
     connect_exit(world, used_names, castle_region_names.b3_exit, castle_region_names.c1_start,
                  entrance_names.c_c1_0, entrance_names.c_b3_1)
 
-    connect(world, used_names, castle_region_names.c1_start, castle_region_names.c1_n_spikes, False)
-    # Requires n spikes switch
-    connect(world, used_names, castle_region_names.c1_start, castle_region_names.c1_se_spikes, False)
-    # Requires se spikes switch
+    # Chambers Floor 10
+    connect(world, used_names, castle_region_names.c1_start, castle_region_names.c1_n_spikes, False,
+            item_name.btnc_c1_n_spikes, 1, False, buttonsanity)
+    # Spikes passable
+    connect(world, used_names, castle_region_names.c1_start, castle_region_names.c1_se_spikes, False,
+            item_name.btnc_c1_red_spikes, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.c1_start, castle_region_names.c1_shop,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c1_3, False)
+                 key_bronze[9], gate_codes, chambers_gate_items, gate_names.c_c1_3, False)
     # Bronze gates with no checks
     c1_s_internals = [
         gate_names.c_c1_7,
@@ -3310,13 +3820,16 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in c1_s_internals:
         connect_gate(world, used_names, castle_region_names.c1_start, castle_region_names.c1_start,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+                     key_bronze[9], gate_codes, chambers_gate_items, gate, False)
     connect_gate(world, used_names, castle_region_names.c1_start, castle_region_names.c1_w,
-                 key_gold_chambers, gate_codes, chambers_gate_items, gate_names.c_c1_12, True)
+                 key_gold[9], gate_codes, chambers_gate_items, gate_names.c_c1_12, True)
     connect_gate(world, used_names, castle_region_names.c1_w, castle_region_names.c1_sgate,
-                 key_silver_chambers, gate_codes, chambers_gate_items, gate_names.c_c1_13, True)
-    connect(world, used_names, castle_region_names.c1_sgate, castle_region_names.c1_prison_stairs, False)
-    # Requires open prison door passage from c1_start
+                 key_silver[9], gate_codes, chambers_gate_items, gate_names.c_c1_13, True)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.c1_w, castle_region_names.c1_prison_stairs, True,
+                item_name.btnc_c1_sw_exit, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.c1_sgate, castle_region_names.c1_prison_stairs, False)
     connect_exit(world, used_names, castle_region_names.c1_sgate, castle_region_names.c2_tp_island,
                  entrance_names.c_c2_50, None)
     connect_exit(world, used_names, castle_region_names.c1_tp_island, castle_region_names.c1_sgate,
@@ -3324,11 +3837,11 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect_exit(world, used_names, castle_region_names.c1_prison_stairs, castle_region_names.pstart_start,
                  entrance_names.c_p_return_0, entrance_names.c_c1_169)
     connect_gate(world, used_names, castle_region_names.c1_w, castle_region_names.c1_s_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c1_6, False)
-    connect(world, used_names, castle_region_names.c1_s_bgate, castle_region_names.c1_start, False)
-    # Requires s shortcut button
+                 key_bronze[9], gate_codes, chambers_gate_items, gate_names.c_c1_6, False)
+    connect(world, used_names, castle_region_names.c1_s_bgate, castle_region_names.c1_start, buttonsanity,
+            item_name.btnc_c1_s_shortcut, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.c1_s_bgate, castle_region_names.c1_ledge,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c1_5, False)
+                 key_bronze[9], gate_codes, chambers_gate_items, gate_names.c_c1_5, False)
     # Bronze gates with no checks
     c1_s_internals = [
         gate_names.c_c1_0,
@@ -3338,36 +3851,68 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in c1_s_internals:
         connect_gate(world, used_names, castle_region_names.c1_w, castle_region_names.c1_w,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+                     key_bronze[9], gate_codes, chambers_gate_items, gate, False)
     connect_exit(world, used_names, castle_region_names.c1_w, castle_region_names.c2_main,
                  entrance_names.c_c2_0, entrance_names.c_c1_100)
 
-    connect(world, used_names, castle_region_names.pstart_start, castle_region_names.pstart_puzzle, False)
-    # Requires 4 prison return rune switches and prison return puzzle switch
+    # Prison Return
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.pstart_start, castle_region_names.pstart_puzzle_island, False,
+                item_name.btnc_pstart_bridge_part, 4, False)
+    else:
+        connect(world, used_names, castle_region_names.pstart_start, castle_region_names.pstart_puzzle_island, False,
+                item_name.btnc_pstart_bridge, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.pstart_puzzle_island, castle_region_names.pstart_puzzle, False,
+            item_name.btnc_pstart_puzzle, 1, False, buttonsanity)
 
-    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_sw_wall, False)
-    # Requires open sw wall
-    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_wall, False)
-    # Requires open west wall
-    connect(world, used_names, castle_region_names.c2_w_shops_2, castle_region_names.c2_e_wall, False)
-    # Requires open east wall
-    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_spikes, False)
-    # Requires 4 spike floor rune switches
+    # Chambers Floor 11
+    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_sw_wall, False,
+            item_name.btnc_c2_sw_room, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_wall, False,
+            item_name.btnc_c2_w_shortcut, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.c2_w_shops_2, castle_region_names.c2_e_wall, buttonsanity,
+            item_name.btnc_c2_e_shop, 1, False, buttonsanity)
+    if buttonsanity_insanity:
+        connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_spikes, False,
+                item_name.btnc_c2_tp_spikes_part, 4, False)
+        connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_bonus, True,
+                item_name.btnc_c2_bonus_room_part, 5, False)
+        connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
+                     entrance_names.c_n4_0, entrance_names.c_c2_b_ent,
+                     item_name.btnc_c2_bonus_part, 8, False)
+    else:
+        connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_spikes, False,
+                item_name.btnc_c2_tp_spikes, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_bonus, buttonsanity,
+                item_name.btnc_c2_bonus_room, 1, False, buttonsanity)
+        if buttonsanity:
+            connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
+                         entrance_names.c_n4_0, entrance_names.c_c2_b_ent,
+                         item_name.btnc_c2_bonus, 1, False)
+        else:
+            connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
+                         entrance_names.c_n4_0, entrance_names.c_c2_b_ent)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_shops_1,
-                 key_silver_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_11, False)
+                 key_silver[10], gate_codes, chambers_gate_items, gate_names.c_c2_11, False)
     connect_gate(world, used_names, castle_region_names.c2_w_shops_3, castle_region_names.c2_w_shops_2,
-                 key_silver_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_10, False)
+                 key_silver[10], gate_codes, chambers_gate_items, gate_names.c_c2_10, False)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_shops_3,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_3, False)
+                 key_bronze[10], gate_codes, chambers_gate_items, gate_names.c_c2_3, False)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_e_shops_1,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_2, False)
+                 key_bronze[10], gate_codes, chambers_gate_items, gate_names.c_c2_2, False)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_e_shops_2,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_16, False)
-    # Can also access from main through open east wall
-    connect(world, used_names, castle_region_names.c2_e_shops_1, castle_region_names.c2_puzzle, False)
-    # Requires open puzzle room and puzzle switch
+                 key_bronze[10], gate_codes, chambers_gate_items, gate_names.c_c2_16, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_e_wall, False,
+                item_name.btnc_c2_e_shop, 1, False)
+        connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_puzzle_room, False,
+                item_name.btnc_c2_open_puzzle, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.c2_e_shops_1, castle_region_names.c2_puzzle_room, False)
+    connect(world, used_names, castle_region_names.c2_puzzle_room, castle_region_names.c2_puzzle, False,
+            item_name.btnc_c2_puzzle, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_exit_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_12, False)
+                 key_bronze[10], gate_codes, chambers_gate_items, gate_names.c_c2_12, False)
     # Bronze gates with no checks
     c2_internals = [
         gate_names.c_c2_5,
@@ -3385,20 +3930,15 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in c2_internals:
         connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_main,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+                     key_bronze[10], gate_codes, chambers_gate_items, gate, False)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_n,
-                 key_gold_chambers, gate_codes, chambers_gate_items, gate_names.c_c2_9, True)
-    connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_bonus, True)
-    # Require 5 open bonus entrance wall switches
-    connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
-                 entrance_names.c_n4_0, entrance_names.c_c2_b_ent)
-    connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_n_wall,
-            False, item_name.btnc_c2_n_wall, 1, False)
-    connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_n_shops,
-            False, item_name.ev_castle_c2_n_shops_switch, 1, False)
-    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_n_shops,
-            False, item_name.ev_castle_c2_n_shops_switch, 1, False)
-    # Presently to open the north shops you need access to c3_nw, change to two-way for button rando
+                 key_gold[10], gate_codes, chambers_gate_items, gate_names.c_c2_9, True)
+    connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_n_wall, False,
+            item_name.btnc_c2_n_room, 1, False)
+    connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_n_shops, True,
+            item_name.btnc_c2_n_shops, 1, False)
+    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_n_shops, True,
+            item_name.btnc_c2_n_shops, 1, False)
     connect_exit(world, used_names, castle_region_names.c2_main, castle_region_names.c3_start,
                  entrance_names.c_c3_0, entrance_names.c_c2_45)
     connect_exit(world, used_names, castle_region_names.c2_n, castle_region_names.c3_nw,
@@ -3406,29 +3946,31 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect_exit(world, used_names, castle_region_names.c2_tp_island, castle_region_names.c1_tp_island,
                  entrance_names.c_c1_99, None)
 
-    connect(world, used_names, castle_region_names.n4_main, castle_region_names.n4_nw,
-            False, key_bonus_chambers)
-    connect(world, used_names, castle_region_names.n4_main, castle_region_names.n4_w,
-            False, key_bonus_chambers)
-    connect(world, used_names, castle_region_names.n4_main, castle_region_names.n4_e,
-            False, key_bonus_chambers)
-    connect_exit(world, used_names, castle_region_names.n4_main, castle_region_names.c2_bonus_return,
-                 entrance_names.c_c2_125, None, key_bonus_chambers)
+    # Chambers Bonus
+    connect_gate(world, used_names, castle_region_names.n4_main, castle_region_names.n4_nw, key_bonus[3])
+    connect_gate(world, used_names, castle_region_names.n4_main, castle_region_names.n4_w, key_bonus[3])
+    connect_gate(world, used_names, castle_region_names.n4_main, castle_region_names.n4_e, key_bonus[3])
+    connect_gate(world, used_names, castle_region_names.n4_main, castle_region_names.n4_exit, key_bonus[3])
+    connect_exit(world, used_names, castle_region_names.n4_exit, castle_region_names.c2_bonus_return,
+                 entrance_names.c_c2_125, None)
 
+    # Chambers Floor 12
     connect_gate(world, used_names, castle_region_names.c3_start, castle_region_names.c3_rspike_switch,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c3_1, False)
-    # Can also get there if you have red spike switch
-    connect(world, used_names, castle_region_names.c3_rspike_switch, castle_region_names.c3_rspikes,
-            False, item_name.ev_castle_c3_rspikes_switch, 1, False)
-    # From c3_start technically, but route through gate so that we require it
+                 key_bronze[11], gate_codes, chambers_gate_items, gate_names.c_c3_1, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.c3_start, castle_region_names.c3_rspikes, True,
+                item_name.btnc_c3_red_spikes, 1, False)
+    connect(world, used_names, castle_region_names.c3_rspike_switch, castle_region_names.c3_rspikes, buttonsanity,
+            item_name.btnc_c3_red_spikes, 1, False, buttonsanity)
+    # Spikes passable
     connect_gate(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_s_bgate,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c3_8, False)
+                 key_bronze[11], gate_codes, chambers_gate_items, gate_names.c_c3_8, False)
     connect_gate(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_m_shop,
-                 key_bronze_chambers, gate_codes, chambers_gate_items, gate_names.c_c3_5, False)
-    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_m_wall, False)
-    # Requires open middle passage
-    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_m_tp, False)
-    # Requires teleport middle item
+                 key_bronze[11], gate_codes, chambers_gate_items, gate_names.c_c3_5, False)
+    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_m_wall, False,
+            item_name.btnc_c3_e_shortcut, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_m_tp, False,
+            item_name.btnc_c3_tp_m, 1, False, buttonsanity)
     # Bronze gates with no checks
     c3_s_internals = [
         gate_names.c_c3_6,
@@ -3442,9 +3984,9 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in c3_s_internals:
         connect_gate(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_rspikes,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
+                     key_bronze[11], gate_codes, chambers_gate_items, gate, False)
     connect_gate(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_nw,
-                 key_gold_chambers, gate_codes, chambers_gate_items, gate_names.c_c3_9, True)
+                 key_gold[11], gate_codes, chambers_gate_items, gate_names.c_c3_9, True)
     # Bronze gates with no checks
     c3_n_internals = [
         gate_names.c_c3_2,
@@ -3453,30 +3995,47 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     ]
     for gate in c3_n_internals:
         connect_gate(world, used_names, castle_region_names.c3_nw, castle_region_names.c3_nw,
-                     key_bronze_chambers, gate_codes, chambers_gate_items, gate, False)
-    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden,
-            False, item_name.ev_castle_c3_sw_hidden_switch, 6, False)
-    connect(world, used_names, castle_region_names.c3_sw_hidden, castle_region_names.c3_se_hidden, False)
-    # Requires open se hidden wall switch
-    connect(world, used_names, castle_region_names.c3_se_hidden, castle_region_names.c3_light_bridge, False)
-    # Requires activate light bridge switch
+                     key_bronze[11], gate_codes, chambers_gate_items, gate, False)
+    if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
+        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden, buttonsanity,
+                item_name.btnc_c3_sw_room, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden, buttonsanity,
+                item_name.btnc_c3_sw_room_part, 6, False)
+    if buttonsanity:
+        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_se_hidden, False,
+                item_name.btnc_c3_open_s_hall, 1, False)
+        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_light_bridge, False,
+                item_name.btnc_c3_open_w_room, 1, False)
+    else:
+        connect(world, used_names, castle_region_names.c3_sw_hidden, castle_region_names.c3_se_hidden, False)
+        connect(world, used_names, castle_region_names.c3_se_hidden, castle_region_names.c3_light_bridge, False)
     connect_exit(world, used_names, castle_region_names.c3_sw_hidden, castle_region_names.c3_fire_floor,
                  entrance_names.c_c3_67, None)
-    connect(world, used_names, castle_region_names.c3_fire_floor, castle_region_names.c3_fire_floor_tp, False)
+    connect(world, used_names, castle_region_names.c3_fire_floor, castle_region_names.c3_fire_floor_tp, False,
+            item_name.btnc_c3_tp_se, 1, False)
     connect_exit(world, used_names, castle_region_names.c3_fire_floor, castle_region_names.c2_c3_tp,
                  entrance_names.c_c2_77, None)
     connect_exit(world, used_names, castle_region_names.c2_c3_tp, castle_region_names.c3_c2_tp,
                  entrance_names.c_c3_156, None)
     connect(world, used_names, castle_region_names.c3_c2_tp, castle_region_names.c3_nw, False)
 
-    # Old connect method to ensure no keys will in the final boss room
+    # Boss 4
+    if buttonsanity_insanity:
+        boss_4_item = item_name.btnc_b4_boss_part
+        boss_4_count = 12
+    else:
+        boss_4_item = item_name.btnc_b4_boss
+        boss_4_count = 3
     connect_exit(world, used_names, castle_region_names.c2_main, castle_region_names.b4_start,
-                 entrance_names.c_b4_0, entrance_names.c_c2_boss, item_name.ev_castle_b4_boss_switch, 3, False)
+                 entrance_names.c_b4_0, entrance_names.c_c2_boss,
+                 boss_4_item, boss_4_count, False)
     connect(world, used_names, castle_region_names.b4_start, castle_region_names.b4_defeated, False)
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
     connect(world, used_names, castle_region_names.b4_defeated, castle_region_names.e1_main,
-            False, item_name.plank, 12, False)
+            False, item_name.plank, 12, False,
+            get_goal_type(world) != GoalType.KillBosses)
     # Technically planks are consumed, but nothing else does so this is faster
     connect(world, used_names, castle_region_names.e1_main, castle_region_names.e2_main, False)
     connect(world, used_names, castle_region_names.e2_main, castle_region_names.e3_main, False)
@@ -4920,6 +5479,13 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
         item_name.key_silver: 6,
         item_name.key_gold: 4,
     }
+    if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+        key_silver = [f"Temple Floor {i+1} Master Silver Key" for i in range(2)]
+        key_gold = [f"Temple Floor {i+1} Master Gold Key" for i in range(2)]
+        key_gold.append(item_name.key_gold_b1)
+    else:
+        key_silver = [item_name.key_silver for _ in range(2)]
+        key_gold = [item_name.key_gold for _ in range(3)]
 
     pan_item = item_name.pan
     # lever_item = item_name.lever
@@ -4939,6 +5505,8 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
         connect(world, used_names, temple_region_names.menu, temple_region_names.hub_main, False)
 
     buttonsanity = world.options.buttonsanity.value > 0
+    buttonsanity_insanity = (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
+                             or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
 
     connect(world, used_names, temple_region_names.hub_main, temple_region_names.hub_rocks,
             False, pickaxe_item, pickaxe_item_count, False)
@@ -4971,7 +5539,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_puzzle, False,
             item_name.btn_c3_puzzle, 1, False, buttonsanity)
     connect_or(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, True,
-              [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps])
+              [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps], True)
     connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False,
             item_name.btn_c3_fall_bridge, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_3_secret, temple_region_names.cave_3_main, False)
@@ -4996,7 +5564,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             item_name.btn_c2_green, 1, False, buttonsanity)
     if buttonsanity:
         connect_or(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_sw, False,
-                   [item_name.btn_c2_green, item_name.btn_c2_s_bridge])
+                   [item_name.btn_c2_green, item_name.btn_c2_s_bridge], True)
         connect(world, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main, False)
         # Can go through the breakable wall
         connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_double_bridge, True,
@@ -5068,7 +5636,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
     connect(world, used_names, temple_region_names.boss_1_arena, temple_region_names.boss_1_defeated, False)
     connect_gate(world, used_names, temple_region_names.boss_1_arena, temple_region_names.b1_back,
-                 item_name.key_gold, gate_codes, gate_counts, gate_names.t_b1_0, True)
+                 key_gold[2], gate_codes, gate_counts, gate_names.t_b1_0, True)
     connect(world, used_names, temple_region_names.b1_back, temple_region_names.boss_1_entrance, buttonsanity,
             item_name.btn_b1_bridge, 1, False, buttonsanity)
 
@@ -5095,7 +5663,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_w_puzzle, False,
             item_name.btn_t1_puzzle_w, 1, False, buttonsanity)
     connect_gate(world, used_names, temple_region_names.t1_main, temple_region_names.t1_sw_sdoor,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_3, False)
+                 key_silver[0], gate_codes, gate_counts, gate_names.t_t1_3, False)
     connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_node_1,
             False, item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t1_node_1, temple_region_names.t1_w, False)
@@ -5106,19 +5674,19 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect_exit(world, used_names, temple_region_names.t1_runway_halls, temple_region_names.cave_3_secret,
                  entrance_names.t_c1_fall_temple, None)
     connect_gate(world, used_names, temple_region_names.t1_w, temple_region_names.t1_sun_turret,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_1, False)
+                 key_silver[0], gate_codes, gate_counts, gate_names.t_t1_1, False)
     connect_gate(world, used_names, temple_region_names.t1_w, temple_region_names.t1_ice_turret,
-                 item_name.key_gold, gate_codes, gate_counts, gate_names.t_t1_4, True)
+                 key_gold[0], gate_codes, gate_counts, gate_names.t_t1_4, True)
     connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_telarian, False,
             item_name.btn_t1_telarian, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_telarian_melt_ice, False,
             item_name.evt_beat_boss_2, 1, False)
     connect_gate(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_n_of_ice_turret,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_0, False)
+                 key_silver[0], gate_codes, gate_counts, gate_names.t_t1_0, False)
     connect_gate(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_s_of_ice_turret,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t1_2, False)
+                 key_silver[0], gate_codes, gate_counts, gate_names.t_t1_2, False)
     connect_gate(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_east,
-                 item_name.key_gold, gate_codes, gate_counts, gate_names.t_t1_5, True)
+                 key_gold[0], gate_codes, gate_counts, gate_names.t_t1_5, True)
     connect(world, used_names, temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall,
             False, item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_node_2,
@@ -5159,14 +5727,14 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_e_ice_gate, False,
             item_name.btn_t2_ice_gate_e, 1, False, buttonsanity)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_n_gate,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t2_0, False)
+                 key_silver[1], gate_codes, gate_counts, gate_names.t_t2_0, False)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_s_gate,
-                 item_name.key_silver, gate_codes, gate_counts, gate_names.t_t2_1, False)
+                 key_silver[1], gate_codes, gate_counts, gate_names.t_t2_1, False)
     connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sdoor_gate, False,
             item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
     # Technically should be two-way, but you have to have been to t2_main before getting here so it's not needed
     connect_gate(world, used_names, temple_region_names.t2_main, temple_region_names.t2_ornate,
-                 item_name.key_gold, gate_codes, gate_counts, gate_names.t_t2_2, False)
+                 key_gold[1], gate_codes, gate_counts, gate_names.t_t2_2, False)
     connect(world, used_names, temple_region_names.t2_ornate, temple_region_names.t2_ornate_gate, buttonsanity,
             item_name.btn_t2_t3_gate_e, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_ornate_t3, temple_region_names.t2_ornate_gate, buttonsanity,
@@ -5261,14 +5829,14 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.t3_boss_fall_3, temple_region_names.t3_main, buttonsanity,
             item_name.btn_t3_fall_3, 1, False, buttonsanity)
 
-    if world.options.buttonsanity != world.options.buttonsanity.option_insanity:
-        connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
-                     entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
-                     item_name.btn_pof, 6, False, False)
-    else:
+    if buttonsanity_insanity:
         connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
                      entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
                      item_name.btn_pof_part, 24, False, False)
+    else:
+        connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
+                     entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
+                     item_name.btn_pof, 6, False, False)
     connect_exit(world, used_names, temple_region_names.pof_1_main, temple_region_names.hub_main,
                  entrance_names.t_hub_pof, entrance_names.t_n1_1_start, None, 1, False, False)
     # Going back to the hub has no entrance requirements
@@ -5278,14 +5846,14 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             item_name.btn_pof_1_walls_s, 1, False)
     connect(world, used_names, temple_region_names.pof_1_main, temple_region_names.pof_1_sw_gate, False,
             item_name.btn_pof_1_walls_s, 1, False)
-    connect(world, used_names, temple_region_names.pof_1_sw_gate, temple_region_names.pof_1_nw, False,
-            item_name.key_bonus)
+    connect_gate(world, used_names, temple_region_names.pof_1_sw_gate, temple_region_names.pof_1_nw,
+                 item_name.key_bonus, None, None, None, True)
     connect_exit(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_n_room,
                  entrance_names.t_n1_1_n, entrance_names.t_n1_1_ne)
     connect(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_exit_hall, True,
             item_name.btn_pof_1_exit, 1, False)
-    connect(world, used_names, temple_region_names.pof_1_exit_hall, temple_region_names.pof_1_gate_2, True,
-            item_name.key_bonus)
+    connect_gate(world, used_names, temple_region_names.pof_1_exit_hall, temple_region_names.pof_1_gate_2,
+                 item_name.key_bonus, None, None, None, True)
     connect_exit(world, used_names, temple_region_names.pof_1_gate_2, temple_region_names.pof_2_main,
                  entrance_names.t_n1_2_start, None)  # entrance_names.t_n1_20)
     connect_exit(world, used_names, temple_region_names.pof_2_main, temple_region_names.pof_2_n,
@@ -5367,7 +5935,7 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
 
 
 def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
-               pass_items: typing.List[str]):
+               pass_items: typing.List[str], use_rule: bool):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -5375,39 +5943,59 @@ def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], sou
 
     connection = HWEntrance(world.player, entrance_name, source_region, target_region,
                             None, 1, False, None)
-    add_rule(connection, lambda state: state.has_any(pass_items, world.player), "and")
+    if use_rule:
+        add_rule(connection, lambda state: state.has_any(pass_items, world.player), "and")
 
     source_region.exits.append(connection)
     connection.connect(target_region)
 
     if two_way:
-        connect_or(world, used_names, target, source, False, pass_items)
+        connect_or(world, used_names, target, source, False, pass_items, use_rule)
 
     return connection
 
 
 def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, key_type: str,
-                 gate_codes: typing.Dict[str, str], gate_items: typing.Dict[str, int], gate_code: str, two_way: bool):
+                 gate_codes: typing.Dict[str, str] = None, gate_items: typing.Dict[str, int] = None,
+                 gate_code: str = None, two_way=True):
+    entrances = []
+
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
     entrance_name = get_entrance_name(used_names, source, target)
 
     key_item_name = key_type
-    if world.options.gate_shuffle.value:
+    if world.options.gate_shuffle.value and gate_code is not None:
         key_item_name = get_random_element(world, gate_items)
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:
             gate_items.pop(key_item_name)
         gate_codes[gate_code] = key_item_name.split(" ")[-2].lower()
 
-    connection = HWEntrance(world.player, entrance_name, source_region, target_region, key_item_name, 1, True, None)
+    consumed = True
+    if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+        consumed = False
+
+    if key_type not in world.key_item_counts:
+        world.key_item_counts[key_type] = 0
+    if consumed:
+        world.key_item_counts[key_type] += 1
+    else:
+        if world.key_item_counts[key_type] > 1:
+            print("Something is consumed and also not consumed")
+        world.key_item_counts[key_type] = 1
+
+    connection = HWEntrance(world.player, entrance_name, source_region, target_region, key_item_name, 1, consumed, None)
+    entrances.append(connection)
 
     source_region.exits.append(connection)
     connection.connect(target_region)
 
     if two_way:
-        connect(world, used_names, target, source, False, key_item_name, 1, True)
+        entrances.append(connect(world, used_names, target, source, False, key_item_name, 1, consumed))
+
+    return entrances
 
 
 def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str,
