@@ -143,8 +143,9 @@ class HammerwatchWorld(World):
 
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
-        # Add key items to item_counts
-        self.item_counts.update(self.key_item_counts)
+        # Add floor master key items to item_counts
+        if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+            self.item_counts.update(self.key_item_counts)
 
         # Remove progression items if the player starts with them
         for precollected in self.multiworld.precollected_items[self.player]:
@@ -153,17 +154,17 @@ class HammerwatchWorld(World):
                     self.item_counts[precollected.name] -= 1
 
         # If buttonsanity is set to shuffle prevent button items from being created here
+        # Disabled for now, as the shuffle setting fails fill constantly due to how restrictive it is
         items_to_place_later = 0
-        item_counts = {}
-        if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
-            for item, count in self.item_counts.items():
-                if item in button_item_names:
-                    items_to_place_later += count
-                    continue
-                item_counts[item] = count
-            # item_counts = {item: count for item, count in self.item_counts.items() if item not in button_item_names}
-        else:
-            item_counts = self.item_counts
+        # item_counts = {}
+        # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+        #     for item, count in self.item_counts.items():
+        #         if item in button_item_names:
+        #             items_to_place_later += count
+        #             continue
+        #         item_counts[item] = count
+        # else:
+        item_counts = self.item_counts
 
         # Add items
         items = 0
@@ -310,12 +311,12 @@ class HammerwatchWorld(World):
             rune_key_locs: typing.List[str] = []
 
             def get_region_item_locs(region: str):
-                if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
-                    return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
-                            if not loc.event and loc.name not in temple_button_locations]
-                else:
-                    return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
-                            if not loc.event]
+                # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+                #     return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
+                #             if not loc.event and loc.name not in temple_button_locations]
+                # else:
+                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
+                        if not loc.event]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
@@ -468,40 +469,30 @@ class HammerwatchWorld(World):
             self.options.shop_cost_min.value = swap
 
     def pre_fill(self) -> None:
-        if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
-            if get_campaign(self) == Campaign.Castle:
-                button_locations = list(castle_button_locations.keys())
-                button_item_names = list(castle_button_table.keys())
-            else:
-                button_locations = list(temple_button_locations.keys())
-                button_item_names = list(temple_button_table.keys())
-            valid_locs = list(self.multiworld.get_unfilled_locations_for_players(button_locations, [self.player]))
-            # state = self.multiworld.get_all_state(False)
-            # for loc_name, itm_name in castle_button_items.items():
-            #     if itm_name not in self.item_counts:
-            #         continue
-            #     loc = self.multiworld.get_location(loc_name, self.player)
-            #     itm = self.create_item(itm_name)
-            #     loc.place_locked_item(itm)
-            #     state.collect(itm, False, loc)
-            # state.update_reachable_regions(self.player)
-            # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
-            #                   highlight_regions=state.reachable_regions[self.player])
-            button_items = []
-            for item in button_item_names:
-                if item not in self.item_counts:
-                    continue
-                for i in range(self.item_counts[item]):
-                    button_items.append(self.create_item(item))
-            non_button_prog_items = [item for item in self.world_itempool
-                                    if item.classification & ItemClassification.progression]
-            non_button_state = CollectionState(self.multiworld)
-            for prog_item in non_button_prog_items:
-                non_button_state.collect(prog_item)
-            self.random.shuffle(valid_locs)
-            self.random.shuffle(button_items)
-            fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
-                             True, False, True, None, False, False, "Button Shuffle")
+        # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
+        #     if get_campaign(self) == Campaign.Castle:
+        #         button_locations = list(castle_button_locations.keys())
+        #         button_item_names = list(castle_button_table.keys())
+        #     else:
+        #         button_locations = list(temple_button_locations.keys())
+        #         button_item_names = list(temple_button_table.keys())
+        #     valid_locs = list(self.multiworld.get_unfilled_locations_for_players(button_locations, [self.player]))
+        #     button_items = []
+        #     for item in button_item_names:
+        #         if item not in self.item_counts:
+        #             continue
+        #         for i in range(self.item_counts[item]):
+        #             button_items.append(self.create_item(item))
+        #     non_button_prog_items = [item for item in self.world_itempool
+        #                             if item.classification & ItemClassification.progression]
+        #     non_button_state = CollectionState(self.multiworld)
+        #     for prog_item in non_button_prog_items:
+        #         non_button_state.collect(prog_item)
+        #     self.random.shuffle(valid_locs)
+        #     self.random.shuffle(button_items)
+        #     fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
+        #                      True, False, True, None, False, False, "Button Shuffle")
+        pass
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.options.shop_shuffle.value:

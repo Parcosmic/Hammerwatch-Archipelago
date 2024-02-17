@@ -134,14 +134,15 @@ class RandomizeEnemyLoot(Toggle):
 
 class Buttonsanity(Choice):
     """Whether the effects of buttons and switches are shuffled into the item pool
-    Shuffle: all effects from buttons and switches will be shuffled only amongst your own button and switch locations
     Normal: button effects can be found anywhere in the multiworld
     Insanity: button effects will be split into progressive versions based on the number of buttons required to trigger the effect in vanilla
     """
+    # Shuffle: all effects from buttons and switches will be shuffled only amongst your own button and switch locations
     display_name = "Buttonsanity"
     # category = "Generation"
     option_off = 0
-    option_shuffle = 1
+    # option_shuffle = 1  # Disabled for now, keeps failing fill due to how restrictive button placements are
+    # Would likely need to use item rules on every location to make this work, but this'll be insanely slow
     option_normal = 2
     option_insanity = 3
     default = 0

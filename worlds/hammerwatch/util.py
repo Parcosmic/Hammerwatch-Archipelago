@@ -1,6 +1,7 @@
 import typing
 from enum import Enum
 from ..AutoWorld import World
+from worlds.generic.Rules import add_rule
 from .names import item_name
 
 if typing.TYPE_CHECKING:
@@ -45,8 +46,8 @@ def get_goal_type(world: "HammerwatchWorld") -> GoalType:
 
 
 def get_buttonsanity_insanity(world: "HammerwatchWorld") -> bool:
-    return (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
-            or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
+    return world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
+    # or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
 
 
 def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
@@ -109,3 +110,8 @@ def get_random_element(world: World, dictionary: typing.Dict):
             return item
         index -= value
     return None
+
+
+def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
+    loc = world.multiworld.get_location(loc_name, world.player)
+    add_rule(loc, lambda state: state.has(item, world.player, item_count), "and")

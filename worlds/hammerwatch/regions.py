@@ -6,8 +6,7 @@ from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names
-from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_active_key_names,
-                   get_buttonsanity_insanity)
+from .util import GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_buttonsanity_insanity
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -1568,6 +1567,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_nw_2,
         castle_location_names.r1_tower_plant_1,
         castle_location_names.btn_r1_floor_nw,
+        castle_location_names.btn_r1_puzzle,
     ]
     r1_nw_region = create_region(world, active_locations, castle_region_names.r1_nw, r1_nw_locs)
 
@@ -1576,7 +1576,6 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_puzzle_2,
         castle_location_names.r1_puzzle_3,
         castle_location_names.r1_puzzle_4,
-        castle_location_names.btn_r1_puzzle,
     ]
     r1_puzzle_region = create_region(world, active_locations, castle_region_names.r1_puzzle, r1_puzzle_locs)
 
@@ -3160,8 +3159,7 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
         chambers_gate_items = gate_counts
 
     buttonsanity = world.options.buttonsanity.value > 0
-    buttonsanity_insanity = (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
-                             or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
+    buttonsanity_insanity = get_buttonsanity_insanity(world)
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
     if not world.options.exit_randomization.value or not world.options.random_start_exit.value:
@@ -3364,10 +3362,10 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect(world, used_names, castle_region_names.p3_bonus_return, castle_region_names.p3_bonus, False)
 
     # Boss 1
-    connect_or(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False,
+    connect(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False)
+    connect_or(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False,
                [item_name.btnc_b1_left, item_name.btnc_b1_right], buttonsanity)
     # Technically only need 1 button functional for the fight to not be super terrible
-    connect(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False)
     connect(world, used_names, castle_region_names.b1_defeated, castle_region_names.b1_exit, False)
     connect_exit(world, used_names, castle_region_names.b1_exit, castle_region_names.a1_start,
                  entrance_names.c_a1_0, entrance_names.c_b1_1)
@@ -3530,13 +3528,15 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
                 item_name.btnc_a3_open_knife_part, 5, False)
         connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False,
                 item_name.btnc_a3_open_knife_2_part, 2, False)
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, True,
+                item_name.btnc_a3_open_knife_2_part, 2, False)
     else:
         connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_puzzle_reward, False,
                 item_name.btnc_a3_open_knife, 1, False, buttonsanity)
         connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False,
                 item_name.btnc_a3_open_knife_2, 1, False, buttonsanity)
-    connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, buttonsanity,
-            item_name.btnc_a3_open_knife_2, 1, False, buttonsanity)
+        connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_nw_stairs, buttonsanity,
+                item_name.btnc_a3_open_knife_2, 1, False, buttonsanity)
     connect_exit(world, used_names, castle_region_names.a3_nw_stairs, castle_region_names.a2_nw,
                  entrance_names.c_a2_3, entrance_names.c_a3_2)
     connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_tp, False,
@@ -5505,8 +5505,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
         connect(world, used_names, temple_region_names.menu, temple_region_names.hub_main, False)
 
     buttonsanity = world.options.buttonsanity.value > 0
-    buttonsanity_insanity = (world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
-                             or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
+    buttonsanity_insanity = get_buttonsanity_insanity(world)
 
     connect(world, used_names, temple_region_names.hub_main, temple_region_names.hub_rocks,
             False, pickaxe_item, pickaxe_item_count, False)

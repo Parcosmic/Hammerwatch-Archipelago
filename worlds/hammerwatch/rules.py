@@ -6,7 +6,8 @@ from .names import (castle_region_names, temple_region_names, castle_location_na
 from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, etr_base_name, connect
 from .options import ExitRandomization
-from .util import GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity
+from .util import (GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity,
+                   add_loc_item_rule)
 from Utils import visualize_regions
 
 if typing.TYPE_CHECKING:
@@ -163,16 +164,23 @@ def set_extra_rules(world: "HammerwatchWorld"):
             a2_bgate_tp = world.multiworld.get_location(castle_location_names.a2_ne_l_bgate, world.player)
             if get_buttonsanity_insanity(world):
                 # Boss gate button location logic
-                for loc, item in boss_gate_locs.items():
-                    add_rule(world.multiworld.get_location(loc, world.player),
-                             lambda state: state.has(f"{item} Progress", world.player, 12), "and")
+                boss_gate_locs = {
+                    castle_location_names.btn_p3_boss_door: item_name.btnc_b1_boss_part,
+                    castle_location_names.btn_a1_boss_door: item_name.btnc_b2_boss_part,
+                    castle_location_names.btn_r3_boss_door: item_name.btnc_b3_boss_part,
+                }
+                for loc_name, itm_name in boss_gate_locs.items():
+                    add_loc_item_rule(world, loc_name, itm_name, 12)
+                    # loc = world.multiworld.get_location(loc_name, world.player)
+                    # add_rule(loc, lambda state, itm=itm_name: state.has(itm, world.player, 12), "and")
                 # Armory Floor 5 NE gates teleport item
                 add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates_part, world.player, 4), "and")
             else:
                 # Boss gate button location logic
-                for loc, item in boss_gate_locs.items():
-                    add_rule(world.multiworld.get_location(loc, world.player),
-                             lambda state: state.has(item, world.player, 3), "and")
+                for loc_name, itm_name in boss_gate_locs.items():
+                    add_loc_item_rule(world, loc_name, itm_name, 3)
+                    # add_rule(world.multiworld.get_location(loc_name, world.player),
+                    #          lambda state, itm=itm_name: state.has(itm, world.player, 3), "and")
                 # Armory Floor 5 NE gates teleport item
                 add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates, world.player), "and")
                 # Rune sequence
@@ -187,9 +195,10 @@ def set_extra_rules(world: "HammerwatchWorld"):
                 castle_location_names.r3_e_tp: item_name.btnc_r3_tp_ne_b,
                 castle_location_names.r3_e_secret_tp: item_name.btnc_r3_tp_ne_t,
             }
-            for loc_name, item in misc_loc_logic.items():
-                add_rule(world.multiworld.get_location(loc_name, world.player),
-                         lambda state: state.has(item, world.player), "and")
+            for loc_name, itm_name in misc_loc_logic.items():
+                add_loc_item_rule(world, loc_name, itm_name)
+                # add_rule(world.multiworld.get_location(loc_name, world.player),
+                #          lambda state, itm=itm_name: state.has(itm, world.player), "and")
 
     else:
         # Overwrite world completion condition if we need to defeat all bosses
@@ -856,8 +865,6 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
 
     transitions: typing.List[HWEntrance] = world.multiworld.get_entrances(world.player)
     for exit_ in transitions:
-        if exit_.player != world.player:
-            continue
         if exit_.pass_item is None or exit_.parent_region.name == exit_.connected_region.name:
             continue
         # If the items are consumed gotta use the downstream cost logic
@@ -865,7 +872,7 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
             if exit_.pass_item not in door_counts.keys():
                 continue  # If the item isn't in door_counts then it's being excluded and we don't set logic
             needed_keys = door_counts[exit_.pass_item] - exit_.downstream_count
-            # print(f"{exit.parent_region} -> {exit.connected_region} - {exit.pass_item}: {needed_keys}")
+            print(f"{exit_.parent_region} -> {exit_.connected_region} - {exit_.pass_item}: {needed_keys}")
             add_rule(exit_, lambda state, this=exit_, num=needed_keys: state.has(this.pass_item, world.player, num), "and")
         else:  # Elsewise just set the item rule normally
             add_rule(exit_, lambda state, this=exit_: state.has(this.pass_item, world.player, this.item_count), "and")
@@ -874,12 +881,10 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
 def set_downstream_costs(item: str, entrance: HWEntrance, seen):
     entr_id = get_entrance_id(entrance)
     seen.append(entr_id)
-    seen = seen.copy()  # Create a copy so that independent pathways don't lock each other
     door_entrances: typing.Set[str] = set()
     cost_dict: typing.Dict[str] = {}
     if entrance.parent_region != entrance.connected_region:
-        help = list(entrance.connected_region.exits)
-        for exit_ in help:
+        for exit_ in entrance.connected_region.exits:
             exit_id = get_entrance_id(exit_)
             if exit_id in seen and exit_.connected_region.name != exit_.parent_region.name or exit_id in cost_dict:
                 continue
