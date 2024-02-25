@@ -115,6 +115,7 @@ trap_poison = "Poison Trap"
 trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 trap_banner = "Banner Trap"
+trap_flies = "Fly Trap"
 
 # Castle button item names
 btnc_b1_boss = "Activate Prison Boss Rune"
@@ -499,6 +500,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_fire,
         trap_confuse,
         trap_banner,
+        trap_flies,
     },
     group_buttons: {
         btn_pof,

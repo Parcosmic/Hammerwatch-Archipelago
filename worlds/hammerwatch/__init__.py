@@ -3,8 +3,8 @@ import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
     entrance_names, option_names
-from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items, castle_item_counts, temple_item_counts,
-                    castle_button_table, temple_button_table)
+from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items,
+                    castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
                         castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name
@@ -100,6 +100,15 @@ class HammerwatchWorld(World):
                         if ex_mod in exclude_mods:
                             continue
                         exclude_mods.append(ex_mod)
+
+        # Validate trap item weight option
+        all_zero = True
+        for item, weight in self.options.trap_item_weights.value.items():
+            if weight > 0:
+                all_zero = False
+                break
+        if all_zero:
+            self.options.trap_item_weights.value = {item: 100 for item in trap_items}
 
         # Door type randomization
         if self.campaign == Campaign.Castle:

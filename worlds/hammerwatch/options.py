@@ -1,8 +1,9 @@
 import typing
-from schema import Schema, Optional
+from schema import Schema, Optional, And
 from dataclasses import dataclass
 from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, OptionDict, PerGameCommonOptions
 from .names import option_names
+from .items import trap_table
 
 
 class Goal(Choice):
@@ -396,6 +397,13 @@ class TrapItemPercentage(Range):
     default = 5
 
 
+class TrapItemWeights(OptionDict):
+    """The relative weights of trap items in the item pool"""
+    display_name = "Trap Item Weights"
+    schema = Schema({Optional(trap): And(int, lambda n: n >= 0) for trap in trap_table.keys()})
+    default = {trap: 100 for trap in trap_table.keys()}
+
+
 class StartingLifeCount(Range):
     """How many extra lives each player will start the game with"""
     display_name = "Starting Life Count"
@@ -455,6 +463,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     lever_fragments: LeverFragments
     pickaxe_fragments: PickaxeFragments
     trap_item_percent: TrapItemPercentage
+    trap_item_weights: TrapItemWeights
     starting_life_count: StartingLifeCount
     game_modifiers: GameModifiers
     death_link: DeathLink
@@ -477,9 +486,7 @@ client_required_options = [
     option_names.shop_cost_max,
     option_names.enemy_shuffle,
     option_names.enemy_shuffle_act_range,
-    # option_names.bonus_behavior,
     option_names.randomize_bonus_keys,
-    # option_names.remove_lives,
     option_names.randomize_recovery_items,
     option_names.randomize_secrets,
     option_names.randomize_puzzles,
@@ -487,8 +494,6 @@ client_required_options = [
     option_names.buttonsanity,
     option_names.open_castle,
     option_names.key_mode,
-    # option_names.extra_keys_percent,
-    # option_names.big_bronze_key_percent,
     option_names.shortcut_teleporter,
     option_names.portal_accessibility,
     option_names.no_sunbeam_damage,
@@ -497,7 +502,6 @@ client_required_options = [
     option_names.pan_fragments,
     option_names.lever_fragments,
     option_names.pickaxe_fragments,
-    # option_names.trap_item_percent,
     option_names.starting_life_count,
     option_names.game_modifiers,
     option_names.death_link,

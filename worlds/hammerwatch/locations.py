@@ -2,7 +2,6 @@ import typing
 
 from BaseClasses import Location, ItemClassification
 from .names import castle_location_names, temple_location_names, item_name
-from .options import BonusChestLocationBehavior, Difficulty
 from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity
 from .items import (castle_item_counts, temple_item_counts, temple_button_counts,
                     recovery_table, get_item_counts, id_start)
@@ -2996,11 +2995,11 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
 
     # Bonus level handling
     bonus_behavior = world.options.bonus_behavior.value
-    if bonus_behavior == BonusChestLocationBehavior.option_necessary:  # Necessary
+    if bonus_behavior == world.options.bonus_behavior.option_necessary:  # Necessary
         for i in range(min(extra_items, len(bonus_locations))):
             loc = world.random.choice(list(bonus_locations.keys()))
             location_table.update({loc: bonus_locations.pop(loc)})
-    elif bonus_behavior == BonusChestLocationBehavior.option_all:  # All
+    elif bonus_behavior == world.options.bonus_behavior.option_all:  # All
         location_table.update(bonus_locations)
 
     return location_table, item_counts, random_locations
@@ -3209,7 +3208,7 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
         castle_location_names.p2_beetle_boss_room_3,
     ]
     location_table = keep_one_location(p2_gkey_2_locs, castle_location_names.crloc_p2_gkey_2)
-    if world.options.difficulty.value == Difficulty.option_easier:
+    if world.options.difficulty.value == world.options.difficulty.option_easier:
         remove_location(castle_location_names.p2_toggle_spike_trap_reward_2, item_name.chest_wood)
         remove_location(castle_location_names.p2_toggle_spike_trap_reward_3, item_name.chest_wood)
     # Prison Floor 3

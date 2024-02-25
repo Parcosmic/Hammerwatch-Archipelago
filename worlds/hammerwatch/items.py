@@ -1,8 +1,8 @@
 import typing
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
-from .options import BonusChestLocationBehavior
-from .util import Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names
+from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names,
+                   get_random_elements)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -94,6 +94,7 @@ trap_table: typing.Dict[str, ItemData] = {
     item_name.trap_fire: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_banner: ItemData(counter.count(), ItemClassification.trap),
+    item_name.trap_flies: ItemData(counter.count(), ItemClassification.trap),
 }
 
 counter = Counter(id_start + 0x200 - 1)
@@ -415,15 +416,7 @@ stat_upgrade_items: typing.List[str] = [
     item_name.stat_upgrade_mana,
 ]
 
-trap_items: typing.List[str] = [
-    item_name.trap_bomb,
-    item_name.trap_mana,
-    item_name.trap_poison,
-    item_name.trap_frost,
-    item_name.trap_fire,
-    item_name.trap_confuse,
-    item_name.trap_banner,
-]
+trap_items: typing.List[str] = list(trap_table.keys())
 
 big_key_amount = 3
 key_table: typing.Dict[str, typing.Tuple[str, int]] = {
@@ -766,12 +759,11 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
             item_counts_table[trap_item] = 0
         trap_item_count = int((filler_item_count - extra_items) * trap_item_percent)
         extra_items += trap_item_count
-        for t in range(trap_item_count):
-            item = trap_items[world.random.randrange(len(trap_items))]
+        for item in get_random_elements(world, world.options.trap_item_weights.value, trap_item_count):
             item_counts_table[item] += 1
 
     # For Necessary we set the number of bonus chests equal to each extra item
-    if world.options.bonus_behavior.value == BonusChestLocationBehavior.option_necessary:
+    if world.options.bonus_behavior.value == world.options.bonus_behavior.option_necessary:
         item_counts_table[item_name.bonus_chest] = max(item_counts_table[item_name.bonus_chest], extra_items, 0)
 
     return item_counts_table, extra_items

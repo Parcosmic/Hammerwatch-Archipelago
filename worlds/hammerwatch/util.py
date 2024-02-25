@@ -112,6 +112,21 @@ def get_random_element(world: World, dictionary: typing.Dict):
     return None
 
 
+def get_random_elements(world: World, dictionary: typing.Dict, amount: int):
+    total = 0
+    for value in dictionary.values():
+        total += value
+    elements = []
+    for k in range(amount):
+        index = world.random.randint(0, total-1)
+        for item, value in dictionary.items():
+            if index < value:
+                elements.append(item)
+                break
+            index -= value
+    return elements
+
+
 def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
     loc = world.multiworld.get_location(loc_name, world.player)
     add_rule(loc, lambda state: state.has(item, world.player, item_count), "and")
