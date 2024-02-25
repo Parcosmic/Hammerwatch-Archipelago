@@ -50,13 +50,13 @@ def get_buttonsanity_insanity(world: "HammerwatchWorld") -> bool:
     # or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
 
 
-def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
+def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
     campaign = get_campaign(world)
     if campaign == Campaign.Castle:
         if world.options.key_mode.value == world.options.key_mode.option_floor_master:
             key_names = set()
         elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
-            key_names = {
+            key_names = [
                 item_name.key_bronze_prison,
                 item_name.key_bronze_armory,
                 item_name.key_bronze_archives,
@@ -69,34 +69,34 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.Set[str]:
                 item_name.key_gold_armory,
                 item_name.key_gold_archives,
                 item_name.key_gold_chambers,
-            }
+            ]
             if world.options.randomize_bonus_keys.value:
-                key_names.update({
+                key_names.extend([
                     item_name.key_bonus_prison,
                     item_name.key_bonus_armory,
                     item_name.key_bonus_archives,
                     item_name.key_bonus_chambers,
-                    })
+                    ])
         else:
-            key_names = {
+            key_names = [
                 item_name.key_bronze,
                 item_name.key_silver,
                 item_name.key_gold,
-            }
+            ]
             if world.options.randomize_bonus_keys.value:
-                key_names.add(item_name.key_bonus)
+                key_names.append(item_name.key_bonus)
     else:
-        key_names = {
+        key_names = [
             item_name.mirror,
             item_name.key_teleport,
-        }
+        ]
         if world.options.key_mode.value != world.options.key_mode.option_floor_master:
-            key_names.update({
+            key_names.extend([
                 item_name.key_silver,
                 item_name.key_gold,
-            })
+            ])
             if world.options.randomize_bonus_keys.value:
-                key_names.add(item_name.key_bonus)
+                key_names.append(item_name.key_bonus)
     return key_names
 
 

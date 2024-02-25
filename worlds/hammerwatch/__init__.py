@@ -1,12 +1,13 @@
+import logging
 import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
     entrance_names, option_names
-from .items import (HammerwatchItem, item_table, key_table, filler_items, castle_item_counts, temple_item_counts,
+from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items, castle_item_counts, temple_item_counts,
                     castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
                         castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
-from .regions import create_regions, HWEntrance, HWExitData
+from .regions import create_regions, HWEntrance, HWExitData, get_etr_name
 from .rules import set_rules
 from .util import Campaign, get_campaign, get_active_key_names
 from .options import HammerwatchOptions, client_required_options
@@ -62,7 +63,6 @@ class HammerwatchWorld(World):
     gate_types: typing.Dict[str, str]
     level_exits: typing.List[HWEntrance]
     exit_swaps: typing.Dict[str, str]
-    exit_spoiler_info: typing.List[str]
     start_exit: str
     key_item_counts: typing.Dict[str, int]
 
@@ -120,7 +120,6 @@ class HammerwatchWorld(World):
         self.gate_types = create_regions(self, self.campaign, self.active_location_list, self.random_locations)
         # Dumb hack to make sure everything is connected before other worlds try to do logic stuff
         self.exit_swaps = {}
-        self.exit_spoiler_info = []
         set_rules(self, self.door_counts)
 
     def create_item(self, name: str) -> Item:
@@ -133,19 +132,17 @@ class HammerwatchWorld(World):
     def create_items(self) -> None:
         self.world_itempool = []
 
-        # First create and place our locked items so we know how many are left over
-        if self.campaign == Campaign.Castle:
-            self.place_castle_locked_items()
-            button_item_names = list(castle_button_table.keys())
-        else:
-            self.place_tots_locked_items()
-            button_item_names = list(temple_button_table.keys())
-
-        total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
-
         # Add floor master key items to item_counts
         if self.options.key_mode.value == self.options.key_mode.option_floor_master:
             self.item_counts.update(self.key_item_counts)
+
+        # First create and place our locked items so we know how many are left over
+        if self.campaign == Campaign.Castle:
+            self.place_castle_locked_items()
+        else:
+            self.place_tots_locked_items()
+
+        total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         # Remove progression items if the player starts with them
         for precollected in self.multiworld.precollected_items[self.player]:
@@ -153,17 +150,6 @@ class HammerwatchWorld(World):
                 if precollected.name in self.item_counts and self.item_counts[precollected.name] > 0:
                     self.item_counts[precollected.name] -= 1
 
-        # If buttonsanity is set to shuffle prevent button items from being created here
-        # Disabled for now, as the shuffle setting fails fill constantly due to how restrictive it is
-        items_to_place_later = 0
-        # item_counts = {}
-        # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
-        #     for item, count in self.item_counts.items():
-        #         if item in button_item_names:
-        #             items_to_place_later += count
-        #             continue
-        #         item_counts[item] = count
-        # else:
         item_counts = self.item_counts
 
         # Add items
@@ -175,16 +161,32 @@ class HammerwatchWorld(World):
                 present_filler_items.append(item)
 
         # Add/remove junk items depending if we have not enough/too many locations
-        junk: int = total_required_locations - items - items_to_place_later
+        junk: int = total_required_locations - items
         if junk > 0:
             for name in self.random.choices(present_filler_items, k=junk):
                 item_counts[name] += 1
         else:
-            for j in range(-junk):
+            while junk < 0:
+                junk += 1
                 junk_item = self.random.choice(present_filler_items)
                 item_counts[junk_item] -= 1
                 if item_counts[junk_item] == 0:
                     present_filler_items.remove(junk_item)
+                    if len(present_filler_items) == 0:
+                        break
+            # Remove trap items if we've run out of filler
+            present_trap_items = [trap_item for trap_item in trap_items if trap_item in item_counts]
+            while junk < 0:
+                junk += 1
+                trap_item = self.random.choice(present_trap_items)
+                item_counts[trap_item] -= 1
+                if item_counts[trap_item] == 0:
+                    present_trap_items.remove(trap_item)
+                    if len(present_trap_items) == 0:
+                        logging.warning(f"HammerwatchWorld for player {self.multiworld.player_name[self.player]} "
+                                        f"(slot {self.player}) ran out of filler and trap items to remove. Some items "
+                                        f"will remain unplaced!")
+                        break
 
         # Create items and add to item pool
         for item in item_counts:
@@ -262,6 +264,19 @@ class HammerwatchWorld(World):
                 location = self.multiworld.get_location(loc, self.player)
                 location.address = None
                 location.place_locked_item(self.create_event(itm))
+
+        # Manual start item placement to get fill out of an overly restrictive start with buttonsanity
+        if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
+                and self.options.randomize_recovery_items.value == 0):
+            start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
+            start_gate: HWEntrance = self.multiworld.get_entrance(start_gate_name, self.player)
+            start_item_name = self.random.choice([start_gate.pass_item, item_name.btnc_p1_floor])
+            if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
+                if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
+                    start_item_name = f"Big {start_item_name}"
+            self.item_counts[start_item_name] -= 1
+            start_item = self.create_item(start_item_name)
+            self.multiworld.get_location(castle_location_names.btn_p1_floor, self.player).place_locked_item(start_item)
 
     def place_tots_locked_items(self):
         temple_events = {
@@ -492,6 +507,11 @@ class HammerwatchWorld(World):
         #     self.random.shuffle(button_items)
         #     fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
         #                      True, False, True, None, False, False, "Button Shuffle")
+
+        # state = self.multiworld.get_all_state(False)
+        # state.update_reachable_regions(self.player)
+        # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
+        #                   highlight_regions=state.reachable_regions[self.player])
         pass
 
     def write_spoiler(self, spoiler_handle) -> None:

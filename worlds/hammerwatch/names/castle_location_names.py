@@ -1549,7 +1549,7 @@ btn_r3_wall_seq_w = "AvF9: SE Sequence West Wall Button"
 btn_r3_wall_seq_m = "AvF9: SE Sequence Middle Wall Button"
 btn_r3_wall_seq_se = "AvF9: SE Sequence SE Wall Button"
 btn_r3_floor_sw_gate = "AvF9: SW Gate Floor Button"
-btn_r3_seq_simon = "AvF9: SE Button Sequence"
+btn_r3_seq_simon_room = "AvF9: SE Button Sequence"
 
 btn_c1_floor_n = "ChF10: North Floor Button"
 btn_c1_floor_red = "ChF10: Red Floor Button"

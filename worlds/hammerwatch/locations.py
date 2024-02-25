@@ -1594,12 +1594,12 @@ castle_button_locations: typing.Dict[str, LocationData] = {
     castle_location_names.btn_c2_rune_bonus_6: LocationData(counter.count(), LocationClassification.Buttoninsanity),
     castle_location_names.btn_c2_rune_bonus_7: LocationData(counter.count(), LocationClassification.Buttoninsanity),
     castle_location_names.btn_c2_rune_bonus_5: LocationData(counter.count(), LocationClassification.Buttoninsanity),
-    castle_location_names.btn_c2_wall_seq_nw: LocationData(counter.count(), LocationClassification.Button),
-    castle_location_names.btn_c2_wall_seq_ne: LocationData(counter.count(), LocationClassification.Button),
+    castle_location_names.btn_c2_wall_seq_nw: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    castle_location_names.btn_c2_wall_seq_ne: LocationData(counter.count(), LocationClassification.Buttoninsanity),
     castle_location_names.btn_c2_wall_n_exit_gate: LocationData(counter.count(), LocationClassification.Button),
-    castle_location_names.btn_c2_wall_seq_w: LocationData(counter.count(), LocationClassification.Button),
-    castle_location_names.btn_c2_wall_seq_s: LocationData(counter.count(), LocationClassification.Button),
-    castle_location_names.btn_c2_wall_seq_e: LocationData(counter.count(), LocationClassification.Button),
+    castle_location_names.btn_c2_wall_seq_w: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    castle_location_names.btn_c2_wall_seq_s: LocationData(counter.count(), LocationClassification.Buttoninsanity),
+    castle_location_names.btn_c2_wall_seq_e: LocationData(counter.count(), LocationClassification.Buttoninsanity),
     castle_location_names.btn_c2_wall_red_n: LocationData(counter.count(), LocationClassification.Button),
     castle_location_names.btn_c2_wall_blue: LocationData(counter.count(), LocationClassification.Button),
     castle_location_names.btn_c2_wall_portal_shop: LocationData(counter.count(), LocationClassification.Button),
@@ -1641,7 +1641,7 @@ castle_button_locations: typing.Dict[str, LocationData] = {
     castle_location_names.btn_p3_seq_bonus: LocationData(counter.count(), LocationClassification.Button),
     castle_location_names.btn_a3_seq_knife: LocationData(counter.count(), LocationClassification.Button),
     castle_location_names.btn_a3_seq_knife_2: LocationData(counter.count(), LocationClassification.Button),
-    castle_location_names.btn_r3_seq_simon: LocationData(counter.count(), LocationClassification.Button),
+    castle_location_names.btn_r3_seq_simon_room: LocationData(counter.count(), LocationClassification.Button),
     castle_location_names.btn_c2_seq_bonus: LocationData(counter.count(), LocationClassification.Button),
 }
 
@@ -1672,7 +1672,7 @@ castle_combo_button_locations: typing.List[str] = [
     castle_location_names.btn_p3_seq_bonus,
     castle_location_names.btn_a3_seq_knife,
     castle_location_names.btn_a3_seq_knife_2,
-    castle_location_names.btn_r3_seq_simon,
+    castle_location_names.btn_r3_seq_simon_room,
     castle_location_names.btn_c2_seq_bonus,
 ]
 
@@ -1730,15 +1730,15 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_p2_boss_4: item_name.btnc_b1_boss_part,
     castle_location_names.btn_p2_boss_1: item_name.btnc_b1_boss_part,
     castle_location_names.btn_p2_boss_3: item_name.btnc_b1_boss_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_1: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_3: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_2: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_2: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_1: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_3: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_3: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_2: item_name.btnc_p2_spike_puzzle_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_1: item_name.btnc_p2_spike_puzzle_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_e_1: item_name.btnc_p2_spike_puzzle_r_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_e_2: item_name.btnc_p2_spike_puzzle_r_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_e_3: item_name.btnc_p2_spike_puzzle_r_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_n_3: item_name.btnc_p2_spike_puzzle_t_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_n_2: item_name.btnc_p2_spike_puzzle_t_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_n_1: item_name.btnc_p2_spike_puzzle_t_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_s_3: item_name.btnc_p2_spike_puzzle_b_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_s_2: item_name.btnc_p2_spike_puzzle_b_part,
+    castle_location_names.btn_p2_floor_spike_puzzle_s_1: item_name.btnc_p2_spike_puzzle_b_part,
     castle_location_names.btn_p2_floor_red: item_name.btnc_p2_red_spikes,
     castle_location_names.btn_p2_floor_tp_item_2: item_name.btnc_p2_tp_jail,
     castle_location_names.btn_p2_floor_tp_item_1: item_name.btnc_p2_open_w_jail,
@@ -2018,8 +2018,8 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_p3_seq_bonus: item_name.btnc_p3_open_bonus,
     castle_location_names.btn_a3_seq_knife: item_name.btnc_a3_open_knife,
     castle_location_names.btn_a3_seq_knife_2: item_name.btnc_a3_open_knife_2,
-    castle_location_names.btn_r3_seq_simon: item_name.btnc_r3_bonus,
-    castle_location_names.btn_c2_seq_bonus: item_name.btnc_c2_bonus,
+    castle_location_names.btn_r3_seq_simon_room: item_name.btnc_r3_simon_room,
+    castle_location_names.btn_c2_seq_bonus: item_name.btnc_c2_bonus_room,
 }
 
 counter = Counter(id_start)
@@ -2775,7 +2775,7 @@ temple_combo_button_locations: typing.List[str] = [
     temple_location_names.btn_c1_pof,
     temple_location_names.btn_t1_pof,
     temple_location_names.btn_t2_pof,
-    temple_location_names.btn_t2_runes,
+    # temple_location_names.btn_t2_runes,  # This location always needs to exist
     # temple_location_names.btn_t2_portal,
     # temple_location_names.btn_t3_levers,
 ]
@@ -2969,8 +2969,14 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
             if itm not in button_items:
                 button_items[itm] = 0
             button_items[itm] += 1
-        # button_items = {temple_button_items[loc]: 1 for loc, data in temple_button_locations.items()
-        #                 if data.classification != LocationClassification.Buttoninsanity}
+        if hw_map == Campaign.Castle:
+            # Special override as the spike puzzle locations exist for both buttonsanity options
+            button_items.pop(item_name.btnc_p2_spike_puzzle_r_part)
+            button_items.pop(item_name.btnc_p2_spike_puzzle_b_part)
+            button_items.pop(item_name.btnc_p2_spike_puzzle_t_part)
+            button_items[item_name.btnc_p2_spike_puzzle_r] = 1
+            button_items[item_name.btnc_p2_spike_puzzle_b] = 1
+            button_items[item_name.btnc_p2_spike_puzzle_t] = 1
     item_counts.update(button_items)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below

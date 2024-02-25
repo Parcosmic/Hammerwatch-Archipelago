@@ -154,8 +154,12 @@ castle_button_table: typing.Dict[str, ItemData] = {
     item_name.btnc_r2_puzzle: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_c2_puzzle: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_p1_floor: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btnc_p2_spike_puzzle: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btnc_p2_spike_puzzle_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_spike_puzzle_r: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_spike_puzzle_b: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_spike_puzzle_t: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_p2_spike_puzzle_r_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_spike_puzzle_b_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.btnc_p2_spike_puzzle_t_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.btnc_p2_red_spikes: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_p2_open_w_jail: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_p2_tp_jail: ItemData(counter.count(), ItemClassification.progression),
@@ -511,7 +515,9 @@ castle_button_counts: typing.Dict[str, int] = {
     item_name.btnc_b2_boss_part: 4,
     item_name.btnc_b3_boss_part: 4,
     item_name.btnc_b4_boss_part: 4,
-    item_name.btnc_p2_spike_puzzle_part: 9,
+    item_name.btnc_p2_spike_puzzle_r_part: 3,
+    item_name.btnc_p2_spike_puzzle_b_part: 3,
+    item_name.btnc_p2_spike_puzzle_t_part: 3,
     item_name.btnc_p2_tp_w_part: 4,
     item_name.btnc_p2_rune_sequence_part: 4,
     item_name.btnc_p3_portal_part: 5,
@@ -639,14 +645,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         # else:
         #     world.key_item_counts[key] = 0
 
-    if world.options.key_mode.value == world.options.key_mode.option_floor_master:
-        if get_campaign(world) == Campaign.Castle:
-            master_key_dict = castle_floor_master_keys
-        else:
-            master_key_dict = temple_floor_master_keys
-        # item_counts_table.update({master_key: 1 for master_key in master_key_dict.keys()})
-        world.key_item_counts.update({master_key: 0 for master_key in master_key_dict.keys()})
-    else:
+    if world.options.key_mode.value != world.options.key_mode.option_floor_master:
         # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
         key_names = set()
         for key_name in active_keys:
@@ -731,7 +730,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     # If the player has selected not to randomize recovery items, set all their counts to zero
     if not world.options.randomize_recovery_items.value:
         for recovery in recovery_table.keys():
-            extra_items -= item_counts_table.pop(recovery, 0)
+            item_counts_table.pop(recovery, 0)
 
     # Enemy loot
     if world.options.randomize_enemy_loot.value:

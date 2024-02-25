@@ -11,7 +11,7 @@ p1_sw_bronze_gate = "PrF1: SW Bronze Gate"
 p1_e = "PrF1: East"
 p1_m_bronze_gate = "PrF1: Middle Bronze Gate"
 p1_from_p2 = "PrF1: Middle Shop Alleyway"
-p1_from_p3_n = "PrF1: Boss Switch"
+p1_from_p3_n = "PrF1: Boss Rune"
 p1_from_p3_s = "PrF1: SW Stairs"
 
 p2_start = "PrF2: Start"

@@ -1,7 +1,7 @@
 import typing
 
 from . import HammerwatchTestBase
-from .. import item_name, castle_location_names, temple_location_names, option_names
+from .. import item_name, option_names
 from .. import options, locations, items
 
 
@@ -112,14 +112,14 @@ class TestHammerwatchOptions(HammerwatchTestBase):
             "goal": options.Goal.option_temple_pyramid_of_fear,
         },
         "Castle test act-specific keys": {
-            "act_specific_keys": options.ActSpecificKeys.option_true,
+            option_names.key_mode: options.KeyMode.option_act_specific,
         },
         "Castle test act-specific keys with extra keys": {
-            "act_specific_keys": options.ActSpecificKeys.option_true,
+            option_names.key_mode: options.KeyMode.option_act_specific,
             "extra_keys_percent": options.ExtraKeysPercent.range_end,
         },
         "Castle test act-specific keys with big keys": {
-            "act_specific_keys": options.ActSpecificKeys.option_true,
+            option_names.key_mode: options.KeyMode.option_act_specific,
             "big_bronze_key_percent": options.BigBronzeKeyPercent.range_end,
         },
         "Full act range castle exit rando": {
@@ -154,13 +154,38 @@ class TestHammerwatchOptions(HammerwatchTestBase):
             option_names.goal: options.Goal.option_temple_all_bosses,
             option_names.key_mode: options.KeyMode.option_floor_master,
         },
+        "Castle buttonsanity": {
+            option_names.buttonsanity: options.Buttonsanity.option_normal,
+        },
+        "Castle buttonsanity insanity": {
+            option_names.buttonsanity: options.Buttonsanity.option_insanity,
+        },
+        "Castle buttonsanity with exit randomization and random start": {
+            option_names.buttonsanity: options.Buttonsanity.option_normal,
+            option_names.exit_randomization: options.ExitRandomization.option_all,
+            option_names.random_start_exit: options.StartExit.option_true,
+        },
+        "Temple buttonsanity": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.buttonsanity: options.Buttonsanity.option_normal,
+        },
+        "Temple buttonsanity insanity": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.buttonsanity: options.Buttonsanity.option_insanity,
+        },
+        "Temple buttonsanity with exit randomization and random start": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.buttonsanity: options.Buttonsanity.option_normal,
+            option_names.exit_randomization: options.ExitRandomization.option_all,
+            option_names.random_start_exit: options.StartExit.option_true,
+        },
     }
 
     def test_options(self):
-        for option_set, options in TestHammerwatchOptions.option_sets.items():
+        for option_set, options_ in TestHammerwatchOptions.option_sets.items():
             with self.subTest(option_set):
                 test_world = HammerwatchTestBase()
-                test_world.options = options
+                test_world.options = options_
                 test_world.world_setup()
                 test_world.test_all_locations_are_active(option_set)
 
@@ -215,6 +240,7 @@ class TestGameModifiers(HammerwatchTestBase):
     }
 
     def test_disable_correct_modifiers(self):
+        # noinspection PyTypeChecker
         world_options: options.HammerwatchOptions = self.multiworld.worlds[1].options
 
         self.assertTrue(world_options.game_modifiers.value[option_names.mod_infinite_lives],
@@ -229,3 +255,14 @@ class TestGameModifiers(HammerwatchTestBase):
                          "The game modifier \"double lives\" should be changed to False")
         self.assertFalse(world_options.game_modifiers.value[option_names.mod_double_damage],
                          "The game modifier \"double damage\" should not be changed from False")
+
+
+class TestTrapItems(HammerwatchTestBase):
+    options = {
+        option_names.trap_item_percent: 100,
+    }
+
+    def test_no_filler_if_all_trap_items(self):
+        filler_items = [item for item in self.multiworld.itempool if item.classification == item.classification.filler]
+        self.assertEquals(len(filler_items), 0,
+                          f"Filler items found when {option_names.trap_item_percent} is 100%!")
