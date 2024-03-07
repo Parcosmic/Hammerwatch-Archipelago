@@ -92,7 +92,7 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
             start_region_name = code_to_region[world.start_exit].name
             world.multiworld.spoiler.set_entrance("Start", f"{start_region_name} [{world.start_exit}]", "entrance", world.player)
         for exit_ in world.level_exits:
-            exit_.name = get_etr_name(exit_.parent_region.name, exit_.connected_region.name)
+            # exit_.name = get_etr_name(exit_.parent_region.name, exit_.connected_region.name)
             for level_exit in world.level_exits:
                 entrance_name = level_exit.parent_region.name
                 if level_exit.return_code is not None:

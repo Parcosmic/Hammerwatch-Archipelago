@@ -3376,8 +3376,8 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
 
     # Boss 1
     connect(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False)
-    connect_or(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False,
-               [item_name.btnc_b1_left, item_name.btnc_b1_right], buttonsanity)
+    connect(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False,
+            item_name.btnc_b1_pillars, 1, False, buttonsanity)
     # Technically only need 1 button functional for the fight to not be super terrible
     connect(world, used_names, castle_region_names.b1_defeated, castle_region_names.b1_exit, False)
     connect_exit(world, used_names, castle_region_names.b1_exit, castle_region_names.a1_start,

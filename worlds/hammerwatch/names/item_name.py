@@ -155,7 +155,7 @@ btnc_p3_boss_door = "Open PrF3 Boss Gate"
 btnc_p3_sgate_spikes = "Disable PrF3 Entrance Gate Spikes"
 btnc_p3_red_spikes = "Disable PrF3 Red Spikes"
 btnc_p3_blue_spikes = "Disable PrF3 Blue Spikes"
-btnc_p3_e_passage = "Open PrF3 East Passage"
+btnc_p3_e_passage = "Open PrF3 SE Passage"
 btnc_p3_s_spikes = "Disable PrF3 South Spikes"
 btnc_p3_portal = "Open PrF3 Bonus Portal"
 btnc_p3_portal_part = "Open PrF3 Bonus Portal Progress"
@@ -170,7 +170,7 @@ btnc_p3_s_passage = "Open PrF3 South Arrow Hall Passage"
 btnc_p3_s_exit_l = "Open PrF3 South Exit Room Left Side"
 btnc_p3_s_exit_r = "Open PrF3 South Exit Room Right Side"
 btnc_p3_nw_room = "Open PrF3 NW Treasure Room"
-btnc_b1_left = "Enable Queen Arena Left Button"
+btnc_b1_pillars = "Enable Queen Arena Buttons"
 btnc_b1_right = "Enable Queen Arena Right Button"
 btnc_n1_cache_n = "Open PrB North Treasure Rooms"
 btnc_n1_cache_ne = "Open PrB NE Treasure Room"
@@ -185,7 +185,7 @@ btnc_a1_open_se_cache = "Open AmF4 SE Cache"
 btnc_a1_open_se_cache_part = "Open AmF4 SE Cache Progress"
 btnc_a1_open_m_cache = "Open AmF4 Middle Cache"
 btnc_a1_open_ne_cache = "Open AmF4 NE Cache"
-btnc_a1_open_se_wall = "Open AmF4 SE Wall"
+btnc_a1_open_se_wall = "Open AmF4 South Wall"
 btnc_a1_open_se_rune = "Open AmF4 SE Rune Room"
 btnc_a2_pyramid_nw = "Teleport AmF5 NW Pyramid Item"
 btnc_a2_bspikes_tp = "Teleport AmF5 Blue Spikes Item"
@@ -197,7 +197,7 @@ btnc_a2_tp_ne = "Teleport AmF5 NE Fireball Hall Item"
 btnc_a2_tp_sw = "Teleport AmF5 SW Item"
 btnc_a2_tp_se = "Teleport AmF5 SE Item"
 btnc_a2_tp_ne_gates = "Teleport AmF5 NE Gates Item"
-btnc_a2_tp_ne_gates_part = "Teleport AmF5 NE Item Progress"
+btnc_a2_tp_ne_gates_part = "Teleport AmF5 NE Gates Item Progress"
 btnc_a2_open_w_exit = "Open AmF5 West Exits Hall"
 btnc_a2_open_shortcut = "Open AmF5 Start Shortcut"  # Useful
 btnc_a2_open_se_room_l = "Open AmF5 SE Tower Room Left Side"
@@ -237,10 +237,10 @@ btnc_r2_open_puzzle = "Open ArF8 Puzzle Room"
 btnc_r2_open_puzzle_part = "Open ArF8 Puzzle Room Progress"
 btnc_r2_nw_shortcut = "Open ArF8 NW Shortcut"  # Useful
 btnc_r2_open_start = "Open ArF8 Middle Entrance"
-btnc_r2_open_spikes_t = "Open ArF8 Top Spike Turret Island Shortcut"
+btnc_r2_open_spikes_t = "Open ArF8 Spike Turret Island Top Shortcut"
 btnc_r2_light_bridge = "Activate ArF8 SW Light Bridge"
 btnc_r2_open_ne_cache = "Open ArF8 NE Cache"
-btnc_r2_open_spikes_l = "Open ArF8 Left Spike Turret Island Shortcut"
+btnc_r2_open_spikes_l = "Open ArF8 Spike Turret Island Left Shortcut"
 btnc_r3_boss_door = "Open ArF9 Boss Gate"
 btnc_r3_passage_room_2 = "Open ArF9 Secret Passage North Room"
 btnc_r3_tp_nw = "Teleport ArF9 NW Item"
@@ -290,7 +290,7 @@ btnc_c2_s_red_flame_turret = "Disable ChF11 South Red Flame Turrets"  # Useful
 btnc_c2_s_shortcut = "Open ChF11 South Entrance Shortcut"  # Useful
 btnc_c3_e_shortcut = "Open ChF12 East Shortcut"
 btnc_c3_sw_room = "Open ChF12 SW Hidden Hall"
-btnc_c3_sw_room_part = "Open ChF12 Hidden Hall Progress"
+btnc_c3_sw_room_part = "Open ChF12 SW Hidden Hall Progress"
 btnc_c3_red_spikes = "Disable ChF12 Red Spikes"
 btnc_c3_blue_fire_turrets_on = "Activate ChF12 Blue Flame Turrets"  # Trap
 btnc_c3_tp_m = "Teleport ChF12 Middle Item"
@@ -500,7 +500,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_fire,
         trap_confuse,
         trap_banner,
-        trap_flies,
+        # trap_flies,
     },
     group_buttons: {
         btn_pof,

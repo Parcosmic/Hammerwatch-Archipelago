@@ -94,7 +94,7 @@ trap_table: typing.Dict[str, ItemData] = {
     item_name.trap_fire: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_banner: ItemData(counter.count(), ItemClassification.trap),
-    item_name.trap_flies: ItemData(counter.count(), ItemClassification.trap),
+    # item_name.trap_flies: ItemData(counter.count(), ItemClassification.trap),
 }
 
 counter = Counter(id_start + 0x200 - 1)
@@ -195,9 +195,9 @@ castle_button_table: typing.Dict[str, ItemData] = {
     item_name.btnc_n1_cache_ne: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_n1_hall_top: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_n1_hall_bottom: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btnc_b1_left: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btnc_b1_right: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btnc_a1_boss_door: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_b1_pillars: ItemData(counter.count(), ItemClassification.progression),
+    # item_name.btnc_b1_right: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btnc_a1_boss_door: ItemData(counter.count(2), ItemClassification.progression),
     item_name.btnc_a1_tp_n: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_a1_m_shortcut: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_a1_red_spikes: ItemData(counter.count(), ItemClassification.progression),
