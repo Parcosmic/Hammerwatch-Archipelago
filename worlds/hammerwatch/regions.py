@@ -3171,6 +3171,9 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
 
         gate_counts = [all_gate_counts for _ in range(12)]
 
+    if world.options.randomize_bonus_keys == 0:
+        key_bonus = [item_name.key_bonus for _ in range(4)]
+
     buttonsanity = world.options.buttonsanity.value > 0
     buttonsanity_insanity = get_buttonsanity_insanity(world)
     rando_all_exits = world.options.exit_randomization.value == world.options.exit_randomization.option_all

@@ -59,8 +59,9 @@ receiving bronze keys feel more meaningful.
 
 ## Client commands
 
-A few commands have been added to the client to help prevent softlocks or to provide QoL. To run a command enter it in
-the in-game chat with its arguments and hit enter. The current commands are:
+A few commands have been added to the client to help prevent softlocks or to provide QoL. To run a command, enter it in
+the in-game chat with its arguments and hit enter. Surrounding an argument with quotes ("") will include any spaces in
+the argument. The current commands are:
 
 /help: lists all commands and their usages
 

@@ -517,11 +517,19 @@ class HammerwatchWorld(World):
         #     fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
         #                      True, False, True, None, False, False, "Button Shuffle")
 
-        # state = self.multiworld.get_all_state(False)
-        # state.update_reachable_regions(self.player)
-        # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
-        #                   highlight_regions=state.reachable_regions[self.player])
-        pass
+        state = self.multiworld.get_all_state(False)
+        state.update_reachable_regions(self.player)
+        visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
+                          highlight_regions=state.reachable_regions[self.player])
+
+        # In the castle campaign if buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
+        blue_button_trap_chance = 0.5
+        if get_campaign(self) == Campaign.Castle and self.options.buttonsanity > 0 and self.random.random() > blue_button_trap_chance:
+            button_loc = self.multiworld.get_location(castle_location_names.btn_c3_wall_blue, self.player)
+            trap_pool = [item for item in self.multiworld.itempool if item.classification == ItemClassification.trap]
+            trap_item: Item = self.random.choice(trap_pool)
+            self.multiworld.itempool.remove(trap_item)
+            button_loc.place_locked_item(trap_item)
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.options.shop_shuffle.value:

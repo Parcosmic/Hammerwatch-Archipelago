@@ -201,9 +201,8 @@ class TestCastleButtonsanityOff(HammerwatchTestBase):
         for location in self.multiworld.get_locations(1):
             if location.name not in locations.all_locations:
                 continue
-            loc_type = locations.all_locations[location.name].classification
-            if (loc_type == locations.LocationClassification.Button
-                    or loc_type == locations.LocationClassification.Buttoninsanity):
+            loc_type = locations.all_locations[location.name].loc_type
+            if loc_type & locations.LocType.Button:
                 self.assertTrue(location.item.name in items.castle_button_table)
 
 
@@ -219,9 +218,8 @@ class TestTempleButtonsanityOff(HammerwatchTestBase):
         for location in self.multiworld.get_locations(1):
             if location.name not in locations.all_locations:
                 continue
-            loc_type = locations.all_locations[location.name].classification
-            if (loc_type == locations.LocationClassification.Button
-                    or loc_type == locations.LocationClassification.Buttoninsanity):
+            loc_type = locations.all_locations[location.name].loc_type
+            if loc_type & locations.LocType.Button:
                 self.assertTrue(location.item.name in items.temple_button_table)
             else:
                 self.assertFalse(location.item.name in items.temple_button_table)
