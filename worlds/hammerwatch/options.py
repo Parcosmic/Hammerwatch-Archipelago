@@ -420,8 +420,9 @@ class GameModifiers(OptionDict):
 
 
 class ERSeed(FreeText):
-    """Determines the seed for generating the exit randomization layout. If blank the seed will be random"""
+    """Determines the seed for generating the exit randomization layout. If "random" the seed will be random"""
     display_name = "Exit Randomization Seed"
+    default = "random"
 
 
 class DeathLink(DeathLink):

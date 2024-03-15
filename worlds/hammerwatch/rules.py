@@ -70,7 +70,7 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     tries = 0
     stop_threshold = 100000
     random_state = None
-    if world.options.er_seed.value != "":
+    if world.options.er_seed.value != "random":
         random_state = world.random.getstate()
         world.random.seed(world.options.er_seed.value.encode())
     while not set_connections(world, entrance_block_types, passage_blocking_codes,
