@@ -1,4 +1,6 @@
+import sys
 import typing
+import hashlib
 from enum import Enum
 from BaseClasses import Region, Entrance
 from .names import (castle_region_names, temple_region_names, castle_location_names, temple_location_names,
@@ -67,6 +69,10 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
 
     tries = 0
     stop_threshold = 100000
+    random_state = None
+    if world.options.er_seed.value != "":
+        random_state = world.random.getstate()
+        world.random.seed(world.options.er_seed.value.encode())
     while not set_connections(world, entrance_block_types, passage_blocking_codes,
                               code_to_exit, code_to_region, open_codes):
         if tries >= stop_threshold:
@@ -75,6 +81,8 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     if tries >= stop_threshold:
         raise RuntimeError("Could not generate a valid ER configuration!")
     # print(f"Connecting exits took {tries} tries")
+    if random_state is not None:
+        world.random.setstate(random_state)
 
     menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
     if get_campaign(world) == Campaign.Castle:

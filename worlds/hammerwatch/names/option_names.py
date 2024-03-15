@@ -40,6 +40,7 @@ trap_item_percent = "trap_item_percent"
 trap_item_weights = "trap_item_weights"
 starting_life_count = "starting_life_count"
 game_modifiers = "game_modifiers"
+er_seed = "er_seed"
 death_link = "death_link"
 
 mod_no_extra_lives = "no_extra_lives"

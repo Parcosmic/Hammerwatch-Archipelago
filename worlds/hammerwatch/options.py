@@ -1,7 +1,7 @@
 import typing
 from schema import Schema, Optional, And
 from dataclasses import dataclass
-from Options import Choice, Range, Option, Toggle, DeathLink, DefaultOnToggle, OptionDict, PerGameCommonOptions
+from Options import Choice, Range, Option, Toggle, DeathLink, OptionDict, FreeText, PerGameCommonOptions
 from .names import option_names
 from .items import trap_table
 
@@ -419,6 +419,11 @@ class GameModifiers(OptionDict):
     schema = Schema({Optional(mod): bool for mod in option_names.game_modifier_names})
 
 
+class ERSeed(FreeText):
+    """Determines the seed for generating the exit randomization layout. If blank the seed will be random"""
+    display_name = "Exit Randomization Seed"
+
+
 class DeathLink(DeathLink):
     """When anybody dies, everyone dies. This also applies to all multiplayer players within a single game"""
     display_name = "Death Link"
@@ -466,6 +471,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     trap_item_weights: TrapItemWeights
     starting_life_count: StartingLifeCount
     game_modifiers: GameModifiers
+    er_seed: ERSeed
     death_link: DeathLink
 
 
