@@ -607,6 +607,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     p3_sw_region = create_region(world, active_locations, castle_region_names.p3_sw, p3_sw_locs)
 
+    p3_boss_region = create_region(world, active_locations, castle_region_names.p3_boss, [])
+
     p3_exit_s_locs = [
         castle_location_names.btn_p3_wall_to_p1_s,
     ]
@@ -769,6 +771,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a1_boss_door,
     ]
     a1_start_region = create_region(world, active_locations, castle_region_names.a1_start, a1_start_locs)
+
+    a1_boss_region = create_region(world, active_locations, castle_region_names.a1_boss, [])
 
     a1_start_shop_w_locs = []  # Start bronze gate shop
     a1_start_shop_w_region = create_region(world, active_locations, castle_region_names.a1_start_shop_w,
@@ -2061,6 +2065,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
     r3_exit_region = create_region(world, active_locations, castle_region_names.r3_exit, r3_exit_locs)
 
+    r3_boss_region = create_region(world, active_locations, castle_region_names.r3_boss, [])
+
     n3_main_locs = [
         castle_location_names.n3_tp_room_n_1,
         castle_location_names.n3_tp_room_n_2,
@@ -2381,6 +2387,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c2_wall_s_save,
     ]
     c2_main_region = create_region(world, active_locations, castle_region_names.c2_main, c2_main_locs)
+
+    c2_boss_region = create_region(world, active_locations, castle_region_names.c2_boss, [])
 
     c2_exit_bgate_locs = [
         castle_location_names.btn_c2_wall_n_exit_gate,
@@ -2886,6 +2894,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         p3_arrow_hall_secret_region,
         p3_spikes_s_region,
         p3_sw_region,
+        p3_boss_region,
         p3_exit_s_region,
         p3_hidden_arrow_hall_region,
         p3_s_gold_gate_region,
@@ -2904,6 +2913,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         b1_defeated_region,
         b1_exit_region,
         a1_start_region,
+        a1_boss_region,
         a1_start_shop_w_region,
         a1_start_shop_m_region,
         a1_start_shop_e_region,
@@ -3040,6 +3050,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         r3_bonus_return_region,
         r3_bonus_return_bridge_region,
         r3_exit_region,
+        r3_boss_region,
         n3_main_region,
         n3_tp_room_region,
         b3_start_region,
@@ -3060,6 +3071,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         pstart_puzzle_island_region,
         pstart_puzzle_region,
         c2_main_region,
+        c2_boss_region,
         c2_sw_wall_region,
         c2_w_wall_region,
         c2_e_wall_region,
@@ -3353,13 +3365,15 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     if buttonsanity:
         connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_n_gold_gate, True,
                 item_name.btnc_p3_sw_shortcut, 1, False)
-        connect_exit(world, used_names, castle_region_names.p3_sw, castle_region_names.b1_start,
-                     entrance_names.c_b1_0, entrance_names.c_p3_boss, item_name.btnc_p3_boss_door, 1, False,
-                     rando_all_exits, True)
+        connect(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_boss, True,
+                item_name.btnc_p3_boss_door, 1, False)
     else:
-        connect_exit(world, used_names, castle_region_names.p3_sw, castle_region_names.b1_start,
-                     entrance_names.c_b1_0, entrance_names.c_p3_boss, item_name.btnc_b1_boss, 3, False,
-                     rando_all_exits, True)
+        connect_all(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_boss, True,
+                    [item_name.btnc_b1_rune_1, item_name.btnc_b1_rune_2, item_name.btnc_b1_rune_3],
+                    True)
+    connect_exit(world, used_names, castle_region_names.p3_boss, castle_region_names.b1_start,
+                 entrance_names.c_b1_0, entrance_names.c_p3_boss, None, 0, False,
+                 rando_all_exits, True)
 
     # Prison Bonus
     connect_gate(world, used_names, castle_region_names.n1_start, castle_region_names.n1_room1, key_bonus[0])
@@ -3400,13 +3414,15 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a3_main,
                  entrance_names.c_a3_0, entrance_names.c_a1_a3)
     if buttonsanity:
-        connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.b2_start,
-                     entrance_names.c_b2_0, entrance_names.c_a1_boss, item_name.btnc_a1_boss_door, 1, False,
-                     rando_all_exits, True)
+        connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss,True,
+                item_name.btnc_a1_boss_door, 1, False)
     else:
-        connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.b2_start,
-                     entrance_names.c_b2_0, entrance_names.c_a1_boss, item_name.btnc_b2_boss, 3, False,
-                     rando_all_exits, True)
+        connect_all(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss, True,
+                    [item_name.btnc_b2_rune_1, item_name.btnc_b2_rune_2, item_name.btnc_b2_rune_3],
+                    True)
+    connect_exit(world, used_names, castle_region_names.a1_boss, castle_region_names.b2_start,
+                 entrance_names.c_b2_0, entrance_names.c_a1_boss, None, 0, False,
+                 rando_all_exits, True)
     connect_gate(world, used_names, castle_region_names.a1_se, castle_region_names.a1_e,
                  key_silver[3], gate_codes, gate_counts[3], gate_names.c_a1_6, True)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_sw_bgate,
@@ -3802,13 +3818,15 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect(world, used_names, castle_region_names.r3_w_ggate, castle_region_names.r3_exit, False,
             item_name.btnc_r3_open_exit, 1, False, buttonsanity)
     if buttonsanity:
-        connect_exit(world, used_names, castle_region_names.r3_exit, castle_region_names.b3_start,
-                     entrance_names.c_b3_0, entrance_names.c_r3_boss, item_name.btnc_r3_boss_door, 1, False,
-                     rando_all_exits, True)
+        connect(world, used_names, castle_region_names.r3_exit, castle_region_names.r3_boss, True,
+                item_name.btnc_r3_boss_door, 1, False)
     else:
-        connect_exit(world, used_names, castle_region_names.r3_exit, castle_region_names.b3_start,
-                     entrance_names.c_b3_0, entrance_names.c_r3_boss, item_name.btnc_b3_boss, 3, False,
-                     rando_all_exits, True)
+        connect_all(world, used_names, castle_region_names.r3_exit, castle_region_names.r3_boss, True,
+                    [item_name.btnc_b3_rune_1, item_name.btnc_b3_rune_2, item_name.btnc_b3_rune_3],
+                    True)
+    connect_exit(world, used_names, castle_region_names.r3_boss, castle_region_names.b3_start,
+                 entrance_names.c_b3_0, entrance_names.c_r3_boss, None, 0, False,
+                 rando_all_exits, True)
 
     # Archives Bonus
     connect_exit(world, used_names, castle_region_names.n3_main, castle_region_names.n3_tp_room,
@@ -4045,16 +4063,25 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
                  entrance_names.c_c3_156, None)
     connect(world, used_names, castle_region_names.c3_c2_tp, castle_region_names.c3_nw, False)
 
-    # Boss 4
     if buttonsanity_insanity:
-        boss_4_item = item_name.btnc_b4_boss_part
-        boss_4_count = 12
+        b4_runes_entr = connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_boss, False)
+        b4_runes_entr_inv = connect(world, used_names, castle_region_names.c2_boss, castle_region_names.c2_main, False)
+        rune_items = [
+            item_name.btnc_b4_rune_1_part,
+            item_name.btnc_b4_rune_2_part,
+            item_name.btnc_b4_rune_3_part,
+        ]
+        add_rule(b4_runes_entr, lambda state: all(state.has(rune, world.player, 4) for rune in rune_items))
+        add_rule(b4_runes_entr_inv, lambda state: all(state.has(rune, world.player, 4) for rune in rune_items))
     else:
-        boss_4_item = item_name.btnc_b4_boss
-        boss_4_count = 3
-    connect_exit(world, used_names, castle_region_names.c2_main, castle_region_names.b4_start,
+        connect_all(world, used_names, castle_region_names.c2_main, castle_region_names.c2_boss, rando_all_exits,
+                    [item_name.btnc_b4_rune_1, item_name.btnc_b4_rune_2, item_name.btnc_b4_rune_3],
+                    True)
+
+    # Boss 4
+    connect_exit(world, used_names, castle_region_names.c2_boss, castle_region_names.b4_start,
                  entrance_names.c_b4_0, entrance_names.c_c2_boss,
-                 boss_4_item, boss_4_count, False, rando_all_exits, True)
+                 None, 0, False, rando_all_exits, True)
     connect(world, used_names, castle_region_names.b4_start, castle_region_names.b4_defeated, False)
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
@@ -5958,6 +5985,27 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
 
     if two_way:
         connect(world, used_names, target, source, False, pass_item, item_count, items_consumed, use_pass_item)
+
+    return connection
+
+
+def connect_all(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
+                pass_items: typing.List[str], use_rule: bool):
+    source_region = world.multiworld.get_region(source, world.player)
+    target_region = world.multiworld.get_region(target, world.player)
+
+    entrance_name = get_entrance_name(used_names, source, target)
+
+    connection = HWEntrance(world.player, entrance_name, source_region, target_region,
+                            None, 1, False, None)
+    if use_rule:
+        add_rule(connection, lambda state: state.has_all(pass_items, world.player), "and")
+
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    if two_way:
+        connect_or(world, used_names, target, source, False, pass_items, use_rule)
 
     return connection
 

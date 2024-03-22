@@ -118,14 +118,30 @@ trap_banner = "Banner Trap"
 trap_flies = "Fly Trap"
 
 # Castle button item names
-btnc_b1_boss = "Prison Boss Rune"
-btnc_b1_boss_part = "Prison Boss Rune Progress"
-btnc_b2_boss = "Armory Boss Rune"
-btnc_b2_boss_part = "Armory Boss Rune Progress"
-btnc_b3_boss = "Archives Boss Rune"
-btnc_b3_boss_part = "Archives Boss Rune Progress"
-btnc_b4_boss = "Chambers Boss Rune"
-btnc_b4_boss_part = "Chambers Boss Rune Progress"
+btnc_b1_rune_1 = "Prison Boss Rune y"
+btnc_b1_rune_2 = "Prison Boss Rune n"
+btnc_b1_rune_3 = "Prison Boss Rune A"
+btnc_b2_rune_1 = "Armory Boss Rune y"
+btnc_b2_rune_2 = "Armory Boss Rune n"
+btnc_b2_rune_3 = "Armory Boss Rune A"
+btnc_b3_rune_1 = "Archives Boss Rune y"
+btnc_b3_rune_2 = "Archives Boss Rune n"
+btnc_b3_rune_3 = "Archives Boss Rune A"
+btnc_b4_rune_1 = "Chambers Boss Rune y"
+btnc_b4_rune_2 = "Chambers Boss Rune n"
+btnc_b4_rune_3 = "Chambers Boss Rune A"
+btnc_b1_rune_1_part = "Prison Boss Rune y Progress"
+btnc_b1_rune_2_part = "Prison Boss Rune n Progress"
+btnc_b1_rune_3_part = "Prison Boss Rune A Progress"
+btnc_b2_rune_1_part = "Armory Boss Rune y Progress"
+btnc_b2_rune_2_part = "Armory Boss Rune n Progress"
+btnc_b2_rune_3_part = "Armory Boss Rune A Progress"
+btnc_b3_rune_1_part = "Archives Boss Rune y Progress"
+btnc_b3_rune_2_part = "Archives Boss Rune n Progress"
+btnc_b3_rune_3_part = "Archives Boss Rune A Progress"
+btnc_b4_rune_1_part = "Chambers Boss Rune y Progress"
+btnc_b4_rune_2_part = "Chambers Boss Rune n Progress"
+btnc_b4_rune_3_part = "Chambers Boss Rune A Progress"
 btnc_pstart_puzzle = "Activate PrF1 Puzzle"
 btnc_p2_puzzle = "Activate PrF2 Puzzle"
 btnc_a1_puzzle = "Activate AmF4 Puzzle"
@@ -406,6 +422,11 @@ group_tools = "Tools"
 group_traps = "Traps"
 group_buttons = "Buttons"
 
+group_b1_boss = "Prison Boss Rune"
+group_b2_boss = "Armory Boss Rune"
+group_b3_boss = "Archives Boss Rune"
+group_b4_boss = "Chambers Boss Rune"
+
 item_groups: typing.Dict[str, typing.Set[str]] = {
     group_chests: {
         bonus_chest,
@@ -569,5 +590,37 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_pof_2_puzzle,
         btn_pof_2_exit,
         btn_pof_3_start,
+    },
+    group_b1_boss: {
+        btnc_b1_rune_1,
+        btnc_b1_rune_2,
+        btnc_b1_rune_3,
+        btnc_b1_rune_1_part,
+        btnc_b1_rune_2_part,
+        btnc_b1_rune_3_part,
+    },
+    group_b2_boss: {
+        btnc_b2_rune_1,
+        btnc_b2_rune_2,
+        btnc_b2_rune_3,
+        btnc_b2_rune_1_part,
+        btnc_b2_rune_2_part,
+        btnc_b2_rune_3_part,
+    },
+    group_b3_boss: {
+        btnc_b3_rune_1,
+        btnc_b3_rune_2,
+        btnc_b3_rune_3,
+        btnc_b3_rune_1_part,
+        btnc_b3_rune_2_part,
+        btnc_b3_rune_3_part,
+    },
+    group_b4_boss: {
+        btnc_b4_rune_1,
+        btnc_b4_rune_2,
+        btnc_b4_rune_3,
+        btnc_b4_rune_1_part,
+        btnc_b4_rune_2_part,
+        btnc_b4_rune_3_part,
     },
 }

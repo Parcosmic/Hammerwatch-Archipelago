@@ -167,33 +167,40 @@ def set_extra_rules(world: "HammerwatchWorld"):
             world.options.exclude_locations.value.update(escape_locations)
         # Buttonsanity additional rules
         if world.options.buttonsanity.value > 0:
-            boss_gate_locs = {
-                castle_location_names.btn_p3_boss_door: item_name.btnc_b1_boss,
-                castle_location_names.btn_a1_boss_door: item_name.btnc_b2_boss,
-                castle_location_names.btn_r3_boss_door: item_name.btnc_b3_boss,
+            rune_counts = 1
+            boss_gate_locs: typing.Dict[str, typing.List[str]] = {
+                castle_location_names.btn_p3_boss_door:
+                    [item_name.btnc_b1_rune_1, item_name.btnc_b1_rune_2, item_name.btnc_b1_rune_3],
+                castle_location_names.btn_a1_boss_door:
+                    [item_name.btnc_b2_rune_1, item_name.btnc_b2_rune_2, item_name.btnc_b2_rune_3],
+                castle_location_names.btn_r3_boss_door:
+                    [item_name.btnc_b3_rune_1, item_name.btnc_b3_rune_2, item_name.btnc_b3_rune_3],
             }
             a2_bgate_tp = world.multiworld.get_location(castle_location_names.a2_ne_l_bgate, world.player)
             if get_buttonsanity_insanity(world):
                 # Boss gate button location logic
-                boss_gate_locs = {
-                    castle_location_names.btn_p3_boss_door: item_name.btnc_b1_boss_part,
-                    castle_location_names.btn_a1_boss_door: item_name.btnc_b2_boss_part,
-                    castle_location_names.btn_r3_boss_door: item_name.btnc_b3_boss_part,
+                rune_counts = 4
+                boss_gate_locs: typing.Dict[str, typing.List[str]] = {
+                    castle_location_names.btn_p3_boss_door:
+                        [item_name.btnc_b1_rune_1_part, item_name.btnc_b1_rune_2_part, item_name.btnc_b1_rune_3_part],
+                    castle_location_names.btn_a1_boss_door:
+                        [item_name.btnc_b2_rune_1_part, item_name.btnc_b2_rune_2_part, item_name.btnc_b2_rune_3_part],
+                    castle_location_names.btn_r3_boss_door:
+                        [item_name.btnc_b3_rune_1_part, item_name.btnc_b3_rune_2_part, item_name.btnc_b3_rune_3_part],
                 }
-                for loc_name, itm_name in boss_gate_locs.items():
-                    add_loc_item_rule(world, loc_name, itm_name, 12)
                 # Armory Floor 5 NE gates teleport item
                 add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates_part, world.player, 4), "and")
             else:
-                # Boss gate button location logic
-                for loc_name, itm_name in boss_gate_locs.items():
-                    add_loc_item_rule(world, loc_name, itm_name, 3)
                 # Armory Floor 5 NE gates teleport item
                 add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates, world.player), "and")
                 # Rune sequence
                 c12_seq_loc = world.multiworld.get_location(castle_location_names.btn_c3_rune, world.player)
                 c12_seq_loc_n = world.multiworld.get_location(castle_location_names.c3_nw_ice_towers_1, world.player)
                 add_rule(c12_seq_loc, lambda state: state.can_reach(c12_seq_loc_n, "Location", world.player), "and")
+            # Boss gate button location logic
+            for loc_name, rune_items in boss_gate_locs.items():
+                loc = world.multiworld.get_location(loc_name, world.player)
+                add_rule(loc, lambda state, runes=rune_items: all(state.has(rune, world.player, rune_counts) for rune in runes))
             misc_loc_logic = {
                 castle_location_names.a2_pyramid_1: item_name.btnc_a2_pyramid_nw,
                 castle_location_names.a3_pyramid: item_name.btnc_a3_pyramid_ne,
@@ -828,10 +835,10 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
     if get_campaign(world) == Campaign.Castle:
         # Disconnect level exits and pretend that you need to go through the boss switch areas to the boss
         remove_entrances = [
-            world.multiworld.get_entrance(get_etr_name(castle_region_names.p3_sw, castle_region_names.b1_start), world.player),
-            world.multiworld.get_entrance(get_etr_name(castle_region_names.a1_start, castle_region_names.b2_start), world.player),
-            world.multiworld.get_entrance(get_etr_name(castle_region_names.r3_exit, castle_region_names.b3_start), world.player),
-            world.multiworld.get_entrance(get_etr_name(castle_region_names.c2_main, castle_region_names.b4_start), world.player),
+            world.multiworld.get_entrance(get_etr_name(castle_region_names.p3_boss, castle_region_names.b1_start), world.player),
+            world.multiworld.get_entrance(get_etr_name(castle_region_names.a1_boss, castle_region_names.b2_start), world.player),
+            world.multiworld.get_entrance(get_etr_name(castle_region_names.r3_boss, castle_region_names.b3_start), world.player),
+            world.multiworld.get_entrance(get_etr_name(castle_region_names.c2_boss, castle_region_names.b4_start), world.player),
         ]
         add_entrances = [
             copy_entrance_dest("P1 Boss Switch", castle_region_names.p1_from_p3_n, remove_entrances[0]),
