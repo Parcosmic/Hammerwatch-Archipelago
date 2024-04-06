@@ -2935,21 +2935,26 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     random_locations: typing.Dict[str, int] = {}
     button_items = {}
     map_button_items: typing.Dict[str, str]
+    event_buttons: typing.Dict[str, str]
     combo_button_locs: typing.List[str]
+    pickup_locs: typing.Dict[str, LocationData]
+    enemy_loot_locs: typing.Dict[str, LocationData]
 
     location_table = {}
     if hw_map == Campaign.Castle:
         item_counts.update(castle_item_counts)
-        hw_map_locations = get_castle_locations(world)
         map_button_items = castle_button_items
         button_locations = castle_button_locations
         combo_button_locs = castle_combo_button_locations
+        hw_map_locations = get_base_locations(world, castle_pickup_locations, castle_enemy_loot_locations,
+                                              button_locations, castle_event_buttons, combo_button_locs)
     else:  # Need a default case for this else tests will complain
         item_counts.update(temple_item_counts)
-        hw_map_locations = get_temple_locations(world)
         map_button_items = temple_button_items
         button_locations = temple_button_locations
         combo_button_locs = temple_combo_button_locations
+        hw_map_locations = get_base_locations(world, temple_pickup_locations, temple_enemy_loot_locations,
+                                              button_locations, temple_event_buttons, combo_button_locs)
 
     if get_buttonsanity_insanity(world):
         for loc, itm in map_button_items.items():
@@ -2987,6 +2992,8 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
         if data.loc_type & LocType.Recovery and not world.options.randomize_recovery_items:
             continue
         if data.loc_type & LocType.Puzzle and not world.options.randomize_puzzles:
+            if name in map_button_items:
+                item_counts[map_button_items[name]] -= 1
             continue
         location_table[name] = data
 
@@ -3009,48 +3016,26 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     return location_table, item_counts, random_locations
 
 
-def get_castle_locations(world: "HammerwatchWorld"):
+def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, LocationData],
+                       enemy_loot_locs: typing.Dict[str, LocationData], button_locs: typing.Dict[str, LocationData],
+                       event_buttons: typing.Dict[str, str], combo_button_locs: list[str]):
     location_table: typing.Dict[str, LocationData] = {}
-    location_table.update(castle_pickup_locations)
+    location_table.update(pickup_locs)
     if world.options.randomize_enemy_loot.value:
-        location_table.update(castle_enemy_loot_locations)
+        location_table.update(enemy_loot_locs)
 
     button_locations: typing.Dict[str, LocationData] = {}
     if world.options.buttonsanity == world.options.buttonsanity.option_off:
         # Only add buttons that need locked items for logic
-        button_locations.update({loc: castle_button_locations[loc] for loc in castle_event_buttons.keys()})
+        button_locations.update({loc: button_locs[loc] for loc in event_buttons.keys()})
     elif get_buttonsanity_insanity(world):
-        button_locations.update({loc: data for loc, data in castle_button_locations.items()
-                                 if loc not in castle_combo_button_locations})
+        button_locations.update({loc: data for loc, data in button_locs.items()
+                                 if loc not in combo_button_locs})
     else:
         # Add non-insanity buttons and the combo function buttons
-        button_locations = {loc: data for loc, data in castle_button_locations.items()
+        button_locations = {loc: data for loc, data in button_locs.items()
                             if (data.loc_type & LocType.Buttoninsanity) != LocType.Buttoninsanity}
-        button_locations.update({loc: castle_button_locations[loc] for loc in castle_combo_button_locations})
-    location_table.update(button_locations)
-
-    return location_table
-
-
-def get_temple_locations(world: "HammerwatchWorld"):
-    location_table: typing.Dict[str, LocationData] = {}
-    location_table.update(temple_pickup_locations)
-    if world.options.randomize_enemy_loot.value:
-        location_table.update(temple_enemy_loot_locations)
-
-    button_locations: typing.Dict[str, LocationData] = {}
-    if world.options.buttonsanity == world.options.buttonsanity.option_off:
-        # Only add buttons that need locked items for logic
-        # button_locations.update({loc: data for loc, data in temple_button_locations.items() if loc in temple_event_switches})
-        button_locations.update({loc: temple_button_locations[loc] for loc in temple_event_buttons.keys()})
-    elif world.options.buttonsanity != world.options.buttonsanity.option_insanity:
-        # Add non-insanity buttons and the combo function buttons
-        button_locations = {loc: data for loc, data in temple_button_locations.items()
-                            if (data.loc_type & LocType.Buttoninsanity) != LocType.Buttoninsanity}
-        button_locations.update({loc: temple_button_locations[loc] for loc in temple_combo_button_locations})
-    else:
-        button_locations.update({loc: data for loc, data in temple_button_locations.items()
-                                 if loc not in temple_combo_button_locations})
+        button_locations.update({loc: button_locs[loc] for loc in combo_button_locs})
     location_table.update(button_locations)
 
     return location_table
@@ -3061,7 +3046,8 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
     random_locations: typing.Dict[str, int] = {}
 
     def remove_location(location: str, loc_item: str):
-        location_table.pop(location)
+        if location in location_table:
+            location_table.pop(location)
         item_counts[loc_item] -= 1
 
     def remove_puzzle_locations(base_name: str, rloc_name: str):
@@ -3840,6 +3826,12 @@ def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typi
     if world.options.randomize_puzzles:
         for rloc, loc in puzzle_locs.items():
             remove_puzzle_locations(loc[:-1], rloc)
+    else:
+        item_counts[item_name.chest_purple] -= len(puzzle_locs)
+        item_counts[item_name.stat_upgrade] -= len(puzzle_locs)
+        item_counts[item_name.ankh] -= len(puzzle_locs)
+        item_counts[item_name.potion_rejuvenation] -= len(puzzle_locs)
+
     # Enemy loot locations
     if world.options.randomize_enemy_loot.value:
         flower_locs = [

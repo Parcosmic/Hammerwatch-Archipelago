@@ -809,7 +809,7 @@ btn_pof_puzzle = "PoF: Chance Puzzle Button"
 btn_pof_1_panel_se = "PoF L1: SE Teleport Room Panel"
 btn_pof_1_panel_n = "PoF L1: North Room Panel"
 btn_pof_2_panel_e = "PoF L2: NE Panel"
-btn_pof_2_panel_w = "PoF Chance Puzzle Room Panel"
+btn_pof_2_panel_w = "PoF L2: Chance Puzzle Room Panels"
 btn_pof_3_panel = "PoF L3: Entrance Panel"
 
 ev_pof_end = "PoF: Level 2 End"

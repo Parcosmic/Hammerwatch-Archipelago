@@ -143,6 +143,8 @@ class HammerwatchWorld(World):
 
         # Add floor master key items to item_counts
         if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+            if not self.options.randomize_bonus_keys.value:
+                self.key_item_counts.pop(item_name.key_bonus)
             self.item_counts.update(self.key_item_counts)
 
         # First create and place our locked items so we know how many are left over

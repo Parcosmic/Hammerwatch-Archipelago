@@ -1,6 +1,4 @@
-import sys
 import typing
-import hashlib
 from enum import Enum
 from BaseClasses import Region, Entrance
 from .names import (castle_region_names, temple_region_names, castle_location_names, temple_location_names,
