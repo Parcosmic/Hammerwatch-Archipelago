@@ -519,10 +519,11 @@ class HammerwatchWorld(World):
         #     fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
         #                      True, False, True, None, False, False, "Button Shuffle")
 
-        state = self.multiworld.get_all_state(False)
-        state.update_reachable_regions(self.player)
-        visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
-                          highlight_regions=state.reachable_regions[self.player])
+        # Don't forget to uncomment this before pushing!!!
+        # state = self.multiworld.get_all_state(False)
+        # state.update_reachable_regions(self.player)
+        # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
+        #                   highlight_regions=state.reachable_regions[self.player])
 
         # In the castle campaign if buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
         blue_button_trap_chance = 0.5
