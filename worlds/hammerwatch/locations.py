@@ -3018,7 +3018,7 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
 
 def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, LocationData],
                        enemy_loot_locs: typing.Dict[str, LocationData], button_locs: typing.Dict[str, LocationData],
-                       event_buttons: typing.Dict[str, str], combo_button_locs: list[str]):
+                       event_buttons: typing.Dict[str, str], combo_button_locs: typing.List[str]):
     location_table: typing.Dict[str, LocationData] = {}
     location_table.update(pickup_locs)
     if world.options.randomize_enemy_loot.value:
