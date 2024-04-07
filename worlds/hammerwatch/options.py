@@ -414,7 +414,9 @@ class StartingLifeCount(Range):
 
 
 class GameModifiers(OptionDict):
-    """Enforces game modifiers to be set either true or false"""
+    """Enforces game modifiers to be set either true or false
+    Valid modifiers are: no_extra_lives, 1_hp, shared_hp_pool, no_hp_pickups, no_mana_regen, reverse_hp_regen,
+    infinite_lives, hp_regen, double_damage, double_lives, and 5x_mana_regen"""
     display_name = "Game Modifiers"
     schema = Schema({Optional(mod): bool for mod in option_names.game_modifier_names})
 
