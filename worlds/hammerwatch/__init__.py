@@ -220,7 +220,7 @@ class HammerwatchWorld(World):
     def remove(self, state: CollectionState, item: Item) -> bool:
         prog = super(HammerwatchWorld, self).remove(state, item)
         spaces = item.name.count(" ")
-        if item.name.endswith("Key") and spaces > 1:
+        if item.name.endswith("Key") and spaces > 1 and item.name in key_table:
             add_name = key_table[item.name][0]
             count = key_table[item.name][1]
             state.prog_items[self.player][add_name] -= count
