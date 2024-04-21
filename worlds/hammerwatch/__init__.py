@@ -81,6 +81,13 @@ class HammerwatchWorld(World):
     def generate_early(self):
         self.campaign = get_campaign(self)
 
+        # Validate act specific keys option
+        if self.campaign == Campaign.Temple and self.options.key_mode == self.options.key_mode.option_act_specific:
+            slot_name = self.multiworld.player_name[self.player]
+            logging.warning(f"Slot \"{slot_name}\": Act Specific Keys option not compatible with temple campaign, "
+                            f"switching to vanilla")
+            self.options.key_mode.value = self.options.key_mode.option_vanilla
+
         exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives, option_names.mod_double_lives],
                                 [option_names.mod_1_hp, option_names.mod_no_hp_pickups],
                                 [option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen],
