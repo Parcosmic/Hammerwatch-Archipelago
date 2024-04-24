@@ -3411,7 +3411,7 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
                  key_gold[3], gate_codes, gate_counts[3], gate_names.c_a1_8, False)
     connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a2_start,
                  entrance_names.c_a2_0, entrance_names.c_a1_a2)
-    connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a3_main,
+    connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a3_start,
                  entrance_names.c_a3_0, entrance_names.c_a1_a3)
     if buttonsanity:
         connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss,True,
