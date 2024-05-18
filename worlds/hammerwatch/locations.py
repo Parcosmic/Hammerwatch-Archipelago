@@ -3045,6 +3045,13 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
                                    item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
 
+    if hasattr(world.multiworld, "re_gen_passthrough"):
+        random_locations = world.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"]
+    if hasattr(world.multiworld, "generation_is_fake"):
+        item_counts.pop(item_name.loot_tower)
+        item_counts.pop(item_name.loot_flower)
+        return location_table, item_counts, random_locations
+
     def remove_location(location: str, loc_item: str):
         if location in location_table:
             location_table.pop(location)
@@ -3370,6 +3377,14 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
 def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
                                  item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
+
+    if hasattr(world.multiworld, "re_gen_passthrough"):
+        random_locations = world.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"]
+        item_counts.pop(item_name.loot_tower)
+        item_counts.pop(item_name.loot_flower)
+        item_counts.pop(item_name.loot_mini_flower)
+        return location_table, item_counts, random_locations
+
     buttonsanity = world.options.buttonsanity.value > 0
 
     def remove_location(location: str, loc_item: str):

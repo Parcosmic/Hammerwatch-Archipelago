@@ -1,3 +1,5 @@
+import random
+import string
 import typing
 from enum import Enum
 from BaseClasses import Region, Entrance
@@ -7,7 +9,7 @@ from worlds.generic.Rules import add_rule
 from .regions import HWEntrance, get_etr_name, connect
 from .options import ExitRandomization
 from .util import (GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity,
-                   add_loc_item_rule)
+                   add_loc_rule, add_loc_item_rule)
 from Utils import visualize_regions
 from .locations import castle_event_buttons
 
@@ -67,10 +69,14 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
 
     tries = 0
     stop_threshold = 100000
-    random_state = None
-    if world.options.er_seed.value != "random":
-        random_state = world.random.getstate()
-        world.random.seed(world.options.er_seed.value.encode())
+    random_state = world.random.getstate()
+    er_seed = world.options.er_seed.value
+    if hasattr(world.multiworld, "re_gen_passthrough"):
+        er_seed = world.multiworld.re_gen_passthrough["Hammerwatch"]["er_seed"]
+    if er_seed == "random":
+        er_seed = ''.join(random.choices(string.ascii_letters, k=16))
+        world.options.er_seed.value = er_seed
+    world.random.seed(er_seed)
     while not set_connections(world, entrance_block_types, passage_blocking_codes,
                               code_to_exit, code_to_region, open_codes):
         if tries >= stop_threshold:
@@ -79,8 +85,7 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     if tries >= stop_threshold:
         raise RuntimeError("Could not generate a valid ER configuration!")
     # print(f"Connecting exits took {tries} tries")
-    if random_state is not None:
-        world.random.setstate(random_state)
+    world.random.setstate(random_state)
 
     menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
     if get_campaign(world) == Campaign.Castle:
@@ -191,10 +196,13 @@ def set_extra_rules(world: "HammerwatchWorld"):
             else:
                 # Armory Floor 5 NE gates teleport item
                 add_rule(a2_bgate_tp, lambda state: state.has(item_name.btnc_a2_tp_ne_gates, world.player), "and")
-                # Rune sequence
+                # Sequence locations requiring access to multiple regions
                 c12_seq_loc = world.multiworld.get_location(castle_location_names.btn_c3_rune, world.player)
-                c12_seq_loc_n = world.multiworld.get_location(castle_location_names.c3_nw_ice_towers_1, world.player)
-                add_rule(c12_seq_loc, lambda state: state.can_reach(c12_seq_loc_n, "Location", world.player), "and")
+                add_rule(c12_seq_loc, lambda state: state.can_reach_location(castle_location_names.c3_nw_ice_towers_1, world.player), "and")
+                add_loc_rule(world, castle_location_names.btn_p2_rune_sequence,
+                             lambda state: state.can_reach_region(castle_region_names.p2_m_bronze_gate, world.player)
+                             and state.can_reach_region(castle_region_names.p2_e_bronze_gate_2, world.player)
+                             and state.can_reach_region(castle_region_names.p2_se_bronze_gate, world.player))
             # Boss gate button location logic
             for loc_name, rune_items in boss_gate_locs.items():
                 loc = world.multiworld.get_location(loc_name, world.player)
@@ -253,7 +261,7 @@ def set_extra_rules(world: "HammerwatchWorld"):
         if world.options.buttonsanity.value > 0:
             add_rule(world.multiworld.get_location(temple_location_names.btn_t1_wall_guard, world.player),
                      lambda state: state.has(item_name.btn_t1_guard, world.player))
-            if world.random_locations[temple_location_names.rloc_t2_portal] == 2:
+            if world.get_random_location(temple_location_names.rloc_t2_portal) == 2:
                 add_rule(world.multiworld.get_location(temple_location_names.t2_teleporter, world.player),
                          lambda state: state.has(item_name.btn_t2_portal, world.player))
         if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:

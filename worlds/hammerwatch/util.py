@@ -1,7 +1,7 @@
 import typing
 from enum import Enum
 from ..AutoWorld import World
-from worlds.generic.Rules import add_rule
+from worlds.generic.Rules import add_rule, CollectionRule
 from .names import item_name
 
 if typing.TYPE_CHECKING:
@@ -127,6 +127,10 @@ def get_random_elements(world: World, dictionary: typing.Dict, amount: int):
     return elements
 
 
-def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
+def add_loc_rule(world: World, loc_name: str, rule: CollectionRule):
     loc = world.multiworld.get_location(loc_name, world.player)
-    add_rule(loc, lambda state: state.has(item, world.player, item_count), "and")
+    add_rule(loc, rule, "and")
+
+
+def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
+    add_loc_rule(world, loc_name, lambda state: state.has(item, world.player, item_count))

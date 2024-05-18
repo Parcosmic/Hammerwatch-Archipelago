@@ -133,7 +133,9 @@ class HammerwatchWorld(World):
 
     def create_regions(self) -> None:
         self.level_exits = []
-        self.gate_types = create_regions(self, self.campaign, self.active_location_list, self.random_locations)
+        if hasattr(self.multiworld, "re_gen_passthrough"):
+            self.gate_types = self.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"]
+        self.gate_types = create_regions(self, self.campaign, self.active_location_list)
         # Dumb hack to make sure everything is connected before other worlds try to do logic stuff
         self.exit_swaps = {}
         set_rules(self, self.door_counts)
@@ -248,6 +250,20 @@ class HammerwatchWorld(World):
         if self.options.goal == self.options.goal.option_castle_escape:
             castle_events[castle_location_names.ev_escape] = item_name.evc_escaped
 
+        for loc, itm in castle_events.items():
+            location = self.multiworld.get_location(loc, self.player)
+            location.address = None
+            location.place_locked_item(self.create_event(itm))
+        if not self.options.buttonsanity.value:
+            for loc, itm in castle_event_buttons.items():
+                location = self.multiworld.get_location(loc, self.player)
+                location.address = None
+                location.place_locked_item(self.create_event(itm))
+
+        # Don't place non-event items if we're using Universal Tracker
+        if hasattr(self.multiworld, "generation_is_fake"):
+            return
+
         # Bonus Key Locations
         if not self.options.randomize_bonus_keys.value:
             castle_bonus_keys = [
@@ -272,16 +288,6 @@ class HammerwatchWorld(World):
             ]
             for loc in castle_bonus_keys:
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
-
-        for loc, itm in castle_events.items():
-            location = self.multiworld.get_location(loc, self.player)
-            location.address = None
-            location.place_locked_item(self.create_event(itm))
-        if not self.options.buttonsanity.value:
-            for loc, itm in castle_event_buttons.items():
-                location = self.multiworld.get_location(loc, self.player)
-                location.address = None
-                location.place_locked_item(self.create_event(itm))
 
         # Manual start item placement to get fill out of an overly restrictive start with buttonsanity
         if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
@@ -319,15 +325,6 @@ class HammerwatchWorld(World):
             temple_location_names.ev_beat_boss_3: item_name.evt_beat_boss_3,
         }
 
-        # Pyramid of Fear Bonus Keys
-        if not self.options.randomize_bonus_keys.value:
-            temple_bonus_keys = [
-                temple_location_names.pof_1_n_5,
-                temple_location_names.pof_1_ent_5,
-            ]
-            for loc in temple_bonus_keys:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
-
         # Event/button items
         for loc, itm in temple_events.items():
             location = self.multiworld.get_location(loc, self.player)
@@ -339,6 +336,19 @@ class HammerwatchWorld(World):
                 location.address = None
                 location.place_locked_item(self.create_event(itm))
 
+        # Don't place non-event items if we're using Universal Tracker
+        if hasattr(self.multiworld, "generation_is_fake"):
+            return
+
+        # Pyramid of Fear Bonus Keys
+        if not self.options.randomize_bonus_keys.value:
+            temple_bonus_keys = [
+                temple_location_names.pof_1_n_5,
+                temple_location_names.pof_1_ent_5,
+            ]
+            for loc in temple_bonus_keys:
+                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
+
         # Portal Accessibility rune keys
         if self.options.portal_accessibility.value:
             rune_key_locs: typing.List[str] = []
@@ -348,8 +358,7 @@ class HammerwatchWorld(World):
                 #     return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
                 #             if not loc.event and loc.name not in temple_button_locations]
                 # else:
-                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
-                        if not loc.event]
+                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
@@ -552,3 +561,15 @@ class HammerwatchWorld(World):
 
     def extend_hint_information(self, hint_data: typing.Dict[int, typing.Dict[int, str]]):
         pass
+
+    def interpret_slot_data(self, slot_data: typing.Dict[str, typing.Any]):
+        self.gate_types = slot_data["Gate Types"]
+        return {"Gate Types": slot_data["Gate Types"],
+                "er_seed": slot_data["er_seed"],
+                "Random Locations": {random_key: slot_data[random_key] for random_key in self.random_locations.keys()}}
+
+    def get_random_location(self, rloc_name: str):
+        # If UT is generating the first time we just pass a dummy value as it'll restart gen anyway
+        if hasattr(self.multiworld, "generation_is_fake") and not hasattr(self.multiworld, "re_gen_passthrough"):
+            return 0
+        return self.random_locations[rloc_name]

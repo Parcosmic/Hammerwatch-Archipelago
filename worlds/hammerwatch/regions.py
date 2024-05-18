@@ -48,20 +48,18 @@ class HWEntrance(Entrance):
         self.swapped = False
 
 
-def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: typing.Dict[str, LocationData],
-                   random_locations: typing.Dict[str, int]):
+def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: typing.Dict[str, LocationData]):
     gate_codes = {}
     if campaign == Campaign.Castle:
-        create_castle_regions(world, active_locations, random_locations)
-        connect_castle_regions(world, random_locations, gate_codes)
+        create_castle_regions(world, active_locations)
+        connect_castle_regions(world, gate_codes)
     else:
-        create_tots_regions(world, active_locations, random_locations)
-        connect_tots_regions(world, random_locations, gate_codes)
+        create_tots_regions(world, active_locations)
+        connect_tots_regions(world, gate_codes)
     return gate_codes
 
 
-def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData],
-                          random_locations: typing.Dict[str, int]):
+def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
     goal = get_goal_type(world)
 
     menu_region = create_region(world, active_locations, castle_region_names.menu)
@@ -363,8 +361,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     p2_e_bronze_gate_2_locations = [
         castle_location_names.btn_p2_rune_sequence_2
     ]
-    p2_e_bronze_gate_2_region = create_region(world, active_locations,
-                                              castle_region_names.p2_e_bronze_gate_2,
+    p2_e_bronze_gate_2_region = create_region(world, active_locations, castle_region_names.p2_e_bronze_gate_2,
                                               p2_e_bronze_gate_2_locations)
 
     p2_m_bronze_gate_locations = [
@@ -3120,8 +3117,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     ]
 
 
-def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.Dict[str, int],
-                           gate_codes: typing.Dict[str, str]):
+def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
     used_names: typing.Dict[str, int] = {}
     gate_counts: typing.List[typing.Dict[str, int]]
     all_gate_counts: typing.Dict[str, int] = {
@@ -3392,9 +3388,9 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect(world, used_names, castle_region_names.p3_bonus_return, castle_region_names.p3_bonus, False)
 
     # Boss 1
-    connect(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False)
-    connect(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False,
+    connect(world, used_names, castle_region_names.b1_start, castle_region_names.b1_arena, False,
             item_name.btnc_b1_pillars, 1, False, buttonsanity)
+    connect(world, used_names, castle_region_names.b1_arena, castle_region_names.b1_defeated, False)
     # Technically only need 1 button functional for the fight to not be super terrible
     connect(world, used_names, castle_region_names.b1_defeated, castle_region_names.b1_exit, False)
     connect_exit(world, used_names, castle_region_names.b1_exit, castle_region_names.a1_start,
@@ -4095,8 +4091,7 @@ def connect_castle_regions(world: "HammerwatchWorld", random_locations: typing.D
     connect(world, used_names, castle_region_names.e4_main, castle_region_names.escaped, False)
 
 
-def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData],
-                        random_locations: typing.Dict[str, int]):
+def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
     menu_region = create_region(world, active_locations, temple_region_names.menu, None)
 
     hub_main_locations = [
@@ -4506,7 +4501,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
                                         cave1_temple_locations)
     # Dynamically place portal event location
     c1_portal_loc = HammerwatchLocation(world.player, temple_location_names.ev_c1_portal)
-    if random_locations[temple_location_names.rloc_c1_portal] == 1:
+    if world.get_random_location(temple_location_names.rloc_c1_portal) == 1:
         cave1_main_region.locations.append(c1_portal_loc)
         c1_portal_loc.parent_region = cave1_main_region
     else:
@@ -4802,10 +4797,11 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
                                                    t1_ice_chamber_melt_ice_locations)
     # Dynamically place portal event location
     t1_portal_loc = HammerwatchLocation(world.player, temple_location_names.ev_t1_portal)
-    if random_locations[temple_location_names.rloc_t1_portal] == 0:
+    t1_portal_rloc = world.get_random_location(temple_location_names.rloc_t1_portal)
+    if t1_portal_rloc == 0:
         t1_east_region.locations.append(t1_portal_loc)
         t1_portal_loc.parent_region = t1_east_region
-    elif random_locations[temple_location_names.rloc_t1_portal] == 1:
+    elif t1_portal_rloc == 1:
         t1_ice_turret_region.locations.append(t1_portal_loc)
         t1_portal_loc.parent_region = t1_ice_turret_region
     else:
@@ -5091,13 +5087,14 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
 
     # Dynamically place portal event location
     t2_portal_loc = HammerwatchLocation(world.player, temple_location_names.ev_t2_portal)
-    if random_locations[temple_location_names.rloc_t2_portal] == 0:
+    t2_portal_rloc = world.get_random_location(temple_location_names.rloc_t2_portal)
+    if t2_portal_rloc == 0:
         t2_main_region.locations.append(t2_portal_loc)
         t2_portal_loc.parent_region = t2_main_region
-    elif random_locations[temple_location_names.rloc_t2_portal] == 1:
+    elif t2_portal_rloc == 1:
         t2_s_gate_region.locations.append(t2_portal_loc)
         t2_portal_loc.parent_region = t2_s_gate_region
-    elif random_locations[temple_location_names.rloc_t2_portal] == 2:
+    elif t2_portal_rloc == 2:
         t2_main_region.locations.append(t2_portal_loc)
         t2_portal_loc.parent_region = t2_main_region
     else:
@@ -5523,8 +5520,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     ]
 
 
-def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dict[str, int],
-                         gate_codes: typing.Dict[str, str]):
+def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
     used_names: typing.Dict[str, int] = {}
 
     gate_counts: typing.List[typing.Dict[str, int]]
@@ -5573,9 +5569,10 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
                  entrance_names.t_c1_fall_surface, None)
     # For the temple entrances in the hub
     t3_entrance = temple_region_names.t3_main
-    if random_locations[temple_location_names.rloc_t3_entrance] == 2:
+    t3_entrance_rloc = world.get_random_location(temple_location_names.rloc_t3_entrance)
+    if t3_entrance_rloc == 2:
         t3_entrance = temple_region_names.t3_blockade_s
-    t3_entrance_code = f"t3|{random_locations[temple_location_names.rloc_t3_entrance]}"
+    t3_entrance_code = f"t3|{t3_entrance_rloc}"
     connect_exit(world, used_names, temple_region_names.hub_rocks, t3_entrance,
                  t3_entrance_code, entrance_names.t_hub_t3)  # , item_name.key_teleport, 1, True)
     connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.temple_entrance,
@@ -5655,7 +5652,7 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
             item_name.btn_c1_puzzle_w, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, buttonsanity,
             item_name.btn_c1_blue, 1, False, buttonsanity)
-    c1_no_e_shortcut = random_locations[temple_location_names.rloc_c1_hall_e] >= 2
+    c1_no_e_shortcut = world.get_random_location(temple_location_names.rloc_c1_hall_e) >= 2
     connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_red_bridge, buttonsanity,
             item_name.btn_c1_red, 1, False, c1_no_e_shortcut and buttonsanity)
     if buttonsanity:
@@ -5700,18 +5697,21 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.b1_back, temple_region_names.boss_1_entrance, buttonsanity,
             item_name.btn_b1_bridge, 1, False, buttonsanity)
 
-    passage_entrance = entrance_names.t_p_ent_start if random_locations[temple_location_names.rloc_passage_entrance] == 0\
+    p_entr_rloc = world.get_random_location(temple_location_names.rloc_passage_entrance)
+    p_mid_rloc = world.get_random_location(temple_location_names.rloc_passage_middle)
+    p_end_rloc = world.get_random_location(temple_location_names.rloc_passage_end)
+    passage_entrance = entrance_names.t_p_ent_start if p_entr_rloc == 0\
         else entrance_names.t_p_ent_start_2
     connect_exit(world, used_names, temple_region_names.b1_back, temple_region_names.passage_entrance,
                  passage_entrance, entrance_names.t_b1_end)
-    passage_mid = f"passage|{random_locations[temple_location_names.rloc_passage_middle] + 1}0"
+    passage_mid = f"passage|{p_mid_rloc + 1}0"
     connect_exit(world, used_names, temple_region_names.passage_entrance, temple_region_names.passage_mid,
                  passage_mid, entrance_names.t_p_ent_exit)
     connect(world, used_names, temple_region_names.passage_mid, temple_region_names.passage_puzzle, False,
             item_name.btn_p_puzzle, 1, False, buttonsanity)
-    passage_end = f"passage|1{random_locations[temple_location_names.rloc_passage_end] + 1}0"
+    passage_end = f"passage|1{p_end_rloc + 1}0"
     connect_exit(world, used_names, temple_region_names.passage_mid, temple_region_names.passage_end,
-                 passage_end, f"passage|{random_locations[temple_location_names.rloc_passage_middle] + 1}1")
+                 passage_end, f"passage|{p_mid_rloc + 1}1")
 
     connect_exit(world, used_names, temple_region_names.passage_end, temple_region_names.temple_entrance_back,
                  entrance_names.t_t_ent_p, entrance_names.t_p_end_end)
@@ -5760,20 +5760,21 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
     connect(world, used_names, temple_region_names.t1_east, temple_region_names.t1_ne_hall, False,
             item_name.btn_t1_hall, 1, False, buttonsanity)
 
+    t2_entr_rloc = world.get_random_location(temple_location_names.rloc_t2_entrance)
     if world.options.exit_randomization.value:
         if world.options.portal_accessibility.value:
             connect_exit(world, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
-                         f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end)
+                         f"t2|{t2_entr_rloc}", entrance_names.t_t1_end)
             connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_main, False)
         else:
             connect_exit(world, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
-                         f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
+                         f"t2|{t2_entr_rloc}", entrance_names.t_t1_end,
                          item_name.key_teleport, 1, True)
             connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_main, False,
                     item_name.key_teleport, 1, True)
     else:
         connect_exit(world, used_names, temple_region_names.t1_east, temple_region_names.t2_main,
-                     f"t2|{random_locations[temple_location_names.rloc_t2_entrance]}", entrance_names.t_t1_end,
+                     f"t2|{t2_entr_rloc}", entrance_names.t_t1_end,
                      item_name.key_teleport, 4, False)
 
     connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_nw_puzzle, False,
@@ -5790,7 +5791,9 @@ def connect_tots_regions(world: "HammerwatchWorld", random_locations: typing.Dic
                  key_silver[1], gate_codes, gate_counts[1], gate_names.t_t2_0, False)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_s_gate,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.t_t2_1, False)
-    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sdoor_gate, False,
+    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_sdoor_gate, False,
+            item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
+    connect(world, used_names, temple_region_names.t2_sdoor_gate, temple_region_names.t2_s_gate, False,
             item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
     # Technically should be two-way, but you have to have been to t2_main before getting here so it's not needed
     connect_gate(world, used_names, temple_region_names.t2_main, temple_region_names.t2_ornate,
@@ -6044,7 +6047,15 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     key_item_name = key_type
     # Override the key item if gate shuffle is on
     if world.options.gate_shuffle.value and gate_code is not None:
-        key_item_name = get_random_element(world, gate_items)
+        # Special handling for Universal Tracker
+        if hasattr(world.multiworld, "re_gen_passthrough"):
+            key_item_name = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code].capitalize() + " Key"
+            if world.options.key_mode.value == world.options.key_mode.option_act_specific:
+                key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
+            elif world.options.key_mode.value == world.options.key_mode.option_floor_master:
+                key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
+        else:
+            key_item_name = get_random_element(world, gate_items)
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:
             gate_items.pop(key_item_name)

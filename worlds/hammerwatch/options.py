@@ -145,6 +145,7 @@ class Buttonsanity(Choice):
     # option_shuffle = 1  # Disabled for now, keeps failing fill due to how restrictive button placements are
     # Would likely need to use item rules on every location to make this work, but this'll be insanely slow
     option_normal = 2
+    alias_on = 2
     option_insanity = 3
     default = 0
 
@@ -514,4 +515,5 @@ client_required_options = [
     option_names.starting_life_count,
     option_names.game_modifiers,
     option_names.death_link,
+    option_names.er_seed,
 ]
