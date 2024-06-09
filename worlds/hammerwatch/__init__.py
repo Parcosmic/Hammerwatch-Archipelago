@@ -10,7 +10,7 @@ from .locations import (LocationData, all_locations, setup_locations, castle_eve
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name
 from .rules import set_rules
 from .util import Campaign, get_campaign, get_active_key_names
-from .options import HammerwatchOptions, client_required_options
+from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
@@ -30,6 +30,9 @@ class HammerwatchWeb(WebWorld):
         ["Parcosmic"]
     )]
 
+    option_groups = option_groups
+    options_presets = option_presets
+
 
 class HammerwatchWorld(World):
     """
@@ -38,8 +41,8 @@ class HammerwatchWorld(World):
     or the Temple of the Sun to stop the evil Sun Guardian Sha'Rand.
     """
     game: str = "Hammerwatch"
-    options_dataclass = HammerwatchOptions
-    options: HammerwatchOptions
+    options_dataclass = options.HammerwatchOptions
+    options: options.HammerwatchOptions
     topology_present: bool = True
     remote_start_inventory: bool = True
 
@@ -68,7 +71,7 @@ class HammerwatchWorld(World):
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         return {
-            **self.options.as_dict(*client_required_options),
+            **self.options.as_dict(*options.client_required_options),
             **self.random_locations,
             **self.shop_locations,
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
@@ -358,7 +361,8 @@ class HammerwatchWorld(World):
                 #     return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
                 #             if not loc.event and loc.name not in temple_button_locations]
                 # else:
-                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event]
+                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event
+                        and not loc.item]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
