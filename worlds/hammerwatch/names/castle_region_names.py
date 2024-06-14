@@ -64,7 +64,7 @@ n1_room2 = "PrB: Room 2"
 n1_room2_unlock = "PrB: Room 2 Unlock"
 n1_room3 = "PrB: Room 3"
 n1_room3_unlock = "PrB: Room 3 Unlock"
-n1_room3_hall = "PrB: Room 2 Open Hall"
+n1_room3_hall = "PrB: Room 3 Open Hall"
 n1_room4 = "PrB: Room 4"
 n1_exit = "PrB: Exit"
 

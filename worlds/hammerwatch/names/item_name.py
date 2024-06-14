@@ -385,7 +385,7 @@ btn_t3_puzzle_room_part = "Open TF3 Puzzle Room Progress"
 
 # Event/Button Names
 evc_escaped = "Escaped Castle Hammerwatch"
-ev_victory = "Victory"
+ev_all_planks = "Get required Strange Planks"
 
 evc_beat_boss_1 = "Defeat Queen"
 evc_beat_boss_2 = "Defeat Knight"

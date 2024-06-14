@@ -59,20 +59,15 @@ def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locatio
     return gate_codes
 
 
-def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
-    goal = get_goal_type(world)
-
-    menu_region = create_region(world, active_locations, castle_region_names.menu)
-    hub_region = create_region(world, active_locations, castle_region_names.hub)
-
-    p1_start_locations = [
+castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
+    castle_region_names.menu: None,
+    castle_region_names.hub: None,
+    castle_region_names.p1_start: [
         castle_location_names.p1_by_nw_bronze_gate,
         castle_location_names.btn_p1_floor,
-    ]
-    p1_start_region = create_region(world, active_locations, castle_region_names.p1_start,
-                                    p1_start_locations)
-
-    p1_nw_locs = [
+        castle_location_names.ev_entrance_bridge,
+    ],
+    castle_region_names.p1_nw: [
         castle_location_names.p1_entrance_1,
         castle_location_names.p1_entrance_2,
         castle_location_names.p1_entrance_3,
@@ -80,17 +75,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p1_entrance_hall_1,
         castle_location_names.p1_entrance_hall_2,
         castle_location_names.p1_entrance_secret,
-    ]
-    p1_nw_region = create_region(world, active_locations, castle_region_names.p1_nw, p1_nw_locs)
-
-    p1_nw_left_locs = [
+    ],
+    castle_region_names.p1_nw_left: [
         castle_location_names.p1_entrance_s,
         castle_location_names.p1_entrance_w,
-    ]
-    p1_nw_left_region = create_region(world, active_locations, castle_region_names.p1_nw_left,
-                                      p1_nw_left_locs)
-
-    p1_s_locations = [
+    ],
+    castle_region_names.p1_s: [
         castle_location_names.p1_by_sw_bronze_gate_1,
         castle_location_names.p1_by_sw_bronze_gate_2,
         castle_location_names.p1_by_sw_bronze_gate_3,
@@ -127,16 +117,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p1_s_secret_1,
         castle_location_names.p1_s_secret_2,
         castle_location_names.p1_se_bridge,
-    ]
-    p1_s_region = create_region(world, active_locations, castle_region_names.p1_s, p1_s_locations)
-
-    p1_sw_bronze_gate_locations = [
+    ],
+    castle_region_names.p1_sw_bronze_gate: [
         castle_location_names.p1_sw_bronze_gate,
-    ]
-    p1_sw_bronze_gate_region = create_region(world, active_locations, castle_region_names.p1_sw_bronze_gate,
-                                             p1_sw_bronze_gate_locations)
-
-    p1_e_locations = [
+    ],
+    castle_region_names.p1_e: [
         castle_location_names.p1_by_exit_1,
         castle_location_names.p1_by_exit_2,
         castle_location_names.p1_by_exit_3,
@@ -154,24 +139,16 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p1_room_by_exit,
         castle_location_names.p1_ne_arrow_traps,
         castle_location_names.p1_hint_room,
-    ]
-    p1_e_region = create_region(world, active_locations, castle_region_names.p1_e, p1_e_locations)
-
-    p1_m_bronze_gate_locations = [
+    ],
+    castle_region_names.p1_m_bronze_gate: [
         castle_location_names.p1_m_bronze_gate,
-    ]
-    p1_m_bronze_gate_region = create_region(world, active_locations, castle_region_names.p1_m_bronze_gate,
-                                            p1_m_bronze_gate_locations)
-
-    p1_from_p2_locations = [
+    ],
+    castle_region_names.p1_from_p2: [
         castle_location_names.p1_bars_1,
         castle_location_names.p1_bars_2,
         castle_location_names.p1_p2_by_shop,
-    ]
-    p1_from_p2_region = create_region(world, active_locations, castle_region_names.p1_from_p2,
-                                      p1_from_p2_locations)
-
-    p1_from_p3_n_locations = [
+    ],
+    castle_region_names.p1_from_p3_n: [
         castle_location_names.p1_p3_n_bridge,
         castle_location_names.p1_p3_n_across_bridge,
         castle_location_names.btn_p1_boss,
@@ -179,21 +156,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p1_boss_2,
         castle_location_names.btn_p1_boss_3,
         castle_location_names.btn_p1_boss_4,
-    ]
-    p1_from_p3_n_region = create_region(world, active_locations, castle_region_names.p1_from_p3_n,
-                                        p1_from_p3_n_locations)
-
-    p1_from_p3_s_locations = [
+    ],
+    castle_region_names.p1_from_p3_s: [
         castle_location_names.p1_p3_s,
-    ]
-    p1_from_p3_s_region = create_region(world, active_locations, castle_region_names.p1_from_p3_s,
-                                        p1_from_p3_s_locations)
-
-    p2_start_locations = []
-    p2_start_region = create_region(world, active_locations, castle_region_names.p2_start,
-                                    p2_start_locations)
-
-    p2_m_locations = [
+    ],
+    castle_region_names.p2_start: None,
+    castle_region_names.p2_m: [
         castle_location_names.p2_w_of_silver_gate_1,
         castle_location_names.p2_w_of_silver_gate_2,
         castle_location_names.p2_nw_island_s_1,
@@ -210,16 +178,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_nw_island_4,
         castle_location_names.p2_nw_island_5,
         castle_location_names.btn_p2_wall_shortcut_1,
-    ]
-    p2_m_region = create_region(world, active_locations, castle_region_names.p2_m, p2_m_locations)
-
-    p2_p1_return_locs = [
+    ],
+    castle_region_names.p2_p1_return: [
         castle_location_names.btn_p2_wall_from_p1,
-    ]
-    p2_p1_return_region = create_region(world, active_locations, castle_region_names.p2_p1_return,
-                                        p2_p1_return_locs)
-
-    p2_n_locations = [
+    ],
+    castle_region_names.p2_n: [
         castle_location_names.p2_spike_puzzle_e_1,
         castle_location_names.p2_spike_puzzle_e_2,
         castle_location_names.p2_spike_puzzle_ne_1,
@@ -230,38 +193,24 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p2_floor_spike_puzzle_e_1,
         castle_location_names.btn_p2_floor_spike_puzzle_e_2,
         castle_location_names.btn_p2_floor_spike_puzzle_e_3,
-    ]
-    p2_n_region = create_region(world, active_locations, castle_region_names.p2_n, p2_n_locations)
-
-    p2_spike_puzzle_bottom_locs = [
+    ],
+    castle_region_names.p2_spike_puzzle_bottom: [
         castle_location_names.btn_p2_floor_spike_puzzle_s_1,
         castle_location_names.btn_p2_floor_spike_puzzle_s_2,
         castle_location_names.btn_p2_floor_spike_puzzle_s_3,
-    ]
-    p2_spike_puzzle_bottom_region = create_region(world, active_locations,
-                                                  castle_region_names.p2_spike_puzzle_bottom,
-                                                  p2_spike_puzzle_bottom_locs)
-
-    p2_spike_puzzle_left_locs = [
+    ],
+    castle_region_names.p2_spike_puzzle_left: [
         castle_location_names.p2_spike_puzzle_w_1,
         castle_location_names.p2_spike_puzzle_w_2,
-    ]
-    p2_spike_puzzle_left_region = create_region(world, active_locations,
-                                                castle_region_names.p2_spike_puzzle_left,
-                                                p2_spike_puzzle_left_locs)
-
-    p2_spike_puzzle_top_locs = [
+    ],
+    castle_region_names.p2_spike_puzzle_top: [
         castle_location_names.p2_spike_puzzle_n_1,
         castle_location_names.p2_spike_puzzle_n_2,
         castle_location_names.btn_p2_floor_spike_puzzle_n_1,
         castle_location_names.btn_p2_floor_spike_puzzle_n_2,
         castle_location_names.btn_p2_floor_spike_puzzle_n_3,
-    ]
-    p2_spike_puzzle_top_region = create_region(world, active_locations,
-                                               castle_region_names.p2_spike_puzzle_top,
-                                               p2_spike_puzzle_top_locs)
-
-    p2_red_switch_locations = [
+    ],
+    castle_region_names.p2_red_switch: [
         castle_location_names.p2_by_red_spikes_1,
         castle_location_names.p2_by_red_spikes_2,
         castle_location_names.p2_by_red_spikes_3,
@@ -280,30 +229,20 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.p2_tower_plant_2,
         castle_location_names.btn_p2_puzzle,
         castle_location_names.btn_p2_floor_e_save,
-    ]
-    p2_red_switch_region = create_region(world, active_locations, castle_region_names.p2_red_switch,
-                                         p2_red_switch_locations)
-
-    p2_puzzle_locs = [
+    ],
+    castle_region_names.p2_puzzle: [
         castle_location_names.p2_puzzle_1,
         castle_location_names.p2_puzzle_2,
         castle_location_names.p2_puzzle_3,
         castle_location_names.p2_puzzle_4,
-    ]
-    p2_puzzle_region = create_region(world, active_locations, castle_region_names.p2_puzzle, p2_puzzle_locs)
-
-    p2_e_bronze_gate_locations = [
+    ],
+    castle_region_names.p2_e_bronze_gate: [
         # Offense shop
-    ]
-    p2_e_bronze_gate_region = create_region(world, active_locations, castle_region_names.p2_e_bronze_gate,
-                                            p2_e_bronze_gate_locations)
-
-    p2_e_save_locs = [
+    ],
+    castle_region_names.p2_e_save: [
         castle_location_names.p2_e_save,
-    ]
-    p2_e_save_region = create_region(world, active_locations, castle_region_names.p2_e_save, p2_e_save_locs)
-
-    p2_s_locations = [
+    ],
+    castle_region_names.p2_s: [
         castle_location_names.p2_big_bridge_1,
         castle_location_names.p2_big_bridge_2,
         castle_location_names.p2_big_bridge_3,
@@ -355,65 +294,37 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p2_rune_puzzle_2,
         castle_location_names.btn_p2_rune_puzzle_3,
         castle_location_names.btn_p2_rune_puzzle_4,
-    ]
-    p2_s_region = create_region(world, active_locations, castle_region_names.p2_s, p2_s_locations)
-
-    p2_e_bronze_gate_2_locations = [
+    ],
+    castle_region_names.p2_e_bronze_gate_2: [
         castle_location_names.btn_p2_rune_sequence_2
-    ]
-    p2_e_bronze_gate_2_region = create_region(world, active_locations, castle_region_names.p2_e_bronze_gate_2,
-                                              p2_e_bronze_gate_2_locations)
-
-    p2_m_bronze_gate_locations = [
+    ],
+    castle_region_names.p2_m_bronze_gate: [
         castle_location_names.btn_p2_rune_sequence_1
-    ]
-    p2_m_bronze_gate_region = create_region(world, active_locations, castle_region_names.p2_m_bronze_gate,
-                                            p2_m_bronze_gate_locations)
-
-    p2_se_bronze_gate_locations = [
+    ],
+    castle_region_names.p2_se_bronze_gate: [
         castle_location_names.btn_p2_rune_sequence_4
-    ]
-    p2_se_bronze_gate_region = create_region(world, active_locations, castle_region_names.p2_se_bronze_gate,
-                                             p2_se_bronze_gate_locations)
-
-    p2_gg_room_reward_locations = [
+    ],
+    castle_region_names.p2_gg_room_reward: [
         castle_location_names.p2_e_gold_gate_room_reward_1,
         castle_location_names.p2_e_gold_gate_room_reward_2,
-    ]
-    p2_gg_room_reward_region = create_region(world, active_locations, castle_region_names.p2_gg_room_reward,
-                                             p2_gg_room_reward_locations)
-
-    p2_w_treasure_locs = [
+    ],
+    castle_region_names.p2_w_treasure: [
         castle_location_names.p2_beetle_boss_hidden_room_1,
-    ]
-    p2_w_treasure_region = create_region(world, active_locations, castle_region_names.p2_w_treasure,
-                                         p2_w_treasure_locs)
-
-    p2_w_treasure_tp_locs = [
+    ],
+    castle_region_names.p2_w_treasure_tp: [
         castle_location_names.p2_beetle_boss_hidden_room_2,
-    ]
-    p2_w_treasure_tp_region = create_region(world, active_locations, castle_region_names.p2_w_treasure_tp,
-                                            p2_w_treasure_tp_locs)
-
-    p2_tp_puzzle_locs = [
+    ],
+    castle_region_names.p2_tp_puzzle: [
         castle_location_names.p2_sequence_puzzle_reward,
-    ]
-    p2_tp_puzzle_region = create_region(world, active_locations, castle_region_names.p2_tp_puzzle,
-                                        p2_tp_puzzle_locs)
-
-    p2_end_locations = [
+    ],
+    castle_region_names.p2_end: [
         castle_location_names.p2_end_1,
         castle_location_names.p2_end_2,
-    ]
-    p2_end_region = create_region(world, active_locations, castle_region_names.p2_end, p2_end_locations)
-
-    p3_start_door_locs = [
+    ],
+    castle_region_names.p3_start_door: [
         castle_location_names.btn_p3_wall_start,
-    ]
-    p3_start_door_region = create_region(world, active_locations, castle_region_names.p3_start_door,
-                                         p3_start_door_locs)
-
-    p3_start_locs = [
+    ],
+    castle_region_names.p3_start: [
         castle_location_names.p3_entrance_s_of_poker_1,
         castle_location_names.p3_entrance_s_of_poker_2,
         castle_location_names.p3_entrance_s_of_poker_3,
@@ -442,52 +353,32 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p3_floor,
         castle_location_names.btn_p3_wall_start_n,
         castle_location_names.btn_p3_wall_start_nw,
-    ]
-    p3_start_region = create_region(world, active_locations, castle_region_names.p3_start, p3_start_locs)
-
-    p3_start_shop_locs = [
+    ],
+    castle_region_names.p3_start_shop: [
         # Shop
-    ]
-    p3_start_shop_region = create_region(world, active_locations, castle_region_names.p3_start_shop, p3_start_shop_locs)
-
-    p3_nw_closed_room_locs = [
+    ],
+    castle_region_names.p3_nw_closed_room: [
         castle_location_names.p3_nw_closed_room,
-    ]
-    p3_nw_closed_room_region = create_region(world, active_locations, castle_region_names.p3_nw_closed_room,
-                                             p3_nw_closed_room_locs)
-
-    p3_nw_n_bronze_gate_locs = [
+    ],
+    castle_region_names.p3_nw_n_bronze_gate: [
         castle_location_names.p3_nw_n_bronze_gate_1,
         castle_location_names.p3_nw_n_bronze_gate_2,
         castle_location_names.p3_nw_n_bronze_gate_3,
         castle_location_names.p3_nw_n_bronze_gate_4,
         castle_location_names.p3_nw_n_bronze_gate_5,
-    ]
-    p3_nw_n_bronze_gate_region = create_region(world, active_locations,
-                                               castle_region_names.p3_nw_n_bronze_gate, p3_nw_n_bronze_gate_locs)
-
-    p3_nw_s_bronze_gate_locs = [
+    ],
+    castle_region_names.p3_nw_s_bronze_gate: [
         castle_location_names.p3_nw_s_bronze_gate_1,
         castle_location_names.p3_nw_s_bronze_gate_2,
         castle_location_names.p3_nw_s_bronze_gate_3,
         castle_location_names.p3_nw_s_bronze_gate_4,
         castle_location_names.p3_nw_s_bronze_gate_5,
-    ]
-    p3_nw_s_bronze_gate_region = create_region(world, active_locations,
-                                               castle_region_names.p3_nw_s_bronze_gate, p3_nw_s_bronze_gate_locs)
-
-    p3_s_bronze_gate_locs = [
-    ]
-    p3_s_bronze_gate_region = create_region(world, active_locations, castle_region_names.p3_s_bronze_gate,
-                                            p3_s_bronze_gate_locs)
-
-    p3_silver_gate_locs = [
+    ],
+    castle_region_names.p3_s_bronze_gate: None,
+    castle_region_names.p3_silver_gate: [
         castle_location_names.p3_s_of_silver_gate,
-    ]
-    p3_silver_gate_region = create_region(world, active_locations, castle_region_names.p3_silver_gate,
-                                          p3_silver_gate_locs)
-
-    p3_n_gold_gate_locs = [
+    ],
+    castle_region_names.p3_n_gold_gate: [
         castle_location_names.p3_by_w_shop,
         castle_location_names.p3_ne_se_1,
         castle_location_names.p3_ne_se_2,
@@ -523,32 +414,20 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p3_wall_bonus_ne,
         castle_location_names.btn_p3_wall_bonus_s,
         castle_location_names.btn_p3_wall_bonus_se,
-    ]
-    p3_n_gold_gate_region = create_region(world, active_locations, castle_region_names.p3_n_gold_gate,
-                                          p3_n_gold_gate_locs)
-
-    p3_rspikes_locs = [
+    ],
+    castle_region_names.p3_rspikes: [
         castle_location_names.p3_red_spike_room,
         castle_location_names.btn_p3_wall_bonus_w_2,
-    ]
-    p3_rspikes_region = create_region(world, active_locations, castle_region_names.p3_rspikes,
-                                      p3_rspikes_locs)
-
-    p3_rspikes_room_locs = [
+    ],
+    castle_region_names.p3_rspikes_room: [
         castle_location_names.p3_tower_plant_4,
         castle_location_names.btn_p3_wall_bonus_w_1,
         castle_location_names.btn_p3_seq_bonus,
-    ]
-    p3_rspikes_room_region = create_region(world, active_locations, castle_region_names.p3_rspikes_room,
-                                           p3_rspikes_room_locs)
-
-    p3_bspikes_locs = [
+    ],
+    castle_region_names.p3_bspikes: [
         # Shop location
-    ]
-    p3_bspikes_region = create_region(world, active_locations, castle_region_names.p3_bspikes,
-                                      p3_bspikes_locs)
-
-    p3_bonus_locs = [
+    ],
+    castle_region_names.p3_bonus: [
         castle_location_names.btn_p3_wall_bonus,
         castle_location_names.btn_p3_rune_bonus,
         castle_location_names.btn_p3_rune_bonus_1,
@@ -560,26 +439,18 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p3_rune_bonus_7,
         castle_location_names.btn_p3_rune_bonus_8,
         castle_location_names.btn_p3_rune_bonus_9,
-    ]
-    p3_bonus_region = create_region(world, active_locations, castle_region_names.p3_bonus, p3_bonus_locs)
-
-    p3_arrow_hall_secret_locs = [
+    ],
+    castle_region_names.p3_arrow_hall_secret: [
         castle_location_names.btn_p3_wall_secret_arrow_hall,
-    ]
-    p3_arrow_hall_secret_region = create_region(world, active_locations,
-                                                castle_region_names.p3_arrow_hall_secret, p3_arrow_hall_secret_locs)
-
-    p3_spikes_s_locs = [
+    ],
+    castle_region_names.p3_spikes_s: [
         castle_location_names.p3_spike_trap_1,
         castle_location_names.p3_spike_trap_2,
         castle_location_names.p3_spike_trap_3,
         castle_location_names.p3_by_m_shop_1,
         castle_location_names.p3_by_m_shop_2,
-    ]
-    p3_spikes_s_region = create_region(world, active_locations, castle_region_names.p3_spikes_s,
-                                       p3_spikes_s_locs)
-
-    p3_sw_locs = [
+    ],
+    castle_region_names.p3_sw: [
         castle_location_names.p3_ne_of_bridge_1,
         castle_location_names.p3_ne_of_bridge_2,
         castle_location_names.p3_w_of_w_poker,
@@ -601,73 +472,40 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_p3_floor_sw,
         castle_location_names.btn_p3_wall_sw,
         castle_location_names.btn_p3_wall_boss_door,
-    ]
-    p3_sw_region = create_region(world, active_locations, castle_region_names.p3_sw, p3_sw_locs)
-
-    p3_boss_region = create_region(world, active_locations, castle_region_names.p3_boss, [])
-
-    p3_exit_s_locs = [
+    ],
+    castle_region_names.p3_boss: None,
+    castle_region_names.p3_exit_s: [
         castle_location_names.btn_p3_wall_to_p1_s,
-    ]
-    p3_exit_s_region = create_region(world, active_locations, castle_region_names.p3_exit_s, p3_exit_s_locs)
-
-    p3_hidden_arrow_hall_locs = [
+    ],
+    castle_region_names.p3_hidden_arrow_hall: [
         castle_location_names.p3_secret_secret,
         castle_location_names.p3_secret_arrow_hall_1,
         castle_location_names.p3_secret_arrow_hall_2,
-    ]
-    p3_hidden_arrow_hall_region = create_region(world, active_locations,
-                                                castle_region_names.p3_hidden_arrow_hall, p3_hidden_arrow_hall_locs)
-
-    p3_s_gold_gate_locs = [
+    ],
+    castle_region_names.p3_s_gold_gate: [
         castle_location_names.btn_p3_boss_s,
         castle_location_names.btn_p3_boss_s_1,
         castle_location_names.btn_p3_boss_s_2,
         castle_location_names.btn_p3_boss_s_3,
         castle_location_names.btn_p3_boss_s_4,
-    ]
-    p3_s_gold_gate_region = create_region(world, active_locations, castle_region_names.p3_s_gold_gate,
-                                          p3_s_gold_gate_locs)
-
-    p3_bonus_return_locs = [
+    ],
+    castle_region_names.p3_bonus_return: [
         castle_location_names.p3_bonus_return,
-    ]
-    p3_bonus_return_region = create_region(world, active_locations, castle_region_names.p3_bonus_return,
-                                           p3_bonus_return_locs)
-
-    if world.options.shortcut_teleporter.value:
-        p3_portal_from_p1_locs = [
-            castle_location_names.p3_skip_boss_switch_1,
-            castle_location_names.p3_skip_boss_switch_2,
-            castle_location_names.p3_skip_boss_switch_3,
-            castle_location_names.p3_skip_boss_switch_4,
-            castle_location_names.p3_skip_boss_switch_5,
-            castle_location_names.p3_skip_boss_switch_6,
-        ]
-        p3_portal_from_p1_region = create_region(world, active_locations,
-                                                 castle_region_names.p3_portal_from_p1, p3_portal_from_p1_locs)
-        world.multiworld.regions.append(p3_portal_from_p1_region)
-
-    n1_start_locs = [
+    ],
+    castle_region_names.n1_start: [
         castle_location_names.n1_entrance
-    ]
-    n1_start_region = create_region(world, active_locations, castle_region_names.n1_start, n1_start_locs)
-
-    n1_room1_locs = [
+    ],
+    castle_region_names.n1_room1: [
         castle_location_names.n1_room1
-    ]
-    n1_room1_region = create_region(world, active_locations, castle_region_names.n1_room1, n1_room1_locs)
-
-    n1_room2_locs = [
+    ],
+    castle_region_names.n1_room2: [
         castle_location_names.n1_room2_s_1,
         castle_location_names.n1_room2_s_2,
         castle_location_names.n1_room2_s_3,
         castle_location_names.n1_room2_n_secret_room,
         castle_location_names.btn_n1_panel_n,
-    ]
-    n1_room2_region = create_region(world, active_locations, castle_region_names.n1_room2, n1_room2_locs)
-
-    n1_room2_unlock_locs = [
+    ],
+    castle_region_names.n1_room2_unlock: [
         castle_location_names.n1_room2_small_box,
         castle_location_names.n1_room2_nw_room_1,
         castle_location_names.n1_room2_nw_room_2,
@@ -681,11 +519,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n1_room2_n_m_room_4,
         castle_location_names.n1_room2_n_m_room_5,
         castle_location_names.n1_room2_n_m_room_6,
-    ]
-    n1_room2_unlock_region = create_region(world, active_locations, castle_region_names.n1_room2_unlock,
-                                           n1_room2_unlock_locs)
-
-    n1_room3_locs = [
+    ],
+    castle_region_names.n1_room3: [
         castle_location_names.n1_room3_w_1,
         castle_location_names.n1_room3_w_2,
         castle_location_names.n1_room3_w_3,
@@ -708,25 +543,17 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n1_room3_w_20,
         castle_location_names.btn_n1_panel_e_1,
         castle_location_names.btn_n1_panel_e_2,
-    ]
-    n1_room3_region = create_region(world, active_locations, castle_region_names.n1_room3, n1_room3_locs)
-
-    n1_room3_unlock_locs = [
+    ],
+    castle_region_names.n1_room3_unlock: [
         castle_location_names.n1_room3_sealed_room_1,
         castle_location_names.n1_room3_sealed_room_2,
         castle_location_names.n1_room3_sealed_room_3,
         castle_location_names.n1_room3_sealed_room_4,
-    ]
-    n1_room3_unlock_region = create_region(world, active_locations, castle_region_names.n1_room3_unlock,
-                                           n1_room3_unlock_locs)
-
-    n1_room3_hall_locs = [
+    ],
+    castle_region_names.n1_room3_hall: [
         castle_location_names.btn_n1_panel_s,
-    ]
-    n1_room3_hall_region = create_region(world, active_locations, castle_region_names.n1_room3_hall,
-                                         n1_room3_hall_locs)
-
-    n1_room4_locs = [
+    ],
+    castle_region_names.n1_room4: [
         castle_location_names.n1_room4_e,
         castle_location_names.n1_room4_m,
         castle_location_names.n1_room4_w_1,
@@ -734,62 +561,41 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n1_room4_s_1,
         castle_location_names.n1_room4_s_2,
         castle_location_names.n1_room4_s_3,
-    ]
-    n1_room4_region = create_region(world, active_locations, castle_region_names.n1_room4, n1_room4_locs)
-
-    n1_exit_region = create_region(world, active_locations, castle_region_names.n1_exit, [])
-
-    b1_start_locs = [
+    ],
+    castle_region_names.n1_exit: None,
+    castle_region_names.b1_start: [
         castle_location_names.b1_behind_portal,
-    ]
-    b1_start_region = create_region(world, active_locations, castle_region_names.b1_start, b1_start_locs)
-
-    b1_arena_locs = [
+    ],
+    castle_region_names.b1_arena: [
         castle_location_names.b1_arena_1,
         castle_location_names.b1_arena_2,
         castle_location_names.btn_b1_1,
         castle_location_names.btn_b1_2,
-    ]
-    b1_arena_region = create_region(world, active_locations, castle_region_names.b1_arena, b1_arena_locs)
-
-    b1_defeated_locs = [
+    ],
+    castle_region_names.b1_defeated: [
         castle_location_names.b1_reward,
         castle_location_names.ev_beat_boss_1,
-    ]
-    b1_defeated_region = create_region(world, active_locations, castle_region_names.b1_defeated,
-                                       b1_defeated_locs)
-
-    b1_exit_locs = [
-    ]
-    b1_exit_region = create_region(world, active_locations, castle_region_names.b1_exit, b1_exit_locs)
-
-    a1_start_locs = [
+    ],
+    castle_region_names.b1_exit: None,
+    castle_region_names.a1_start: [
         castle_location_names.btn_a1_wall_start,
         castle_location_names.btn_a1_boss_door,
-    ]
-    a1_start_region = create_region(world, active_locations, castle_region_names.a1_start, a1_start_locs)
-
-    a1_boss_region = create_region(world, active_locations, castle_region_names.a1_boss, [])
-
-    a1_start_shop_w_locs = []  # Start bronze gate shop
-    a1_start_shop_w_region = create_region(world, active_locations, castle_region_names.a1_start_shop_w,
-                                           a1_start_shop_w_locs)
-
-    a1_start_shop_m_locs = []  # Start top gold gate shop
-    a1_start_shop_m_region = create_region(world, active_locations, castle_region_names.a1_start_shop_m,
-                                           a1_start_shop_m_locs)
-
-    a1_start_shop_e_locs = []  # Start bottom gold gate shop
-    a1_start_shop_e_region = create_region(world, active_locations, castle_region_names.a1_start_shop_e,
-                                           a1_start_shop_e_locs)
-
-    a1_se_locs = [
+    ],
+    castle_region_names.a1_boss: None,
+    castle_region_names.a1_start_shop_w: [
+        # Start bronze gate shop
+    ],
+    castle_region_names.a1_start_shop_m: [
+        # Start top gold gate shop
+    ],
+    castle_region_names.a1_start_shop_e: [
+        # Start bottom gold gate shop
+    ],
+    castle_region_names.a1_se: [
         castle_location_names.a1_s_save_1,
         castle_location_names.a1_s_save_2,
-    ]
-    a1_se_region = create_region(world, active_locations, castle_region_names.a1_se, a1_se_locs)
-
-    a1_e_locs = [
+    ],
+    castle_region_names.a1_e: [
         castle_location_names.a1_m_trellis_secret,
         castle_location_names.a1_n_save_1,
         castle_location_names.a1_n_save_2,
@@ -821,67 +627,38 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a1_floor_tp_n,
         castle_location_names.btn_a1_floor_red,
         castle_location_names.btn_a1_wall_red_spikes,
-    ]
-    a1_e_region = create_region(world, active_locations, castle_region_names.a1_e, a1_e_locs)
-
-    a1_ne_cache_locs = [
+    ],
+    castle_region_names.a1_ne_cache: [
         castle_location_names.a1_ne_ice_tower_secret,
-    ]
-    a1_ne_cache_region = create_region(world, active_locations, castle_region_names.a1_ne_cache,
-                                         a1_ne_cache_locs)
-
-    a1_e_sw_bgate_locs = []
-    a1_e_sw_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_sw_bgate,
-                                         a1_e_sw_bgate_locs)
-
-    a1_e_s_bgate_locs = []
-    a1_e_s_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_s_bgate,
-                                        a1_e_s_bgate_locs)
-
-    a1_e_se_bgate_locs = [
+    ],
+    castle_region_names.a1_e_sw_bgate: None,
+    castle_region_names.a1_e_s_bgate: None,
+    castle_region_names.a1_e_se_bgate: [
         castle_location_names.btn_a1_wall_se,
-    ]
-    a1_e_se_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_se_bgate,
-                                         a1_e_se_bgate_locs)
-
-    a1_e_e_bgate_locs = []
-    a1_e_e_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_e_bgate,
-                                        a1_e_e_bgate_locs)
-
-    a1_rune_room_locs = [
+    ],
+    castle_region_names.a1_e_e_bgate: None,
+    castle_region_names.a1_rune_room: [
         castle_location_names.btn_a1_rune,
         castle_location_names.btn_a1_rune_1,
         castle_location_names.btn_a1_rune_2,
         castle_location_names.btn_a1_rune_3,
         castle_location_names.btn_a1_rune_4,
-    ]
-    a1_rune_room_region = create_region(world, active_locations, castle_region_names.a1_rune_room,
-                                        a1_rune_room_locs)
-
-    a1_se_cache_locs = [
+    ],
+    castle_region_names.a1_se_cache: [
         castle_location_names.a1_se_cache_1,
         castle_location_names.a1_se_cache_2,
         castle_location_names.a1_se_cache_3,
         castle_location_names.a1_se_cache_4,
-    ]
-    a1_se_cache_region = create_region(world, active_locations, castle_region_names.a1_se_cache,
-                                       a1_se_cache_locs)
-
-    a1_e_ne_bgate_locs = [
+    ],
+    castle_region_names.a1_e_ne_bgate: [
         castle_location_names.a1_e_ne_bgate,
-    ]
-    a1_e_ne_bgate_region = create_region(world, active_locations, castle_region_names.a1_e_ne_bgate,
-                                         a1_e_ne_bgate_locs)
-
-    a1_red_spikes_locs = [
+    ],
+    castle_region_names.a1_red_spikes: [
         castle_location_names.a1_red_spikes_1,
         castle_location_names.a1_red_spikes_2,
         castle_location_names.a1_red_spikes_3,
-    ]
-    a1_red_spikes_region = create_region(world, active_locations, castle_region_names.a1_red_spikes,
-                                         a1_red_spikes_locs)
-
-    a1_n_bgate_locs = [
+    ],
+    castle_region_names.a1_n_bgate: [
         castle_location_names.a1_n_cache_1,
         castle_location_names.a1_n_cache_2,
         castle_location_names.a1_n_cache_3,
@@ -891,16 +668,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a1_n_cache_7,
         castle_location_names.a1_n_cache_8,
         castle_location_names.a1_n_cache_9,
-    ]
-    a1_n_bgate_region = create_region(world, active_locations, castle_region_names.a1_n_bgate,
-                                      a1_n_bgate_locs)
-
-    a1_tp_n_locs = [
+    ],
+    castle_region_names.a1_tp_n: [
         castle_location_names.a1_n_tp,
-    ]
-    a1_tp_n_region = create_region(world, active_locations, castle_region_names.a1_tp_n, a1_tp_n_locs)
-
-    a1_w_locs = [
+    ],
+    castle_region_names.a1_w: [
         castle_location_names.a1_nw_left_1,
         castle_location_names.a1_nw_left_2,
         castle_location_names.a1_nw_left_3,
@@ -928,54 +700,29 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a1_floor_sw,
         castle_location_names.btn_a1_puzzle,
         castle_location_names.btn_a1_wall_m_cache,
-    ]
-    a1_w_region = create_region(world, active_locations, castle_region_names.a1_w, a1_w_locs)
-
-    a1_puzzle_locs = [
+    ],
+    castle_region_names.a1_puzzle: [
         castle_location_names.a1_puzzle_1,
         castle_location_names.a1_puzzle_2,
         castle_location_names.a1_puzzle_3,
         castle_location_names.a1_puzzle_4,
-    ]
-    a1_puzzle_region = create_region(world, active_locations, castle_region_names.a1_puzzle, a1_puzzle_locs)
-
-    a1_w_ne_bgate_locs = []
-    a1_w_ne_bgate_region = create_region(world, active_locations, castle_region_names.a1_w_ne_bgate,
-                                         a1_w_ne_bgate_locs)
-
-    a1_nw_bgate_locs = [
+    ],
+    castle_region_names.a1_w_ne_bgate: None,
+    castle_region_names.a1_nw_bgate: [
         castle_location_names.a1_nw_bgate
-    ]
-    a1_nw_bgate_region = create_region(world, active_locations, castle_region_names.a1_nw_bgate,
-                                       a1_nw_bgate_locs)
-
-    a1_w_se_bgate_locs = []
-    a1_w_se_bgate_region = create_region(world, active_locations, castle_region_names.a1_w_se_bgate,
-                                         a1_w_se_bgate_locs)
-
-    a1_w_sw_bgate_locs = []
-    a1_w_sw_bgate_region = create_region(world, active_locations, castle_region_names.a1_w_sw_bgate,
-                                         a1_w_sw_bgate_locs)
-
-    a1_w_sw_bgate_1_locs = []
-    a1_w_sw_bgate_1_region = create_region(world, active_locations, castle_region_names.a1_w_sw_bgate_1,
-                                           a1_w_sw_bgate_1_locs)
-
-    a1_sw_spikes_locs = [
+    ],
+    castle_region_names.a1_w_se_bgate: None,
+    castle_region_names.a1_w_sw_bgate: None,
+    castle_region_names.a1_w_sw_bgate_1: None,
+    castle_region_names.a1_sw_spikes: [
         castle_location_names.a1_sw_spikes
-    ]
-    a1_sw_spikes_region = create_region(world, active_locations, castle_region_names.a1_sw_spikes,
-                                        a1_sw_spikes_locs)
-
-    a1_from_a2_locs = [
+    ],
+    castle_region_names.a1_from_a2: [
         castle_location_names.a1_from_a2_1,
         castle_location_names.a1_from_a2_2,
         castle_location_names.a1_from_a2_3,
-    ]
-    a1_from_a2_region = create_region(world, active_locations, castle_region_names.a1_from_a2,
-                                      a1_from_a2_locs)
-
-    a2_start_locs = [
+    ],
+    castle_region_names.a2_start: [
         castle_location_names.a2_n_of_s_save_1,
         castle_location_names.a2_n_of_s_save_2,
         castle_location_names.a2_n_of_s_save_3,
@@ -998,46 +745,26 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a2_floor_tp_se,
         castle_location_names.btn_a2_puzzle,
         castle_location_names.btn_a2_wall_sw,
-    ]
-    a2_start_region = create_region(world, active_locations, castle_region_names.a2_start, a2_start_locs)
-
-    a2_puzzle_locs = [
+    ],
+    castle_region_names.a2_puzzle: [
         castle_location_names.a2_puzzle_1,
         castle_location_names.a2_puzzle_2,
         castle_location_names.a2_puzzle_3,
         castle_location_names.a2_puzzle_4,
-    ]
-    a2_puzzle_region = create_region(world, active_locations, castle_region_names.a2_puzzle, a2_puzzle_locs)
-
-    a2_tp_sw_locs = [
+    ],
+    castle_region_names.a2_tp_sw: [
         castle_location_names.a2_sw_ice_tower_tp,
-    ]
-    a2_tp_sw_region = create_region(world, active_locations, castle_region_names.a2_tp_sw, a2_tp_sw_locs)
-
-    a2_tp_se_locs = [
+    ],
+    castle_region_names.a2_tp_se: [
         castle_location_names.a2_se_tp,
-    ]
-    a2_tp_se_region = create_region(world, active_locations, castle_region_names.a2_tp_se, a2_tp_se_locs)
-
-    a2_sw_bgate_locs = []
-    a2_sw_bgate_region = create_region(world, active_locations, castle_region_names.a2_sw_bgate,
-                                       a2_sw_bgate_locs)
-
-    a2_s_bgate_locs = [
+    ],
+    castle_region_names.a2_sw_bgate: None,
+    castle_region_names.a2_s_bgate: [
         castle_location_names.a2_s_bgate,
-    ]
-    a2_s_bgate_region = create_region(world, active_locations, castle_region_names.a2_s_bgate,
-                                      a2_s_bgate_locs)
-
-    a2_se_bgate_locs = []
-    a2_se_bgate_region = create_region(world, active_locations, castle_region_names.a2_se_bgate,
-                                       a2_se_bgate_locs)
-
-    a2_s_save_bgate_locs = []
-    a2_s_save_bgate_region = create_region(world, active_locations, castle_region_names.a2_s_save_bgate,
-                                           a2_s_save_bgate_locs)
-
-    a2_ne_locs = [
+    ],
+    castle_region_names.a2_se_bgate: None,
+    castle_region_names.a2_s_save_bgate: None,
+    castle_region_names.a2_ne: [
         castle_location_names.a2_s_of_n_save_1,
         castle_location_names.a2_s_of_n_save_2,
         castle_location_names.a2_s_of_n_save_3,
@@ -1079,20 +806,12 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a2_floor_tp_n,
         castle_location_names.btn_a2_floor_secret_e,
         castle_location_names.btn_a2_wall_e,
-    ]
-    a2_ne_region = create_region(world, active_locations, castle_region_names.a2_ne, a2_ne_locs)
-
-    a2_ne_m_bgate_locs = []
-    a2_ne_m_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_m_bgate,
-                                         a2_ne_m_bgate_locs)
-
-    a2_ne_l_bgate_locs = [
+    ],
+    castle_region_names.a2_ne_m_bgate: None,
+    castle_region_names.a2_ne_l_bgate: [
         castle_location_names.a2_ne_l_bgate,
-    ]
-    a2_ne_l_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_l_bgate,
-                                         a2_ne_l_bgate_locs)
-
-    a2_ne_r_bgate_locs = [
+    ],
+    castle_region_names.a2_ne_r_bgate: [
         castle_location_names.a2_ne_r_bgate_1,
         castle_location_names.a2_ne_r_bgate_2,
         castle_location_names.btn_a2_rune,
@@ -1100,24 +819,13 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a2_rune_2,
         castle_location_names.btn_a2_rune_3,
         castle_location_names.btn_a2_rune_4,
-    ]
-    a2_ne_r_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_r_bgate,
-                                         a2_ne_r_bgate_locs)
-
-    a2_ne_b_bgate_locs = []
-    a2_ne_b_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_b_bgate,
-                                         a2_ne_b_bgate_locs)
-
-    a2_ne_save_bgate_locs = []
-    a2_ne_save_bgate_region = create_region(world, active_locations, castle_region_names.a2_ne_save_bgate,
-                                            a2_ne_save_bgate_locs)
-
-    a2_tp_ne_locs = [
+    ],
+    castle_region_names.a2_ne_b_bgate: None,
+    castle_region_names.a2_ne_save_bgate: None,
+    castle_region_names.a2_tp_ne: [
         castle_location_names.a2_ne_tp,
-    ]
-    a2_tp_ne_region = create_region(world, active_locations, castle_region_names.a2_tp_ne, a2_tp_ne_locs)
-
-    a2_e_locs = [
+    ],
+    castle_region_names.a2_e: [
         castle_location_names.a2_e_ice_tower_1,
         castle_location_names.a2_e_ice_tower_2,
         castle_location_names.a2_e_ice_tower_3,
@@ -1127,16 +835,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.a2_s_of_e_bgate,
         castle_location_names.a2_tower_ice_6,
         castle_location_names.btn_a2_wall_se,
-    ]
-    a2_e_region = create_region(world, active_locations, castle_region_names.a2_e, a2_e_locs)
-
-    a2_e_bgate_locs = [
+    ],
+    castle_region_names.a2_e_bgate: [
         castle_location_names.a2_e_bgate,
-    ]
-    a2_e_bgate_region = create_region(world, active_locations, castle_region_names.a2_e_bgate,
-                                      a2_e_bgate_locs)
-
-    a2_nw_locs = [
+    ],
+    castle_region_names.a2_nw: [
         castle_location_names.a2_pyramid_1,
         castle_location_names.a2_pyramid_3,
         castle_location_names.a2_pyramid_4,
@@ -1149,39 +852,24 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a2_floor_pyramid_se,
         castle_location_names.btn_a2_floor_pyramid_m,
         castle_location_names.btn_a2_wall_nw,
-    ]
-    a2_nw_region = create_region(world, active_locations, castle_region_names.a2_nw, a2_nw_locs)
-
-    a2_bonus_return_locs = [
+    ],
+    castle_region_names.a2_bonus_return: [
         castle_location_names.a2_bonus_return,
-    ]
-    a2_bonus_return_region = create_region(world, active_locations, castle_region_names.a2_bonus_return,
-                                           a2_bonus_return_locs)
-
-    a2_blue_spikes_locs = [
+    ],
+    castle_region_names.a2_blue_spikes: [
         castle_location_names.a2_blue_spikes,
-    ]
-    a2_blue_spikes_region = create_region(world, active_locations, castle_region_names.a2_blue_spikes,
-                                          a2_blue_spikes_locs)
-
-    a2_blue_spikes_tp_locs = [
+    ],
+    castle_region_names.a2_blue_spikes_tp: [
         castle_location_names.a2_nw_tp,
-    ]
-    a2_blue_spikes_tp_region = create_region(world, active_locations, castle_region_names.a2_blue_spikes_tp,
-                                             a2_blue_spikes_tp_locs)
-
-    a2_to_a3_locs = []
-    a2_to_a3_region = create_region(world, active_locations, castle_region_names.a2_to_a3, a2_to_a3_locs)
-
-    n2_start_locs = [
+    ],
+    castle_region_names.a2_to_a3: None,
+    castle_region_names.n2_start: [
         castle_location_names.n2_start_1,
         castle_location_names.n2_start_2,
         castle_location_names.n2_start_3,
         castle_location_names.n2_start_4,
-    ]
-    n2_start_region = create_region(world, active_locations, castle_region_names.n2_start, n2_start_locs)
-
-    n2_m_locs = [
+    ],
+    castle_region_names.n2_m: [
         castle_location_names.n2_m_m_1,
         castle_location_names.n2_m_m_2,
         castle_location_names.n2_m_m_3,
@@ -1193,10 +881,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_m_se_4,
         castle_location_names.n2_m_se_5,
         castle_location_names.btn_n2_panel_n,
-    ]
-    n2_m_region = create_region(world, active_locations, castle_region_names.n2_m, n2_m_locs)
-
-    n2_nw_locs = [
+    ],
+    castle_region_names.n2_nw: [
         castle_location_names.n2_nw_top_1,
         castle_location_names.n2_nw_top_2,
         castle_location_names.n2_nw_top_3,
@@ -1211,10 +897,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_nw_bottom_3,
         castle_location_names.n2_nw_bottom_4,
         castle_location_names.btn_n2_floor_blue,
-    ]
-    n2_nw_region = create_region(world, active_locations, castle_region_names.n2_nw, n2_nw_locs)
-
-    n2_w_locs = [
+    ],
+    castle_region_names.n2_w: [
         castle_location_names.n2_w_1,
         castle_location_names.n2_w_2,
         castle_location_names.n2_w_3,
@@ -1230,10 +914,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_w_13,
         castle_location_names.n2_w_14,
         castle_location_names.n2_w_15,
-    ]
-    n2_w_region = create_region(world, active_locations, castle_region_names.n2_w, n2_w_locs)
-
-    n2_e_locs = [
+    ],
+    castle_region_names.n2_e: [
         castle_location_names.n2_e_1,
         castle_location_names.n2_e_2,
         castle_location_names.n2_e_3,
@@ -1249,10 +931,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_e_13,
         castle_location_names.n2_e_14,
         castle_location_names.n2_e_15,
-    ]
-    n2_e_region = create_region(world, active_locations, castle_region_names.n2_e, n2_e_locs)
-
-    n2_n_locs = [
+    ],
+    castle_region_names.n2_n: [
         castle_location_names.n2_n_1,
         castle_location_names.n2_n_2,
         castle_location_names.n2_n_3,
@@ -1268,10 +948,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_n_13,
         castle_location_names.n2_n_14,
         castle_location_names.n2_n_15,
-    ]
-    n2_n_region = create_region(world, active_locations, castle_region_names.n2_n, n2_n_locs)
-
-    n2_s_locs = [
+    ],
+    castle_region_names.n2_s: [
         castle_location_names.n2_s_1,
         castle_location_names.n2_s_2,
         castle_location_names.n2_s_3,
@@ -1281,36 +959,25 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n2_s_7,
         castle_location_names.n2_s_8,
         castle_location_names.n2_s_9,
-    ]
-    n2_s_region = create_region(world, active_locations, castle_region_names.n2_s, n2_s_locs)
-
-    n2_ne_locs = [
+    ],
+    castle_region_names.n2_ne: [
         castle_location_names.n2_ne_1,
         castle_location_names.n2_ne_2,
         castle_location_names.n2_ne_3,
         castle_location_names.n2_ne_4,
         castle_location_names.btn_n2_panel_ne,
-    ]
-    n2_ne_region = create_region(world, active_locations, castle_region_names.n2_ne, n2_ne_locs)
-
-    n2_se_locs = [
+    ],
+    castle_region_names.n2_se: [
         castle_location_names.btn_n2_panel_se,
-    ]
-    n2_se_region = create_region(world, active_locations, castle_region_names.n2_se, n2_se_locs)
-
-    n2_exit_locs = [
-    ]
-    n2_exit_region = create_region(world, active_locations, castle_region_names.n2_exit, n2_exit_locs)
-
-    a3_start_locs = [
+    ],
+    castle_region_names.n2_exit: None,
+    castle_region_names.a3_start: [
         castle_location_names.a3_sw_1,
         castle_location_names.a3_sw_2,
         castle_location_names.a3_sw_3,
         castle_location_names.btn_a3_wall_start,
-    ]
-    a3_start_region = create_region(world, active_locations, castle_region_names.a3_start, a3_start_locs)
-
-    a3_main_locs = [
+    ],
+    castle_region_names.a3_main: [
         castle_location_names.a3_s_banner_secret,
         castle_location_names.a3_nw_save_2,
         castle_location_names.a3_nw_save_3,
@@ -1387,125 +1054,63 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_a3_floor_tp_m,
         castle_location_names.btn_a3_wall_end,
         castle_location_names.btn_a3_seq_knife,
-    ]
-    a3_main_region = create_region(world, active_locations, castle_region_names.a3_main, a3_main_locs)
-
-    a3_tp_locs = [
+    ],
+    castle_region_names.a3_tp: [
         castle_location_names.a3_m_tp,
-    ]
-    a3_tp_region = create_region(world, active_locations, castle_region_names.a3_tp, a3_tp_locs)
-
-    a3_from_a2_locs = [
+    ],
+    castle_region_names.a3_from_a2: [
         castle_location_names.btn_a3_wall_from_a2,
-    ]
-    a3_from_a2_region = create_region(world, active_locations, castle_region_names.a3_from_a2, a3_from_a2_locs)
-
-    a3_from_a2_wall_locs = [
+    ],
+    castle_region_names.a3_from_a2_wall: [
         castle_location_names.btn_a3_floor_stairs_in_wall,
-    ]
-    a3_from_a2_wall_region = create_region(world, active_locations, castle_region_names.a3_from_a2_wall,
-                                           a3_from_a2_wall_locs)
-
-    a3_knife_puzzle_reward_locs = [
+    ],
+    castle_region_names.a3_knife_puzzle_reward: [
         castle_location_names.a3_knife_puzzle_reward_l_5,
         castle_location_names.a3_knife_puzzle_reward_r,
         castle_location_names.btn_a3_wall_knife_1,
         castle_location_names.btn_a3_wall_knife_2,
         castle_location_names.btn_a3_seq_knife_2,
-    ]
-    a3_knife_puzzle_reward_region = create_region(world, active_locations, castle_region_names.a3_knife_puzzle_reward,
-                                                  a3_knife_puzzle_reward_locs)
-
-    a3_knife_reward_2_locs = [
+    ],
+    castle_region_names.a3_knife_reward_2: [
         castle_location_names.a3_knife_puzzle_reward_l_1,
         castle_location_names.a3_knife_puzzle_reward_l_2,
         castle_location_names.a3_knife_puzzle_reward_l_3,
         castle_location_names.a3_knife_puzzle_reward_l_4,
-    ]
-    a3_knife_reward_2_region = create_region(world, active_locations, castle_region_names.a3_knife_reward_2,
-                                             a3_knife_reward_2_locs)
-
-    a3_nw_stairs_region = create_region(world, active_locations, castle_region_names.a3_nw_stairs, [])
-
-    a3_w_b_bgate_locs = [
-
-    ]
-    a3_w_b_bgate_region = create_region(world, active_locations, castle_region_names.a3_w_b_bgate,
-                                        a3_w_b_bgate_locs)
-
-    a3_w_b_bgate_tp_locs = [
+    ],
+    castle_region_names.a3_nw_stairs: None,
+    castle_region_names.a3_w_b_bgate: None,
+    castle_region_names.a3_w_b_bgate_tp: [
         castle_location_names.a3_pyramids_s_bgate_tp
-    ]
-    a3_w_b_bgate_tp_region = create_region(world, active_locations, castle_region_names.a3_w_b_bgate_tp,
-                                           a3_w_b_bgate_tp_locs)
-
-    a3_w_t_bgate_locs = []
-    a3_w_t_bgate_region = create_region(world, active_locations, castle_region_names.a3_w_t_bgate,
-                                        a3_w_t_bgate_locs)
-
-    a3_w_r_bgate_locs = []
-    a3_w_r_bgate_region = create_region(world, active_locations, castle_region_names.a3_w_r_bgate,
-                                        a3_w_r_bgate_locs)
-
-    a3_n_l_bgate_locs = []
-    a3_n_l_bgate_region = create_region(world, active_locations, castle_region_names.a3_n_l_bgate,
-                                        a3_n_l_bgate_locs)
-
-    a3_n_r_bgate_locs = []
-    a3_n_r_bgate_region = create_region(world, active_locations, castle_region_names.a3_n_r_bgate,
-                                        a3_n_r_bgate_locs)
-
-    a3_e_l_bgate_locs = []
-    a3_e_l_bgate_region = create_region(world, active_locations, castle_region_names.a3_e_l_bgate,
-                                        a3_e_l_bgate_locs)
-
-    a3_e_r_bgate_locs = []
-    a3_e_r_bgate_region = create_region(world, active_locations, castle_region_names.a3_e_r_bgate,
-                                        a3_e_r_bgate_locs)
-
-    b2_start_locs = [
-    ]
-    b2_start_region = create_region(world, active_locations, castle_region_names.b2_start, b2_start_locs)
-
-    b2_arena_locs = [
-    ]
-    b2_arena_region = create_region(world, active_locations, castle_region_names.b2_arena, b2_arena_locs)
-
-    b2_defeated_locs = [
+    ],
+    castle_region_names.a3_w_t_bgate: None,
+    castle_region_names.a3_w_r_bgate: None,
+    castle_region_names.a3_n_l_bgate: None,
+    castle_region_names.a3_n_r_bgate: None,
+    castle_region_names.a3_e_l_bgate: None,
+    castle_region_names.a3_e_r_bgate: None,
+    castle_region_names.b2_start: None,
+    castle_region_names.b2_arena: None,
+    castle_region_names.b2_defeated: [
         castle_location_names.b2_boss,
         castle_location_names.b2_boss_reward,
         castle_location_names.ev_beat_boss_2,
-    ]
-    b2_defeated_region = create_region(world, active_locations, castle_region_names.b2_defeated,
-                                       b2_defeated_locs)
-
-    b2_exit_locs = [
-    ]
-    b2_exit_region = create_region(world, active_locations, castle_region_names.b2_exit, b2_exit_locs)
-
-    r1_start_locs = [
+    ],
+    castle_region_names.b2_exit: None,
+    castle_region_names.r1_start: [
         castle_location_names.r1_se_1,
         castle_location_names.r1_se_2,
         castle_location_names.r1_se_3,
         castle_location_names.r1_se_4,
         castle_location_names.r1_se_5,
         castle_location_names.r1_se_6,
-    ]
-    r1_start_region = create_region(world, active_locations, castle_region_names.r1_start, r1_start_locs)
-
-    r1_se_ggate_locs = [
+    ],
+    castle_region_names.r1_se_ggate: [
         castle_location_names.btn_r1_floor_se,
-    ]
-    r1_se_ggate_region = create_region(world, active_locations, castle_region_names.r1_se_ggate,
-                                       r1_se_ggate_locs)
-
-    r1_start_wall_locs = [
+    ],
+    castle_region_names.r1_start_wall: [
         castle_location_names.r1_start_wall
-    ]
-    r1_start_wall_region = create_region(world, active_locations, castle_region_names.r1_start_wall,
-                                         r1_start_wall_locs)
-
-    r1_e_locs = [
+    ],
+    castle_region_names.r1_e: [
         castle_location_names.r1_e_knife_trap_1,
         castle_location_names.r1_e_knife_trap_2,
         castle_location_names.r1_e_knife_trap_3,
@@ -1515,16 +1120,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_e_knife_trap_7,
         castle_location_names.r1_e_s,
         castle_location_names.btn_r1_floor_e,
-    ]
-    r1_e_region = create_region(world, active_locations, castle_region_names.r1_e, r1_e_locs)
-
-    r1_e_s_bgate_locs = [
+    ],
+    castle_region_names.r1_e_s_bgate: [
         castle_location_names.r1_e_s_bgate
-    ]
-    r1_e_s_bgate_region = create_region(world, active_locations, castle_region_names.r1_e_s_bgate,
-                                        r1_e_s_bgate_locs)
-
-    r1_e_n_bgate_locs = [
+    ],
+    castle_region_names.r1_e_n_bgate: [
         castle_location_names.r1_e_fire_floor_1,
         castle_location_names.r1_e_fire_floor_2,
         castle_location_names.r1_e_fire_floor_3,
@@ -1536,64 +1136,42 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_e_n_3,
         castle_location_names.r1_tower_plant_2,
         castle_location_names.btn_r1_wall_ne,
-    ]
-    r1_e_n_bgate_region = create_region(world, active_locations, castle_region_names.r1_e_n_bgate,
-                                        r1_e_n_bgate_locs)
-
-    r1_e_sgate_locs = [
+    ],
+    castle_region_names.r1_e_sgate: [
         castle_location_names.r1_e_sgate,
         castle_location_names.btn_r1_wall_se,
-    ]
-    r1_e_sgate_region = create_region(world, active_locations, castle_region_names.r1_e_sgate,
-                                      r1_e_sgate_locs)
-
-    r1_se_wall_locs = [
+    ],
+    castle_region_names.r1_se_wall: [
         castle_location_names.r1_se_wall
-    ]
-    r1_se_wall_region = create_region(world, active_locations, castle_region_names.r1_se_wall,
-                                      r1_se_wall_locs)
-
-    r1_ne_ggate_locs = [
+    ],
+    castle_region_names.r1_ne_ggate: [
         castle_location_names.r1_ne_ggate_1,
         castle_location_names.r1_ne_ggate_2,
         castle_location_names.r1_ne_ggate_3,
         castle_location_names.r1_ne_ggate_4,
         castle_location_names.btn_r1_floor_ne,
-    ]
-    r1_ne_ggate_region = create_region(world, active_locations, castle_region_names.r1_ne_ggate,
-                                       r1_ne_ggate_locs)
-
-    r1_nw_locs = [
+    ],
+    castle_region_names.r1_nw: [
         castle_location_names.r1_nw_1,
         castle_location_names.r1_nw_2,
         castle_location_names.r1_tower_plant_1,
         castle_location_names.btn_r1_floor_nw,
         castle_location_names.btn_r1_puzzle,
-    ]
-    r1_nw_region = create_region(world, active_locations, castle_region_names.r1_nw, r1_nw_locs)
-
-    r1_puzzle_locs = [
+    ],
+    castle_region_names.r1_puzzle: [
         castle_location_names.r1_puzzle_1,
         castle_location_names.r1_puzzle_2,
         castle_location_names.r1_puzzle_3,
         castle_location_names.r1_puzzle_4,
-    ]
-    r1_puzzle_region = create_region(world, active_locations, castle_region_names.r1_puzzle, r1_puzzle_locs)
-
-    r1_nw_hidden_locs = [
+    ],
+    castle_region_names.r1_nw_hidden: [
         castle_location_names.r1_nw_hidden_1,
         castle_location_names.r1_nw_hidden_2,
-    ]
-    r1_nw_hidden_region = create_region(world, active_locations, castle_region_names.r1_nw_hidden,
-                                        r1_nw_hidden_locs)
-
-    r1_nw_ggate_locs = [
+    ],
+    castle_region_names.r1_nw_ggate: [
         castle_location_names.btn_r1_floor_nw_hidden,
-    ]
-    r1_nw_ggate_region = create_region(world, active_locations, castle_region_names.r1_nw_ggate,
-                                       r1_nw_ggate_locs)
-
-    r1_sw_locs = [
+    ],
+    castle_region_names.r1_sw: [
         castle_location_names.r1_sw_nw_1,
         castle_location_names.r1_sw_nw_2,
         castle_location_names.r1_sw_nw_3,
@@ -1618,45 +1196,30 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r1_tower_plant_3,
         castle_location_names.r1_tower_plant_4,
         castle_location_names.btn_r1_wall_w,
-    ]
-    r1_sw_region = create_region(world, active_locations, castle_region_names.r1_sw, r1_sw_locs)
-
-    r1_w_sgate_locs = [  # Shop region
+    ],
+    castle_region_names.r1_w_sgate: [
         castle_location_names.btn_r1_floor_w_shop,
-    ]
-    r1_w_sgate_region = create_region(world, active_locations, castle_region_names.r1_w_sgate,
-                                      r1_w_sgate_locs)
-
-    r1_sw_ggate_locs = [
+        # Shop region
+    ],
+    castle_region_names.r1_sw_ggate: [
         castle_location_names.btn_r1_floor_w_s,
-    ]
-    r1_sw_ggate_region = create_region(world, active_locations, castle_region_names.r1_sw_ggate,
-                                       r1_sw_ggate_locs)
-
-    r1_exit_l_locs = [
+    ],
+    castle_region_names.r1_exit_l: [
         castle_location_names.btn_r1_floor_exit,
-    ]
-    r1_exit_l_region = create_region(world, active_locations, castle_region_names.r1_exit_l, r1_exit_l_locs)
-
-    r1_exit_r_locs = []
-    r1_exit_r_region = create_region(world, active_locations, castle_region_names.r1_exit_r, r1_exit_r_locs)
-
-    r2_start_locs = [
+    ],
+    castle_region_names.r1_exit_r: None,
+    castle_region_names.r2_start: [
         castle_location_names.r2_start,
         castle_location_names.btn_r2_wall_start,
-    ]
-    r2_start_region = create_region(world, active_locations, castle_region_names.r2_start, r2_start_locs)
-
-    r2_bswitch_locs = [
+    ],
+    castle_region_names.r2_bswitch: [
         castle_location_names.btn_r2_boss_e,
         castle_location_names.btn_r2_boss_e_1,
         castle_location_names.btn_r2_boss_e_2,
         castle_location_names.btn_r2_boss_e_3,
         castle_location_names.btn_r2_boss_e_4,
-    ]
-    r2_bswitch_region = create_region(world, active_locations, castle_region_names.r2_bswitch, r2_bswitch_locs)
-
-    r2_m_locs = [
+    ],
+    castle_region_names.r2_m: [
         castle_location_names.r2_n_3,
         castle_location_names.r2_n_4,
         castle_location_names.r2_n_bronze_gates_3,
@@ -1714,18 +1277,14 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_tower_plant_4,
         castle_location_names.btn_r2_floor_ne,
         castle_location_names.btn_r2_wall_nw,
-    ]
-    r2_m_region = create_region(world, active_locations, castle_region_names.r2_m, r2_m_locs)
-
-    r2_nw_locs = [
+    ],
+    castle_region_names.r2_nw: [
         castle_location_names.r2_nw_spike_trap_1,
         castle_location_names.r2_nw_spike_trap_2,
         castle_location_names.r2_tower_plant_1,
         castle_location_names.btn_r2_floor_nw,
-    ]
-    r2_nw_region = create_region(world, active_locations, castle_region_names.r2_nw, r2_nw_locs)
-
-    r2_n_locs = [
+    ],
+    castle_region_names.r2_n: [
         castle_location_names.r2_n_closed_room,
         castle_location_names.btn_r2_boss_n,
         castle_location_names.btn_r2_boss_n_1,
@@ -1733,29 +1292,20 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_r2_boss_n_3,
         castle_location_names.btn_r2_boss_n_4,
         castle_location_names.btn_r2_floor_boss_rune,
-    ]
-    r2_n_region = create_region(world, active_locations, castle_region_names.r2_n, r2_n_locs)
-
-    r2_e_locs = [
+    ],
+    castle_region_names.r2_e: [
         castle_location_names.r2_e_1,
         castle_location_names.r2_e_2,
         castle_location_names.r2_e_3,
         castle_location_names.r2_e_4,
         castle_location_names.r2_e_5,
         castle_location_names.btn_r2_floor_e,
-    ]
-    r2_e_region = create_region(world, active_locations, castle_region_names.r2_e, r2_e_locs)
-
-    r2_w_bgate_locs = []
-    r2_w_bgate_region = create_region(world, active_locations, castle_region_names.r2_w_bgate,
-                                      r2_w_bgate_locs)
-
-    r2_sgate_locs = [
+    ],
+    castle_region_names.r2_w_bgate: None,
+    castle_region_names.r2_sgate: [
         castle_location_names.btn_r2_floor_gate_s,
-    ]
-    r2_sgate_region = create_region(world, active_locations, castle_region_names.r2_sgate, r2_sgate_locs)
-
-    r2_s_locs = [
+    ],
+    castle_region_names.r2_s: [
         castle_location_names.r2_sw_1,
         castle_location_names.r2_sw_2,
         castle_location_names.r2_sw_3,
@@ -1771,10 +1321,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_tower_plant_5,
         castle_location_names.btn_r2_floor_sw_hidden,
         castle_location_names.btn_r2_floor_sw,
-    ]
-    r2_s_region = create_region(world, active_locations, castle_region_names.r2_s, r2_s_locs)
-
-    r2_spike_island_locs = [
+    ],
+    castle_region_names.r2_spike_island: [
         castle_location_names.r2_s_knife_trap_1,
         castle_location_names.r2_s_knife_trap_2,
         castle_location_names.r2_s_knife_trap_3,
@@ -1782,61 +1330,40 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.r2_s_knife_trap_5,
         castle_location_names.btn_r2_wall_spike_island_n,
         castle_location_names.btn_r2_wall_spike_island_s,
-    ]
-    r2_spike_island_region = create_region(world, active_locations, castle_region_names.r2_spike_island,
-                                           r2_spike_island_locs)
-
-    r2_sw_bridge_locs = [
+    ],
+    castle_region_names.r2_sw_bridge: [
         castle_location_names.btn_r2_rune,
         castle_location_names.btn_r2_rune_1,
         castle_location_names.btn_r2_rune_2,
         castle_location_names.btn_r2_rune_3,
         castle_location_names.btn_r2_rune_4,
-    ]
-    r2_sw_bridge_region = create_region(world, active_locations, castle_region_names.r2_sw_bridge, r2_sw_bridge_locs)
-
-    r2_puzzle_room_locs = [
+    ],
+    castle_region_names.r2_puzzle_room: [
         castle_location_names.btn_r2_puzzle,
-    ]
-    r2_puzzle_room_region = create_region(world, active_locations, castle_region_names.r2_puzzle_room,
-                                          r2_puzzle_room_locs)
-
-    r2_puzzle_locs = [
+    ],
+    castle_region_names.r2_puzzle: [
         castle_location_names.r2_puzzle_1,
         castle_location_names.r2_puzzle_2,
         castle_location_names.r2_puzzle_3,
         castle_location_names.r2_puzzle_4,
-    ]
-    r2_puzzle_region = create_region(world, active_locations, castle_region_names.r2_puzzle, r2_puzzle_locs)
-
-    r2_w_locs = [
+    ],
+    castle_region_names.r2_w: [
         castle_location_names.r2_w_island,
-    ]
-    r2_w_region = create_region(world, active_locations, castle_region_names.r2_w, r2_w_locs)
-
-    r2_from_r3_locs = [
+    ],
+    castle_region_names.r2_from_r3: [
         castle_location_names.r2_ne_knife_trap_end,
         castle_location_names.btn_r2_wall_ne,
-    ]
-    r2_from_r3_region = create_region(world, active_locations, castle_region_names.r2_from_r3,
-                                      r2_from_r3_locs)
-
-    r2_ne_cache_locs = [
+    ],
+    castle_region_names.r2_ne_cache: [
         castle_location_names.r2_ne_knife_trap_wall_1,
         castle_location_names.r2_ne_knife_trap_wall_2,
         castle_location_names.r2_ne_knife_trap_wall_3,
-    ]
-    r2_ne_cache_region = create_region(world, active_locations, castle_region_names.r2_ne_cache,
-                                       r2_ne_cache_locs)
-
-    r2_ggate_locs = [
+    ],
+    castle_region_names.r2_ggate: [
         castle_location_names.btn_r2_floor_gate_w,
-    ]
-    r2_ggate_region = create_region(world, active_locations, castle_region_names.r2_ggate, r2_ggate_locs)
-
-    r2_exit_region = create_region(world, active_locations, castle_region_names.r2_exit, [])
-
-    r3_main_locs = [
+    ],
+    castle_region_names.r2_exit: None,
+    castle_region_names.r3_main: [
         castle_location_names.r3_ne_knife_trap_1,
         castle_location_names.r3_ne_knife_trap_2,
         castle_location_names.r3_e_fire_floor_n_1,
@@ -1898,102 +1425,62 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_r3_wall_seq_n,
         castle_location_names.btn_r3_wall_seq_w,
         castle_location_names.btn_r3_wall_seq_m,
-    ]
-    r3_main_region = create_region(world, active_locations, castle_region_names.r3_main, r3_main_locs)
-
-    r3_ne_room_locs = [
+    ],
+    castle_region_names.r3_ne_room: [
         castle_location_names.r3_e_secret_tp,
         castle_location_names.r3_e_tp,
         castle_location_names.btn_r3_floor_ne_room,
-    ]
-    r3_ne_room_region = create_region(world, active_locations, castle_region_names.r3_ne_room,
-                                      r3_ne_room_locs)
-
-    r3_s_room_locs = [
+    ],
+    castle_region_names.r3_s_room: [
         castle_location_names.r3_s_shops_room_1,
         castle_location_names.r3_s_shops_room_2,
         castle_location_names.btn_r3_floor_s_room,
-    ]
-    r3_s_room_region = create_region(world, active_locations, castle_region_names.r3_s_room, r3_s_room_locs)
-
-    r3_w_ggate_locs = [
+    ],
+    castle_region_names.r3_w_ggate: [
         castle_location_names.r3_s_of_boss_door_1,
         castle_location_names.r3_s_of_boss_door_2,
         castle_location_names.r3_tower_plant_5,
-    ]
-    r3_w_ggate_region = create_region(world, active_locations, castle_region_names.r3_w_ggate,
-                                      r3_w_ggate_locs)
-
-    r3_e_ggate_locs = [
+    ],
+    castle_region_names.r3_e_ggate: [
         castle_location_names.r3_e_ggate_hallway_1,
         castle_location_names.r3_e_ggate_hallway_2,
         castle_location_names.r3_e_ggate_hallway_3,
         castle_location_names.r3_tower_plant_3,
         castle_location_names.btn_r3_floor_gate_nw,
-    ]
-    r3_e_ggate_region = create_region(world, active_locations, castle_region_names.r3_e_ggate,
-                                      r3_e_ggate_locs)
-
-    r3_sw_bgate_locs = [
+    ],
+    castle_region_names.r3_sw_bgate: [
         castle_location_names.btn_r3_floor_sw_gate,
         castle_location_names.btn_r3_wall_sw_gate,
-    ]
-    r3_sw_bgate_region = create_region(world, active_locations, castle_region_names.r3_sw_bgate,
-                                       r3_sw_bgate_locs)
-
-    r3_sw_wall_r_locs = [
+    ],
+    castle_region_names.r3_sw_wall_r: [
         castle_location_names.r3_sw_hidden_room_1,
         castle_location_names.r3_sw_hidden_room_2,
-    ]
-    r3_sw_wall_r_region = create_region(world, active_locations, castle_region_names.r3_sw_wall_r,
-                                        r3_sw_wall_r_locs)
-
-    r3_secret_hall_locs = [
+    ],
+    castle_region_names.r3_passage: [
         castle_location_names.btn_r3_floor_passage,
-    ]
-    r3_secret_hall_region = create_region(world, active_locations, castle_region_names.r3_passage,
-                                          r3_secret_hall_locs)
-
-    r3_secret_hall_room_1_locs = [
+    ],
+    castle_region_names.r3_passage_room_1: [
         castle_location_names.r3_w_passage_s_closed_room,
         castle_location_names.btn_r3_wall_passage_room_1,
-    ]
-    r3_secret_hall_room_1_region = create_region(world, active_locations, castle_region_names.r3_passage_room_1,
-                                                 r3_secret_hall_room_1_locs)
-
-    r3_secret_hall_room_2_locs = [
+    ],
+    castle_region_names.r3_passage_room_2: [
         castle_location_names.r3_w_passage_behind_spikes,
         castle_location_names.btn_r3_floor_passage_room_2,
-    ]
-    r3_secret_hall_room_2_region = create_region(world, active_locations, castle_region_names.r3_passage_room_2,
-                                                 r3_secret_hall_room_2_locs)
-
-    r3_secret_hall_room_2_spikes_locs = [
+    ],
+    castle_region_names.r3_passage_spikes: [
         castle_location_names.btn_r3_wall_passage_room_2,
-    ]
-    r3_secret_hall_room_2_spikes_region = create_region(world, active_locations,
-                                                        castle_region_names.r3_passage_spikes,
-                                                        r3_secret_hall_room_2_spikes_locs)
-
-    r3_secret_hall_end_locs = [
+    ],
+    castle_region_names.r3_passage_end: [
         castle_location_names.btn_r3_floor_passage_end,
-    ]
-    r3_secret_hall_end_region = create_region(world, active_locations, castle_region_names.r3_passage_end,
-                                              r3_secret_hall_end_locs)
-
-    r3_nw_tp_locs = [
+    ],
+    castle_region_names.r3_nw_tp: [
         castle_location_names.r3_nw_tp,
-    ]
-    r3_nw_tp_region = create_region(world, active_locations, castle_region_names.r3_nw_tp, r3_nw_tp_locs)
-
-    r3_se_cache_locs = [
+    ],
+    castle_region_names.r3_se_cache: [
         castle_location_names.r3_e_fire_floor_secret,
         castle_location_names.btn_r3_wall_seq_ne,
-    ]
-    r3_se_cache_region = create_region(world, active_locations, castle_region_names.r3_se_cache,
-                                       r3_se_cache_locs)
-
-    r3_boss_switch_locs = [
+    ],
+    castle_region_names.r3_boss_switch: [
         castle_location_names.r3_boss_switch_room_1,
         castle_location_names.r3_boss_switch_room_2,
         castle_location_names.r3_boss_switch_room_3,
@@ -2004,17 +1491,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_r3_boss_4,
         castle_location_names.btn_r3_wall_seq_se,
         castle_location_names.btn_r3_seq_simon_room,
-    ]
-    r3_boss_switch_region = create_region(world, active_locations, castle_region_names.r3_boss_switch,
-                                          r3_boss_switch_locs)
-
-    r3_rune_room_locs = [
+    ],
+    castle_region_names.r3_rune_room: [
         castle_location_names.btn_r3_floor_simon,
-    ]
-    r3_rune_room_region = create_region(world, active_locations, castle_region_names.r3_rune_room,
-                                        r3_rune_room_locs)
-
-    r3_simon_says_locs = [
+    ],
+    castle_region_names.r3_simon_says: [
         castle_location_names.btn_r3_simon,
         castle_location_names.btn_r3_simon_1,
         castle_location_names.btn_r3_simon_2,
@@ -2022,24 +1503,16 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_r3_simon_4,
         castle_location_names.btn_r3_simon_5,
         castle_location_names.btn_r3_simon_6,
-    ]
-    r3_simon_says_region = create_region(world, active_locations, castle_region_names.r3_simon_says,
-                                         r3_simon_says_locs)
-
-    r3_bonus_locs = []
-    r3_bonus_region = create_region(world, active_locations, castle_region_names.r3_bonus, r3_bonus_locs)
-
-    r3_l_shop_sgate_locs = [
+    ],
+    castle_region_names.r3_bonus: None,
+    castle_region_names.r3_l_shop_sgate: [
         castle_location_names.r3_s_shops_room_left_shop,
-    ]
-    r3_l_shop_sgate_region = create_region(world, active_locations, castle_region_names.r3_l_shop_sgate,
-                                           r3_l_shop_sgate_locs)
-
-    r3_r_shop_sgate_locs = []
-    r3_r_shop_sgate_region = create_region(world, active_locations, castle_region_names.r3_r_shop_sgate,
-                                           r3_r_shop_sgate_locs)
-
-    r3_bonus_return_locs = [
+        # Shop region
+    ],
+    castle_region_names.r3_r_shop_sgate: [
+        # Shop region
+    ],
+    castle_region_names.r3_bonus_return: [
         castle_location_names.r3_bonus_return_1,
         castle_location_names.r3_bonus_return_2,
         castle_location_names.btn_r3_rune,
@@ -2047,24 +1520,15 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_r3_rune_2,
         castle_location_names.btn_r3_rune_3,
         castle_location_names.btn_r3_rune_4,
-    ]
-    r3_bonus_return_region = create_region(world, active_locations, castle_region_names.r3_bonus_return,
-                                           r3_bonus_return_locs)
-
-    r3_bonus_return_bridge_locs = [
+    ],
+    castle_region_names.r3_bonus_return_bridge: [
         castle_location_names.r3_e_shops_puzzle_reward,
-    ]
-    r3_bonus_return_bridge_region = create_region(world, active_locations,
-                                                  castle_region_names.r3_bonus_return_bridge, r3_bonus_return_bridge_locs)
-
-    r3_exit_locs = [
+    ],
+    castle_region_names.r3_exit: [
         castle_location_names.btn_r3_boss_door,
-    ]
-    r3_exit_region = create_region(world, active_locations, castle_region_names.r3_exit, r3_exit_locs)
-
-    r3_boss_region = create_region(world, active_locations, castle_region_names.r3_boss, [])
-
-    n3_main_locs = [
+    ],
+    castle_region_names.r3_boss: None,
+    castle_region_names.n3_main: [
         castle_location_names.n3_tp_room_n_1,
         castle_location_names.n3_tp_room_n_2,
         castle_location_names.n3_exit_e_1,
@@ -2128,36 +1592,19 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n3_se_cluster_5,
         castle_location_names.n3_exit_s,
         castle_location_names.n3_exit_se,
-    ]
-    n3_main_region = create_region(world, active_locations, castle_region_names.n3_main, n3_main_locs)
-
-    n3_tp_room_locs = [
+    ],
+    castle_region_names.n3_tp_room: [
         castle_location_names.n3_tp_room,
-    ]
-    n3_tp_room_region = create_region(world, active_locations, castle_region_names.n3_tp_room,
-                                      n3_tp_room_locs)
-
-    b3_start_locs = [
-    ]
-    b3_start_region = create_region(world, active_locations, castle_region_names.b3_start, b3_start_locs)
-
-    b3_arena_locs = [
-    ]
-    b3_arena_region = create_region(world, active_locations, castle_region_names.b3_arena, b3_arena_locs)
-
-    b3_defeated_locs = [
+    ],
+    castle_region_names.b3_start: None,
+    castle_region_names.b3_arena: None,
+    castle_region_names.b3_defeated: [
         castle_location_names.b3_boss,
         castle_location_names.b3_reward,
         castle_location_names.ev_beat_boss_3,
-    ]
-    b3_defeated_region = create_region(world, active_locations, castle_region_names.b3_defeated,
-                                       b3_defeated_locs)
-
-    b3_exit_locs = [
-    ]
-    b3_exit_region = create_region(world, active_locations, castle_region_names.b3_exit, b3_exit_locs)
-
-    c1_start_locs = [
+    ],
+    castle_region_names.b3_exit: None,
+    castle_region_names.c1_start: [
         castle_location_names.c1_n_alcove_2,
         castle_location_names.c1_n_alcove_3,
         castle_location_names.c1_s_ice_towers_4,
@@ -2182,95 +1629,62 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c1_floor_n,
         castle_location_names.btn_c1_floor_red,
         castle_location_names.btn_c1_wall_red,
-    ]
-    c1_start_region = create_region(world, active_locations, castle_region_names.c1_start, c1_start_locs)
-
-    c1_se_spikes_locs = [
+    ],
+    castle_region_names.c1_se_spikes: [
         castle_location_names.c1_se_spikes
-    ]
-    c1_se_spikes_region = create_region(world, active_locations, castle_region_names.c1_se_spikes,
-                                        c1_se_spikes_locs)
-
-    c1_n_spikes_locs = [
+    ],
+    castle_region_names.c1_n_spikes: [
         castle_location_names.c1_n_spikes_1,
         castle_location_names.c1_n_spikes_2,
         castle_location_names.c1_tower_ice_1,
-    ]
-    c1_n_spikes_region = create_region(world, active_locations, castle_region_names.c1_n_spikes,
-                                       c1_n_spikes_locs)
-    # Obviously a shop region
-    c1_shop_locs = [
-    ]
-    c1_shop_region = create_region(world, active_locations, castle_region_names.c1_shop, c1_shop_locs)
-
-    c1_w_locs = [
+    ],
+    castle_region_names.c1_shop: [
+        # Shop region
+    ],
+    castle_region_names.c1_w: [
         castle_location_names.c1_w_1,
         castle_location_names.c1_w_2,
         castle_location_names.c1_w_3,
         castle_location_names.c1_miniboss_lich_1,
         castle_location_names.c1_miniboss_lich_2,
         castle_location_names.c1_tower_plant_2,
-    ]
-    c1_w_region = create_region(world, active_locations, castle_region_names.c1_w, c1_w_locs)
-
-    c1_sgate_locs = [
+    ],
+    castle_region_names.c1_sgate: [
         castle_location_names.c1_sgate,
         castle_location_names.btn_c1_wall_portal,
-    ]
-    c1_sgate_region = create_region(world, active_locations, castle_region_names.c1_sgate, c1_sgate_locs)
-
-    c1_prison_stairs_locs = [
+    ],
+    castle_region_names.c1_prison_stairs: [
         castle_location_names.c1_prison_stairs
-    ]
-    c1_prison_stairs_region = create_region(world, active_locations, castle_region_names.c1_prison_stairs,
-                                            c1_prison_stairs_locs)
-
-    c1_s_bgate_locs = [
+    ],
+    castle_region_names.c1_s_bgate: [
         castle_location_names.btn_c1_wall_s_gate,
-    ]
-    c1_s_bgate_region = create_region(world, active_locations, castle_region_names.c1_s_bgate,
-                                      c1_s_bgate_locs)
-
-    c1_ledge_locs = [
+    ],
+    castle_region_names.c1_ledge: [
         castle_location_names.c1_ledge_1,
         castle_location_names.c1_ledge_2,
         castle_location_names.btn_c1_wall_ledge,
-    ]
-    c1_ledge_region = create_region(world, active_locations, castle_region_names.c1_ledge, c1_ledge_locs)
-
-    c1_tp_island_locs = [
+    ],
+    castle_region_names.c1_tp_island: [
         castle_location_names.c1_tp_island_1,
         castle_location_names.c1_tp_island_2,
-    ]
-    c1_tp_island_region = create_region(world, active_locations, castle_region_names.c1_tp_island,
-                                        c1_tp_island_locs)
-
-    pstart_start_locs = [
+    ],
+    castle_region_names.pstart_start: [
         castle_location_names.btn_pstart_rune,
         castle_location_names.btn_pstart_rune_1,
         castle_location_names.btn_pstart_rune_2,
         castle_location_names.btn_pstart_rune_3,
         castle_location_names.btn_pstart_rune_4,
-    ]
-    pstart_start_region = create_region(world, active_locations, castle_region_names.pstart_start,
-                                        pstart_start_locs)
-
-    pstart_puzzle_island_locs = [
+    ],
+    castle_region_names.pstart_puzzle_island: [
         castle_location_names.btn_pstart_puzzle,
-    ]
-    pstart_puzzle_island_region = create_region(world, active_locations, castle_region_names.pstart_puzzle_island,
-                                                pstart_puzzle_island_locs)
-
-    pstart_puzzle_locs = [
+    ],
+    castle_region_names.pstart_puzzle: [
         castle_location_names.pstart_puzzle_1,
         castle_location_names.pstart_puzzle_2,
         castle_location_names.pstart_puzzle_3,
         castle_location_names.pstart_puzzle_4,
-    ]
-    pstart_puzzle_region = create_region(world, active_locations, castle_region_names.pstart_puzzle,
-                                         pstart_puzzle_locs)
-
-    c2_main_locs = [
+    ],
+    castle_region_names.c2_main: [
         castle_location_names.c2_ne_platform_5,
         castle_location_names.c2_e_fire_floor_1,
         castle_location_names.c2_w_spikes_s_2,
@@ -2382,88 +1796,57 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c2_wall_blue,
         castle_location_names.btn_c2_wall_red_s,
         castle_location_names.btn_c2_wall_s_save,
-    ]
-    c2_main_region = create_region(world, active_locations, castle_region_names.c2_main, c2_main_locs)
-
-    c2_boss_region = create_region(world, active_locations, castle_region_names.c2_boss, [])
-
-    c2_exit_bgate_locs = [
+    ],
+    castle_region_names.c2_boss: None,
+    castle_region_names.c2_exit_bgate: [
         castle_location_names.btn_c2_wall_n_exit_gate,
-    ]
-    c2_exit_bgate_region = create_region(world, active_locations, castle_region_names.c2_exit_bgate,
-                                         c2_exit_bgate_locs)
-
-    c2_sw_wall_locs = [
+    ],
+    castle_region_names.c2_sw_wall: [
         castle_location_names.c2_sw_ice_tower_6,
-    ]
-    c2_sw_wall_region = create_region(world, active_locations, castle_region_names.c2_sw_wall,
-                                      c2_sw_wall_locs)
-
-    c2_w_wall_locs = [
+    ],
+    castle_region_names.c2_w_wall: [
         castle_location_names.c2_w_save_wall,
-    ]
-    c2_w_wall_region = create_region(world, active_locations, castle_region_names.c2_w_wall, c2_w_wall_locs)
-
-    c2_e_wall_locs = [
+    ],
+    castle_region_names.c2_e_wall: [
         castle_location_names.c2_by_e_shops_2,
-    ]
-    c2_e_wall_region = create_region(world, active_locations, castle_region_names.c2_e_wall, c2_e_wall_locs)
-
-    c2_w_spikes_locs = [
+    ],
+    castle_region_names.c2_w_spikes: [
         castle_location_names.c2_w_spikes_1,
         castle_location_names.c2_w_spikes_2,
         castle_location_names.c2_w_spikes_3,
         castle_location_names.c2_w_spikes_4,
-    ]
-    c2_w_spikes_region = create_region(world, active_locations, castle_region_names.c2_w_spikes,
-                                       c2_w_spikes_locs)
-
-    c2_w_shops_1_locs = [
-        castle_location_names.c2_by_w_shops_1
-    ]
-    c2_w_shops_1_region = create_region(world, active_locations, castle_region_names.c2_w_shops_1,
-                                        c2_w_shops_1_locs)
-
-    c2_w_shops_2_locs = [
-        castle_location_names.c2_by_w_shops_2
-    ]
-    c2_w_shops_2_region = create_region(world, active_locations, castle_region_names.c2_w_shops_2,
-                                        c2_w_shops_2_locs)
-
-    c2_w_shops_3_locs = [
+    ],
+    castle_region_names.c2_w_shops_1: [
+        castle_location_names.c2_by_w_shops_1,
+        # Shop region
+    ],
+    castle_region_names.c2_w_shops_2: [
+        castle_location_names.c2_by_w_shops_2,
+        # Shop region
+    ],
+    castle_region_names.c2_w_shops_3: [
         castle_location_names.c2_by_w_shops_3_1,
         castle_location_names.c2_by_w_shops_3_2,
-    ]
-    c2_w_shops_3_region = create_region(world, active_locations, castle_region_names.c2_w_shops_3,
-                                        c2_w_shops_3_locs)
-
-    c2_e_shops_1_locs = [
+        # Shop region
+    ],
+    castle_region_names.c2_e_shops_1: [
         castle_location_names.btn_c2_wall_portal_shop,
-    ]
-    c2_e_shops_1_region = create_region(world, active_locations, castle_region_names.c2_e_shops_1,
-                                        c2_e_shops_1_locs)
-
-    c2_e_shops_2_locs = [
+        # Shop region
+    ],
+    castle_region_names.c2_e_shops_2: [
         castle_location_names.btn_c2_wall_e_shop,
-    ]
-    c2_e_shops_2_region = create_region(world, active_locations, castle_region_names.c2_e_shops_2,
-                                        c2_e_shops_2_locs)
-
-    c2_puzzle_room_locs = [
+        # Shop region
+    ],
+    castle_region_names.c2_puzzle_room: [
         castle_location_names.btn_c2_puzzle,
-    ]
-    c2_puzzle_room_region = create_region(world, active_locations, castle_region_names.c2_puzzle_room,
-                                          c2_puzzle_room_locs)
-
-    c2_puzzle_locs = [
+    ],
+    castle_region_names.c2_puzzle: [
         castle_location_names.c2_puzzle_1,
         castle_location_names.c2_puzzle_2,
         castle_location_names.c2_puzzle_3,
         castle_location_names.c2_puzzle_4,
-    ]
-    c2_puzzle_region = create_region(world, active_locations, castle_region_names.c2_puzzle, c2_puzzle_locs)
-
-    c2_n_locs = [
+    ],
+    castle_region_names.c2_n: [
         castle_location_names.c2_nw_ledge_1,
         castle_location_names.c2_nw_ledge_2,
         castle_location_names.c2_nw_ledge_3,
@@ -2488,15 +1871,11 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c2_wall_seq_s,
         castle_location_names.btn_c2_wall_seq_e,
         castle_location_names.btn_c2_seq_bonus,
-    ]
-    c2_n_region = create_region(world, active_locations, castle_region_names.c2_n, c2_n_locs)
-
-    c2_n_wall_locs = [
+    ],
+    castle_region_names.c2_n_wall: [
         castle_location_names.c2_n_wall
-    ]
-    c2_n_wall_region = create_region(world, active_locations, castle_region_names.c2_n_wall, c2_n_wall_locs)
-
-    c2_bonus_locs = [
+    ],
+    castle_region_names.c2_bonus: [
         castle_location_names.btn_c2_rune_bonus,
         castle_location_names.btn_c2_rune_bonus_1,
         castle_location_names.btn_c2_rune_bonus_2,
@@ -2506,44 +1885,31 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c2_rune_bonus_6,
         castle_location_names.btn_c2_rune_bonus_7,
         castle_location_names.btn_c2_rune_bonus_8,
-    ]
-    c2_bonus_region = create_region(world, active_locations, castle_region_names.c2_bonus, c2_bonus_locs)
-
-    c2_bonus_return_locs = [
+    ],
+    castle_region_names.c2_bonus_return: [
         castle_location_names.c2_bonus_return
-    ]
-    c2_bonus_return_region = create_region(world, active_locations, castle_region_names.c2_bonus_return,
-                                           c2_bonus_return_locs)
-
-    c2_tp_island_locs = [
+    ],
+    castle_region_names.c2_tp_island: [
         castle_location_names.btn_c2_boss_e,
         castle_location_names.btn_c2_boss_e_1,
         castle_location_names.btn_c2_boss_e_2,
         castle_location_names.btn_c2_boss_e_3,
         castle_location_names.btn_c2_boss_e_4,
-    ]
-    c2_tp_island_region = create_region(world, active_locations, castle_region_names.c2_tp_island,
-                                        c2_tp_island_locs)
-
-    c2_c3_tp_locs = [
+    ],
+    castle_region_names.c2_c3_tp: [
         castle_location_names.btn_c2_floor_t_hall,
-    ]
-    c2_c3_tp_region = create_region(world, active_locations, castle_region_names.c2_c3_tp, c2_c3_tp_locs)
-
-    c2_n_shops_locs = [
-    ]
-    c2_n_shops_region = create_region(world, active_locations, castle_region_names.c2_n_shops,
-                                      c2_n_shops_locs)
-
-    n4_main_locs = [
+    ],
+    castle_region_names.c2_n_shops: [
+        # Shop region #1
+        # Shop region #2
+    ],
+    castle_region_names.n4_main: [
         castle_location_names.n4_ne,
         castle_location_names.n4_by_w_room_1,
         castle_location_names.n4_by_exit,
         castle_location_names.n4_by_w_room_2,
-    ]
-    n4_main_region = create_region(world, active_locations, castle_region_names.n4_main, n4_main_locs)
-
-    n4_nw_locs = [
+    ],
+    castle_region_names.n4_nw: [
         castle_location_names.n4_nw_1,
         castle_location_names.n4_nw_2,
         castle_location_names.n4_nw_3,
@@ -2560,10 +1926,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n4_nw_16,
         castle_location_names.n4_nw_13,
         castle_location_names.n4_nw_12,
-    ]
-    n4_nw_region = create_region(world, active_locations, castle_region_names.n4_nw, n4_nw_locs)
-
-    n4_w_locs = [
+    ],
+    castle_region_names.n4_w: [
         castle_location_names.n4_w_7,
         castle_location_names.n4_w_4,
         castle_location_names.n4_w_3,
@@ -2578,10 +1942,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n4_w_13,
         castle_location_names.n4_w_14,
         castle_location_names.n4_w_9,
-    ]
-    n4_w_region = create_region(world, active_locations, castle_region_names.n4_w, n4_w_locs)
-
-    n4_e_locs = [
+    ],
+    castle_region_names.n4_e: [
         castle_location_names.n4_e_11,
         castle_location_names.n4_e_24,
         castle_location_names.n4_e_16,
@@ -2614,23 +1976,15 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.n4_e_32,
         castle_location_names.n4_e_23,
         castle_location_names.n4_e_21,
-    ]
-    n4_e_region = create_region(world, active_locations, castle_region_names.n4_e, n4_e_locs)
-
-    n4_exit_region = create_region(world, active_locations, castle_region_names.n4_exit, [])
-
-    c3_main_locs = [
+    ],
+    castle_region_names.n4_exit: None,
+    castle_region_names.c3_start: [
         castle_location_names.c3_start_e
-    ]
-    c3_main_region = create_region(world, active_locations, castle_region_names.c3_start, c3_main_locs)
-
-    c3_rspike_switch_locs = [
+    ],
+    castle_region_names.c3_rspike_switch: [
         castle_location_names.btn_c3_wall_red
-    ]
-    c3_rspike_switch_region = create_region(world, active_locations, castle_region_names.c3_rspike_switch,
-                                            c3_rspike_switch_locs)
-
-    c3_rspikes_locs = [
+    ],
+    castle_region_names.c3_rspikes: [
         castle_location_names.c3_w_ledge_1,
         castle_location_names.c3_w_ledge_2,
         castle_location_names.c3_m_ice_towers_1,
@@ -2666,32 +2020,21 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c3_floor,
         castle_location_names.btn_c3_wall_blue,
         castle_location_names.btn_c3_wall_w,
-    ]
-    c3_rspikes_region = create_region(world, active_locations, castle_region_names.c3_rspikes,
-                                      c3_rspikes_locs)
-
-    c3_m_wall_locs = [
+    ],
+    castle_region_names.c3_m_wall: [
         castle_location_names.c3_m_wall
-    ]
-    c3_m_wall_region = create_region(world, active_locations, castle_region_names.c3_m_wall, c3_m_wall_locs)
-
-    c3_m_shop_locs = [
+    ],
+    castle_region_names.c3_m_shop: [
         castle_location_names.btn_c3_wall_shop,
-    ]
-    c3_m_shop_region = create_region(world, active_locations, castle_region_names.c3_m_shop, c3_m_shop_locs)
-
-    c3_m_tp_locs = [
+        # Shop region
+    ],
+    castle_region_names.c3_m_tp: [
         castle_location_names.c3_m_tp
-    ]
-    c3_m_tp_region = create_region(world, active_locations, castle_region_names.c3_m_tp, c3_m_tp_locs)
-
-    c3_s_bgate_locs = [
+    ],
+    castle_region_names.c3_s_bgate: [
         castle_location_names.c3_s_bgate
-    ]
-    c3_s_bgate_region = create_region(world, active_locations, castle_region_names.c3_s_bgate,
-                                      c3_s_bgate_locs)
-
-    c3_nw_locs = [
+    ],
+    castle_region_names.c3_nw: [
         castle_location_names.c3_nw_ice_towers_1,
         castle_location_names.c3_nw_ice_towers_2,
         castle_location_names.c3_nw_ice_towers_3,
@@ -2716,52 +2059,33 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.btn_c3_boss_2,
         castle_location_names.btn_c3_boss_3,
         castle_location_names.btn_c3_boss_4,
-    ]
-    c3_nw_region = create_region(world, active_locations, castle_region_names.c3_nw, c3_nw_locs)
-
-    c3_sw_hidden_locs = [
+    ],
+    castle_region_names.c3_sw_hidden: [
         castle_location_names.c3_sw_hidden,
         castle_location_names.btn_c3_wall_sw_hidden,
-    ]
-    c3_sw_hidden_region = create_region(world, active_locations, castle_region_names.c3_sw_hidden,
-                                        c3_sw_hidden_locs)
-
-    c3_se_hidden_locs = [
+    ],
+    castle_region_names.c3_se_hidden: [
         castle_location_names.btn_c3_wall_se_hidden,
-    ]
-    c3_se_hidden_region = create_region(world, active_locations, castle_region_names.c3_se_hidden,
-                                        c3_se_hidden_locs)
-
-    c3_light_bridge_locs = [
+    ],
+    castle_region_names.c3_light_bridge: [
         castle_location_names.c3_light_bridge_1,
         castle_location_names.c3_light_bridge_2,
         castle_location_names.c3_light_bridge_3,
         castle_location_names.c3_easter_egg,
-    ]
-    c3_light_bridge_region = create_region(world, active_locations, castle_region_names.c3_light_bridge,
-                                           c3_light_bridge_locs)
-
-    c3_fire_floor_locs = [
+    ],
+    castle_region_names.c3_fire_floor: [
         castle_location_names.c3_fire_floor_1,
         castle_location_names.c3_fire_floor_2,
         castle_location_names.c3_fire_floor_3,
         castle_location_names.btn_c3_wall_fire_floor,
-    ]
-    c3_fire_floor_region = create_region(world, active_locations, castle_region_names.c3_fire_floor,
-                                         c3_fire_floor_locs)
-
-    c3_fire_floor_tp_locs = [
+    ],
+    castle_region_names.c3_fire_floor_tp: [
         castle_location_names.c3_fire_floor_tp
-    ]
-    c3_fire_floor_tp_region = create_region(world, active_locations, castle_region_names.c3_fire_floor_tp,
-                                            c3_fire_floor_tp_locs)
-
-    c3_c2_tp_locs = [
+    ],
+    castle_region_names.c3_c2_tp: [
         castle_location_names.c3_c2_tp
-    ]
-    c3_c2_tp_region = create_region(world, active_locations, castle_region_names.c3_c2_tp, c3_c2_tp_locs)
-
-    b4_start_locs = [
+    ],
+    castle_region_names.b4_start: [
         castle_location_names.b4_w_1,
         castle_location_names.b4_w_2,
         castle_location_names.b4_w_3,
@@ -2785,10 +2109,8 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.b4_dragon_12,
         castle_location_names.b4_miniboss_lich_1,
         castle_location_names.b4_miniboss_lich_2,
-    ]
-    b4_start_region = create_region(world, active_locations, castle_region_names.b4_start, b4_start_locs)
-
-    b4_defeated_locations = [
+    ],
+    castle_region_names.b4_defeated: [
         castle_location_names.b4_dragon_1,
         castle_location_names.b4_dragon_2,
         castle_location_names.b4_dragon_3,
@@ -2812,309 +2134,45 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
         castle_location_names.b4_plank_10,
         castle_location_names.b4_plank_11,
         castle_location_names.ev_beat_boss_4,
-    ]
-    b4_defeated_region = create_region(world, active_locations, castle_region_names.b4_defeated,
-                                       b4_defeated_locations)
-
-    e1_main_locations = []
-    e1_main_region = create_region(world, active_locations, castle_region_names.e1_main, e1_main_locations)
-
-    e2_main_locations = [
+    ],
+    castle_region_names.e1_main: None,
+    castle_region_names.e2_main: [
         castle_location_names.e2_entrance,
         castle_location_names.e2_end,
-    ]
-    e2_main_region = create_region(world, active_locations, castle_region_names.e2_main, e2_main_locations)
-
-    e3_main_locations = [
+    ],
+    castle_region_names.e3_main: [
         castle_location_names.e3_entrance_1,
         castle_location_names.e3_entrance_2,
-    ]
-    e3_main_region = create_region(world, active_locations, castle_region_names.e3_main, e3_main_locations)
-
-    e4_main_locations = [
+    ],
+    castle_region_names.e4_main: [
         castle_location_names.e4_main,
+    ],
+    castle_region_names.escaped: [
+        castle_location_names.ev_escape
+    ],
+}
+p3_portal_boss_rune_room_regions = {
+    castle_region_names.p3_portal_from_p1: [
+        castle_location_names.p3_skip_boss_switch_1,
+        castle_location_names.p3_skip_boss_switch_2,
+        castle_location_names.p3_skip_boss_switch_3,
+        castle_location_names.p3_skip_boss_switch_4,
+        castle_location_names.p3_skip_boss_switch_5,
+        castle_location_names.p3_skip_boss_switch_6,
     ]
-    e4_main_region = create_region(world, active_locations, castle_region_names.e4_main, e4_main_locations)
+}
 
-    escaped_locations = [
-    ]
-    if world.options.goal == world.options.goal.option_castle_escape:
-        escaped_locations.append(castle_location_names.ev_escape)
-    escaped_region = create_region(world, active_locations, castle_region_names.escaped, escaped_locations)
 
-    world.multiworld.regions += [
-        menu_region,
-        hub_region,
-        p1_start_region,
-        p1_nw_region,
-        p1_nw_left_region,
-        p1_s_region,
-        p1_sw_bronze_gate_region,
-        p1_e_region,
-        p1_m_bronze_gate_region,
-        p1_from_p2_region,
-        p1_from_p3_n_region,
-        p1_from_p3_s_region,
-        p2_start_region,
-        p2_m_region,
-        p2_p1_return_region,
-        p2_n_region,
-        p2_spike_puzzle_bottom_region,
-        p2_spike_puzzle_left_region,
-        p2_spike_puzzle_top_region,
-        p2_red_switch_region,
-        p2_puzzle_region,
-        p2_e_bronze_gate_region,
-        p2_e_save_region,
-        p2_s_region,
-        p2_e_bronze_gate_2_region,
-        p2_m_bronze_gate_region,
-        p2_se_bronze_gate_region,
-        p2_gg_room_reward_region,
-        p2_w_treasure_region,
-        p2_w_treasure_tp_region,
-        p2_tp_puzzle_region,
-        p2_end_region,
-        p3_start_door_region,
-        p3_start_region,
-        p3_start_shop_region,
-        p3_nw_closed_room_region,
-        p3_nw_n_bronze_gate_region,
-        p3_nw_s_bronze_gate_region,
-        p3_s_bronze_gate_region,
-        p3_silver_gate_region,
-        p3_n_gold_gate_region,
-        p3_rspikes_region,
-        p3_rspikes_room_region,
-        p3_bspikes_region,
-        p3_bonus_region,
-        p3_arrow_hall_secret_region,
-        p3_spikes_s_region,
-        p3_sw_region,
-        p3_boss_region,
-        p3_exit_s_region,
-        p3_hidden_arrow_hall_region,
-        p3_s_gold_gate_region,
-        p3_bonus_return_region,
-        n1_start_region,
-        n1_room1_region,
-        n1_room2_region,
-        n1_room2_unlock_region,
-        n1_room3_region,
-        n1_room3_unlock_region,
-        n1_room3_hall_region,
-        n1_room4_region,
-        n1_exit_region,
-        b1_start_region,
-        b1_arena_region,
-        b1_defeated_region,
-        b1_exit_region,
-        a1_start_region,
-        a1_boss_region,
-        a1_start_shop_w_region,
-        a1_start_shop_m_region,
-        a1_start_shop_e_region,
-        a1_se_region,
-        a1_e_region,
-        a1_ne_cache_region,
-        a1_e_sw_bgate_region,
-        a1_e_s_bgate_region,
-        a1_e_se_bgate_region,
-        a1_e_e_bgate_region,
-        a1_rune_room_region,
-        a1_se_cache_region,
-        a1_e_ne_bgate_region,
-        a1_red_spikes_region,
-        a1_n_bgate_region,
-        a1_tp_n_region,
-        a1_w_region,
-        a1_puzzle_region,
-        a1_w_ne_bgate_region,
-        a1_nw_bgate_region,
-        a1_w_se_bgate_region,
-        a1_w_sw_bgate_region,
-        a1_w_sw_bgate_1_region,
-        a1_sw_spikes_region,
-        a1_from_a2_region,
-        a2_start_region,
-        a2_puzzle_region,
-        a2_tp_sw_region,
-        a2_tp_se_region,
-        a2_sw_bgate_region,
-        a2_s_bgate_region,
-        a2_se_bgate_region,
-        a2_s_save_bgate_region,
-        a2_ne_region,
-        a2_ne_m_bgate_region,
-        a2_ne_l_bgate_region,
-        a2_ne_r_bgate_region,
-        a2_ne_b_bgate_region,
-        a2_ne_save_bgate_region,
-        a2_tp_ne_region,
-        a2_e_region,
-        a2_e_bgate_region,
-        a2_nw_region,
-        a2_bonus_return_region,
-        a2_blue_spikes_region,
-        a2_blue_spikes_tp_region,
-        a2_to_a3_region,
-        n2_start_region,
-        n2_m_region,
-        n2_nw_region,
-        n2_n_region,
-        n2_e_region,
-        n2_s_region,
-        n2_w_region,
-        n2_ne_region,
-        n2_se_region,
-        n2_exit_region,
-        a3_start_region,
-        a3_main_region,
-        a3_tp_region,
-        a3_from_a2_region,
-        a3_from_a2_wall_region,
-        a3_knife_puzzle_reward_region,
-        a3_knife_reward_2_region,
-        a3_nw_stairs_region,
-        a3_w_t_bgate_region,
-        a3_w_r_bgate_region,
-        a3_w_b_bgate_region,
-        a3_w_b_bgate_tp_region,
-        a3_n_l_bgate_region,
-        a3_n_r_bgate_region,
-        a3_e_l_bgate_region,
-        a3_e_r_bgate_region,
-        b2_start_region,
-        b2_arena_region,
-        b2_defeated_region,
-        b2_exit_region,
-        r1_start_region,
-        r1_se_ggate_region,
-        r1_e_region,
-        r1_start_wall_region,
-        r1_e_n_bgate_region,
-        r1_e_s_bgate_region,
-        r1_e_sgate_region,
-        r1_w_sgate_region,
-        r1_se_wall_region,
-        r1_ne_ggate_region,
-        r1_nw_region,
-        r1_puzzle_region,
-        r1_nw_hidden_region,
-        r1_nw_ggate_region,
-        r1_sw_region,
-        r1_sw_ggate_region,
-        r1_exit_l_region,
-        r1_exit_r_region,
-        r2_start_region,
-        r2_bswitch_region,
-        r2_m_region,
-        r2_w_bgate_region,
-        r2_nw_region,
-        r2_n_region,
-        r2_e_region,
-        r2_sgate_region,
-        r2_s_region,
-        r2_spike_island_region,
-        r2_sw_bridge_region,
-        r2_puzzle_room_region,
-        r2_puzzle_region,
-        r2_w_region,
-        r2_from_r3_region,
-        r2_ne_cache_region,
-        r2_ggate_region,
-        r2_exit_region,
-        r3_main_region,
-        r3_ne_room_region,
-        r3_s_room_region,
-        r3_w_ggate_region,
-        r3_e_ggate_region,
-        r3_sw_bgate_region,
-        r3_sw_wall_r_region,
-        r3_secret_hall_region,
-        r3_secret_hall_room_1_region,
-        r3_secret_hall_room_2_region,
-        r3_secret_hall_room_2_spikes_region,
-        r3_secret_hall_end_region,
-        r3_nw_tp_region,
-        r3_se_cache_region,
-        r3_boss_switch_region,
-        r3_rune_room_region,
-        r3_simon_says_region,
-        r3_bonus_region,
-        r3_l_shop_sgate_region,
-        r3_r_shop_sgate_region,
-        r3_bonus_return_region,
-        r3_bonus_return_bridge_region,
-        r3_exit_region,
-        r3_boss_region,
-        n3_main_region,
-        n3_tp_room_region,
-        b3_start_region,
-        b3_arena_region,
-        b3_defeated_region,
-        b3_exit_region,
-        c1_start_region,
-        c1_n_spikes_region,
-        c1_se_spikes_region,
-        c1_shop_region,
-        c1_w_region,
-        c1_sgate_region,
-        c1_prison_stairs_region,
-        c1_s_bgate_region,
-        c1_ledge_region,
-        c1_tp_island_region,
-        pstart_start_region,
-        pstart_puzzle_island_region,
-        pstart_puzzle_region,
-        c2_main_region,
-        c2_boss_region,
-        c2_sw_wall_region,
-        c2_w_wall_region,
-        c2_e_wall_region,
-        c2_w_spikes_region,
-        c2_w_shops_1_region,
-        c2_w_shops_2_region,
-        c2_w_shops_3_region,
-        c2_e_shops_1_region,
-        c2_e_shops_2_region,
-        c2_puzzle_room_region,
-        c2_puzzle_region,
-        c2_exit_bgate_region,
-        c2_n_region,
-        c2_n_wall_region,
-        c2_bonus_region,
-        c2_bonus_return_region,
-        c2_tp_island_region,
-        c2_c3_tp_region,
-        c2_n_shops_region,
-        n4_main_region,
-        n4_nw_region,
-        n4_w_region,
-        n4_e_region,
-        n4_exit_region,
-        c3_main_region,
-        c3_rspike_switch_region,
-        c3_rspikes_region,
-        c3_m_shop_region,
-        c3_m_wall_region,
-        c3_m_tp_region,
-        c3_s_bgate_region,
-        c3_nw_region,
-        c3_sw_hidden_region,
-        c3_se_hidden_region,
-        c3_light_bridge_region,
-        c3_fire_floor_region,
-        c3_fire_floor_tp_region,
-        c3_c2_tp_region,
-        b4_start_region,
-        b4_defeated_region,
-        e1_main_region,
-        e2_main_region,
-        e3_main_region,
-        e4_main_region,
-        escaped_region,
-    ]
+def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
+
+    castle_created_regions = [create_region(world, active_locations, region_name, locations)
+                              for region_name, locations in castle_regions.items()]
+
+    if world.options.shortcut_teleporter.value == world.options.shortcut_teleporter.option_true:
+        castle_created_regions.extend([create_region(world, active_locations, region_name, locations)
+                                       for region_name, locations in p3_portal_boss_rune_room_regions.items()])
+
+    world.multiworld.regions.extend(castle_created_regions)
 
 
 def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
@@ -3150,7 +2208,10 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         key_bronze = [f"{castle_act_names[i//3]} Floor {i+1} Master Bronze Key" for i in range(12)]
         key_silver = [f"{castle_act_names[i//3]} Floor {i+1} Master Silver Key" for i in range(12)]
         key_gold = [f"{castle_act_names[i//3]} Floor {i+1} Master Gold Key" for i in range(12)]
-        key_bonus = [f"{castle_act_names[b]} Master Bonus Key" for b in range(4)]
+        if world.options.randomize_bonus_keys == world.options.randomize_bonus_keys.option_true:
+            key_bonus = [f"{castle_act_names[b]} Master Bonus Key" for b in range(4)]
+        else:
+            key_bonus = [f"{castle_act_names[b]} Bonus Key" for b in range(4)]
         gate_counts = [{key_bronze[i]: 999999999, key_silver[i]: 999999999, key_gold[i]: 999999999} for i in range(12)]
     elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
         key_bronze = [f"{castle_act_names[i//3]} Bronze Key" for i in range(12)]
@@ -3178,9 +2239,6 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         key_bonus = [item_name.key_bonus for _ in range(4)]
 
         gate_counts = [all_gate_counts for _ in range(12)]
-
-    if world.options.randomize_bonus_keys == 0:
-        key_bonus = [item_name.key_bonus for _ in range(4)]
 
     buttonsanity = world.options.buttonsanity.value > 0
     buttonsanity_insanity = get_buttonsanity_insanity(world)
@@ -4096,7 +3154,8 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
 
     hub_main_locations = [
         temple_location_names.hub_front_of_pof,
-        temple_location_names.hub_behind_temple_entrance
+        temple_location_names.hub_behind_temple_entrance,
+        temple_location_names.ev_planks,
     ]
     dunes_main_region = create_region(world, active_locations, temple_region_names.hub_main, hub_main_locations)
 

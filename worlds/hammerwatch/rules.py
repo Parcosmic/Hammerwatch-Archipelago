@@ -119,7 +119,7 @@ def set_extra_rules(world: "HammerwatchWorld"):
     goal = get_goal_type(world)
     if goal == GoalType.PlankHunt:
         world.multiworld.completion_condition[world.player] =\
-            lambda state: state.has(item_name.plank, world.player, world.options.planks_required_count.value)
+            lambda state: state.has(item_name.ev_all_planks, world.player)
 
     # Set special entrance and location rules, and set world completion condition
     if get_campaign(world) == Campaign.Castle:
@@ -132,22 +132,11 @@ def set_extra_rules(world: "HammerwatchWorld"):
                 item_name.evc_beat_boss_4,
             }
             world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
+        elif goal == GoalType.PlankHunt:
+            add_loc_item_rule(world, castle_location_names.ev_entrance_bridge, item_name.plank,
+                              world.options.planks_required_count.value)
         elif goal == GoalType.FullCompletion:
             world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.evc_escaped, world.player)
-            # Get name of the final boss entrance
-            final_boss_entr_name = get_etr_name(castle_region_names.b4_start, castle_region_names.b4_defeated)
-            final_boss_entrance = world.multiworld.get_entrance(final_boss_entr_name, world.player)
-            # if get_option(multiworld, player, option_names.exit_randomization) > 0:
-            #     for exit in multiworld.get_entrances():
-            #         if exit.player == player and exit.name.endswith(castle_region_names.b4_start):
-            #             entr_name = exit.name
-            #             break
-            # add_rule(final_boss_entrance,
-            #          lambda state: state.has(item_name.plank, world.player, 12)
-            #                        and state.has(item_name.key_gold, world.player, 16)
-            #                        and state.has(item_name.key_silver, world.player, 13)
-            #                        and state.has(item_name.key_bronze, world.player, 103)
-            #                        and state.has(item_name.key_bonus, world.player, 18))
             # Exclude all locations that are in the escape sequence
             escape_locations = [
                 castle_location_names.b4_plank_1,
@@ -227,6 +216,9 @@ def set_extra_rules(world: "HammerwatchWorld"):
                 item_name.evt_beat_boss_3,
             }
             world.multiworld.completion_condition[world.player] = lambda state: state.has_all(boss_names, world.player)
+        elif goal == GoalType.PlankHunt:
+            add_loc_item_rule(world, temple_location_names.ev_planks, item_name.plank,
+                              world.options.planks_required_count.value)
         elif goal == GoalType.AltCompletion:
             world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.ev_pof_complete, world.player)
 

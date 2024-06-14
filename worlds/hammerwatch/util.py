@@ -54,7 +54,14 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
     campaign = get_campaign(world)
     if campaign == Campaign.Castle:
         if world.options.key_mode.value == world.options.key_mode.option_floor_master:
-            key_names = set()
+            key_names = []
+            if world.options.randomize_bonus_keys == world.options.randomize_bonus_keys.option_false:
+                key_names.extend([
+                    item_name.key_bonus_prison,
+                    item_name.key_bonus_armory,
+                    item_name.key_bonus_archives,
+                    item_name.key_bonus_chambers,
+                ])
         elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
             key_names = [
                 item_name.key_bronze_prison,
@@ -69,34 +76,29 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
                 item_name.key_gold_armory,
                 item_name.key_gold_archives,
                 item_name.key_gold_chambers,
+                item_name.key_bonus_prison,  # Even if bonus keys aren't randomized we need to set logic for them!
+                item_name.key_bonus_armory,
+                item_name.key_bonus_archives,
+                item_name.key_bonus_chambers,
             ]
-            if world.options.randomize_bonus_keys.value:
-                key_names.extend([
-                    item_name.key_bonus_prison,
-                    item_name.key_bonus_armory,
-                    item_name.key_bonus_archives,
-                    item_name.key_bonus_chambers,
-                    ])
         else:
             key_names = [
                 item_name.key_bronze,
                 item_name.key_silver,
                 item_name.key_gold,
+                item_name.key_bonus,
             ]
-            if world.options.randomize_bonus_keys.value:
-                key_names.append(item_name.key_bonus)
     else:
         key_names = [
             item_name.mirror,
             item_name.key_teleport,
+            item_name.key_bonus,
         ]
         if world.options.key_mode.value != world.options.key_mode.option_floor_master:
             key_names.extend([
                 item_name.key_silver,
                 item_name.key_gold,
             ])
-            if world.options.randomize_bonus_keys.value:
-                key_names.append(item_name.key_bonus)
     return key_names
 
 

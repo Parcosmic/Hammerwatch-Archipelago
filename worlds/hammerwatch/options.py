@@ -503,10 +503,7 @@ option_presets = {
         option_names.lever_fragments: "random",
         option_names.pickaxe_fragments: "random",
         option_names.trap_item_percent: "random",
-        # option_names.trap_item_weights: "random",
         option_names.starting_life_count: "random",
-        # option_names.game_modifiers: "random",
-        option_names.er_seed: "random",
         option_names.death_link: "random",
     },
     "Default Castle Hammerwatch": {
@@ -541,7 +538,6 @@ option_presets = {
         option_names.treasure_shuffle: TreasureShuffle.option_false,
         option_names.trap_item_percent: TrapItemPercentage.default,
         option_names.starting_life_count: StartingLifeCount.default,
-        option_names.er_seed: "random",
     },
     "Default Temple of the Sun": {
         option_names.goal: Goal.option_temple_all_bosses,
@@ -576,7 +572,6 @@ option_presets = {
         option_names.pickaxe_fragments: PickaxeFragments.default,
         option_names.trap_item_percent: TrapItemPercentage.default,
         option_names.starting_life_count: StartingLifeCount.default,
-        option_names.er_seed: "random",
     },
 }
 

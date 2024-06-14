@@ -46,7 +46,8 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    hw_client_version = "1.0"
+    apworld_version = "1.0"
+    hw_client_version = "1.1"
     data_version = 5
 
     web = HammerwatchWeb()
@@ -75,6 +76,7 @@ class HammerwatchWorld(World):
             **self.random_locations,
             **self.shop_locations,
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
+            "APWorld Version": self.apworld_version,
             "Hammerwatch Mod Version": self.hw_client_version,
             "Gate Types": self.gate_types,
             "Exit Swaps": self.exit_swaps,
@@ -156,7 +158,7 @@ class HammerwatchWorld(World):
         # Add floor master key items to item_counts
         if self.options.key_mode.value == self.options.key_mode.option_floor_master:
             if not self.options.randomize_bonus_keys.value:
-                self.key_item_counts.pop(item_name.key_bonus)
+                self.item_counts.update({key: num for key, num in self.key_item_counts.items() if "Bonus" not in key})
             self.item_counts.update(self.key_item_counts)
 
         # First create and place our locked items so we know how many are left over
@@ -249,9 +251,9 @@ class HammerwatchWorld(World):
             castle_location_names.ev_beat_boss_2: item_name.evc_beat_boss_2,
             castle_location_names.ev_beat_boss_3: item_name.evc_beat_boss_3,
             castle_location_names.ev_beat_boss_4: item_name.evc_beat_boss_4,
+            castle_location_names.ev_entrance_bridge: item_name.ev_all_planks,
+            castle_location_names.ev_escape: item_name.evc_escaped
         }
-        if self.options.goal == self.options.goal.option_castle_escape:
-            castle_events[castle_location_names.ev_escape] = item_name.evc_escaped
 
         for loc, itm in castle_events.items():
             location = self.multiworld.get_location(loc, self.player)
@@ -269,28 +271,55 @@ class HammerwatchWorld(World):
 
         # Bonus Key Locations
         if not self.options.randomize_bonus_keys.value:
-            castle_bonus_keys = [
-                castle_location_names.n1_room1,
-                castle_location_names.n1_room3_sealed_room_1,
-                castle_location_names.n1_room2_small_box,
-                castle_location_names.n1_entrance,
-                castle_location_names.n1_room4_m,
-                castle_location_names.n2_m_n,
-                castle_location_names.n2_m_m_3,
-                castle_location_names.n2_ne_4,
-                castle_location_names.n2_m_e,
-                castle_location_names.n2_start_1,
-                castle_location_names.n2_m_se_5,
-                castle_location_names.n3_exit_sw,
-                castle_location_names.n3_m_cluster_5,
-                castle_location_names.n3_se_cluster_5,
-                castle_location_names.n4_ne,
-                castle_location_names.n4_by_w_room_1,
-                castle_location_names.n4_by_w_room_2,
-                castle_location_names.n4_by_exit,
+            act_bonus_key_locs = [
+                [
+                    castle_location_names.n1_room1,
+                    castle_location_names.n1_room3_sealed_room_1,
+                    castle_location_names.n1_room2_small_box,
+                    castle_location_names.n1_entrance,
+                    castle_location_names.n1_room4_m,
+                ],
+                [
+                    castle_location_names.n2_m_n,
+                    castle_location_names.n2_m_m_3,
+                    castle_location_names.n2_ne_4,
+                    castle_location_names.n2_m_e,
+                    castle_location_names.n2_start_1,
+                    castle_location_names.n2_m_se_5,
+                ],
+                [
+                    castle_location_names.n3_exit_sw,
+                    castle_location_names.n3_m_cluster_5,
+                    castle_location_names.n3_se_cluster_5,
+                ],
+                [
+                    castle_location_names.n4_ne,
+                    castle_location_names.n4_by_w_room_1,
+                    castle_location_names.n4_by_w_room_2,
+                    castle_location_names.n4_by_exit,
+                ]
             ]
-            for loc in castle_bonus_keys:
-                self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
+            if self.options.key_mode == self.options.key_mode.option_vanilla:
+                bonus_key_locs = [
+                    *act_bonus_key_locs[0],
+                    *act_bonus_key_locs[1],
+                    *act_bonus_key_locs[2],
+                    *act_bonus_key_locs[3],
+                ]
+                for loc_name in bonus_key_locs:
+                    loc = self.multiworld.get_location(loc_name, self.player)
+                    loc.place_locked_item(self.create_item(item_name.key_bonus))
+            else:
+                bonus_key_names = [
+                    item_name.key_bonus_prison,
+                    item_name.key_bonus_armory,
+                    item_name.key_bonus_archives,
+                    item_name.key_bonus_chambers,
+                ]
+                for k in range(len(bonus_key_names)):
+                    for loc_name in act_bonus_key_locs[k]:
+                        loc = self.multiworld.get_location(loc_name, self.player)
+                        loc.place_locked_item(self.create_item(bonus_key_names[k]))
 
         # Manual start item placement to get fill out of an overly restrictive start with buttonsanity
         if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
@@ -326,6 +355,7 @@ class HammerwatchWorld(World):
             temple_location_names.ev_beat_boss_1: item_name.evt_beat_boss_1,
             temple_location_names.ev_beat_boss_2: item_name.evt_beat_boss_2,
             temple_location_names.ev_beat_boss_3: item_name.evt_beat_boss_3,
+            temple_location_names.ev_planks: item_name.ev_all_planks,
         }
 
         # Event/button items

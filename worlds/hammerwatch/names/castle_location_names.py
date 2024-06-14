@@ -1308,8 +1308,8 @@ c3_tower_ice_7 = "ChF12: Middle Bridge Towers Top Tower Loot"
 c3_tower_ice_8 = "ChF12: Middle Bridge Towers Bottom Tower Loot"
 c3_tower_ice_9 = "ChF12: SE Save Left Tower Loot"
 c3_tower_ice_10 = "ChF12: South Towers Right Tower Loot"
-b4_miniboss_lich_1 = "Worldfire Lich Miniboss Loot #1"
-b4_miniboss_lich_2 = "Worldfire Lich Miniboss Loot #2"
+b4_miniboss_lich_1 = "Worldfire Miniboss Loot #1"
+b4_miniboss_lich_2 = "Worldfire Miniboss Loot #2"
 
 # Button Locations
 btn_p1_boss = "PrF1: Boss Rune"
@@ -1705,7 +1705,8 @@ ev_beat_boss_2 = "Defeat Knight"
 ev_beat_boss_3 = "Defeat Lich"
 ev_beat_boss_4 = "Defeat Dragon"
 
-ev_escape = "Castle Entrance Bridge"
+ev_escape = "Castle Escaped"
+ev_entrance_bridge = "Castle Entrance Bridge"
 
 # Shared Event Locations
 ev_victory = "Victory"

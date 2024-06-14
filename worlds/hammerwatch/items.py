@@ -672,12 +672,9 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         #     world.key_item_counts[key] = 0
 
     if world.options.key_mode.value != world.options.key_mode.option_floor_master:
-        # Get the active keys, and don't add bronze keys or bonus keys those don't get extra for now
-        key_names = set()
-        for key_name in active_keys:
-            # Exclude bronze keys and rune keys from getting extra items added to the pool
-            if "Bronze" not in key_name and key_name != item_name.key_teleport:
-                key_names.add(key_name)
+        # Get the active keys, and don't add bronze keys, bonus keys, or rune keys those don't get extra for now
+        key_names = {key_name for key_name in active_keys
+                     if "Bronze" not in key_name and "Bonus" not in key_name and key_name != item_name.key_teleport}
         extra_key_percent = world.options.extra_keys_percent.value / 100
         for key in key_names:
             extra_keys = int(item_counts_table[key] * extra_key_percent)
