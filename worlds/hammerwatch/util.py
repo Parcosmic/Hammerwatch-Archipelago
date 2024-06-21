@@ -50,6 +50,17 @@ def get_buttonsanity_insanity(world: "HammerwatchWorld") -> bool:
     # or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
 
 
+def get_key_code(key_name: str):
+    if key_name == "bronze":
+        return 0
+    if key_name == "silver":
+        return 1
+    if key_name == "gold":
+        return 2
+    if key_name == "bonus":
+        return 10
+
+
 def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
     campaign = get_campaign(world)
     if campaign == Campaign.Castle:

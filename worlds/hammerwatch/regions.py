@@ -6,7 +6,8 @@ from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names
-from .util import GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_buttonsanity_insanity
+from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_buttonsanity_insanity,
+                   get_key_code)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -4699,7 +4700,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:
             gate_items.pop(key_item_name)
-        gate_codes[gate_code] = key_item_name.split(" ")[-2].lower()
+        gate_codes[gate_code] = get_key_code(key_item_name.split(" ")[-2].lower())
 
     consumed = True
     if world.options.key_mode.value == world.options.key_mode.option_floor_master:
