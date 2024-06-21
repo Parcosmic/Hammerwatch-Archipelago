@@ -41,14 +41,13 @@ class HammerwatchWorld(World):
     or the Temple of the Sun to stop the evil Sun Guardian Sha'Rand.
     """
     game = "Hammerwatch"
-    options_dataclass = options.HammerwatchOptions
-    options: options.HammerwatchOptions
+    options_dataclass = HammerwatchOptions
+    options: HammerwatchOptions
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    apworld_version = "2"
+    apworld_version = "2.0"
     hw_client_version = "1.1"
-    data_version = 5
 
     web = HammerwatchWeb()
 
@@ -72,7 +71,7 @@ class HammerwatchWorld(World):
 
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         return {
-            **self.options.as_dict(*options.client_required_options),
+            **self.options.as_dict(*client_required_options),
             **self.random_locations,
             **self.shop_locations,
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
