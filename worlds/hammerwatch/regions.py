@@ -2468,7 +2468,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_exit(world, used_names, castle_region_names.a1_start, castle_region_names.a3_start,
                  entrance_names.c_a3_0, entrance_names.c_a1_a3)
     if buttonsanity:
-        connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss,True,
+        connect(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss, True,
                 item_name.btnc_a1_boss_door, 1, False)
     else:
         connect_all(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss, True,
@@ -4185,14 +4185,14 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
 
         gate_counts = [all_gate_counts for _ in range(3)]
 
-    pan_item = item_name.pan
+    # pan_item = item_name.pan
     # lever_item = item_name.lever
     pickaxe_item = item_name.pickaxe
-    pan_item_count = world.options.pan_fragments.value
+    # pan_item_count = world.options.pan_fragments.value
     # lever_item_count = world.options.lever_fragments.value
     pickaxe_item_count = world.options.pickaxe_fragments.value
-    if pan_item_count > 1:
-        pan_item = item_name.pan_fragment
+    # if pan_item_count > 1:
+    #     pan_item = item_name.pan_fragment
     # if lever_item_count > 1:
     #     lever_item = item_name.lever_fragment
     if pickaxe_item_count > 1:
@@ -4239,7 +4239,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_puzzle, False,
             item_name.btn_c3_puzzle, 1, False, buttonsanity)
     connect_or(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, True,
-              [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps], True)
+               [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps], True)
     connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False,
             item_name.btn_c3_fall_bridge, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_3_secret, temple_region_names.cave_3_main, False)
@@ -4278,7 +4278,8 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_puzzle, False,
             item_name.btn_c2_puzzle, 1, False, buttonsanity)
     # Two-way
-    # connect_generic(multiworld, player, used_names, temple_region_names.c2_double_bridge, temple_region_names.cave_2_main)
+    # connect_generic(multiworld, player, used_names, temple_region_names.c2_double_bridge,
+    #                 temple_region_names.cave_2_main)
     # Both require double bridge switch
     # connect(world, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main, False)
     # Requires lower bridge switch
@@ -4298,11 +4299,11 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_blue_bridge, buttonsanity,
             item_name.btn_c1_blue, 1, False, buttonsanity)
     c1_no_e_shortcut = world.get_random_location(temple_location_names.rloc_c1_hall_e) >= 2
-    connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_red_bridge, buttonsanity,
-            item_name.btn_c1_red, 1, False, c1_no_e_shortcut and buttonsanity)
+    connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_red_bridge,
+            buttonsanity, item_name.btn_c1_red, 1, False, c1_no_e_shortcut and buttonsanity)
     if buttonsanity:
-        connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_green_bridge, True,
-                item_name.btn_c1_green, 1, False)
+        connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.cave_1_green_bridge,
+                True, item_name.btn_c1_green, 1, False)
         connect(world, used_names, temple_region_names.cave_1_green_bridge, temple_region_names.c1_storage_island, True,
                 item_name.btn_c1_green, 1, False)
     else:
@@ -4462,7 +4463,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.btn_t2_blue, 1, False)
     connect(world, used_names, temple_region_names.t2_jail_sw, temple_region_names.t2_s_gate, buttonsanity,
             item_name.btn_t2_jail_w, 1, False, buttonsanity)
-    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_n_hidden_hall,False,
+    connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_n_hidden_hall, False,
             item_name.btn_t2_s_gate_hall, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_n_hidden_hall, temple_region_names.t2_jones_hall, False,
             item_name.btn_t2_jones_hall_back, 1, False, buttonsanity)
@@ -4618,15 +4619,8 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
     if not use_pass_item:
         pass_item = None
 
-    rule_item = None
-    if pass_item and not items_consumed:
-        rule_item = pass_item
-        # pass_item = None
-
     connection = HWEntrance(world.player, entrance_name, source_region, target_region,
                             pass_item, item_count, items_consumed, None)
-    # if rule_item and use_pass_item:
-    #     add_rule(connection, lambda state: state.has(rule_item, world.player, item_count), "and")
 
     source_region.exits.append(connection)
     connection.connect(target_region)
@@ -4694,7 +4688,8 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     if world.options.gate_shuffle.value and gate_code is not None:
         # Special handling for Universal Tracker
         if hasattr(world.multiworld, "re_gen_passthrough"):
-            key_item_name = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code].capitalize() + " Key"
+            key_item_name = \
+                (world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code].capitalize() + " Key")
             if world.options.key_mode.value == world.options.key_mode.option_act_specific:
                 key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
             elif world.options.key_mode.value == world.options.key_mode.option_floor_master:

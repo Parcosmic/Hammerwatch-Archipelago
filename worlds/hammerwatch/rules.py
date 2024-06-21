@@ -10,8 +10,6 @@ from .regions import HWEntrance, get_etr_name, connect
 from .options import ExitRandomization
 from .util import (GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity,
                    add_loc_rule, add_loc_item_rule)
-from Utils import visualize_regions
-from .locations import castle_event_buttons
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -195,7 +193,8 @@ def set_extra_rules(world: "HammerwatchWorld"):
             # Boss gate button location logic
             for loc_name, rune_items in boss_gate_locs.items():
                 loc = world.multiworld.get_location(loc_name, world.player)
-                add_rule(loc, lambda state, runes=rune_items: all(state.has(rune, world.player, rune_counts) for rune in runes))
+                add_rule(loc, lambda state, runes=rune_items:
+                         all(state.has(rune, world.player, rune_counts) for rune in runes))
             misc_loc_logic = {
                 castle_location_names.a2_pyramid_1: item_name.btnc_a2_pyramid_nw,
                 castle_location_names.a3_pyramid: item_name.btnc_a3_pyramid_ne,
@@ -897,8 +896,9 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
         remove.parent_region.exits.append(remove)
         remove.connected_region.entrances.append(remove)
 
-    transitions: typing.List[HWEntrance] = world.multiworld.get_entrances(world.player)
+    transitions = world.multiworld.get_entrances(world.player)
     for exit_ in transitions:
+        assert isinstance(exit_, HWEntrance)
         if exit_.pass_item is None or exit_.parent_region.name == exit_.connected_region.name:
             continue
         # If the items are consumed gotta use the downstream cost logic

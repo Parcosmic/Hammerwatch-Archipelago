@@ -14,8 +14,8 @@ from .options import HammerwatchOptions, client_required_options, option_groups,
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
-from Utils import visualize_regions
-from Fill import fill_restrictive
+# from Utils import visualize_regions
+# from Fill import fill_restrictive
 
 
 class HammerwatchWeb(WebWorld):
@@ -40,7 +40,7 @@ class HammerwatchWorld(World):
     Play as a hero that is one of seven classes as you fight your way through Castle Hammerwatch to defeat the dragon
     or the Temple of the Sun to stop the evil Sun Guardian Sha'Rand.
     """
-    game: str = "Hammerwatch"
+    game = "Hammerwatch"
     options_dataclass = options.HammerwatchOptions
     options: options.HammerwatchOptions
     topology_present: bool = True
@@ -93,7 +93,8 @@ class HammerwatchWorld(World):
                             f"switching to vanilla")
             self.options.key_mode.value = self.options.key_mode.option_vanilla
 
-        exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives, option_names.mod_double_lives],
+        exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives,
+                                 option_names.mod_double_lives],
                                 [option_names.mod_1_hp, option_names.mod_no_hp_pickups],
                                 [option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen],
                                 [option_names.mod_no_mana_regen, option_names.mod_5x_mana_regen]]
@@ -178,15 +179,15 @@ class HammerwatchWorld(World):
         item_counts = self.item_counts
 
         # Add items
-        items = 0
+        total_items = 0
         present_filler_items = []
         for item in item_counts:
-            items += item_counts[item]
+            total_items += item_counts[item]
             if item_table[item].classification == ItemClassification.filler and item_counts[item] > 0:
                 present_filler_items.append(item)
 
         # Add/remove junk items depending if we have not enough/too many locations
-        junk: int = total_required_locations - items
+        junk: int = total_required_locations - total_items
         if junk > 0:
             for name in self.random.choices(present_filler_items, k=junk):
                 item_counts[name] += 1
@@ -325,7 +326,8 @@ class HammerwatchWorld(World):
         if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
                 and self.options.randomize_recovery_items.value == 0):
             start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
-            start_gate: HWEntrance = self.multiworld.get_entrance(start_gate_name, self.player)
+            start_gate = self.multiworld.get_entrance(start_gate_name, self.player)
+            assert isinstance(start_gate, HWEntrance)
             start_item_name = self.random.choice([start_gate.pass_item, item_name.btnc_p1_floor])
             if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
                 if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
@@ -391,8 +393,8 @@ class HammerwatchWorld(World):
                 #     return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
                 #             if not loc.event and loc.name not in temple_button_locations]
                 # else:
-                return [loc.name for loc in self.multiworld.get_region(region, self.player).locations if not loc.event
-                        and not loc.item]
+                return [__loc.name for __loc in self.multiworld.get_region(region, self.player).locations
+                        if not __loc.event and not __loc.item]
 
             # Cave Level 3 Rune Key
             c3_locs = get_region_item_locs(temple_region_names.c3_e)
@@ -446,8 +448,8 @@ class HammerwatchWorld(World):
             t3_locs += get_region_item_locs(temple_region_names.t3_n_node)
             rune_key_locs.append(self.random.choice(t3_locs))
 
-            for loc in rune_key_locs:
-                self.multiworld.get_location(loc, self.player).place_locked_item(
+            for _loc in rune_key_locs:
+                self.multiworld.get_location(_loc, self.player).place_locked_item(
                     self.create_item(item_name.key_teleport))
 
     def set_rules(self) -> None:
@@ -577,7 +579,8 @@ class HammerwatchWorld(World):
 
         # In the castle campaign if buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
         blue_button_trap_chance = 0.5
-        if get_campaign(self) == Campaign.Castle and self.options.buttonsanity > 0 and self.random.random() > blue_button_trap_chance:
+        if (get_campaign(self) == Campaign.Castle and self.options.buttonsanity > 0
+                and self.random.random() > blue_button_trap_chance):
             button_loc = self.multiworld.get_location(castle_location_names.btn_c3_wall_blue, self.player)
             trap_pool = [item for item in self.multiworld.itempool if item.classification == ItemClassification.trap]
             trap_item: Item = self.random.choice(trap_pool)
@@ -589,7 +592,8 @@ class HammerwatchWorld(World):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop}")
-            # spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
+            # spoiler_handle.write(
+            # f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
             # for entry in self.exit_spoiler_info:
             #     spoiler_handle.write(f"\n{entry}")
 

@@ -1,10 +1,9 @@
 import typing
 
-from BaseClasses import Location, ItemClassification
+from BaseClasses import Location
 from .names import castle_location_names, temple_location_names, item_name
 from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity
-from .items import (castle_item_counts, temple_item_counts, temple_button_counts,
-                    recovery_table, get_item_counts, id_start)
+from .items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
 from enum import IntFlag
 
 if typing.TYPE_CHECKING:
@@ -2998,9 +2997,9 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
         location_table[name] = data
 
     if hw_map == Campaign.Castle:  # Castle Hammerwatch
-        location_table, item_counts, random_locations = choose_castle_random_locations(world, location_table, item_counts)
+        location_table, item_counts, random_locations = set_castle_random_locations(world, location_table, item_counts)
     elif hw_map == Campaign.Temple:
-        location_table, item_counts, random_locations = choose_tots_random_locations(world, location_table, item_counts)
+        location_table, item_counts, random_locations = set_tots_random_locations(world, location_table, item_counts)
 
     item_counts, extra_items = get_item_counts(world, hw_map, item_counts)
 
@@ -3041,8 +3040,8 @@ def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, 
     return location_table
 
 
-def choose_castle_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
-                                   item_counts: typing.Dict[str, int]):
+def set_castle_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
+                                item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
 
     if hasattr(world.multiworld, "re_gen_passthrough"):
@@ -3374,8 +3373,8 @@ def choose_castle_random_locations(world: "HammerwatchWorld", location_table: ty
     return location_table, item_counts, random_locations
 
 
-def choose_tots_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
-                                 item_counts: typing.Dict[str, int]):
+def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
+                              item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
 
     if hasattr(world.multiworld, "re_gen_passthrough"):
