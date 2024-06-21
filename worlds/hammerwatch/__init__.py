@@ -2,7 +2,7 @@ import logging
 import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
-    entrance_names, option_names
+    entrance_names, option_names, gate_names
 from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items,
                     castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
@@ -46,7 +46,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    apworld_version = "1.0"
+    apworld_version = "2"
     hw_client_version = "1.1"
     data_version = 5
 
@@ -64,7 +64,7 @@ class HammerwatchWorld(World):
     random_locations: typing.Dict[str, int]
     shop_locations: typing.Dict[str, str]
     door_counts: typing.Dict[str, int]
-    gate_types: typing.Dict[str, str]
+    gate_types: typing.Dict[str, int]
     level_exits: typing.List[HWEntrance]
     exit_swaps: typing.Dict[str, str]
     start_exit: str
@@ -78,9 +78,10 @@ class HammerwatchWorld(World):
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
             "APWorld Version": self.apworld_version,
             "Hammerwatch Mod Version": self.hw_client_version,
-            "Gate Types": self.gate_types,
-            "Exit Swaps": self.exit_swaps,
-            "Start Exit": self.start_exit
+            "Gate Types": {gate_names.gate_name_indices[gate]: typ for gate, typ in self.gate_types.items()},
+            "Exit Swaps": {entrance_names.entrance_name_indices[orig]: entrance_names.entrance_name_indices[new]
+                           for orig, new in self.exit_swaps.items()},
+            "Start Exit": entrance_names.entrance_name_indices[self.start_exit],
         }
 
     def generate_early(self):
