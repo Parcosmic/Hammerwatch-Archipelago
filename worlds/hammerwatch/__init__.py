@@ -10,7 +10,7 @@ from .locations import (LocationData, all_locations, setup_locations, castle_eve
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name
 from .rules import set_rules
 from .util import Campaign, get_campaign, get_active_key_names
-from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
+from .options import HammerwatchOptions, client_required_options#, option_groups, option_presets
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
@@ -30,8 +30,8 @@ class HammerwatchWeb(WebWorld):
         ["Parcosmic"]
     )]
 
-    option_groups = option_groups
-    options_presets = option_presets
+    # option_groups = option_groups
+    # options_presets = option_presets
 
 
 class HammerwatchWorld(World):
