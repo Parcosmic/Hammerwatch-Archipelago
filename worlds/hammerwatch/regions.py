@@ -4700,7 +4700,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
         gate_items[key_item_name] -= 1
         if gate_items[key_item_name] == 0:
             gate_items.pop(key_item_name)
-        gate_codes[gate_code] = get_key_code(key_item_name.split(" ")[-2].lower())
+        gate_codes[gate_code] = key_item_name.split(" ")[-2].lower()
 
     consumed = True
     if world.options.key_mode.value == world.options.key_mode.option_floor_master:
