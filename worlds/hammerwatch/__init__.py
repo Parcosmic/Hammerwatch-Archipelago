@@ -63,7 +63,7 @@ class HammerwatchWorld(World):
     random_locations: typing.Dict[str, int]
     shop_locations: typing.Dict[str, str]
     door_counts: typing.Dict[str, int]
-    gate_types: typing.Dict[str, str]
+    gate_types: typing.Dict[str, int]
     level_exits: typing.List[HWEntrance]
     exit_swaps: typing.Dict[str, str]
     start_exit: str
@@ -77,9 +77,10 @@ class HammerwatchWorld(World):
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
             "APWorld Version": self.apworld_version,
             "Hammerwatch Mod Version": self.hw_client_version,
-            "Gate Types": {gate: typ for gate, typ in self.gate_types.items()},
-            "Exit Swaps": {orig: new for orig, new in self.exit_swaps.items()},
-            "Start Exit": self.start_exit,
+            "Gate Types": {gate_names.gate_name_indices[gate]: typ for gate, typ in self.gate_types.items()},
+            "Exit Swaps": {entrance_names.entrance_name_indices[orig]: entrance_names.entrance_name_indices[new]
+                           for orig, new in self.exit_swaps.items()},
+            "Start Exit": entrance_names.entrance_name_indices[self.start_exit],
         }
 
     def generate_early(self):
