@@ -64,6 +64,8 @@ serious_health = "Serious Health Upgrade"
 
 # Custom Item Names
 key_bronze_big = "Big Bronze Key"
+hammer = "Hammer"
+hammer_fragment = "Hammer Fragment"
 
 key_bronze_prison = "Prison Bronze Key"
 key_silver_prison = "Prison Silver Key"

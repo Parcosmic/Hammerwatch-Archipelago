@@ -78,6 +78,8 @@ tool_table: typing.Dict[str, ItemData] = {
     item_name.pan_fragment: ItemData(counter.count(), ItemClassification.progression),
     item_name.lever_fragment: ItemData(counter.count(), ItemClassification.progression),
     item_name.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression),
+    item_name.hammer: ItemData(counter.count(), ItemClassification.progression),
+    item_name.hammer_fragment: ItemData(counter.count(), ItemClassification.progression),
 }
 
 special_table: typing.Dict[str, ItemData] = {
@@ -700,6 +702,14 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     # Bonus check behavior - None
     if world.options.bonus_behavior.value == world.options.bonus_behavior.option_none:
         item_counts_table[item_name.bonus_chest] = 0
+
+    # Add hammer/fragments if the option is on
+    hammer_fragments = world.options.hammer_fragments.value
+    if hammer_fragments == 1:
+        item_counts_table[item_name.hammer] = 1
+    elif hammer_fragments > 1:
+        item_counts_table[item_name.hammer_fragment] = hammer_fragments
+    extra_items += hammer_fragments
 
     if campaign == Campaign.Temple:
         # If using fragments switch the whole item out for fragments

@@ -339,6 +339,16 @@ class PickaxeFragments(Range):
     default = 1
 
 
+class HammerFragments(Range):
+    """If not 0 makes fragile walls unbreakable without receiving a custom hammer item that is added to the item pool
+    If greater than 1 separates the hammer into multiple fragments that are shuffled into the item pool
+    All fragments must be collected in order to break down secret walls"""
+    display_name = "Hammer Fragments"
+    range_start = 0
+    range_end = 5
+    default = 0
+
+
 class TrapItemPercentage(Range):
     """What percentage of junk items are replaced with traps"""
     display_name = "Trap Percent"
@@ -419,6 +429,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     pan_fragments: PanFragments
     lever_fragments: LeverFragments
     pickaxe_fragments: PickaxeFragments
+    hammer_fragments: HammerFragments
     trap_item_percent: TrapItemPercentage
     trap_item_weights: TrapItemWeights
     starting_life_count: StartingLifeCount
@@ -460,6 +471,7 @@ client_required_options = [
     option_names.pan_fragments,
     option_names.lever_fragments,
     option_names.pickaxe_fragments,
+    option_names.hammer_fragments,
     option_names.starting_life_count,
     option_names.game_modifiers,
     option_names.death_link,

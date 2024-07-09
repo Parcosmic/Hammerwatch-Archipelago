@@ -47,7 +47,7 @@ class HammerwatchWorld(World):
     remote_start_inventory: bool = True
 
     apworld_version = "2.0"
-    hw_client_version = "1.1"
+    hw_client_version = "1.1.13"
 
     web = HammerwatchWeb()
 
@@ -401,6 +401,8 @@ class HammerwatchWorld(World):
             # If playing exit rando we need to ensure we can always return if falling from the temple
             if not self.options.exit_randomization.value:
                 c3_locs.extend(get_region_item_locs(temple_region_names.cave_3_main))
+            if len(c3_locs) == 0:
+                c3_locs = [temple_location_names.cave3_trapped_guard]
             rune_key_locs.append(self.random.choice(c3_locs))
 
             # Cave Level 2 Rune Key
