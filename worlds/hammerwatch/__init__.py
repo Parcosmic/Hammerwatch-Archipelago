@@ -30,8 +30,8 @@ class HammerwatchWeb(WebWorld):
         ["Parcosmic"]
     )]
 
-    # option_groups = option_groups
-    # options_presets = option_presets
+    option_groups = option_groups
+    options_presets = option_presets
 
 
 class HammerwatchWorld(World):
