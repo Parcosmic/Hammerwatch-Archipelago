@@ -217,10 +217,23 @@ class ShopCostRandoMax(Range):
     default = 100
 
 
-class EnemyShuffle(Toggle):
+class EnemyShuffle(Removed):
     """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level"""
     display_name = "Enemy Shuffle"
     default = False
+
+
+class EnemyShuffleMode(Choice):
+    """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level
+    Individual: enemies will be shuffled individually regardless of type, keeping the same ratios as vanilla
+    Type: converts all enemies of a single type into another. For example all tier 1 bats can become tier 1 beetles"""
+    display_name = "Enemy Shuffle Mode"
+    option_off = 0
+    option_individual = 1
+    option_type = 2
+    alias_false = 0
+    alias_true = 1
+    default = 0
 
 
 class EnemyShuffleBalancing(Range):
@@ -231,6 +244,12 @@ class EnemyShuffleBalancing(Range):
     range_start = 0
     range_end = 3
     default = 0
+
+
+class EnemyShuffleKeepTier(Toggle):
+    """If Enemy Shuffle is on, only shuffles enemies of the same tier amongst each other"""
+    display_name = "Enemy Shuffle Keep Tier"
+    default = True
 
 
 class ExtraKeysPercent(Range):
@@ -407,8 +426,9 @@ class HammerwatchOptions(PerGameCommonOptions):
     # shop_upgrade_level_shuffle: ShopUpgradeLevelShuffle
     shop_cost_min: ShopCostRandoMin
     shop_cost_max: ShopCostRandoMax
-    enemy_shuffle: EnemyShuffle
+    enemy_shuffle_mode: EnemyShuffleMode
     enemy_shuffle_act_range: EnemyShuffleBalancing
+    enemy_shuffle_keep_tier: EnemyShuffleKeepTier
     bonus_behavior: BonusChestLocationBehavior
     randomize_bonus_keys: RandomizeBonusKeys
     remove_lives: RemoveExtraLives
@@ -453,8 +473,9 @@ client_required_options = [
     # option_names.shop_upgrade_level_shuffle,
     option_names.shop_cost_min,
     option_names.shop_cost_max,
-    option_names.enemy_shuffle,
+    option_names.enemy_shuffle_mode,
     option_names.enemy_shuffle_act_range,
+    option_names.enemy_shuffle_keep_tier,
     option_names.randomize_bonus_keys,
     option_names.randomize_recovery_items,
     option_names.randomize_secrets,
@@ -493,8 +514,9 @@ option_presets = {
         option_names.shop_upgrade_category_shuffle: "random",
         option_names.shop_cost_min: "random",
         option_names.shop_cost_max: "random",
-        option_names.enemy_shuffle: "random",
+        option_names.enemy_shuffle_mode: "random",
         option_names.enemy_shuffle_act_range: "random",
+        option_names.enemy_shuffle_keep_tier: "random",
         option_names.bonus_behavior: "random",
         option_names.randomize_bonus_keys: "random",
         option_names.remove_lives: "random",
@@ -532,8 +554,9 @@ option_presets = {
         option_names.shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle.option_off,
         option_names.shop_cost_min: ShopCostRandoMin.default,
         option_names.shop_cost_max: ShopCostRandoMax.default,
-        option_names.enemy_shuffle: EnemyShuffle.option_false,
+        option_names.enemy_shuffle_mode: EnemyShuffleMode.option_off,
         # option_names.enemy_shuffle_act_range: EnemyShuffleBalancing.range_start,
+        # option_names.enemy_shuffle_keep_tier: EnemyShuffleKeepTier.default,
         option_names.bonus_behavior: BonusChestLocationBehavior.default,
         option_names.randomize_bonus_keys: RandomizeBonusKeys.default,
         option_names.remove_lives: RemoveExtraLives.default,
@@ -563,8 +586,9 @@ option_presets = {
         option_names.shop_upgrade_category_shuffle: ShopUpgradeCategoryShuffle.option_off,
         option_names.shop_cost_min: ShopCostRandoMin.default,
         option_names.shop_cost_max: ShopCostRandoMax.default,
-        option_names.enemy_shuffle: EnemyShuffle.option_false,
+        option_names.enemy_shuffle_mode: EnemyShuffleMode.option_off,
         # option_names.enemy_shuffle_act_range: EnemyShuffleBalancing.range_start,
+        # option_names.enemy_shuffle_keep_tier: EnemyShuffleKeepTier.default,
         option_names.bonus_behavior: BonusChestLocationBehavior.default,
         option_names.randomize_bonus_keys: RandomizeBonusKeys.default,
         option_names.remove_lives: RemoveExtraLives.default,
@@ -621,8 +645,9 @@ option_groups = [
         StartExitAct,
         GateShuffle,
         ShuffleShops,
-        EnemyShuffle,
+        EnemyShuffleMode,
         EnemyShuffleBalancing,
+        EnemyShuffleKeepTier,
         TreasureShuffle,
     ]),
     OptionGroup("Game Tweaks", [

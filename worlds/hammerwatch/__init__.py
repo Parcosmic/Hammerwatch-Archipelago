@@ -75,6 +75,7 @@ class HammerwatchWorld(World):
             **self.random_locations,
             **self.shop_locations,
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
+            option_names.enemy_shuffle: 1 if self.options.enemy_shuffle_mode.value == 1 else 0,
             "APWorld Version": self.apworld_version,
             "Hammerwatch Mod Version": self.hw_client_version,
             "Gate Types": {gate_names.gate_name_indices[gate]: typ for gate, typ in self.gate_types.items()},
