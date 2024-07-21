@@ -28,6 +28,25 @@ class GoalType(Enum):
     AltCompletion = 3
 
 
+class PlayerClass(Enum):
+    Paladin = 1
+    Ranger = 2
+    Wizard = 3
+    Warlock = 4
+    Thief = 5
+    Priest = 6
+    Sorcerer = 7
+
+
+class ShopType(Enum):
+    Vitality = 0
+    Combo = 1
+    Offense = 2
+    Defense = 3
+    Miscellaneous = 4
+    Gamble = 5
+
+
 class Counter:
     def __init__(self, start: int = 0):
         self.counter = start
@@ -48,6 +67,30 @@ def get_goal_type(world: "HammerwatchWorld") -> GoalType:
 def get_buttonsanity_insanity(world: "HammerwatchWorld") -> bool:
     return world.options.buttonsanity.value == world.options.buttonsanity.option_insanity
     # or world.options.buttonsanity.value == world.options.buttonsanity.option_shuffle)
+
+
+def get_class_from_option_value(option_value: int):
+    return PlayerClass(option_value)
+
+
+def get_shopsanity_classes(world: "HammerwatchWorld") -> typing.List[PlayerClass]:
+    classes = []
+    if world.options.shopsanity_p1 > 0:
+        p1_class = get_class_from_option_value(world.options.shopsanity_p1.value)
+        classes.append(p1_class)
+    if world.options.shopsanity_p2 > 0:
+        p2_class = get_class_from_option_value(world.options.shopsanity_p2.value)
+        if p2_class not in classes:
+            classes.append(p2_class)
+    if world.options.shopsanity_p3 > 0:
+        p3_class = get_class_from_option_value(world.options.shopsanity_p3.value)
+        if p3_class not in classes:
+            classes.append(p3_class)
+    if world.options.shopsanity_p4 > 0:
+        p4_class = get_class_from_option_value(world.options.shopsanity_p4.value)
+        if p4_class not in classes:
+            classes.append(p4_class)
+    return classes
 
 
 def get_key_code(key_name: str):

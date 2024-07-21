@@ -217,6 +217,50 @@ class ShopCostRandoMax(Range):
     default = 100
 
 
+class Shopsanity(Toggle):
+    """Adds all shop upgrades to the item pool and enables items to appear in the shop"""
+    display_name = "Shopsanity"
+    default = False
+
+
+class ShopsanityClass(Choice):
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    option_off = 0
+    option_paladin = 1
+    option_ranger = 2
+    option_wizard = 3
+    option_warlock = 4
+    option_thief = 5
+    option_priest = 6
+    option_sorcerer = 7
+    default = option_off
+
+
+class ShopsanityP1Class(ShopsanityClass):
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    display_name = "Shopsanity Player 1 Class"
+
+
+class ShopsanityP2Class(ShopsanityClass):
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    display_name = "Shopsanity Player 2 Class"
+
+
+class ShopsanityP3Class(ShopsanityClass):
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    display_name = "Shopsanity Player 3 Class"
+
+
+class ShopsanityP4Class(ShopsanityClass):
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    display_name = "Shopsanity Player 4 Class"
+
+
 class EnemyShuffle(Removed):
     """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level"""
     display_name = "Enemy Shuffle"
@@ -426,6 +470,10 @@ class HammerwatchOptions(PerGameCommonOptions):
     # shop_upgrade_level_shuffle: ShopUpgradeLevelShuffle
     shop_cost_min: ShopCostRandoMin
     shop_cost_max: ShopCostRandoMax
+    shopsanity_p1: ShopsanityP1Class
+    shopsanity_p2: ShopsanityP2Class
+    shopsanity_p3: ShopsanityP3Class
+    shopsanity_p4: ShopsanityP4Class
     enemy_shuffle_mode: EnemyShuffleMode
     enemy_shuffle_act_range: EnemyShuffleBalancing
     enemy_shuffle_keep_tier: EnemyShuffleKeepTier
@@ -473,6 +521,10 @@ client_required_options = [
     # option_names.shop_upgrade_level_shuffle,
     option_names.shop_cost_min,
     option_names.shop_cost_max,
+    option_names.shopsanity_p1,
+    option_names.shopsanity_p2,
+    option_names.shopsanity_p3,
+    option_names.shopsanity_p4,
     option_names.enemy_shuffle_mode,
     option_names.enemy_shuffle_act_range,
     option_names.enemy_shuffle_keep_tier,
@@ -514,6 +566,7 @@ option_presets = {
         option_names.shop_upgrade_category_shuffle: "random",
         option_names.shop_cost_min: "random",
         option_names.shop_cost_max: "random",
+        option_names.shopsanity_p1: "random",
         option_names.enemy_shuffle_mode: "random",
         option_names.enemy_shuffle_act_range: "random",
         option_names.enemy_shuffle_keep_tier: "random",
@@ -625,6 +678,10 @@ option_groups = [
         RandomizePuzzles,
         RandomizeEnemyLoot,
         Buttonsanity,
+        ShopsanityP1Class,
+        ShopsanityP2Class,
+        ShopsanityP3Class,
+        ShopsanityP4Class,
         RemoveExtraLives,
         KeyMode,
         BigBronzeKeyPercent,
