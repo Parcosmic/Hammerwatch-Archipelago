@@ -1,13 +1,13 @@
 import typing
 from enum import Enum
 from collections import namedtuple
-from BaseClasses import Region, Entrance
+from BaseClasses import Region, Entrance, CollectionState
 from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names, shop_location_names, shop_region_names
 from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle_act_names, get_buttonsanity_insanity,
-                   get_key_code, ShopType)
+                   get_key_code, ShopType, ShopInfo)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -2224,7 +2224,6 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
 
 def create_temple_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
     created_shop_regions = []
-    used_names = {}
     shop_regions: typing.Dict[ShopType, typing.List[Region]] = {}
 
     for shop_type, shop_names in shop_region_names.shop_regions.items():
@@ -2236,14 +2235,8 @@ def create_temple_shop_regions(world: "HammerwatchWorld", active_locations: typi
             shop_region = create_region(world, active_locations, shop_name, region_location_names)
             shop_regions[shop_type].append(shop_region)
             created_shop_regions.append(shop_region)
-            if t > 0:
-                for i in range(t).__reversed__():
-                    connect_region(world, used_names, shop_region, shop_regions[shop_type][i], False)
 
     world.multiworld.regions.extend(created_shop_regions)
-
-    for shop_type, regions in shop_regions.items():
-        connect(world, used_names, temple_region_names.hub_main, regions[-1].name, False)
 
 
 def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
@@ -4791,6 +4784,123 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
                  entrance_names.t_t3_fall_2, None, None, 1, False, False)
     connect_exit(world, used_names, temple_region_names.b3_platform_3, temple_region_names.t3_boss_fall_3,
                  entrance_names.t_t3_fall_3, None, None, 1, False, False)
+
+
+def connect_shops(world: "HammerwatchWorld"):
+    used_names = {}
+    # Shop shuffle
+    world.shop_locations = {}
+    if world.campaign == Campaign.Castle:
+        shop_counts = {
+            ShopType.Combo: [1, 2, 2, 3, 4, 4, 5],
+            ShopType.Offense: [1, 1, 2, 3, 3, 4, 5],
+            ShopType.Defense: [1, 2, 3, 4, 5],
+            ShopType.Vitality: [1, 2, 3, 4, 4, 5],
+            ShopType.Powerup: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        }
+        world.shop_locations = {
+            castle_location_names.shop_p1_combo: ShopInfo(ShopType.Combo, 1),
+            castle_location_names.shop_p1_misc: ShopInfo(ShopType.Vitality, 1),
+            castle_location_names.shop_p2_off: ShopInfo(ShopType.Offense, 1),
+            castle_location_names.shop_p2_combo: ShopInfo(ShopType.Combo, 2),
+            castle_location_names.shop_p3_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_p3_off: ShopInfo(ShopType.Offense, 1),
+            castle_location_names.shop_p3_def: ShopInfo(ShopType.Defense, 1),
+            castle_location_names.shop_p3_combo: ShopInfo(ShopType.Combo, 2),
+            castle_location_names.shop_p3_misc: ShopInfo(ShopType.Vitality, 2),
+            castle_location_names.shop_b1_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_a1_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_a1_combo: ShopInfo(ShopType.Combo, 3),
+            castle_location_names.shop_a1_misc: ShopInfo(ShopType.Vitality, 3),
+            castle_location_names.shop_a1_off: ShopInfo(ShopType.Offense, 2),
+            castle_location_names.shop_a1_def: ShopInfo(ShopType.Defense, 2),
+            castle_location_names.shop_a3_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_b2_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_r1_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_r1_misc: ShopInfo(ShopType.Vitality, 4),
+            castle_location_names.shop_r2_combo: ShopInfo(ShopType.Combo, 4),
+            castle_location_names.shop_r2_off: ShopInfo(ShopType.Offense, 3),
+            castle_location_names.shop_r3_misc: ShopInfo(ShopType.Vitality, 4),
+            castle_location_names.shop_r3_def: ShopInfo(ShopType.Defense, 3),
+            castle_location_names.shop_r3_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_r3_off: ShopInfo(ShopType.Offense, 3),
+            castle_location_names.shop_r3_combo: ShopInfo(ShopType.Combo, 4),
+            castle_location_names.shop_b3_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_c1_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_c2_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_c2_combo: ShopInfo(ShopType.Combo, 5),
+            castle_location_names.shop_c2_off: ShopInfo(ShopType.Offense, 4),
+            castle_location_names.shop_c2_def: ShopInfo(ShopType.Defense, 4),
+            castle_location_names.shop_c2_misc: ShopInfo(ShopType.Vitality, 5),
+            castle_location_names.shop_c3_power: ShopInfo(ShopType.Powerup, 0),
+            castle_location_names.shop_c2_off_2: ShopInfo(ShopType.Offense, 5),
+            castle_location_names.shop_c2_def_2: ShopInfo(ShopType.Defense, 5),
+        }
+
+        if world.options.shop_shuffle.value:
+            for loc in world.shop_locations.keys():
+                shop_type = world.random.choice(list(shop_counts.keys()))
+                tier = shop_counts[shop_type].pop(0)
+                if len(shop_counts[shop_type]) == 0:
+                    shop_counts.pop(shop_type)
+                world.shop_locations[loc] = ShopInfo(shop_type, tier)
+                # if tier > 0:
+                #     world.shop_locations[loc] = f"{shop_type} Level {tier}"
+                # else:
+                #     world.shop_locations[loc] = f"{shop_type}"
+    else:
+        shop_counts = {
+            ShopType.Combo: 1,
+            ShopType.Offense: 1,
+            ShopType.Defense: 1,
+            ShopType.Vitality: 1,
+        }
+        world.shop_locations = {
+            temple_location_names.shop_combo: ShopInfo(ShopType.Combo, 1),
+            temple_location_names.shop_misc: ShopInfo(ShopType.Vitality, 2),
+            temple_location_names.shop_off: ShopInfo(ShopType.Offense, 0),
+            temple_location_names.shop_def: ShopInfo(ShopType.Defense, 0),
+        }
+
+        if world.options.shop_shuffle.value:
+            remaining_shops = []
+            for shop_type in shop_counts.keys():
+                remaining_shops.append(shop_type)
+
+            for loc in world.shop_locations.keys():
+                shop_loc_type_index = world.random.randint(0, len(remaining_shops) - 1)
+                world.shop_locations[loc].shop_type = remaining_shops.pop(shop_loc_type_index)
+
+        combo_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_combo].shop_type]
+        misc_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_misc].shop_type]
+        off_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_off].shop_type]
+        def_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_def].shop_type]
+
+        connect(world, used_names, temple_region_names.menu, combo_regions[0], False)
+        connect(world, used_names, temple_region_names.menu, misc_regions[0], False)
+        connect(world, used_names, misc_regions[0], misc_regions[1], False)
+        # Can spend 12 ore on all other shops before this and we need 1 more to access the first level
+        connect(world, used_names, temple_region_names.menu, off_regions[0], False,
+                item_name.ore, 13, False)
+        connect(world, used_names, temple_region_names.menu, def_regions[0], False,
+                item_name.ore, 13, False)
+
+        # 3 Ore locked behind the first level of the combo shop
+        for r in range(len(combo_regions)-1):
+            connect(world, used_names, combo_regions[r], combo_regions[r+1], False,
+                    item_name.ore, 14 + r, False)
+        # 2 Ore locked behind the second level of the vitality shop
+        for r in range(1, len(misc_regions)-1):
+            connect(world, used_names, misc_regions[r], misc_regions[r+1], False,
+                    item_name.ore, 14 + r, False)
+        # 4 Ore locked behind the first level of the offense shop
+        for r in range(len(off_regions)-1):
+            connect(world, used_names, off_regions[r], off_regions[r+1], False,
+                    item_name.ore, 14 + r, False)
+        # 4 Ore locked behind the first level of the defense shop
+        for r in range(len(def_regions)-1):
+            connect(world, used_names, def_regions[r], def_regions[r+1], False,
+                    item_name.ore, 14 + r, False)
 
 
 def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData], name: str,

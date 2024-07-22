@@ -43,8 +43,19 @@ class ShopType(Enum):
     Combo = 1
     Offense = 2
     Defense = 3
-    Miscellaneous = 4
+    Powerup = 4
     Gamble = 5
+
+
+class ShopInfo(typing.NamedTuple):
+    shop_type: ShopType
+    level: int
+
+    def to_str(self):
+        shop_str = self.shop_type.name
+        if self.level > 0:
+            return f"{shop_str} Level {self.level}"
+        return shop_str
 
 
 class Counter:

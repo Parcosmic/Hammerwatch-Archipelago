@@ -18,6 +18,18 @@ if typing.TYPE_CHECKING:
 def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     set_extra_rules(world)
 
+    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
+    if get_campaign(world) == Campaign.Castle:
+        second_region_name = castle_region_names.p1_start
+    else:
+        second_region_name = temple_region_names.hub_main
+    second_region = world.multiworld.get_region(second_region_name, world.player)
+    loop_entrances = prune_entrances(menu_region, second_region)
+
+    set_door_access_rules(world, door_counts, loop_entrances)
+
+
+def connect_regions_er(world: "HammerwatchWorld"):
     # Set start exit and exit rando data structures
     if get_campaign(world) == Campaign.Castle:
         world.start_exit = entrance_names.c_p1_start
@@ -83,34 +95,22 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     if tries >= stop_threshold:
         raise RuntimeError("Could not generate a valid ER configuration!")
     # print(f"Connecting exits took {tries} tries")
-    world.random.setstate(random_state)
-
-    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
-    if get_campaign(world) == Campaign.Castle:
-        second_region_name = castle_region_names.p1_start
-    else:
-        second_region_name = temple_region_names.hub_main
-    second_region = world.multiworld.get_region(second_region_name, world.player)
-    loop_entrances = prune_entrances(menu_region, second_region)
-
-    set_door_access_rules(world, door_counts, loop_entrances)
+    world.random.setstate(random_state)  # Restore random state
 
     # Change the names of all entrances to match where they lead if ER is on
     if world.options.exit_randomization.value > 0:
         if world.options.random_start_exit.value > 0:
             start_region_name = code_to_region[world.start_exit].name
             world.multiworld.spoiler.set_entrance("Start", f"{start_region_name} [{world.start_exit}]", "entrance", world.player)
-        for exit_ in world.level_exits:
-            # exit_.name = get_etr_name(exit_.parent_region.name, exit_.connected_region.name)
-            for level_exit in world.level_exits:
-                entrance_name = level_exit.parent_region.name
-                if level_exit.return_code is not None:
-                    entrance_name += f" [{level_exit.return_code}]"
-                    direction = "both"
-                else:
-                    direction = "entrance"
-                exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
-                world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, world.player)
+        for level_exit in world.level_exits:
+            entrance_name = level_exit.parent_region.name
+            if level_exit.return_code is not None:
+                entrance_name += f" [{level_exit.return_code}]"
+                direction = "both"
+            else:
+                direction = "entrance"
+            exit_name = level_exit.connected_region.name + f" [{level_exit.exit_code}]"
+            world.multiworld.spoiler.set_entrance(entrance_name, exit_name, direction, world.player)
 
 
 def set_extra_rules(world: "HammerwatchWorld"):

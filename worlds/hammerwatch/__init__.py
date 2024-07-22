@@ -7,9 +7,9 @@ from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_i
                     castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
                         castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
-from .regions import create_regions, HWEntrance, HWExitData, get_etr_name
-from .rules import set_rules
-from .util import Campaign, get_campaign, get_active_key_names
+from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
+from .rules import set_rules, connect_regions_er
+from .util import Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes
 from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
@@ -61,7 +61,7 @@ class HammerwatchWorld(World):
     item_counts: typing.Dict[str, int]
     world_itempool: typing.List[Item]
     random_locations: typing.Dict[str, int]
-    shop_locations: typing.Dict[str, str]
+    shop_locations: typing.Dict[str, ShopInfo]
     door_counts: typing.Dict[str, int]
     gate_types: typing.Dict[str, int]
     level_exits: typing.List[HWEntrance]
@@ -73,7 +73,7 @@ class HammerwatchWorld(World):
         return {
             **self.options.as_dict(*client_required_options),
             **self.random_locations,
-            **self.shop_locations,
+            **{shop_loc: shop_info.to_str() for shop_loc, shop_info in self.shop_locations.items()},
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
             option_names.enemy_shuffle: 1 if self.options.enemy_shuffle_mode.value == 1 else 0,
             "APWorld Version": self.apworld_version,
@@ -143,13 +143,17 @@ class HammerwatchWorld(World):
         if hasattr(self.multiworld, "re_gen_passthrough"):
             self.gate_types = self.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"]
         self.gate_types = create_regions(self, self.campaign, self.active_location_list)
-        # Dumb hack to make sure everything is connected before other worlds try to do logic stuff
         self.exit_swaps = {}
-        set_rules(self, self.door_counts)
+        connect_regions_er(self)
+        connect_shops(self)
 
     def create_item(self, name: str) -> Item:
         data = item_table[name]
         return HammerwatchItem(name, data.classification, data.code, self.player)
+
+    def create_item_with_flags(self, name: str, classification: ItemClassification) -> Item:
+        data = item_table[name]
+        return HammerwatchItem(name, classification, data.code, self.player)
 
     def create_event(self, event: str):
         return HammerwatchItem(event, ItemClassification.progression, None, self.player)
@@ -214,6 +218,12 @@ class HammerwatchWorld(World):
                                         f"(slot {self.player}) ran out of filler and trap items to remove. Some items "
                                         f"will remain unplaced!")
                         break
+
+        # If shopsanity is on we need ore to be progression
+        if self.campaign == Campaign.Temple and len(get_shopsanity_classes(self)) > 0:
+            ore_count = item_counts.pop(item_name.ore)
+            for i in range(ore_count):
+                self.world_itempool.append(self.create_item_with_flags(item_name.ore, ItemClassification.progression))
 
         # Create items and add to item pool
         for item in item_counts:
@@ -456,93 +466,9 @@ class HammerwatchWorld(World):
                     self.create_item(item_name.key_teleport))
 
     def set_rules(self) -> None:
-        # self.exit_swaps = {}
-        # self.exit_spoiler_info = []
-        # set_rules(self, self.door_counts)
-        pass
+        set_rules(self, self.door_counts)
 
     def generate_basic(self) -> None:
-        # Shop shuffle
-        self.shop_locations = {}
-        if self.options.shop_shuffle.value:
-            if self.campaign == Campaign.Castle:
-                shop_counts = {
-                    "Combo": [1, 2, 2, 3, 4, 4, 5],
-                    "Offense": [1, 1, 2, 3, 3, 4, 5],
-                    "Defense": [1, 2, 3, 4, 5],
-                    "Vitality": [1, 2, 3, 4, 4, 5],
-                    "Powerup": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-                }
-                self.shop_locations = {
-                    castle_location_names.shop_p1_combo: "",
-                    castle_location_names.shop_p1_misc: "",
-                    castle_location_names.shop_p2_off: "",
-                    castle_location_names.shop_p2_combo: "",
-                    castle_location_names.shop_p3_power: "",
-                    castle_location_names.shop_p3_off: "",
-                    castle_location_names.shop_p3_def: "",
-                    castle_location_names.shop_p3_combo: "",
-                    castle_location_names.shop_p3_misc: "",
-                    castle_location_names.shop_b1_power: "",
-                    castle_location_names.shop_a1_power: "",
-                    castle_location_names.shop_a1_combo: "",
-                    castle_location_names.shop_a1_misc: "",
-                    castle_location_names.shop_a1_off: "",
-                    castle_location_names.shop_a1_def: "",
-                    castle_location_names.shop_a3_power: "",
-                    castle_location_names.shop_b2_power: "",
-                    castle_location_names.shop_r1_power: "",
-                    castle_location_names.shop_r1_misc: "",
-                    castle_location_names.shop_r2_combo: "",
-                    castle_location_names.shop_r2_off: "",
-                    castle_location_names.shop_r3_misc: "",
-                    castle_location_names.shop_r3_def: "",
-                    castle_location_names.shop_r3_power: "",
-                    castle_location_names.shop_r3_off: "",
-                    castle_location_names.shop_r3_combo: "",
-                    castle_location_names.shop_b3_power: "",
-                    castle_location_names.shop_c1_power: "",
-                    castle_location_names.shop_c2_power: "",
-                    castle_location_names.shop_c2_combo: "",
-                    castle_location_names.shop_c2_off: "",
-                    castle_location_names.shop_c2_def: "",
-                    castle_location_names.shop_c2_misc: "",
-                    castle_location_names.shop_c3_power: "",
-                    castle_location_names.shop_c2_off_2: "",
-                    castle_location_names.shop_c2_def_2: "",
-                }
-
-                for loc in self.shop_locations.keys():
-                    shop_type = self.random.choice(list(shop_counts.keys()))
-                    tier = shop_counts[shop_type].pop(0)
-                    if len(shop_counts[shop_type]) == 0:
-                        shop_counts.pop(shop_type)
-                    if tier > 0:
-                        self.shop_locations[loc] = f"{shop_type} Level {tier}"
-                    else:
-                        self.shop_locations[loc] = f"{shop_type}"
-            else:
-                shop_counts = {
-                    "Combo": 1,
-                    "Offense": 1,
-                    "Defense": 1,
-                    "Vitality": 1,
-                }
-                self.shop_locations = {
-                    temple_location_names.shop_combo: "",
-                    temple_location_names.shop_misc: "",
-                    temple_location_names.shop_off: "",
-                    temple_location_names.shop_def: "",
-                }
-                remaining_shops = []
-                for shop_type in shop_counts.keys():
-                    for s in range(shop_counts[shop_type]):
-                        remaining_shops.append(shop_type)
-
-                for loc in self.shop_locations.keys():
-                    self.shop_locations[loc] = self.random.choice(remaining_shops)
-                    remaining_shops.remove(self.shop_locations[loc])
-
         # Shop cost setting validation, swap if max is higher than min
         if self.options.shop_cost_max.value < self.options.shop_cost_min.value:
             swap = self.options.shop_cost_max.value

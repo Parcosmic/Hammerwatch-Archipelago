@@ -962,6 +962,11 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     player_classes = get_shopsanity_classes(world)
     for player_class in player_classes:
         item_counts_table.update(shop_item_counts[player_class])
+    # If shopsanity is being played in the temple campaign, we need to increase the amount of ore in the pool
+    # This is because there isn't enough ore in vanilla to upgrade all the shops!
+    if len(player_classes) > 0 and campaign == Campaign.Temple:
+        extra_items += 17 - item_counts_table[item_name.ore]
+        item_counts_table[item_name.ore] = 17
 
     # Build filler items list
     filler_item_names: typing.List[str] = []
