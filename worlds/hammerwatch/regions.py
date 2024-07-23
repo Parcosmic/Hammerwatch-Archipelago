@@ -57,7 +57,7 @@ def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locatio
     else:
         create_tots_regions(world, active_locations)
         connect_tots_regions(world, gate_codes)
-        create_temple_shop_regions(world, active_locations)
+    create_shop_regions(world, active_locations)
     return gate_codes
 
 
@@ -1203,6 +1203,7 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
     castle_region_names.r1_nw_ggate: [
         castle_location_names.btn_r1_floor_nw_hidden,
     ],
+    castle_region_names.r1_w_wall: None,  # Shop region
     castle_region_names.r1_sw: [
         castle_location_names.r1_sw_nw_1,
         castle_location_names.r1_sw_nw_2,
@@ -2222,7 +2223,7 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     world.multiworld.regions.extend(castle_created_regions)
 
 
-def create_temple_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
+def create_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
     created_shop_regions = []
     shop_regions: typing.Dict[ShopType, typing.List[Region]] = {}
 
@@ -2760,7 +2761,9 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                 item_name.btnc_r1_open_se_room, 1, False)
         connect(world, used_names, castle_region_names.r1_e_n_bgate, castle_region_names.r1_nw, True,
                 item_name.btnc_r1_open_n_wall, 1, False)
-        connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_sw, True,
+        connect(world, used_names, castle_region_names.r1_nw, castle_region_names.r1_w_wall, True,
+                item_name.btnc_r1_open_w_wall, 1, False)
+        connect(world, used_names, castle_region_names.r1_w_wall, castle_region_names.r1_sw, True,
                 item_name.btnc_r1_open_w_wall, 1, False)
         connect(world, used_names, castle_region_names.r1_w_sgate, castle_region_names.r1_start_wall, False,
                 item_name.btnc_r1_open_start_room, 1, False)
@@ -2774,7 +2777,8 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         connect(world, used_names, castle_region_names.r1_se_ggate, castle_region_names.r1_e, False)
         connect(world, used_names, castle_region_names.r1_e_sgate, castle_region_names.r1_se_wall, False)
         connect(world, used_names, castle_region_names.r1_ne_ggate, castle_region_names.r1_nw, False)
-        connect(world, used_names, castle_region_names.r1_nw_ggate, castle_region_names.r1_sw, False)
+        connect(world, used_names, castle_region_names.r1_nw_ggate, castle_region_names.r1_w_wall, False)
+        connect(world, used_names, castle_region_names.r1_w_wall, castle_region_names.r1_sw, False)
         connect(world, used_names, castle_region_names.r1_w_sgate, castle_region_names.r1_start_wall, False)
         connect(world, used_names, castle_region_names.r1_sw_ggate, castle_region_names.r1_exit_l, False)
         connect(world, used_names, castle_region_names.r1_exit_l, castle_region_names.r1_exit_r, False)
@@ -4796,7 +4800,7 @@ def connect_shops(world: "HammerwatchWorld"):
             ShopType.Offense: [1, 1, 2, 3, 3, 4, 5],
             ShopType.Defense: [1, 2, 3, 4, 5],
             ShopType.Vitality: [1, 2, 3, 4, 4, 5],
-            ShopType.Powerup: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+            ShopType.Powerup: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         }
         world.shop_locations = {
             castle_location_names.shop_p1_combo: ShopInfo(ShopType.Combo, 1),
@@ -4848,6 +4852,47 @@ def connect_shops(world: "HammerwatchWorld"):
                 #     world.shop_locations[loc] = f"{shop_type} Level {tier}"
                 # else:
                 #     world.shop_locations[loc] = f"{shop_type}"
+
+        for shop_type, regions in shop_region_names.shop_regions.items():
+            for i in range(1, len(regions)).__reversed__():
+                connect(world, used_names, regions[i], regions[i-1], False)
+
+        connect_shop(world, used_names, castle_region_names.p1_e, castle_location_names.shop_p1_combo)
+        connect_shop(world, used_names, castle_region_names.p1_from_p2, castle_location_names.shop_p1_misc)
+        connect_shop(world, used_names, castle_region_names.p2_e_bronze_gate, castle_location_names.shop_p2_off)
+        connect_shop(world, used_names, castle_region_names.p2_end, castle_location_names.shop_p2_combo)
+        connect_shop(world, used_names, castle_region_names.p3_start_shop, castle_location_names.shop_p3_power)
+        connect_shop(world, used_names, castle_region_names.p3_n_gold_gate, castle_location_names.shop_p3_off)
+        connect_shop(world, used_names, castle_region_names.p3_bspikes, castle_location_names.shop_p3_def)
+        connect_shop(world, used_names, castle_region_names.p3_se_secret, castle_location_names.shop_p3_combo)
+        connect_shop(world, used_names, castle_region_names.p3_m_secret, castle_location_names.shop_p3_misc)
+        connect_shop(world, used_names, castle_region_names.b1_start, castle_location_names.shop_b1_power)
+        connect_shop(world, used_names, castle_region_names.a1_start, castle_location_names.shop_a1_power)
+        connect_shop(world, used_names, castle_region_names.a1_start, castle_location_names.shop_a1_combo)
+        connect_shop(world, used_names, castle_region_names.a1_start_shop_w, castle_location_names.shop_a1_misc)
+        connect_shop(world, used_names, castle_region_names.a1_start_shop_m, castle_location_names.shop_a1_off)
+        connect_shop(world, used_names, castle_region_names.a1_start_shop_e, castle_location_names.shop_a1_def)
+        connect_shop(world, used_names, castle_region_names.a3_secret, castle_location_names.shop_a3_power)
+        connect_shop(world, used_names, castle_region_names.b2_start, castle_location_names.shop_b2_power)
+        connect_shop(world, used_names, castle_region_names.r1_w_wall, castle_location_names.shop_r1_power)
+        connect_shop(world, used_names, castle_region_names.r1_w_sgate, castle_location_names.shop_r1_misc)
+        connect_shop(world, used_names, castle_region_names.r2_w_bgate, castle_location_names.shop_r2_combo)
+        connect_shop(world, used_names, castle_region_names.r2_e, castle_location_names.shop_r2_off)
+        connect_shop(world, used_names, castle_region_names.r3_l_shop_sgate, castle_location_names.shop_r3_misc)
+        connect_shop(world, used_names, castle_region_names.r3_r_shop_sgate, castle_location_names.shop_r3_def)
+        connect_shop(world, used_names, castle_region_names.r3_main, castle_location_names.shop_r3_power)
+        connect_shop(world, used_names, castle_region_names.r3_main, castle_location_names.shop_r3_off)
+        connect_shop(world, used_names, castle_region_names.r3_main, castle_location_names.shop_r3_combo)
+        connect_shop(world, used_names, castle_region_names.b3_start, castle_location_names.shop_b3_power)
+        connect_shop(world, used_names, castle_region_names.c1_shop, castle_location_names.shop_c1_power)
+        connect_shop(world, used_names, castle_region_names.c2_e_shops_1, castle_location_names.shop_c2_power)
+        connect_shop(world, used_names, castle_region_names.c2_w_shops_3, castle_location_names.shop_c2_combo)
+        connect_shop(world, used_names, castle_region_names.c2_w_shops_2, castle_location_names.shop_c2_off)
+        connect_shop(world, used_names, castle_region_names.c2_w_shops_1, castle_location_names.shop_c2_def)
+        connect_shop(world, used_names, castle_region_names.c2_e_shops_2, castle_location_names.shop_c2_misc)
+        connect_shop(world, used_names, castle_region_names.c3_m_shop, castle_location_names.shop_c3_power)
+        connect_shop(world, used_names, castle_region_names.c2_n_shops, castle_location_names.shop_c2_off_2)
+        connect_shop(world, used_names, castle_region_names.c2_n_shops, castle_location_names.shop_c2_def_2)
     else:
         shop_counts = {
             ShopType.Combo: 1,
@@ -5069,6 +5114,15 @@ def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     if two_way and return_code is not None:
         connect_exit(world, used_names, target, source, return_code, exit_code, pass_item, item_count,
                      items_consumed, False, boss_exit)
+
+
+def get_shop_region_name(world: "HammerwatchWorld", shop_loc_name: str):
+    shop_data = world.shop_locations[shop_loc_name]
+    return shop_region_names.shop_regions[shop_data.shop_type][max(shop_data.level-1, 0)]
+
+
+def connect_shop(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, shop_loc: str):
+    connect(world, used_names, source, get_shop_region_name(world, shop_loc), False)
 
 
 def connect_from_data(world: "HammerwatchWorld", data: HWExitData):

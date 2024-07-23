@@ -22,7 +22,7 @@ shop_defense_2 = "Defense 2 Shop"
 shop_defense_3 = "Defense 3 Shop"
 shop_defense_4 = "Defense 4 Shop"
 shop_defense_5 = "Defense 5 Shop"
-shop_misc = "Miscellaneous Shop"
+shop_misc = "Powerup Shop"
 shop_gamble = "Gambling Shop"
 
 shop_vitality = [
@@ -59,4 +59,5 @@ shop_regions: typing.Dict[util.ShopType, typing.List[str]] = {
     util.ShopType.Combo: shop_combo,
     util.ShopType.Offense: shop_offense,
     util.ShopType.Defense: shop_defense,
+    util.ShopType.Powerup: [shop_misc]
 }
