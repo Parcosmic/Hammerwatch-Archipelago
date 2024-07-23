@@ -2920,7 +2920,7 @@ temple_locations: typing.Dict[str, LocationData] = {
     **temple_button_locations,
 }
 
-base_count = id_start + 0x10000
+base_count = id_start + 0x10000 - 1
 counter = Counter(base_count)
 class_shop_table: typing.Dict[str, LocationData] = {}
 for _player_class, shop_type_locs in shop_location_names.shop_class_location_names.items():

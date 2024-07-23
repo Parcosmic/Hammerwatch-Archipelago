@@ -47,9 +47,13 @@ class ShopType(Enum):
     Gamble = 5
 
 
-class ShopInfo(typing.NamedTuple):
+class ShopInfo:
     shop_type: ShopType
     level: int
+
+    def __init__(self, shop_type, level):
+        self.shop_type = shop_type
+        self.level = level
 
     def to_str(self):
         shop_str = self.shop_type.name

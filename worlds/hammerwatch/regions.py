@@ -4856,8 +4856,8 @@ def connect_shops(world: "HammerwatchWorld"):
             ShopType.Vitality: 1,
         }
         world.shop_locations = {
-            temple_location_names.shop_combo: ShopInfo(ShopType.Combo, 1),
-            temple_location_names.shop_misc: ShopInfo(ShopType.Vitality, 2),
+            temple_location_names.shop_combo: ShopInfo(ShopType.Combo, 0),  # Level 1
+            temple_location_names.shop_misc: ShopInfo(ShopType.Vitality, 0),  # Level 2
             temple_location_names.shop_off: ShopInfo(ShopType.Offense, 0),
             temple_location_names.shop_def: ShopInfo(ShopType.Defense, 0),
         }
