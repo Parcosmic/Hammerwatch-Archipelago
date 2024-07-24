@@ -30,8 +30,8 @@ class GoalType(Enum):
 
 class PlayerClass(Enum):
     Paladin = 1
-    Ranger = 2
-    Wizard = 3
+    Wizard = 2
+    Ranger = 3
     Warlock = 4
     Thief = 5
     Priest = 6

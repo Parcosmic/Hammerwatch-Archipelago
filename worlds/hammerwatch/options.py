@@ -228,8 +228,8 @@ class ShopsanityClass(Choice):
     All members of the same class will receive their upgrades together and will have the same items in their shops"""
     option_off = 0
     option_paladin = 1
-    option_ranger = 2
-    option_wizard = 3
+    option_wizard = 2
+    option_ranger = 3
     option_warlock = 4
     option_thief = 5
     option_priest = 6
