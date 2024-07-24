@@ -954,4 +954,34 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btnc_b4_rune_2_part,
         btnc_b4_rune_3_part,
     },
+    group_shop_items: {
+        *class_shop_upgrades[util.PlayerClass.Paladin],
+        *class_shop_upgrades[util.PlayerClass.Wizard],
+        *class_shop_upgrades[util.PlayerClass.Ranger],
+        *class_shop_upgrades[util.PlayerClass.Warlock],
+        *class_shop_upgrades[util.PlayerClass.Thief],
+        *class_shop_upgrades[util.PlayerClass.Priest],
+        *class_shop_upgrades[util.PlayerClass.Sorcerer],
+    },
+    group_shop_paladin: {
+        *class_shop_upgrades[util.PlayerClass.Paladin]
+    },
+    group_shop_wizard: {
+        *class_shop_upgrades[util.PlayerClass.Wizard]
+    },
+    group_shop_ranger: {
+        *class_shop_upgrades[util.PlayerClass.Ranger]
+    },
+    group_shop_warlock: {
+        *class_shop_upgrades[util.PlayerClass.Warlock]
+    },
+    group_shop_thief: {
+        *class_shop_upgrades[util.PlayerClass.Thief]
+    },
+    group_shop_priest: {
+        *class_shop_upgrades[util.PlayerClass.Priest]
+    },
+    group_shop_sorcerer: {
+        *class_shop_upgrades[util.PlayerClass.Sorcerer]
+    },
 }
