@@ -1,8 +1,8 @@
 import typing
 
 from BaseClasses import Location
-from .names import castle_location_names, temple_location_names, item_name
-from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity
+from .names import castle_location_names, temple_location_names, item_name, option_names, shop_location_names
+from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes
 from .items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
 from enum import IntFlag
 
@@ -2920,9 +2920,27 @@ temple_locations: typing.Dict[str, LocationData] = {
     **temple_button_locations,
 }
 
+base_count = id_start + 0x10000 - 1
+counter = Counter(base_count)
+class_shop_table: typing.Dict[str, LocationData] = {}
+for _player_class, shop_type_locs in shop_location_names.shop_class_location_names.items():
+    for shop_tier_names in shop_type_locs.values():
+        for shop_tier in shop_tier_names:
+            class_shop_table.update(
+                {shop_loc_name: LocationData(counter.count(), LocType.Shop) for shop_loc_name in shop_tier})
+    base_count += 100
+    counter = Counter(base_count)
+
+shop_locations: typing.Dict[str, LocationData] = {
+    **class_shop_table,
+}
+# for name, item_data in shop_locations.items():
+#     print(f"{name}:{item_data.code}")
+
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
     **temple_locations,
+    **shop_locations,
 }
 
 
@@ -2995,6 +3013,13 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
                 item_counts[map_button_items[name]] -= 1
             continue
         location_table[name] = data
+
+    # Shop locations
+    classes = get_shopsanity_classes(world)
+    for player_class in classes:
+        for shop_type, shop_tier_counts in shop_location_names.shop_class_location_names[player_class].items():
+            for loc_names in shop_tier_counts:
+                location_table.update({loc_name: shop_locations[loc_name] for loc_name in loc_names})
 
     if hw_map == Campaign.Castle:  # Castle Hammerwatch
         location_table, item_counts, random_locations = set_castle_random_locations(world, location_table, item_counts)

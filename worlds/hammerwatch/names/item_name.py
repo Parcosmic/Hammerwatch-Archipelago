@@ -1,5 +1,7 @@
 # Item Names
 import typing
+from . import option_names
+from .. import util
 
 empty = "Empty"
 bonus_chest = "Bonus Chest"
@@ -118,6 +120,324 @@ trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 trap_banner = "Banner Trap"
 trap_flies = "Fly Trap"
+
+# Shop item names
+
+shop_paladin_health = "Progressive Paladin Health Pool"
+shop_paladin_mana = "Progressive Paladin Mana Pool"
+shop_paladin_armor = "Progressive Paladin Armor"
+shop_paladin_speed = "Progressive Paladin Move Speed"
+shop_paladin_combo = "Paladin Combo"
+shop_paladin_combo_timer = "Progressive Paladin Combo Timer"
+shop_paladin_combo_nova = "Progressive Paladin Combo Nova"
+shop_paladin_combo_healing = "Progressive Paladin Combo Healing"
+shop_paladin_combo_mana = "Progressive Paladin Combo Mana"
+shop_paladin_dmg = "Progressive Paladin Sword Damage"
+shop_paladin_charge_dmg = "Progressive Paladin Charge Damage"
+shop_paladin_charge_range = "Progressive Paladin Charge Range"
+shop_paladin_healing = "Paladin Healing"
+shop_paladin_healing_eff = "Progressive Paladin Healing Efficiency"
+shop_paladin_holy_storm = "Paladin Holy Storm"
+shop_paladin_holy_storm_dmg = "Progressive Paladin Holy Storm Damage"
+shop_paladin_holy_storm_dur = "Progressive Paladin Holy Storm Duration"
+shop_paladin_divine_wrath = "Progressive Paladin Divine Wrath"
+shop_paladin_arc = "Progressive Paladin Sword Arc"
+shop_paladin_shield = "Progressive Paladin Shield"
+
+shop_ranger_health = "Progressive Ranger Health Pool"
+shop_ranger_mana = "Progressive Ranger Mana Pool"
+shop_ranger_armor = "Progressive Ranger Armor"
+shop_ranger_speed = "Progressive Ranger Move Speed"
+shop_ranger_combo = "Ranger Combo"
+shop_ranger_combo_timer = "Progressive Ranger Combo Timer"
+shop_ranger_combo_nova = "Progressive Ranger Combo Nova"
+shop_ranger_combo_healing = "Progressive Ranger Combo Healing"
+shop_ranger_combo_mana = "Progressive Ranger Combo Mana"
+shop_ranger_dmg = "Progressive Ranger Bow Damage"
+shop_ranger_penetration = "Progressive Ranger Penetration"
+shop_ranger_bomb = "Progressive Ranger Bomb Damage"
+shop_ranger_overgrowth = "Ranger Overgrowth"
+shop_ranger_overgrowth_dur = "Progressive Ranger Overgrowth Duration"
+shop_ranger_overgrowth_range = "Progressive Ranger Overgrowth Range"
+shop_ranger_flurry = "Ranger Flurry"
+shop_ranger_flurry_waves = "Progressive Ranger Flurry Waves"
+shop_ranger_flurry_arrows = "Progressive Ranger Flurry Arrows"
+shop_ranger_dodge = "Progressive Ranger Dodge"
+shop_ranger_marksmanship = "Progressive Ranger Marksmanship"
+
+shop_wizard_health = "Progressive Wizard Health Pool"
+shop_wizard_mana = "Progressive Wizard Mana Pool"
+shop_wizard_armor = "Progressive Wizard Armor"
+shop_wizard_speed = "Progressive Wizard Move Speed"
+shop_wizard_combo = "Wizard Combo"
+shop_wizard_combo_timer = "Progressive Wizard Combo Timer"
+shop_wizard_combo_nova = "Progressive Wizard Combo Nova"
+shop_wizard_combo_healing = "Progressive Wizard Combo Healing"
+shop_wizard_combo_mana = "Progressive Wizard Combo Mana"
+shop_wizard_fireball_damage = "Progressive Wizard Fireball Damage"
+shop_wizard_fireball_range = "Progressive Wizard Fireball Range"
+shop_wizard_fire_breath_damage = "Progressive Wizard Fire Breath Damage"
+shop_wizard_fire_nova = "Wizard Fire Nova"
+shop_wizard_fire_nova_flames = "Progressive Wizard Fire Nova Flames"
+shop_wizard_fire_nova_slow = "Progressive Wizard Fire Nova Slow"
+shop_wizard_meteor_strike = "Wizard Meteor Strike"
+shop_wizard_meteor_strike_damage = "Progressive Wizard Meteor Strike Damage"
+shop_wizard_meteor_strike_meteors = "Progressive Wizard Meteor Strike Meteors"
+shop_wizard_fire_shield = "Wizard Fire Shield"
+shop_wizard_combustion = "Wizard Combustion"
+shop_wizard_combustion_damage = "Progressive Wizard Combustion Damage"
+shop_wizard_combustion_duration = "Progressive Wizard Combustion Duration"
+
+shop_warlock_health = "Progressive Warlock Health Pool"
+shop_warlock_mana = "Progressive Warlock Mana Pool"
+shop_warlock_armor = "Progressive Warlock Armor"
+shop_warlock_speed = "Progressive Warlock Move Speed"
+shop_warlock_combo = "Warlock Combo"
+shop_warlock_combo_timer = "Progressive Warlock Combo Timer"
+shop_warlock_combo_nova = "Progressive Warlock Combo Nova"
+shop_warlock_combo_healing = "Progressive Warlock Combo Healing"
+shop_warlock_combo_mana = "Progressive Warlock Combo Mana"
+shop_warlock_dagger_damage = "Progressive Warlock Dagger Damage"
+shop_warlock_dagger_poison = "Progressive Warlock Dagger Poison"
+shop_warlock_lightning_strike_damage = "Progressive Warlock Lightning Strike Damage"
+shop_warlock_lightning_strike_targets = "Progressive Warlock Lightning Strike Targets"
+shop_warlock_summon_gargoyle = "Warlock Summon Gargoyle"
+shop_warlock_gargoyle_damage = "Progressive Warlock Gargoyle Damage"
+shop_warlock_gargoyle_duration = "Progressive Warlock Gargoyle Duration"
+shop_warlock_electrical_storm = "Warlock Electrical Storm"
+shop_warlock_electrical_storm_damage = "Progressive Warlock Electrical Storm Damage"
+shop_warlock_electrical_storm_duration = "Progressive Warlock Electrical Storm Duration"
+shop_warlock_blood_sacrifice = "Progressive Warlock Blood Sacrifice"
+shop_warlock_soul_sacrifice = "Progressive Warlock Soul Sacrifice"
+
+shop_thief_health = "Progressive Thief Health Pool"
+shop_thief_mana = "Progressive Thief Mana Pool"
+shop_thief_armor = "Progressive Thief Armor"
+shop_thief_speed = "Progressive Thief Move Speed"
+shop_thief_combo = "Thief Combo"
+shop_thief_combo_timer = "Progressive Thief Combo Timer"
+shop_thief_combo_nova = "Progressive Thief Combo Nova"
+shop_thief_combo_healing = "Progressive Thief Combo Healing"
+shop_thief_combo_mana = "Progressive Thief Combo Mana"
+shop_thief_knives_damage = "Progressive Thief Knives Damage"
+shop_thief_knife_fan_damage = "Progressive Thief Knife Fan Damage"
+shop_thief_knife_fan_knives = "Progressive Thief Knife Fan Knives"
+shop_thief_grapple_chain = "Thief Grapple Chain"
+shop_thief_grapple_chain_length = "Progressive Thief Grapple Chain Length"
+shop_thief_grapple_chain_stun = "Progressive Thief Grapple Chain Stun"
+shop_thief_smoke_bomb = "Thief Smoke Bomb"
+shop_thief_smoke_bomb_range = "Progressive Thief Smoke Bomb Range"
+shop_thief_fervor = "Progressive Thief Fervor"
+shop_thief_speed_penalty = "Progressive Thief Speed Penalty"
+shop_thief_dodge = "Progressive Thief Dodge"
+
+shop_priest_health = "Progressive Priest Health Pool"
+shop_priest_mana = "Progressive Priest Mana Pool"
+shop_priest_armor = "Progressive Priest Armor"
+shop_priest_speed = "Progressive Priest Move Speed"
+shop_priest_combo = "Priest Combo"
+shop_priest_combo_timer = "Progressive Priest Combo Timer"
+shop_priest_combo_nova = "Progressive Priest Combo Nova"
+shop_priest_combo_healing = "Progressive Priest Combo Healing"
+shop_priest_combo_mana = "Progressive Priest Combo Mana"
+shop_priest_smite_damage = "Progressive Priest Smite Damage"
+shop_priest_speed_penalty = "Progressive Priest Speed Penalty"
+shop_priest_holy_beam_damage = "Progressive Priest Holy Beam Damage"
+shop_priest_holy_beam_range = "Progressive Priest Holy Beam Range"
+shop_priest_draining_field = "Priest Draining Field"
+shop_priest_draining_field_damage = "Progressive Priest Draining Field Damage"
+shop_priest_draining_field_number = "Progressive Priest Draining Field Number"
+shop_priest_cripple_aura = "Priest Cripple Aura"
+shop_priest_cripple_aura_slow = "Progressive Priest Cripple Aura Slow"
+shop_priest_cripple_aura_mana_drain = "Priest Cripple Aura Mana Drain"
+shop_priest_hp_regen = "Progressive Priest HP Regen"
+shop_priest_magic_shield = "Progressive Priest Magic Shield"
+
+shop_sorcerer_health = "Progressive Sorcerer Health Pool"
+shop_sorcerer_mana = "Progressive Sorcerer Mana Pool"
+shop_sorcerer_armor = "Progressive Sorcerer Armor"
+shop_sorcerer_speed = "Progressive Sorcerer Move Speed"
+shop_sorcerer_combo = "Sorcerer Combo"
+shop_sorcerer_combo_timer = "Progressive Sorcerer Combo Timer"
+shop_sorcerer_combo_nova = "Progressive Sorcerer Combo Nova"
+shop_sorcerer_combo_healing = "Progressive Sorcerer Combo Healing"
+shop_sorcerer_combo_mana = "Progressive Sorcerer Combo Mana"
+shop_sorcerer_ice_shard_damage = "Progressive Sorcerer Ice Shard Damage"
+shop_sorcerer_ice_shard_bounces = "Progressive Sorcerer Ice Shard Bounces"
+shop_sorcerer_comet_damage = "Progressive Sorcerer Comet Damage"
+shop_sorcerer_ice_shard_nova = "Sorcerer Ice Shard Nova"
+shop_sorcerer_ice_shard_nova_number = "Progressive Sorcerer Ice Shard Nova Number"
+shop_sorcerer_ice_shard_nova_mana = "Progressive Sorcerer Ice Shard Nova Mana"
+shop_sorcerer_ice_orb = "Sorcerer Ice Orb"
+shop_sorcerer_ice_orb_damage = "Progressive Sorcerer Ice Orb Damage"
+shop_sorcerer_ice_orb_time = "Progressive Sorcerer Ice Orb Time"
+shop_sorcerer_chill = "Sorcerer Chill"
+shop_sorcerer_chill_slow = "Progressive Sorcerer Chill Slow"
+shop_sorcerer_chill_duration = "Progressive Sorcerer Chill Duration"
+shop_sorcerer_frost_shield = "Progressive Sorcerer Frost Shield"
+
+class_shop_upgrades: typing.Dict[util.PlayerClass, typing.List[str]] = {
+    util.PlayerClass.Paladin: [
+        shop_paladin_health,
+        shop_paladin_mana,
+        shop_paladin_armor,
+        shop_paladin_speed,
+        shop_paladin_combo,
+        shop_paladin_combo_timer,
+        shop_paladin_combo_nova,
+        shop_paladin_combo_healing,
+        shop_paladin_combo_mana,
+        shop_paladin_dmg,
+        shop_paladin_charge_dmg,
+        shop_paladin_charge_range,
+        shop_paladin_healing,
+        shop_paladin_healing_eff,
+        shop_paladin_holy_storm,
+        shop_paladin_holy_storm_dmg,
+        shop_paladin_holy_storm_dur,
+        shop_paladin_divine_wrath,
+        shop_paladin_arc,
+        shop_paladin_shield,
+    ],
+    util.PlayerClass.Ranger: [
+        shop_ranger_health,
+        shop_ranger_mana,
+        shop_ranger_armor,
+        shop_ranger_speed,
+        shop_ranger_combo,
+        shop_ranger_combo_timer,
+        shop_ranger_combo_nova,
+        shop_ranger_combo_healing,
+        shop_ranger_combo_mana,
+        shop_ranger_dmg,
+        shop_ranger_penetration,
+        shop_ranger_bomb,
+        shop_ranger_overgrowth,
+        shop_ranger_overgrowth_dur,
+        shop_ranger_overgrowth_range,
+        shop_ranger_flurry,
+        shop_ranger_flurry_waves,
+        shop_ranger_flurry_arrows,
+        shop_ranger_dodge,
+        shop_ranger_marksmanship,
+    ],
+    util.PlayerClass.Wizard: [
+        shop_wizard_health,
+        shop_wizard_mana,
+        shop_wizard_armor,
+        shop_wizard_speed,
+        shop_wizard_combo,
+        shop_wizard_combo_timer,
+        shop_wizard_combo_nova,
+        shop_wizard_combo_healing,
+        shop_wizard_combo_mana,
+        shop_wizard_fireball_damage,
+        shop_wizard_fireball_range,
+        shop_wizard_fire_breath_damage,
+        shop_wizard_fire_nova,
+        shop_wizard_fire_nova_flames,
+        shop_wizard_fire_nova_slow,
+        shop_wizard_meteor_strike,
+        shop_wizard_meteor_strike_damage,
+        shop_wizard_meteor_strike_meteors,
+        shop_wizard_fire_shield,
+        shop_wizard_combustion,
+        shop_wizard_combustion_damage,
+        shop_wizard_combustion_duration,
+    ],
+    util.PlayerClass.Warlock: [
+        shop_warlock_health,
+        shop_warlock_mana,
+        shop_warlock_armor,
+        shop_warlock_speed,
+        shop_warlock_combo,
+        shop_warlock_combo_timer,
+        shop_warlock_combo_nova,
+        shop_warlock_combo_healing,
+        shop_warlock_combo_mana,
+        shop_warlock_dagger_damage,
+        shop_warlock_dagger_poison,
+        shop_warlock_lightning_strike_damage,
+        shop_warlock_lightning_strike_targets,
+        shop_warlock_summon_gargoyle,
+        shop_warlock_gargoyle_damage,
+        shop_warlock_gargoyle_duration,
+        shop_warlock_electrical_storm,
+        shop_warlock_electrical_storm_damage,
+        shop_warlock_electrical_storm_duration,
+        shop_warlock_blood_sacrifice,
+        shop_warlock_soul_sacrifice,
+    ],
+    util.PlayerClass.Thief: [
+        shop_thief_health,
+        shop_thief_mana,
+        shop_thief_armor,
+        shop_thief_speed,
+        shop_thief_combo,
+        shop_thief_combo_timer,
+        shop_thief_combo_nova,
+        shop_thief_combo_healing,
+        shop_thief_combo_mana,
+        shop_thief_knives_damage,
+        shop_thief_knife_fan_damage,
+        shop_thief_knife_fan_knives,
+        shop_thief_grapple_chain,
+        shop_thief_grapple_chain_length,
+        shop_thief_grapple_chain_stun,
+        shop_thief_smoke_bomb,
+        shop_thief_smoke_bomb_range,
+        shop_thief_fervor,
+        shop_thief_speed_penalty,
+        shop_thief_dodge,
+    ],
+    util.PlayerClass.Priest: [
+        shop_priest_health,
+        shop_priest_mana,
+        shop_priest_armor,
+        shop_priest_speed,
+        shop_priest_combo,
+        shop_priest_combo_timer,
+        shop_priest_combo_nova,
+        shop_priest_combo_healing,
+        shop_priest_combo_mana,
+        shop_priest_smite_damage,
+        shop_priest_speed_penalty,
+        shop_priest_holy_beam_damage,
+        shop_priest_holy_beam_range,
+        shop_priest_draining_field,
+        shop_priest_draining_field_damage,
+        shop_priest_draining_field_number,
+        shop_priest_cripple_aura,
+        shop_priest_cripple_aura_slow,
+        shop_priest_cripple_aura_mana_drain,
+        shop_priest_hp_regen,
+        shop_priest_magic_shield,
+    ],
+    util.PlayerClass.Sorcerer: [
+        shop_sorcerer_health,
+        shop_sorcerer_mana,
+        shop_sorcerer_armor,
+        shop_sorcerer_speed,
+        shop_sorcerer_combo,
+        shop_sorcerer_combo_timer,
+        shop_sorcerer_combo_nova,
+        shop_sorcerer_combo_healing,
+        shop_sorcerer_combo_mana,
+        shop_sorcerer_ice_shard_damage,
+        shop_sorcerer_ice_shard_bounces,
+        shop_sorcerer_comet_damage,
+        shop_sorcerer_ice_shard_nova,
+        shop_sorcerer_ice_shard_nova_number,
+        shop_sorcerer_ice_shard_nova_mana,
+        shop_sorcerer_ice_orb,
+        shop_sorcerer_ice_orb_damage,
+        shop_sorcerer_ice_orb_time,
+        shop_sorcerer_chill,
+        shop_sorcerer_chill_slow,
+        shop_sorcerer_chill_duration,
+        shop_sorcerer_frost_shield,
+    ],
+}
 
 # Castle button item names
 btnc_b1_rune_1 = "Prison Boss Rune y"
@@ -429,6 +749,15 @@ group_b2_boss = "Armory Boss Rune"
 group_b3_boss = "Archives Boss Rune"
 group_b4_boss = "Chambers Boss Rune"
 
+group_shop_items = "Shop Upgrades"
+group_shop_paladin = "Paladin Shop Upgrades"
+group_shop_ranger = "Ranger Shop Upgrades"
+group_shop_wizard = "Wizard Shop Upgrades"
+group_shop_warlock = "Warlock Shop Upgrades"
+group_shop_thief = "Thief Shop Upgrades"
+group_shop_priest = "Priest Shop Upgrades"
+group_shop_sorcerer = "Sorcerer Shop Upgrades"
+
 item_groups: typing.Dict[str, typing.Set[str]] = {
     group_chests: {
         bonus_chest,
@@ -624,5 +953,35 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btnc_b4_rune_1_part,
         btnc_b4_rune_2_part,
         btnc_b4_rune_3_part,
+    },
+    group_shop_items: {
+        *class_shop_upgrades[util.PlayerClass.Paladin],
+        *class_shop_upgrades[util.PlayerClass.Wizard],
+        *class_shop_upgrades[util.PlayerClass.Ranger],
+        *class_shop_upgrades[util.PlayerClass.Warlock],
+        *class_shop_upgrades[util.PlayerClass.Thief],
+        *class_shop_upgrades[util.PlayerClass.Priest],
+        *class_shop_upgrades[util.PlayerClass.Sorcerer],
+    },
+    group_shop_paladin: {
+        *class_shop_upgrades[util.PlayerClass.Paladin]
+    },
+    group_shop_wizard: {
+        *class_shop_upgrades[util.PlayerClass.Wizard]
+    },
+    group_shop_ranger: {
+        *class_shop_upgrades[util.PlayerClass.Ranger]
+    },
+    group_shop_warlock: {
+        *class_shop_upgrades[util.PlayerClass.Warlock]
+    },
+    group_shop_thief: {
+        *class_shop_upgrades[util.PlayerClass.Thief]
+    },
+    group_shop_priest: {
+        *class_shop_upgrades[util.PlayerClass.Priest]
+    },
+    group_shop_sorcerer: {
+        *class_shop_upgrades[util.PlayerClass.Sorcerer]
     },
 }

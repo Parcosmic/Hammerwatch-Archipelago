@@ -2,7 +2,7 @@ import typing
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
 from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names,
-                   get_random_elements)
+                   get_random_elements, PlayerClass, get_shopsanity_classes)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -424,6 +424,14 @@ button_table = {
     **temple_button_table,
 }
 
+counter = Counter(id_start + 0x500 - 1)
+shop_table: typing.Dict[str, ItemData] = {}
+for upgrades in item_name.class_shop_upgrades.values():
+    shop_table.update({upgrade: ItemData(counter.count(), ItemClassification.useful) for upgrade in upgrades})
+
+# for name, item_data in shop_table.items():
+#     print(f"{name}:{item_data.code}")
+
 item_table: typing.Dict[str, ItemData] = {
     **collectable_table,
     **recovery_table,
@@ -434,6 +442,7 @@ item_table: typing.Dict[str, ItemData] = {
     **temple_floor_master_keys,
     **trap_table,
     **button_table,
+    **shop_table,
 }
 
 stat_upgrade_items: typing.List[str] = [
@@ -619,6 +628,171 @@ temple_button_counts: typing.Dict[str, int] = {
     item_name.btn_t3_puzzle_room_part: 4,
 }
 
+shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {
+    PlayerClass.Paladin: {
+        item_name.shop_paladin_health: 5,
+        item_name.shop_paladin_mana: 5,
+        item_name.shop_paladin_armor: 5,
+        item_name.shop_paladin_speed: 3,
+        item_name.shop_paladin_combo: 1,
+        item_name.shop_paladin_combo_timer: 5,
+        item_name.shop_paladin_combo_nova: 5,
+        item_name.shop_paladin_combo_healing: 5,
+        item_name.shop_paladin_combo_mana: 5,
+        item_name.shop_paladin_dmg: 5,
+        item_name.shop_paladin_charge_dmg: 3,
+        item_name.shop_paladin_charge_range: 3,
+        item_name.shop_paladin_healing: 1,
+        item_name.shop_paladin_healing_eff: 3,
+        item_name.shop_paladin_holy_storm: 1,
+        item_name.shop_paladin_holy_storm_dmg: 2,
+        item_name.shop_paladin_holy_storm_dur: 2,
+        item_name.shop_paladin_divine_wrath: 3,
+        item_name.shop_paladin_arc: 5,
+        item_name.shop_paladin_shield: 3,
+    },
+    PlayerClass.Ranger: {
+        item_name.shop_ranger_health: 5,
+        item_name.shop_ranger_mana: 5,
+        item_name.shop_ranger_armor: 5,
+        item_name.shop_ranger_speed: 3,
+        item_name.shop_ranger_combo: 1,
+        item_name.shop_ranger_combo_timer: 5,
+        item_name.shop_ranger_combo_nova: 5,
+        item_name.shop_ranger_combo_healing: 5,
+        item_name.shop_ranger_combo_mana: 5,
+        item_name.shop_ranger_dmg: 5,
+        item_name.shop_ranger_penetration: 5,
+        item_name.shop_ranger_bomb: 3,
+        item_name.shop_ranger_overgrowth: 1,
+        item_name.shop_ranger_overgrowth_dur: 2,
+        item_name.shop_ranger_overgrowth_range: 2,
+        item_name.shop_ranger_flurry: 1,
+        item_name.shop_ranger_flurry_waves: 2,
+        item_name.shop_ranger_flurry_arrows: 2,
+        item_name.shop_ranger_dodge: 5,
+        item_name.shop_ranger_marksmanship: 4,
+    },
+    PlayerClass.Wizard: {
+        item_name.shop_wizard_health: 5,
+        item_name.shop_wizard_mana: 5,
+        item_name.shop_wizard_armor: 4,
+        item_name.shop_wizard_speed: 3,
+        item_name.shop_wizard_combo: 1,
+        item_name.shop_wizard_combo_timer: 5,
+        item_name.shop_wizard_combo_nova: 5,
+        item_name.shop_wizard_combo_healing: 5,
+        item_name.shop_wizard_combo_mana: 5,
+        item_name.shop_wizard_fireball_damage: 5,
+        item_name.shop_wizard_fireball_range: 5,
+        item_name.shop_wizard_fire_breath_damage: 4,
+        item_name.shop_wizard_fire_nova: 1,
+        item_name.shop_wizard_fire_nova_flames: 3,
+        item_name.shop_wizard_fire_nova_slow: 3,
+        item_name.shop_wizard_meteor_strike: 1,
+        item_name.shop_wizard_meteor_strike_damage: 2,
+        item_name.shop_wizard_meteor_strike_meteors: 3,
+        item_name.shop_wizard_fire_shield: 1,
+        item_name.shop_wizard_combustion: 1,
+        item_name.shop_wizard_combustion_damage: 3,
+        item_name.shop_wizard_combustion_duration: 3,
+    },
+    PlayerClass.Warlock: {
+        item_name.shop_warlock_health: 5,
+        item_name.shop_warlock_mana: 5,
+        item_name.shop_warlock_armor: 5,
+        item_name.shop_warlock_speed: 3,
+        item_name.shop_warlock_combo: 1,
+        item_name.shop_warlock_combo_timer: 5,
+        item_name.shop_warlock_combo_nova: 5,
+        item_name.shop_warlock_combo_healing: 5,
+        item_name.shop_warlock_combo_mana: 5,
+        item_name.shop_warlock_dagger_damage: 5,
+        item_name.shop_warlock_dagger_poison: 5,
+        item_name.shop_warlock_lightning_strike_damage: 4,
+        item_name.shop_warlock_lightning_strike_targets: 4,
+        item_name.shop_warlock_summon_gargoyle: 1,
+        item_name.shop_warlock_gargoyle_damage: 2,
+        item_name.shop_warlock_gargoyle_duration: 2,
+        item_name.shop_warlock_electrical_storm: 1,
+        item_name.shop_warlock_electrical_storm_damage: 2,
+        item_name.shop_warlock_electrical_storm_duration: 2,
+        item_name.shop_warlock_blood_sacrifice: 5,
+        item_name.shop_warlock_soul_sacrifice: 3,
+    },
+    PlayerClass.Thief: {
+        item_name.shop_thief_health: 5,
+        item_name.shop_thief_mana: 5,
+        item_name.shop_thief_armor: 5,
+        item_name.shop_thief_speed: 3,
+        item_name.shop_thief_combo: 1,
+        item_name.shop_thief_combo_timer: 5,
+        item_name.shop_thief_combo_nova: 5,
+        item_name.shop_thief_combo_healing: 5,
+        item_name.shop_thief_combo_mana: 5,
+        item_name.shop_thief_knives_damage: 5,
+        item_name.shop_thief_knife_fan_damage: 3,
+        item_name.shop_thief_knife_fan_knives: 3,
+        item_name.shop_thief_grapple_chain: 1,
+        item_name.shop_thief_grapple_chain_length: 2,
+        item_name.shop_thief_grapple_chain_stun: 2,
+        item_name.shop_thief_smoke_bomb: 1,
+        item_name.shop_thief_smoke_bomb_range: 2,
+        item_name.shop_thief_fervor: 3,
+        item_name.shop_thief_speed_penalty: 4,
+        item_name.shop_thief_dodge: 5,
+    },
+    PlayerClass.Priest: {
+        item_name.shop_priest_health: 5,
+        item_name.shop_priest_mana: 5,
+        item_name.shop_priest_armor: 5,
+        item_name.shop_priest_speed: 3,
+        item_name.shop_priest_combo: 1,
+        item_name.shop_priest_combo_timer: 5,
+        item_name.shop_priest_combo_nova: 5,
+        item_name.shop_priest_combo_healing: 5,
+        item_name.shop_priest_combo_mana: 5,
+        item_name.shop_priest_smite_damage: 5,
+        item_name.shop_priest_speed_penalty: 5,
+        item_name.shop_priest_holy_beam_damage: 4,
+        item_name.shop_priest_holy_beam_range: 4,
+        item_name.shop_priest_draining_field: 1,
+        item_name.shop_priest_draining_field_damage: 3,
+        item_name.shop_priest_draining_field_number: 2,
+        item_name.shop_priest_cripple_aura: 1,
+        item_name.shop_priest_cripple_aura_slow: 2,
+        item_name.shop_priest_cripple_aura_mana_drain: 1,
+        item_name.shop_priest_hp_regen: 5,
+        item_name.shop_priest_magic_shield: 5,
+    },
+    PlayerClass.Sorcerer: {
+        item_name.shop_sorcerer_health: 5,
+        item_name.shop_sorcerer_mana: 5,
+        item_name.shop_sorcerer_armor: 4,
+        item_name.shop_sorcerer_speed: 3,
+        item_name.shop_sorcerer_combo: 1,
+        item_name.shop_sorcerer_combo_timer: 5,
+        item_name.shop_sorcerer_combo_nova: 5,
+        item_name.shop_sorcerer_combo_healing: 5,
+        item_name.shop_sorcerer_combo_mana: 5,
+        item_name.shop_sorcerer_ice_shard_damage: 5,
+        item_name.shop_sorcerer_ice_shard_bounces: 5,
+        item_name.shop_sorcerer_comet_damage: 4,
+        item_name.shop_sorcerer_ice_shard_nova: 1,
+        item_name.shop_sorcerer_ice_shard_nova_number: 2,
+        item_name.shop_sorcerer_ice_shard_nova_mana: 2,
+        item_name.shop_sorcerer_ice_orb: 1,
+        item_name.shop_sorcerer_ice_orb_damage: 2,
+        item_name.shop_sorcerer_ice_orb_time: 3,
+        item_name.shop_sorcerer_chill: 1,
+        item_name.shop_sorcerer_chill_slow: 3,
+        item_name.shop_sorcerer_chill_duration: 3,
+        item_name.shop_sorcerer_frost_shield: 5,
+    },
+}
+# for player_class in PlayerClass:
+#     print(f"{player_class.name}: {sum(shop_item_counts[player_class].values())}")
+
 
 def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: typing.Dict[str, int]):
     extra_items: int = 0
@@ -783,6 +957,16 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     for u in range(stat_upgrades):
         upgrade = world.random.randrange(4)
         item_counts_table[stat_upgrade_items[upgrade]] += 1
+
+    # Shop items
+    player_classes = get_shopsanity_classes(world)
+    for player_class in player_classes:
+        item_counts_table.update(shop_item_counts[player_class])
+    # If shopsanity is being played in the temple campaign, we need to increase the amount of ore in the pool
+    # This is because there isn't enough ore in vanilla to upgrade all the shops!
+    if len(player_classes) > 0 and campaign == Campaign.Temple:
+        extra_items += 17 - item_counts_table[item_name.ore]
+        item_counts_table[item_name.ore] = 17
 
     # Build filler items list
     filler_item_names: typing.List[str] = []
