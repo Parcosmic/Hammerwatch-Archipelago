@@ -4014,6 +4014,10 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     else:
         item_counts[item_name.vendor_coin] -= item_counts[item_name.miniboss_stat_upgrade]
         item_counts.pop(item_name.miniboss_stat_upgrade)
+        # Hack to force the dune sharks key location to always exist
+        if world.options.key_mode.value == world.options.key_mode.option_floor_master:
+            key_loc_name = temple_location_names.b1_boss_worm_key
+            location_table[key_loc_name] = temple_enemy_loot_locations[key_loc_name]
     item_counts.pop(item_name.loot_tower)
     item_counts.pop(item_name.loot_flower)
     item_counts.pop(item_name.loot_mini_flower)
