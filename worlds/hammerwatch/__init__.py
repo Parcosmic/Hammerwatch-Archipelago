@@ -376,6 +376,12 @@ class HammerwatchWorld(World):
         if hasattr(self.multiworld, "generation_is_fake"):
             return
 
+        # Force Dune Shark key location to be the correct key if randomize enemy loot is off
+        if self.options.randomize_enemy_loot.value == 0:
+            if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+                dune_shark_key_loc = self.multiworld.get_location(temple_location_names.b1_boss_worm_key, self.player)
+                dune_shark_key_loc.place_locked_item(self.create_item(item_name.key_gold_b1))
+
         # Pyramid of Fear Bonus Keys
         if not self.options.randomize_bonus_keys.value:
             temple_bonus_keys = [
