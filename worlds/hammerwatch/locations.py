@@ -2973,18 +2973,7 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
         hw_map_locations = get_base_locations(world, temple_pickup_locations, temple_enemy_loot_locations,
                                               button_locations, temple_event_buttons, combo_button_locs)
 
-    if get_buttonsanity_insanity(world):
-        for loc, itm in map_button_items.items():
-            if loc in combo_button_locs:
-                continue
-            if itm not in button_items:
-                button_items[itm] = 0
-            button_items[itm] += 1
-        # button_items = {itm: 1 for loc, itm in temple_button_items.items()
-        #                 if loc not in temple_combo_button_locations}
-        # for button, count in temple_button_counts:
-        #     button_items[button] = count
-    elif world.options.buttonsanity > 0:
+    if world.options.buttonsanity > 0:
         for loc, itm in map_button_items.items():
             if (button_locations[loc].loc_type & LocType.Buttoninsanity) == LocType.Buttoninsanity:
                 continue
@@ -3419,7 +3408,9 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
 
     def remove_button(location: str):
         location_table.pop(location)
-        item_counts[temple_button_items[location]] -= 1
+        button_item = temple_button_items[location]
+        if button_item in item_counts:
+            item_counts[button_item] -= 1
 
     def remove_puzzle_button(location: str):
         if buttonsanity and world.options.randomize_puzzles:
