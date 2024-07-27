@@ -51,7 +51,7 @@ class ShopInfo:
     shop_type: ShopType
     level: int
 
-    def __init__(self, shop_type, level):
+    def __init__(self, shop_type: ShopType, level: int):
         self.shop_type = shop_type
         self.level = level
 
@@ -60,6 +60,15 @@ class ShopInfo:
         if self.level > 0:
             return f"{shop_str} Level {self.level}"
         return shop_str
+
+    def from_str(self, shop_str: str):
+        splits = shop_str.split(' ')
+        for shp_type in ShopType:
+            if shp_type.name == splits[0]:
+                self.shop_type = shp_type
+                break
+        self.level = int(splits[-1])
+        return self
 
 
 class Counter:
@@ -205,3 +214,7 @@ def add_loc_rule(world: World, loc_name: str, rule: CollectionRule):
 
 def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
     add_loc_rule(world, loc_name, lambda state: state.has(item, world.player, item_count))
+
+
+def is_using_universal_tracker(world: World):
+    return hasattr(world.multiworld, "generation_is_fake")

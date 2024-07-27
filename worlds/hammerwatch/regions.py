@@ -4770,17 +4770,23 @@ def connect_shops(world: "HammerwatchWorld"):
             castle_location_names.shop_c2_def_2: ShopInfo(ShopType.Defense, 5),
         }
 
-        if world.options.shop_shuffle.value:
-            for loc in world.shop_locations.keys():
-                shop_type = world.random.choice(list(shop_counts.keys()))
-                tier = shop_counts[shop_type].pop(0)
-                if len(shop_counts[shop_type]) == 0:
-                    shop_counts.pop(shop_type)
-                world.shop_locations[loc] = ShopInfo(shop_type, tier)
-                # if tier > 0:
-                #     world.shop_locations[loc] = f"{shop_type} Level {tier}"
-                # else:
-                #     world.shop_locations[loc] = f"{shop_type}"
+        if hasattr(world.multiworld, "re_gen_passthrough"):
+            shop_slot_data = {shop_loc_name: world.multiworld.re_gen_passthrough["Hammerwatch"][shop_loc_name]
+                              for shop_loc_name in world.shop_locations.keys()}
+            for loc_name, shop_str in shop_slot_data.items():
+                world.shop_locations[loc_name].from_str(shop_str)
+        else:
+            if world.options.shop_shuffle.value:
+                for loc in world.shop_locations.keys():
+                    shop_type = world.random.choice(list(shop_counts.keys()))
+                    tier = shop_counts[shop_type].pop(0)
+                    if len(shop_counts[shop_type]) == 0:
+                        shop_counts.pop(shop_type)
+                    world.shop_locations[loc] = ShopInfo(shop_type, tier)
+                    # if tier > 0:
+                    #     world.shop_locations[loc] = f"{shop_type} Level {tier}"
+                    # else:
+                    #     world.shop_locations[loc] = f"{shop_type}"
 
         for shop_type, regions in shop_region_names.shop_regions.items():
             for i in range(1, len(regions)).__reversed__():
@@ -4836,21 +4842,29 @@ def connect_shops(world: "HammerwatchWorld"):
             temple_location_names.shop_def: ShopInfo(ShopType.Defense, 0),
         }
 
-        if world.options.shop_shuffle.value:
-            remaining_shops = []
-            for shop_type in shop_counts.keys():
-                remaining_shops.append(shop_type)
+        if hasattr(world.multiworld, "re_gen_passthrough"):
+            shop_slot_data = {shop_loc_name: world.multiworld.re_gen_passthrough["Hammerwatch"][shop_loc_name]
+                              for shop_loc_name in world.shop_locations.keys()}
+            for loc_name, shop_str in shop_slot_data.items():
+                world.shop_locations[loc_name].from_str(shop_str)
+        else:
+            if world.options.shop_shuffle.value:
+                remaining_shops = []
+                for shop_type in shop_counts.keys():
+                    remaining_shops.append(shop_type)
 
-            for loc in world.shop_locations.keys():
-                shop_loc_type_index = world.random.randint(0, len(remaining_shops) - 1)
-                world.shop_locations[loc].shop_type = remaining_shops.pop(shop_loc_type_index)
+                for loc in world.shop_locations.keys():
+                    shop_loc_type_index = world.random.randint(0, len(remaining_shops) - 1)
+                    world.shop_locations[loc].shop_type = remaining_shops.pop(shop_loc_type_index)
 
         combo_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_combo].shop_type]
         misc_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_misc].shop_type]
         off_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_off].shop_type]
         def_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_def].shop_type]
 
+        # The first combo shop is already unlocked so we can access it from the start
         connect(world, used_names, temple_region_names.menu, combo_regions[0], False)
+        # Likewise the first two vitality shops are already unlocked
         connect(world, used_names, temple_region_names.menu, misc_regions[0], False)
         connect(world, used_names, misc_regions[0], misc_regions[1], False)
         # Can spend 12 ore on all other shops before this and we need 1 more to access the first level

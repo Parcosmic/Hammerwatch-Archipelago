@@ -9,7 +9,8 @@ from .locations import (LocationData, all_locations, setup_locations, castle_eve
                         castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
 from .rules import set_rules, connect_regions_er
-from .util import Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes
+from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
+                   is_using_universal_tracker)
 from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
@@ -74,6 +75,7 @@ class HammerwatchWorld(World):
             **self.options.as_dict(*client_required_options),
             **self.random_locations,
             **{shop_loc: shop_info.to_str() for shop_loc, shop_info in self.shop_locations.items()},
+            # Both of these are for backwards compat
             option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
             option_names.enemy_shuffle: 1 if self.options.enemy_shuffle_mode.value == 1 else 0,
             "APWorld Version": self.apworld_version,
@@ -278,7 +280,7 @@ class HammerwatchWorld(World):
                 location.place_locked_item(self.create_event(itm))
 
         # Don't place non-event items if we're using Universal Tracker
-        if hasattr(self.multiworld, "generation_is_fake"):
+        if is_using_universal_tracker(self):
             return
 
         # Bonus Key Locations
@@ -383,7 +385,7 @@ class HammerwatchWorld(World):
                 location.place_locked_item(self.create_event(itm))
 
         # Don't place non-event items if we're using Universal Tracker
-        if hasattr(self.multiworld, "generation_is_fake"):
+        if is_using_universal_tracker(self):
             return
 
         # Force Dune Shark key location to be the correct key if randomize enemy loot is off
@@ -543,6 +545,6 @@ class HammerwatchWorld(World):
 
     def get_random_location(self, rloc_name: str):
         # If UT is generating the first time we just pass a dummy value as it'll restart gen anyway
-        if hasattr(self.multiworld, "generation_is_fake") and not hasattr(self.multiworld, "re_gen_passthrough"):
+        if is_using_universal_tracker(self) and not hasattr(self.multiworld, "re_gen_passthrough"):
             return 0
         return self.random_locations[rloc_name]

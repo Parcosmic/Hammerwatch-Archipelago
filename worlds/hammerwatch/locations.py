@@ -2,7 +2,8 @@ import typing
 
 from BaseClasses import Location
 from .names import castle_location_names, temple_location_names, item_name, option_names, shop_location_names
-from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes
+from .util import (Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes,
+                   is_using_universal_tracker)
 from .items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
 from enum import IntFlag
 
@@ -3060,7 +3061,7 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
 
     if hasattr(world.multiworld, "re_gen_passthrough"):
         random_locations = world.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"]
-    if hasattr(world.multiworld, "generation_is_fake"):
+    if is_using_universal_tracker(world):
         item_counts.pop(item_name.loot_tower)
         item_counts.pop(item_name.loot_flower)
         return location_table, item_counts, random_locations
