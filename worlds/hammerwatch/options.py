@@ -267,9 +267,9 @@ class ShopsanityTrapObfuscation(Choice):
     On: trap names/descriptions will mimic another item perfectly
     Imperfect: trap names/descriptions will mimic another item, but with subtle changes in letters/punctuation
     L33T: 7r4p n4m35/d35cr1p710n5 w1ll b3 1n 4ll l3375p34k
-    OwO: twap names/descwiptions wiw be in aw owo
+    OwO: twap names/descwiptions wiww be in aww owo
     """
-    display_name = "Shopsanity Trap Obfuscation"
+    display_name = "Shady Shops"
     option_off = 0
     option_on = 1
     option_imperfect = 2
