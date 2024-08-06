@@ -7,7 +7,7 @@ from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
     gate_names, entrance_names, shop_location_names, shop_region_names
 from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle_act_names,
-                   get_key_code, ShopType, ShopInfo)
+                   get_key_code, get_key_name, ShopType, ShopInfo)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -4771,8 +4771,7 @@ def connect_shops(world: "HammerwatchWorld"):
         }
 
         if hasattr(world.multiworld, "re_gen_passthrough"):
-            shop_slot_data = {shop_loc_name: world.multiworld.re_gen_passthrough["Hammerwatch"][shop_loc_name]
-                              for shop_loc_name in world.shop_locations.keys()}
+            shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
                 world.shop_locations[loc_name].from_str(shop_str)
         else:
@@ -4843,8 +4842,7 @@ def connect_shops(world: "HammerwatchWorld"):
         }
 
         if hasattr(world.multiworld, "re_gen_passthrough"):
-            shop_slot_data = {shop_loc_name: world.multiworld.re_gen_passthrough["Hammerwatch"][shop_loc_name]
-                              for shop_loc_name in world.shop_locations.keys()}
+            shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
                 world.shop_locations[loc_name].from_str(shop_str)
         else:
@@ -4991,8 +4989,8 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     if world.options.gate_shuffle.value and gate_code is not None:
         # Special handling for Universal Tracker
         if hasattr(world.multiworld, "re_gen_passthrough"):
-            key_item_name = \
-                (world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code].capitalize() + " Key")
+            key_code = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code]
+            key_item_name = key_code.capitalize() + " Key"
             if world.options.key_mode.value == world.options.key_mode.option_act_specific:
                 key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
             elif world.options.key_mode.value == world.options.key_mode.option_floor_master:

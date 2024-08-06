@@ -47,8 +47,8 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    apworld_version = "2.0"
-    hw_client_version = "1.1.13"
+    apworld_version = "1.2"
+    hw_client_version = "1.2"
 
     web = HammerwatchWeb()
 
@@ -73,11 +73,8 @@ class HammerwatchWorld(World):
     def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
         return {
             **self.options.as_dict(*client_required_options),
-            **self.random_locations,
-            **{shop_loc: shop_info.to_str() for shop_loc, shop_info in self.shop_locations.items()},
-            # Both of these are for backwards compat
-            option_names.act_specific_keys: 1 if self.options.key_mode.value == 1 else 0,
-            option_names.enemy_shuffle: 1 if self.options.enemy_shuffle_mode.value == 1 else 0,
+            "Random Locations": self.random_locations,
+            "Shop Locations": {s_loc: s_info.to_slot_data() for s_loc, s_info in self.shop_locations.items()},
             "APWorld Version": self.apworld_version,
             "Hammerwatch Mod Version": self.hw_client_version,
             "Gate Types": {gate_names.gate_name_indices[gate]: typ for gate, typ in self.gate_types.items()},
@@ -528,7 +525,7 @@ class HammerwatchWorld(World):
         if self.options.shop_shuffle.value:
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
-                spoiler_handle.write(f"\n{loc}: {shop}")
+                spoiler_handle.write(f"\n{loc}: {shop.shop_type.name} Shop")
             # spoiler_handle.write(
             # f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
             # for entry in self.exit_spoiler_info:
@@ -541,7 +538,8 @@ class HammerwatchWorld(World):
         self.gate_types = slot_data["Gate Types"]
         return {"Gate Types": slot_data["Gate Types"],
                 "er_seed": slot_data["er_seed"],
-                "Random Locations": {random_key: slot_data[random_key] for random_key in self.random_locations.keys()}}
+                "Random Locations": slot_data["Random Locations"],
+                "Shop Locations": slot_data["Shop Locations"]}
 
     def get_random_location(self, rloc_name: str):
         # If UT is generating the first time we just pass a dummy value as it'll restart gen anyway

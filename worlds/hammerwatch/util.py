@@ -55,19 +55,15 @@ class ShopInfo:
         self.shop_type = shop_type
         self.level = level
 
-    def to_str(self):
-        shop_str = self.shop_type.name
-        if self.level > 0:
-            return f"{shop_str} Level {self.level}"
-        return shop_str
+    def to_slot_data(self):
+        return self.shop_type.value * 10 + self.level
 
     def from_str(self, shop_str: str):
-        splits = shop_str.split(' ')
         for shp_type in ShopType:
-            if shp_type.name == splits[0]:
+            if shp_type.value == int(shop_str[0]):
                 self.shop_type = shp_type
                 break
-        self.level = int(splits[-1])
+        self.level = int(shop_str[1])
         return self
 
 
@@ -126,6 +122,17 @@ def get_key_code(key_name: str):
         return 2
     if key_name == "bonus":
         return 10
+
+
+def get_key_name(key_code: int):
+    if key_code == 0:
+        return "bronze"
+    if key_code == 1:
+        return "silver"
+    if key_code == 2:
+        return "gold"
+    if key_code == 10:
+        return "bonus"
 
 
 def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
