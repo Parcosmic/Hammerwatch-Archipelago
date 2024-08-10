@@ -171,6 +171,11 @@ class HammerwatchWorld(World):
             self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
+            # If we're playing with enemy loot on and key mode is floor master we already place this key
+            if self.options.randomize_enemy_loot.value == 0:
+                if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+                    self.item_counts[item_name.key_gold_b1] = 0
+                    self.item_counts[item_name.key_silver_b1] = 0
 
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 

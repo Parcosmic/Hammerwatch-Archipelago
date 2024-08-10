@@ -3397,6 +3397,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         item_counts.pop(item_name.loot_tower)
         item_counts.pop(item_name.loot_flower)
         item_counts.pop(item_name.loot_mini_flower)
+        item_counts.pop(item_name.miniboss_stat_upgrade)
         return location_table, item_counts, random_locations
 
     buttonsanity = world.options.buttonsanity.value > 0

@@ -4773,7 +4773,7 @@ def connect_shops(world: "HammerwatchWorld"):
         if hasattr(world.multiworld, "re_gen_passthrough"):
             shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
-                world.shop_locations[loc_name].from_str(shop_str)
+                world.shop_locations[loc_name].from_int(shop_str)
         else:
             if world.options.shop_shuffle.value:
                 for loc in world.shop_locations.keys():
@@ -4844,7 +4844,7 @@ def connect_shops(world: "HammerwatchWorld"):
         if hasattr(world.multiworld, "re_gen_passthrough"):
             shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
-                world.shop_locations[loc_name].from_str(shop_str)
+                world.shop_locations[loc_name].from_int(shop_str)
         else:
             if world.options.shop_shuffle.value:
                 remaining_shops = []

@@ -972,7 +972,8 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     filler_item_names: typing.List[str] = []
     filler_item_count: int = 0
     for item in item_counts_table.keys():
-        if item_table[item].classification == ItemClassification.filler and item_counts_table[item] > 0:
+        if (item in item_table and item_table[item].classification == ItemClassification.filler
+                and item_counts_table[item] > 0):
             filler_item_names.append(item)
             filler_item_count += item_counts_table[item]
 

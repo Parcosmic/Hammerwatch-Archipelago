@@ -58,13 +58,9 @@ class ShopInfo:
     def to_slot_data(self):
         return self.shop_type.value * 10 + self.level
 
-    def from_str(self, shop_str: str):
-        for shp_type in ShopType:
-            if shp_type.value == int(shop_str[0]):
-                self.shop_type = shp_type
-                break
-        self.level = int(shop_str[1])
-        return self
+    def from_int(self, shop_int: int):
+        self.shop_type = ShopType(shop_int // 10)
+        self.level = shop_int % 10
 
 
 class Counter:
