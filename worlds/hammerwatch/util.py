@@ -89,6 +89,13 @@ def get_class_from_option_value(option_value: int):
     return PlayerClass(option_value)
 
 
+def get_option_value_from_class_name(class_name: str):
+    for player_class in PlayerClass:
+        if player_class.name == class_name:
+            return player_class.value
+    return 0
+
+
 def get_shopsanity_classes(world: "HammerwatchWorld") -> typing.List[PlayerClass]:
     classes = []
     if world.options.shopsanity_p1 > 0:

@@ -268,13 +268,24 @@ class ShopsanityTrapObfuscation(Choice):
     Imperfect: trap names/descriptions will mimic another item, but with subtle changes in letters/punctuation
     L33T: 7r4p n4m35/d35cr1p710n5 w1ll b3 1n 4ll l3375p34k
     OwO: twap names/descwiptions wiww be in aww owo
+    All Mystery: instead replaces ALL item names/descriptions with question marks, so everything is hidden!
     """
     display_name = "Shady Shops"
     option_off = 0
     option_on = 1
     option_imperfect = 2
-    option_l33t = 3
+    option_l337 = 3
     option_owo = 4
+    option_all_mystery = 5
+
+
+class ShopsanityBalanceCosts(Toggle):
+    """
+    Reduces the costs of items in shops based on their type
+    If the item is useful, it will cost 50% as much and filler items will cost 10% as much
+    """
+    display_name = "Balance Shopsanity Costs"
+    default = True
 
 
 class EnemyShuffle(Removed):
@@ -491,6 +502,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     shopsanity_p3: ShopsanityP3Class
     shopsanity_p4: ShopsanityP4Class
     shopsanity_trap_obfuscation: ShopsanityTrapObfuscation
+    shopsanity_balance_costs: ShopsanityBalanceCosts
     enemy_shuffle_mode: EnemyShuffleMode
     enemy_shuffle_act_range: EnemyShuffleBalancing
     enemy_shuffle_keep_tier: EnemyShuffleKeepTier
@@ -543,6 +555,7 @@ client_required_options = [
     option_names.shopsanity_p3,
     option_names.shopsanity_p4,
     option_names.shopsanity_trap_obfuscation,
+    option_names.shopsanity_balance_costs,
     option_names.enemy_shuffle_mode,
     option_names.enemy_shuffle_act_range,
     option_names.enemy_shuffle_keep_tier,
@@ -586,6 +599,7 @@ option_presets = {
         option_names.shop_cost_max: "random",
         option_names.shopsanity_p1: "random",
         option_names.shopsanity_trap_obfuscation: "random",
+        option_names.shopsanity_balance_costs: "random",
         option_names.enemy_shuffle_mode: "random",
         option_names.enemy_shuffle_act_range: "random",
         option_names.enemy_shuffle_keep_tier: "random",
@@ -736,6 +750,7 @@ option_groups = [
         ShopCostRandoMin,
         ShopCostRandoMax,
         ShopsanityTrapObfuscation,
+        ShopsanityBalanceCosts,
         GameModifiers,
         DeathLink,
     ]),
