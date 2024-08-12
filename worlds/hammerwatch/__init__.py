@@ -16,7 +16,7 @@ from .options import HammerwatchOptions, client_required_options, option_groups,
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
 # from Utils import visualize_regions
-# from Fill import fill_restrictive
+from Fill import fill_restrictive
 
 
 class HammerwatchWeb(WebWorld):
@@ -93,17 +93,18 @@ class HammerwatchWorld(World):
                             f"switching to vanilla")
             self.options.key_mode.value = self.options.key_mode.option_vanilla
 
+        # Validate game modifiers
         exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives,
                                  option_names.mod_double_lives],
                                 [option_names.mod_1_hp, option_names.mod_no_hp_pickups],
                                 [option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen],
                                 [option_names.mod_no_mana_regen, option_names.mod_5x_mana_regen]]
-
-        # Validate game modifiers
         exclude_mods = []
         for mod, value in self.options.game_modifiers.value.items():
             if value:
                 if mod in exclude_mods:
+                    logging.warning(f"Game Modifier '{mod}' for player {self.player} incompatible with other "
+                                    f"modifiers selected, it is now disabled")
                     self.options.game_modifiers.value[mod] = False
                     continue
                 for ex_list in exclusive_mod_groups:
@@ -121,6 +122,7 @@ class HammerwatchWorld(World):
                 all_zero = False
                 break
         if all_zero:
+            logging.info(f"Trap weights for player {self.player} were set to all zero, resetting them all to 100")
             self.options.trap_item_weights.value = {item: 100 for item in trap_items}
 
         # Door type randomization
@@ -337,7 +339,7 @@ class HammerwatchWorld(World):
                         loc = self.multiworld.get_location(loc_name, self.player)
                         loc.place_locked_item(self.create_item(bonus_key_names[k]))
 
-        # Manual start item placement to get fill out of an overly restrictive start with buttonsanity
+        # Add a starting item to local_early_items to get out of an overly restrictive start with buttonsanity
         if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
                 and self.options.randomize_recovery_items.value == 0):
             start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
@@ -347,9 +349,7 @@ class HammerwatchWorld(World):
             if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
                 if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
                     start_item_name = f"Big {start_item_name}"
-            self.item_counts[start_item_name] -= 1
-            start_item = self.create_item(start_item_name)
-            self.multiworld.get_location(castle_location_names.btn_p1_floor, self.player).place_locked_item(start_item)
+            self.multiworld.local_early_items[self.player][start_item_name] = 1
 
     def place_tots_locked_items(self):
         temple_events = {
@@ -411,8 +411,8 @@ class HammerwatchWorld(World):
 
             def get_region_item_locs(region: str):
                 # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
-                #     return [loc.name for loc in self.multiworld.get_region(region, self.player).locations
-                #             if not loc.event and loc.name not in temple_button_locations]
+                #     return [__loc.name for __loc in self.multiworld.get_region(region, self.player).locations
+                #             if not __loc.event and not __loc.item and __loc.name not in temple_button_locations]
                 # else:
                 return [__loc.name for __loc in self.multiworld.get_region(region, self.player).locations
                         if not __loc.event and not __loc.item]
@@ -481,11 +481,13 @@ class HammerwatchWorld(World):
     def generate_basic(self) -> None:
         # Shop cost setting validation, swap if max is higher than min
         if self.options.shop_cost_max.value < self.options.shop_cost_min.value:
+            logging.info(f"Maximum Shop Cost Percent is lower than the minimum for player {self.player}, swapping both")
             swap = self.options.shop_cost_max.value
             self.options.shop_cost_max.value = self.options.shop_cost_min.value
             self.options.shop_cost_min.value = swap
 
     def pre_fill(self) -> None:
+        # Fill keeps failing here and I can't think of a good way to fix it so here it will sit
         # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
         #     if get_campaign(self) == Campaign.Castle:
         #         button_locations = list(castle_button_locations.keys())
@@ -500,17 +502,21 @@ class HammerwatchWorld(World):
         #             continue
         #         for i in range(self.item_counts[item]):
         #             button_items.append(self.create_item(item))
+        #     exclude_items = {
+        #         item_name.ore
+        #     }
         #     non_button_prog_items = [item for item in self.world_itempool
-        #                             if item.classification & ItemClassification.progression]
+        #                              if item.classification & ItemClassification.progression
+        #                              and item.name not in button_item_names
+        #                              and item.name not in exclude_items]
         #     non_button_state = CollectionState(self.multiworld)
         #     for prog_item in non_button_prog_items:
         #         non_button_state.collect(prog_item)
         #     self.random.shuffle(valid_locs)
         #     self.random.shuffle(button_items)
         #     fill_restrictive(self.multiworld, non_button_state, valid_locs, button_items,
-        #                      True, False, True, None, False, False, "Button Shuffle")
+        #                      True, False, True, None, False, True, "Button Shuffle")
 
-        # Don't forget to uncomment this before pushing!!!
         # state = self.multiworld.get_all_state(False)
         # state.update_reachable_regions(self.player)
         # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
@@ -531,13 +537,6 @@ class HammerwatchWorld(World):
             spoiler_handle.write(f"\n\n{self.multiworld.get_player_name(self.player)}'s Shop Shuffle Locations:\n")
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop.shop_type.name} Shop")
-            # spoiler_handle.write(
-            # f"\n\n{self.multiworld.get_player_name(self.player)}'s Exit Randomization Connections:\n")
-            # for entry in self.exit_spoiler_info:
-            #     spoiler_handle.write(f"\n{entry}")
-
-    def extend_hint_information(self, hint_data: typing.Dict[int, typing.Dict[int, str]]):
-        pass
 
     def interpret_slot_data(self, slot_data: typing.Dict[str, typing.Any]):
         self.gate_types = slot_data["Gate Types"]
