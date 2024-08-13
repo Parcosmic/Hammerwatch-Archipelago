@@ -268,7 +268,7 @@ class ShopsanityTrapObfuscation(Choice):
     Imperfect: trap names/descriptions will mimic another item, but with subtle changes in letters/punctuation
     L33T: 7r4p n4m35/d35cr1p710n5 w1ll b3 1n 4ll l3375p34k
     OwO: twap names/descwiptions wiww be in aww owo
-    All Mystery: instead replaces ALL item names/descriptions with question marks, so everything is hidden!
+    All Mystery: instead hides ALL item names/descriptions, so none of the items will be known!
     """
     display_name = "Shady Shops"
     option_off = 0
@@ -333,7 +333,7 @@ class ExtraKeysPercent(Range):
 
 
 class OpenCastle(Toggle):
-    """(Castle only) Unlocks travel to/from all floors at the start of the game. Pairs well with Act Specific Keys!
+    """(Castle only) Unlocks travel to/from all acts at the start of the game. Pairs well with Act Specific Keys!
     """
     display_name = "Open Castle"
     default = False
