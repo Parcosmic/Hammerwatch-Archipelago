@@ -179,6 +179,10 @@ class HammerwatchWorld(World):
                     self.item_counts[item_name.key_gold_b1] = 0
                     self.item_counts[item_name.key_silver_b1] = 0
 
+        # If we're using UT we don't need to create any items
+        if is_using_universal_tracker(self):
+            return
+
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         # Remove progression items if the player starts with them
@@ -539,8 +543,8 @@ class HammerwatchWorld(World):
                 spoiler_handle.write(f"\n{loc}: {shop.shop_type.name} Shop")
 
     def interpret_slot_data(self, slot_data: typing.Dict[str, typing.Any]):
-        self.gate_types = slot_data["Gate Types"]
-        return {"Gate Types": slot_data["Gate Types"],
+        # self.gate_types = slot_data["Gate Types"]
+        return {"Gate Types": {int(gate_index): key_type for gate_index, key_type in slot_data["Gate Types"].items()},
                 "er_seed": slot_data["er_seed"],
                 "Random Locations": slot_data["Random Locations"],
                 "Shop Locations": slot_data["Shop Locations"]}

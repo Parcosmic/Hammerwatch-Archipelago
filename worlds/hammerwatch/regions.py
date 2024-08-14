@@ -4989,8 +4989,9 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     if world.options.gate_shuffle.value and gate_code is not None:
         # Special handling for Universal Tracker
         if hasattr(world.multiworld, "re_gen_passthrough"):
-            key_code = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"][gate_code]
-            key_item_name = key_code.capitalize() + " Key"
+            gate_types = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"]
+            key_code = gate_types[gate_names.gate_name_indices[gate_code]]
+            key_item_name = get_key_name(key_code).capitalize() + " Key"
             if world.options.key_mode.value == world.options.key_mode.option_act_specific:
                 key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
             elif world.options.key_mode.value == world.options.key_mode.option_floor_master:

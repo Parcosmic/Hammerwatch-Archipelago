@@ -122,6 +122,7 @@ class Buttonsanity(Choice):
     option_normal = 2
     alias_on = 2
     option_insanity = 3
+    alias_buttoninsanity = 3
     default = 0
 
 
