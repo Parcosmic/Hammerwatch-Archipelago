@@ -84,6 +84,7 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.p1_entrance_s,
         castle_location_names.p1_entrance_w,
     ],
+    castle_region_names.p1_nw_secret: None,
     castle_region_names.p1_s: [
         castle_location_names.p1_by_sw_bronze_gate_1,
         castle_location_names.p1_by_sw_bronze_gate_2,
@@ -2344,7 +2345,9 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_exit(world, used_names, castle_region_names.p1_e, castle_region_names.p2_start,
                  entrance_names.c_p2_0, entrance_names.c_p1_1)
     if world.options.shortcut_teleporter.value:
-        connect_exit(world, used_names, castle_region_names.p1_nw_left, castle_region_names.p3_portal_from_p1,
+        connect(world, used_names, castle_region_names.p1_nw_left, castle_region_names.p1_nw_secret,
+                True, hammer_item, hammer_item_count, False, hammer_item_count > 0)
+        connect_exit(world, used_names, castle_region_names.p1_nw_secret, castle_region_names.p3_portal_from_p1,
                      entrance_names.c_p3_portal, entrance_names.c_p1_20)
         connect(world, used_names, castle_region_names.p3_portal_from_p1, castle_region_names.p3_n_gold_gate,
                 False)
