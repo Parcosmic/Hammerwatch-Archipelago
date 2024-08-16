@@ -3182,13 +3182,15 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_exit(world, used_names, castle_region_names.c2_boss, castle_region_names.b4_start,
                  entrance_names.c_b4_0, entrance_names.c_c2_boss,
                  None, 0, False, rando_all_exits, True)
-    connect(world, used_names, castle_region_names.b4_start, castle_region_names.b4_defeated, False)
+    connect(world, used_names, castle_region_names.b4_start, castle_region_names.b4_defeated,
+            False, item_name.plank, 12, False,
+            get_goal_type(world) == GoalType.FullCompletion)
+    # Technically planks are consumed, but nothing else does so this is faster
 
     # The escape sequence rooms aren't randomized, it makes the escape goal too easy!
     connect(world, used_names, castle_region_names.b4_defeated, castle_region_names.e1_main,
             False, item_name.plank, 12, False,
-            get_goal_type(world) != GoalType.KillBosses)
-    # Technically planks are consumed, but nothing else does so this is faster
+            get_goal_type(world) == GoalType.PlankHunt)
     connect(world, used_names, castle_region_names.e1_main, castle_region_names.e2_main, False)
     connect(world, used_names, castle_region_names.e2_main, castle_region_names.e3_main, False)
     connect(world, used_names, castle_region_names.e3_main, castle_region_names.e4_main, False)
