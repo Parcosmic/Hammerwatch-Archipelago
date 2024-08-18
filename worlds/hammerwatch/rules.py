@@ -888,6 +888,11 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
             if entrance.items_consumed and entrance.pass_item in key_names:
                 entrance.downstream_count = 0
 
+    # For the castle campaign, vanilla keys, and randomize bonus keys off we need to manually set the rules
+    if (get_campaign(world) == Campaign.Castle and world.options.key_mode == world.options.key_mode.option_vanilla
+       and world.options.randomize_bonus_keys == world.options.randomize_bonus_keys.option_false):
+        get_entrance(world, castle_region_names.n2_start, castle_region_names.n2_m).downstream_count += 4
+
     # Re-add removed entrances and remove added ones
     for add in add_entrances:
         add.parent_region.exits.remove(add)
@@ -906,7 +911,8 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
             if exit_.pass_item not in door_counts.keys():
                 continue  # If the item isn't in door_counts then it's being excluded and we don't set logic
             needed_keys = door_counts[exit_.pass_item] - exit_.downstream_count
-            # print(f"{exit_.parent_region} -> {exit_.connected_region} - {exit_.pass_item}: {needed_keys}")
+            if exit_.pass_item == item_name.key_bonus:
+                print(f"{exit_.parent_region} -> {exit_.connected_region} - {exit_.pass_item}: {needed_keys}")
             add_rule(exit_, lambda state, this=exit_, num=needed_keys: state.has(this.pass_item, world.player, num), "and")
         else:  # Elsewise just set the item rule normally
             add_rule(exit_, lambda state, this=exit_: state.has(this.pass_item, world.player, this.item_count), "and")
@@ -949,3 +955,7 @@ def get_unique_entrance_id(entrance: HWEntrance):
     if entrance.connected_region == entrance.parent_region:
         return entrance.name
     return get_entrance_id(entrance)
+
+
+def get_entrance(world: "HammerwatchWorld", start_region: str, end_region: str) -> HWEntrance:
+    return world.multiworld.get_entrance(get_etr_name(start_region, end_region), world.player)

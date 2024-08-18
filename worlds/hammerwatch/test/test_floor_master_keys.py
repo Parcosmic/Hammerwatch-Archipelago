@@ -95,3 +95,18 @@ class TestTempleFloorMasterKeys(HammerwatchTestBase):
             option_names.gate_shuffle: options.GateShuffle.option_true
         })
         _test_no_useless_floor_master_keys(self)
+
+
+class TestCastleMasterBonusKeys(HammerwatchTestBase):
+    options = {
+        option_names.goal: options.Goal.option_castle_escape,
+        option_names.key_mode: options.KeyMode.option_floor_master,
+        option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_false,
+    }
+
+    def test_no_bonus_floor_master_keys_exist_in_pool(self):
+        self.world_setup()
+        for item in self.multiworld.itempool:
+            self.assertFalse(item.name.endswith("Master Bonus Key"),
+                             f"{item.name} exists in itempool when only bonus act keys should!")
+

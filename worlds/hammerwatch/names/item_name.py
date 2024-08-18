@@ -95,6 +95,11 @@ key_bronze_prison_2 = "Prison Floor 2 Master Bronze Key"
 key_bronze_prison_3 = "Prison Floor 3 Master Bronze Key"
 key_bronze_armory_1 = "Armory Floor 4 Master Bronze Key"
 
+key_bonus_prison_master = "Prison Master Bonus Key"
+key_bonus_armory_master = "Armory Master Bonus Key"
+key_bonus_archives_master = "Archives Master Bonus Key"
+key_bonus_chambers_master = "Chambers Master Bonus Key"
+
 key_silver_b1 = "Dune Sharks Arena Silver Key"
 key_silver_temple_1 = "Temple Floor 1 Master Silver Key"
 key_silver_temple_2 = "Temple Floor 2 Master Silver Key"
@@ -102,6 +107,19 @@ key_gold_b1 = "Dune Sharks Arena Gold Key"
 key_gold_temple_1 = "Temple Floor 1 Master Gold Key"
 key_gold_temple_2 = "Temple Floor 2 Master Gold Key"
 key_bonus_pof = "Pyramid of Fear Master Bonus Key"
+
+castle_act_bonus_keys = [
+    key_bonus_prison,
+    key_bonus_armory,
+    key_bonus_archives,
+    key_bonus_chambers,
+]
+castle_master_bonus_keys = [
+    key_bonus_prison_master,
+    key_bonus_armory_master,
+    key_bonus_archives_master,
+    key_bonus_chambers_master,
+]
 
 # Special Generation stuff
 secret = "Secret"

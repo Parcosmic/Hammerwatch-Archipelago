@@ -84,7 +84,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.p1_entrance_s,
         castle_location_names.p1_entrance_w,
     ],
-    castle_region_names.p1_nw_secret: None,
     castle_region_names.p1_s: [
         castle_location_names.p1_by_sw_bronze_gate_1,
         castle_location_names.p1_by_sw_bronze_gate_2,
@@ -2203,6 +2202,7 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
     ],
 }
 p3_portal_boss_rune_room_regions = {
+    castle_region_names.p1_nw_secret: None,
     castle_region_names.p3_portal_from_p1: [
         castle_location_names.p3_skip_boss_switch_1,
         castle_location_names.p3_skip_boss_switch_2,
@@ -2277,15 +2277,15 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         key_silver = [f"{castle_act_names[i//3]} Floor {i+1} Master Silver Key" for i in range(12)]
         key_gold = [f"{castle_act_names[i//3]} Floor {i+1} Master Gold Key" for i in range(12)]
         if world.options.randomize_bonus_keys == world.options.randomize_bonus_keys.option_true:
-            key_bonus = [f"{castle_act_names[b]} Master Bonus Key" for b in range(4)]
+            key_bonus = item_name.castle_master_bonus_keys
         else:
-            key_bonus = [f"{castle_act_names[b]} Bonus Key" for b in range(4)]
+            key_bonus = item_name.castle_act_bonus_keys
         gate_counts = [{key_bronze[i]: 999999999, key_silver[i]: 999999999, key_gold[i]: 999999999} for i in range(12)]
     elif world.options.key_mode.value == world.options.key_mode.option_act_specific:
         key_bronze = [f"{castle_act_names[i//3]} Bronze Key" for i in range(12)]
         key_silver = [f"{castle_act_names[i//3]} Silver Key" for i in range(12)]
         key_gold = [f"{castle_act_names[i//3]} Gold Key" for i in range(12)]
-        key_bonus = [f"{castle_act_names[b]} Bonus Key" for b in range(4)]
+        key_bonus = item_name.castle_act_bonus_keys
         gate_counts = [
             prison_gate_items,
             prison_gate_items,

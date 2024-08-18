@@ -128,7 +128,8 @@ castle_floor_master_keys: typing.Dict[str, ItemData] = {}
 castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Bronze Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
 castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Silver Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
 castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Gold Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
-castle_floor_master_keys.update({f"{castle_act_names[k]} Master Bonus Key": ItemData(counter.count(), ItemClassification.progression) for k in range(4)})
+castle_floor_master_keys.update({b_key: ItemData(counter.count(), ItemClassification.progression)
+                                 for b_key in item_name.castle_master_bonus_keys})
 
 temple_floor_master_keys: typing.Dict[str, ItemData] = {
     item_name.key_silver_b1: ItemData(counter.count(), ItemClassification.progression),
