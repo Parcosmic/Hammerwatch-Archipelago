@@ -70,3 +70,24 @@ the argument. The current commands are:
 /flag <flag_name\> [true/false]: sets the value of the given flag, with only 1 argument returns the value of the flag instead
 
 /deathlink: toggles deathlink on/off
+
+## How many checks does each option add?
+
+| Option                   | Castle    | Temple     |
+|--------------------------|-----------|------------|
+| Base                     | ~375      | ~190       |
+| Bonus Chests             | 227       | 75         |
+| Bonus Keys               | 18        | 2          |
+| Randomize Peg Puzzles*   | 7 puzzles | 10 puzzles |
+| Randomize Secrets        | 0         | 20         |
+| Randomize Enemy Loot     | ~54       | ~39        |
+| Randomize Recovery Items | 452       | 105        |
+| Buttonsanity*            | 170       | 67         |
+| Buttoninsanity*          | 301       | 102        |
+| Shopsanity               | 70-77     | "          |
+
+*Some notes:
+
+The Randomize Peg Puzzles option adds 0-4 locations per puzzle, with an average of around 2 per puzzle
+
+The Buttonsanity rows in the table include peg puzzle buttons, which aren't randomized if Randomize Peg Puzzles is off
