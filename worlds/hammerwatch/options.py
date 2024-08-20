@@ -723,6 +723,7 @@ option_groups = [
         PanFragments,
         LeverFragments,
         PickaxeFragments,
+        HammerFragments,
         TrapItemPercentage,
         TrapItemWeights,
     ]),
