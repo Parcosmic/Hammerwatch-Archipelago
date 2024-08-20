@@ -446,12 +446,12 @@ item_table: typing.Dict[str, ItemData] = {
     **shop_table,
 }
 
-stat_upgrade_items: typing.List[str] = [
+stat_upgrade_items: typing.Tuple[str, str, str, str] = (
     item_name.stat_upgrade_damage,
     item_name.stat_upgrade_defense,
     item_name.stat_upgrade_health,
     item_name.stat_upgrade_mana,
-]
+)
 
 trap_items: typing.List[str] = list(trap_table.keys())
 
@@ -463,26 +463,6 @@ key_table: typing.Dict[str, typing.Tuple[str, int]] = {
     item_name.key_bronze_big_armory: (item_name.key_bronze_armory, big_key_amount),
     item_name.key_bronze_big_archives: (item_name.key_bronze_archives, big_key_amount),
     item_name.key_bronze_big_chambers: (item_name.key_bronze_chambers, big_key_amount),
-
-    item_name.key_bronze_prison: (item_name.key_bronze, 1),
-    item_name.key_bronze_armory: (item_name.key_bronze, 1),
-    item_name.key_bronze_archives: (item_name.key_bronze, 1),
-    item_name.key_bronze_chambers: (item_name.key_bronze, 1),
-
-    item_name.key_silver_prison: (item_name.key_silver, 1),
-    item_name.key_silver_armory: (item_name.key_silver, 1),
-    item_name.key_silver_archives: (item_name.key_silver, 1),
-    item_name.key_silver_chambers: (item_name.key_silver, 1),
-
-    item_name.key_gold_prison: (item_name.key_gold, 1),
-    item_name.key_gold_armory: (item_name.key_gold, 1),
-    item_name.key_gold_archives: (item_name.key_gold, 1),
-    item_name.key_gold_chambers: (item_name.key_gold, 1),
-
-    item_name.key_bonus_prison: (item_name.key_bonus, 1),
-    item_name.key_bonus_armory: (item_name.key_bonus, 1),
-    item_name.key_bonus_archives: (item_name.key_bonus, 1),
-    item_name.key_bonus_chambers: (item_name.key_bonus, 1),
 }
 
 castle_item_counts: typing.Dict[str, int] = {
@@ -817,7 +797,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         extra_items -= item_counts_table.pop(item_name.plank)
 
     # Extra keys
-    all_key_names = {
+    all_key_names = (
         item_name.key_bronze,
         item_name.key_silver,
         item_name.key_gold,
@@ -839,7 +819,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         item_name.key_bonus_armory,
         item_name.key_bonus_archives,
         item_name.key_bonus_chambers,
-    }
+    )
     active_keys = get_active_key_names(world)
     for key in all_key_names:
         if key in item_counts_table.keys() and key not in active_keys:
@@ -850,12 +830,12 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
 
     if world.options.key_mode.value != world.options.key_mode.option_floor_master:
         # Get the active keys, and don't add bronze keys, bonus keys, or rune keys those don't get extra for now
-        key_names = {key_name for key_name in active_keys
-                     if "Bronze" not in key_name and "Bonus" not in key_name and key_name != item_name.key_teleport}
         extra_key_percent = world.options.extra_keys_percent.value / 100
-        for key in key_names:
-            extra_keys = int(item_counts_table[key] * extra_key_percent)
-            item_counts_table[key] += extra_keys
+        for key_name in active_keys:
+            if "Bronze" in key_name or "Bonus" in key_name or key_name == item_name.key_teleport:
+                continue
+            extra_keys = int(item_counts_table[key_name] * extra_key_percent)
+            item_counts_table[key_name] += extra_keys
             extra_items += extra_keys
         if get_campaign(world) == Campaign.Temple:
             extra_mirrors = int(item_counts_table[item_name.mirror] * extra_key_percent)
@@ -865,13 +845,14 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         # Consolidate bronze keys
         big_bronze_key_percent = world.options.big_bronze_key_percent.value / 100
         if campaign == Campaign.Castle and big_bronze_key_percent > 0:
-            bronze_key_names = [key for key in active_keys if "Bronze" in key]
-            for bronze_key in bronze_key_names:
-                big_name = "Big " + bronze_key
-                big_keys = int(item_counts_table[bronze_key] * big_bronze_key_percent / key_table[big_name][1])
+            for key_name in active_keys:
+                if "Bronze" not in key_name:
+                    continue
+                big_name = "Big " + key_name
+                big_keys = int(item_counts_table[key_name] * big_bronze_key_percent / key_table[big_name][1])
                 if big_keys > 0:
                     item_counts_table[big_name] = big_keys
-                    item_counts_table[bronze_key] -= big_keys * key_table[big_name][1]
+                    item_counts_table[key_name] -= big_keys * key_table[big_name][1]
                     extra_items -= big_keys * key_table[big_name][1] - big_keys
 
     # Bonus check behavior - None
@@ -942,12 +923,12 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
 
     # Enemy loot
     if world.options.randomize_enemy_loot.value:
-        miniboss_stat_upgrade_chances = [
+        miniboss_stat_upgrade_chances = (
             (0.3, item_name.stat_upgrade_health),
             (0.3, item_name.stat_upgrade_mana),
             (0.3, item_name.stat_upgrade_damage),
             (0.1, item_name.stat_upgrade_defense),
-        ]
+        )
         miniboss_upgrades = item_counts_table.pop(item_name.miniboss_stat_upgrade)
         for i in range(miniboss_upgrades):
             item = roll_for_item(world, miniboss_stat_upgrade_chances)
@@ -995,7 +976,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     return item_counts_table, extra_items
 
 
-def roll_for_item(world, loot_chances: typing.List[typing.Tuple[float, str]]):
+def roll_for_item(world, loot_chances: typing.Iterable[typing.Tuple[float, str]]):
     rnd = world.random.random()
     for item in loot_chances:
         rnd -= item[0]

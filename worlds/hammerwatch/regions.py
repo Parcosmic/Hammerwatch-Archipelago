@@ -2365,10 +2365,10 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                  key_silver[1], gate_codes, gate_counts[1], gate_names.c_p2_5, True)
     if buttonsanity:
         p2_shortcut = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n, True)
-        p2_shortcut_items = [
+        p2_shortcut_items = (
             item_name.btnc_p2_shortcut_n,
             item_name.btnc_p2_shortcut_s,
-        ]
+        )
         add_rule(p2_shortcut, lambda state: state.has_all(p2_shortcut_items, world.player))
     connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False,
             item_name.btnc_p2_spike_puzzle_r, 1, False, buttonsanity)
@@ -2495,7 +2495,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                 item_name.btnc_p3_boss_door, 1, False)
     else:
         connect_all(world, used_names, castle_region_names.p3_sw, castle_region_names.p3_boss, True,
-                    [item_name.btnc_b1_rune_1, item_name.btnc_b1_rune_2, item_name.btnc_b1_rune_3],
+                    (item_name.btnc_b1_rune_1, item_name.btnc_b1_rune_2, item_name.btnc_b1_rune_3),
                     True)
     connect_exit(world, used_names, castle_region_names.p3_boss, castle_region_names.b1_start,
                  entrance_names.c_b1_0, entrance_names.c_p3_boss, None, 0, False,
@@ -2512,7 +2512,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_unlock, False,
             item_name.btnc_n1_cache_ne, 1, False, buttonsanity)
     connect_or(world, used_names, castle_region_names.n1_room3, castle_region_names.n1_room3_hall, False,
-               [item_name.btnc_n1_hall_top, item_name.btnc_n1_hall_bottom], buttonsanity)
+               (item_name.btnc_n1_hall_top, item_name.btnc_n1_hall_bottom), buttonsanity)
     connect_gate(world, used_names, castle_region_names.n1_room3_hall, castle_region_names.n1_room4, key_bonus[0])
     connect_gate(world, used_names, castle_region_names.n1_room4, castle_region_names.n1_exit, key_bonus[0])
     connect_exit(world, used_names, castle_region_names.n1_exit, castle_region_names.p3_bonus_return,
@@ -2546,7 +2546,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                 item_name.btnc_a1_boss_door, 1, False)
     else:
         connect_all(world, used_names, castle_region_names.a1_start, castle_region_names.a1_boss, True,
-                    [item_name.btnc_b2_rune_1, item_name.btnc_b2_rune_2, item_name.btnc_b2_rune_3],
+                    (item_name.btnc_b2_rune_1, item_name.btnc_b2_rune_2, item_name.btnc_b2_rune_3),
                     True)
     connect_exit(world, used_names, castle_region_names.a1_boss, castle_region_names.b2_start,
                  entrance_names.c_b2_0, entrance_names.c_a1_boss, None, 0, False,
@@ -2686,7 +2686,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
 
     # Armory Floor 6
     connect_or(world, used_names, castle_region_names.a3_start, castle_region_names.a3_main, True,
-               [item_name.btnc_a3_open_start_n, item_name.btnc_a3_open_start_e], buttonsanity)
+               (item_name.btnc_a3_open_start_n, item_name.btnc_a3_open_start_e), buttonsanity)
     connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_puzzle_reward, False,
             item_name.btnc_a3_open_knife, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.a3_main, castle_region_names.a3_knife_reward_2, False,
@@ -2815,13 +2815,13 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                  key_gold[7], gate_codes, gate_counts[7], gate_names.c_r2_4, False)
     if buttonsanity:
         connect_or(world, used_names, castle_region_names.r2_m, castle_region_names.r2_e, False,
-                   [item_name.btnc_r2_open_fire_t, item_name.btnc_r2_open_fire_b], True)
+                   (item_name.btnc_r2_open_fire_t, item_name.btnc_r2_open_fire_b), True)
         connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_n, False,
                 item_name.btnc_r2_open_bs_r, 1, False)
         connect(world, used_names, castle_region_names.r2_m, castle_region_names.r2_spike_island, True,
                 item_name.btnc_r2_open_spikes_t, 1, False)
         connect_or(world, used_names, castle_region_names.r2_m, castle_region_names.r2_s, False,
-                   [item_name.btnc_r2_open_s_r, item_name.btnc_r2_open_s_l], True)
+                   (item_name.btnc_r2_open_s_r, item_name.btnc_r2_open_s_l), True)
         connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_sw_bridge, False,
                 item_name.btnc_r2_light_bridge, 1, False)
         connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_puzzle_room, False,
@@ -2857,9 +2857,9 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
 
     # Archives Floor 9
     connect_or(world, used_names, castle_region_names.r3_main, castle_region_names.r3_ne_room, False,
-               [item_name.btnc_r3_open_ne_l, item_name.btnc_r3_open_ne_t], buttonsanity)
+               (item_name.btnc_r3_open_ne_l, item_name.btnc_r3_open_ne_t), buttonsanity)
     connect_or(world, used_names, castle_region_names.r3_main, castle_region_names.r3_s_room, False,
-               [item_name.btnc_r3_open_s_r, item_name.btnc_r3_open_s_t], buttonsanity)
+               (item_name.btnc_r3_open_s_r, item_name.btnc_r3_open_s_t), buttonsanity)
     connect_gate(world, used_names, castle_region_names.r3_s_room, castle_region_names.r3_l_shop_sgate,
                  key_silver[8], gate_codes, gate_counts[8], gate_names.c_r3_5, False)
     connect_gate(world, used_names, castle_region_names.r3_s_room, castle_region_names.r3_r_shop_sgate,
@@ -2944,7 +2944,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                 item_name.btnc_r3_boss_door, 1, False)
     else:
         connect_all(world, used_names, castle_region_names.r3_exit, castle_region_names.r3_boss, True,
-                    [item_name.btnc_b3_rune_1, item_name.btnc_b3_rune_2, item_name.btnc_b3_rune_3],
+                    (item_name.btnc_b3_rune_1, item_name.btnc_b3_rune_2, item_name.btnc_b3_rune_3),
                     True)
     connect_exit(world, used_names, castle_region_names.r3_boss, castle_region_names.b3_start,
                  entrance_names.c_b3_0, entrance_names.c_r3_boss, None, 0, False,
@@ -3175,8 +3175,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
 
     connect_all(world, used_names, castle_region_names.c2_main, castle_region_names.c2_boss, rando_all_exits,
-                    [item_name.btnc_b4_rune_1, item_name.btnc_b4_rune_2, item_name.btnc_b4_rune_3],
-                    True)
+                (item_name.btnc_b4_rune_1, item_name.btnc_b4_rune_2, item_name.btnc_b4_rune_3), True)
 
     # Boss 4
     connect_exit(world, used_names, castle_region_names.c2_boss, castle_region_names.b4_start,
@@ -4331,7 +4330,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.c3_main_secrets, temple_region_names.c3_puzzle, False,
             item_name.btn_c3_puzzle, 1, False, buttonsanity)
     connect_or(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, True,
-               [item_name.btn_c3_e_bridge, item_name.btn_c2_pumps], True)
+               (item_name.btn_c3_e_bridge, item_name.btn_c2_pumps), True)
     connect(world, used_names, temple_region_names.c3_e, temple_region_names.c3_e_guard_secret,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False,
@@ -4361,7 +4360,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.btn_c2_green, 1, False, buttonsanity)
     if buttonsanity:
         connect_or(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_sw, False,
-                   [item_name.btn_c2_green, item_name.btn_c2_s_bridge], True)
+                   (item_name.btn_c2_green, item_name.btn_c2_s_bridge), True)
         connect(world, used_names, temple_region_names.c2_sw, temple_region_names.cave_2_main,
                 False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
         connect(world, used_names, temple_region_names.c2_sw, temple_region_names.c2_double_bridge, True,
@@ -4938,7 +4937,7 @@ def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
 
 
 def connect_all(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
-                pass_items: typing.List[str], use_rule: bool):
+                pass_items: typing.Iterable[str], use_rule: bool):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -4953,13 +4952,13 @@ def connect_all(world: "HammerwatchWorld", used_names: typing.Dict[str, int], so
     connection.connect(target_region)
 
     if two_way:
-        connect_or(world, used_names, target, source, False, pass_items, use_rule)
+        connect_all(world, used_names, target, source, False, pass_items, use_rule)
 
     return connection
 
 
 def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
-               pass_items: typing.List[str], use_rule: bool):
+               pass_items: typing.Iterable[str], use_rule: bool):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -5070,11 +5069,6 @@ def get_shop_region_name(world: "HammerwatchWorld", shop_loc_name: str):
 
 def connect_shop(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, shop_loc: str):
     connect(world, used_names, source, get_shop_region_name(world, shop_loc), False)
-
-
-def connect_from_data(world: "HammerwatchWorld", data: HWExitData):
-    connect(world, {}, data.parent, data.target, False,
-            data.pass_item, data.item_count, data.items_consumed)
 
 
 def get_etr_name(source: str, target: str):

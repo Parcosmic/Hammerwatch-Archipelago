@@ -94,11 +94,11 @@ class HammerwatchWorld(World):
             self.options.key_mode.value = self.options.key_mode.option_vanilla
 
         # Validate game modifiers
-        exclusive_mod_groups = [[option_names.mod_no_extra_lives, option_names.mod_infinite_lives,
-                                 option_names.mod_double_lives],
-                                [option_names.mod_1_hp, option_names.mod_no_hp_pickups],
-                                [option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen],
-                                [option_names.mod_no_mana_regen, option_names.mod_5x_mana_regen]]
+        exclusive_mod_groups = ((option_names.mod_no_extra_lives, option_names.mod_infinite_lives,
+                                 option_names.mod_double_lives),
+                                (option_names.mod_1_hp, option_names.mod_no_hp_pickups),
+                                (option_names.mod_1_hp, option_names.mod_reverse_hp_regen, option_names.mod_hp_regen),
+                                (option_names.mod_no_mana_regen, option_names.mod_5x_mana_regen))
         exclude_mods = []
         for mod, value in self.options.game_modifiers.value.items():
             if value:
@@ -242,28 +242,6 @@ class HammerwatchWorld(World):
 
         self.multiworld.itempool += self.world_itempool
 
-    def collect(self, state: CollectionState, item: Item) -> bool:
-        prog = super(HammerwatchWorld, self).collect(state, item)
-        spaces = item.name.count(" ")
-        if item.name.endswith("Key") and spaces > 1 and item.name in key_table:
-            add_name = key_table[item.name][0]
-            count = key_table[item.name][1]
-            state.prog_items[self.player][add_name] += count
-            if item.name.startswith("Big") and spaces == 3:
-                state.prog_items[self.player][key_table[add_name][0]] += count * key_table[add_name][1]
-        return prog
-
-    def remove(self, state: CollectionState, item: Item) -> bool:
-        prog = super(HammerwatchWorld, self).remove(state, item)
-        spaces = item.name.count(" ")
-        if item.name.endswith("Key") and spaces > 1 and item.name in key_table:
-            add_name = key_table[item.name][0]
-            count = key_table[item.name][1]
-            state.prog_items[self.player][add_name] -= count
-            if item.name.startswith("Big") and spaces == 3:
-                state.prog_items[self.player][key_table[add_name][0]] -= count * key_table[add_name][1]
-        return prog
-
     def get_filler_item_name(self) -> str:
         return self.random.choice(tuple(filler_items))
 
@@ -293,34 +271,34 @@ class HammerwatchWorld(World):
 
         # Bonus Key Locations
         if not self.options.randomize_bonus_keys.value:
-            act_bonus_key_locs = [
-                [
+            act_bonus_key_locs = (
+                (
                     castle_location_names.n1_room1,
                     castle_location_names.n1_room3_sealed_room_1,
                     castle_location_names.n1_room2_small_box,
                     castle_location_names.n1_entrance,
                     castle_location_names.n1_room4_m,
-                ],
-                [
+                ),
+                (
                     castle_location_names.n2_m_n,
                     castle_location_names.n2_m_m_3,
                     castle_location_names.n2_ne_4,
                     castle_location_names.n2_m_e,
                     castle_location_names.n2_start_1,
                     castle_location_names.n2_m_se_5,
-                ],
-                [
+                ),
+                (
                     castle_location_names.n3_exit_sw,
                     castle_location_names.n3_m_cluster_5,
                     castle_location_names.n3_se_cluster_5,
-                ],
-                [
+                ),
+                (
                     castle_location_names.n4_ne,
                     castle_location_names.n4_by_w_room_1,
                     castle_location_names.n4_by_w_room_2,
                     castle_location_names.n4_by_exit,
-                ]
-            ]
+                )
+            )
             if self.options.key_mode == self.options.key_mode.option_vanilla:
                 bonus_key_locs = [
                     *act_bonus_key_locs[0],
@@ -332,12 +310,12 @@ class HammerwatchWorld(World):
                     loc = self.multiworld.get_location(loc_name, self.player)
                     loc.place_locked_item(self.create_item(item_name.key_bonus))
             else:
-                bonus_key_names = [
+                bonus_key_names = (
                     item_name.key_bonus_prison,
                     item_name.key_bonus_armory,
                     item_name.key_bonus_archives,
                     item_name.key_bonus_chambers,
-                ]
+                )
                 for k in range(len(bonus_key_names)):
                     for loc_name in act_bonus_key_locs[k]:
                         loc = self.multiworld.get_location(loc_name, self.player)
@@ -349,7 +327,7 @@ class HammerwatchWorld(World):
             start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
             start_gate = self.multiworld.get_entrance(start_gate_name, self.player)
             assert isinstance(start_gate, HWEntrance)
-            start_item_name = self.random.choice([start_gate.pass_item, item_name.btnc_p1_floor])
+            start_item_name = self.random.choice((start_gate.pass_item, item_name.btnc_p1_floor))
             if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
                 if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
                     start_item_name = f"Big {start_item_name}"
@@ -402,10 +380,10 @@ class HammerwatchWorld(World):
 
         # Pyramid of Fear Bonus Keys
         if not self.options.randomize_bonus_keys.value:
-            temple_bonus_keys = [
+            temple_bonus_keys = (
                 temple_location_names.pof_1_n_5,
                 temple_location_names.pof_1_ent_5,
-            ]
+            )
             for loc in temple_bonus_keys:
                 self.multiworld.get_location(loc, self.player).place_locked_item(self.create_item(item_name.key_bonus))
 

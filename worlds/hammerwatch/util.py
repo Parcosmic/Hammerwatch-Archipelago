@@ -8,12 +8,12 @@ if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
-castle_act_names = [
+castle_act_names = (
     "Prison",
     "Armory",
     "Archives",
     "Chambers",
-]
+)
 
 
 class Campaign(Enum):
