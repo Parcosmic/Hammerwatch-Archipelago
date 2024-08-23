@@ -13,7 +13,7 @@ from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopT
                    is_using_universal_tracker)
 from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
 
-from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
+from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
 # from Utils import visualize_regions
 from Fill import fill_restrictive
@@ -513,6 +513,51 @@ class HammerwatchWorld(World):
             trap_item: Item = self.random.choice(trap_pool)
             self.multiworld.itempool.remove(trap_item)
             button_loc.place_locked_item(trap_item)
+
+    @classmethod
+    def stage_post_fill(cls, multiworld: MultiWorld):
+        # If buttonsanity is on for a given Hammerwatch world swap shop upgrades so the base upgrade is always first
+        world_shopsanity_items: typing.Dict[int, typing.Dict[str, typing.Optional[typing.Tuple]]] = {}
+        for world in multiworld.get_game_worlds("Hammerwatch"):
+            assert isinstance(world, HammerwatchWorld)
+            if len(get_shopsanity_classes(world)):
+                world_shopsanity_items[world.player] = {}
+
+        if len(world_shopsanity_items) == 0:
+            return
+
+        spheres = multiworld.get_spheres()
+        for sphere_num, sphere in enumerate(spheres, 0):
+            for loc in sphere:
+                if loc.game != "Hammerwatch":  # or loc.player not in world_shopsanity_items:
+                    continue
+                loc_item = loc.item
+                # Is this a shopsanity item that has a prerequisite or is it a root upgrade?
+                if loc_item.name in item_name.shop_upgrade_prereqs:
+                    item_prereq = item_name.shop_upgrade_prereqs[loc_item.name]
+                    if item_prereq in world_shopsanity_items[loc_item.player]:
+                        continue
+                    world_shopsanity_items[loc_item.player][item_prereq] = (sphere_num, loc_item)
+                elif loc_item.name in item_name.shop_upgrade_roots:
+                    # If an upgrade was found earlier swap it with the base upgrade
+                    if loc_item.name in world_shopsanity_items[loc_item.player]:
+                        swap_data = world_shopsanity_items[loc_item.player][loc_item.name]
+                        if swap_data is None:  # Should never happen but here just in case
+                            continue
+                        swap_sphere = swap_data[0]
+                        # If the swap item and our base upgrade are located in the same sphere we don't need to swap
+                        if swap_sphere == sphere_num:
+                            continue
+                        swap_item = swap_data[1]
+                        swap_loc = swap_item.location
+                        swap_loc.item = None
+                        root_loc = loc_item.location
+                        swap_loc.place_locked_item(loc_item)
+                        root_loc.item = swap_item
+                        swap_item.location = root_loc
+                    else:
+                        # This is the first item we found and it's already first
+                        world_shopsanity_items[loc_item.player][loc_item.name] = None
 
     def write_spoiler(self, spoiler_handle) -> None:
         if self.options.shop_shuffle.value:
