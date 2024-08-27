@@ -4661,8 +4661,8 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.btn_t3_fall_3, 1, False, buttonsanity)
 
     connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.pof_1_main,
-                     entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
-                     item_name.btn_pof, 6, False, False)
+                 entrance_names.t_n1_1_start, entrance_names.t_hub_pof,
+                 item_name.btn_pof, 6, False, False)
     connect_exit(world, used_names, temple_region_names.pof_1_main, temple_region_names.hub_main,
                  entrance_names.t_hub_pof, entrance_names.t_n1_1_start, None, 1, False, False)
     # Going back to the hub has no entrance requirements
@@ -4863,6 +4863,8 @@ def connect_shops(world: "HammerwatchWorld"):
         misc_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_misc].shop_type]
         off_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_off].shop_type]
         def_regions = shop_region_names.shop_regions[world.shop_locations[temple_location_names.shop_def].shop_type]
+
+        connect(world, used_names, temple_region_names.menu, shop_region_names.shop_regions[ShopType.Powerup][0], False)
 
         # The first combo shop is already unlocked so we can access it from the start
         connect(world, used_names, temple_region_names.menu, combo_regions[0], False)
