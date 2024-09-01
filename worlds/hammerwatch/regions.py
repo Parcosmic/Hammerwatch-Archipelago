@@ -2499,7 +2499,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                     True)
     connect_exit(world, used_names, castle_region_names.p3_boss, castle_region_names.b1_start,
                  entrance_names.c_b1_0, entrance_names.c_p3_boss, None, 0, False,
-                 rando_all_exits, True)
+                 rando_all_exits, rando_all_exits)
 
     # Prison Bonus
     connect_gate(world, used_names, castle_region_names.n1_start, castle_region_names.n1_room1, key_bonus[0])
@@ -2550,7 +2550,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                     True)
     connect_exit(world, used_names, castle_region_names.a1_boss, castle_region_names.b2_start,
                  entrance_names.c_b2_0, entrance_names.c_a1_boss, None, 0, False,
-                 rando_all_exits, True)
+                 rando_all_exits, rando_all_exits)
     connect_gate(world, used_names, castle_region_names.a1_se, castle_region_names.a1_e,
                  key_silver[3], gate_codes, gate_counts[3], gate_names.c_a1_6, True)
     connect_gate(world, used_names, castle_region_names.a1_e, castle_region_names.a1_e_sw_bgate,
@@ -2948,7 +2948,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                     True)
     connect_exit(world, used_names, castle_region_names.r3_boss, castle_region_names.b3_start,
                  entrance_names.c_b3_0, entrance_names.c_r3_boss, None, 0, False,
-                 rando_all_exits, True)
+                 rando_all_exits, rando_all_exits)
 
     # Archives Bonus
     connect_exit(world, used_names, castle_region_names.n3_main, castle_region_names.n3_tp_room,
@@ -3180,7 +3180,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     # Boss 4
     connect_exit(world, used_names, castle_region_names.c2_boss, castle_region_names.b4_start,
                  entrance_names.c_b4_0, entrance_names.c_c2_boss,
-                 None, 0, False, rando_all_exits, True)
+                 None, 0, False, rando_all_exits, rando_all_exits)
     connect(world, used_names, castle_region_names.b4_start, castle_region_names.b4_defeated,
             False, item_name.plank, 12, False,
             get_goal_type(world) == GoalType.FullCompletion)
@@ -4421,7 +4421,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.cave_1_pumps, temple_region_names.c1_storage_island, False)
     connect_exit(world, used_names, temple_region_names.c1_storage_island, temple_region_names.boss2_main,
                  entrance_names.t_b2, entrance_names.t_c3_boss, None, 1, False,
-                 rando_all_exits, True)
+                 rando_all_exits, rando_all_exits)
     # Technically a level exit, but we need to be able to go to the defeated room from anywhere rip
     connect(world, used_names, temple_region_names.boss2_main, temple_region_names.boss2_defeated, False)
 
@@ -4429,15 +4429,15 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
         if world.options.portal_accessibility.value:
             connect_exit(world, used_names, temple_region_names.cave_1_red_bridge,
                          temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
-                         None, 1, False, True, True)
+                         None, 1, False, True, rando_all_exits)
         else:
             connect_exit(world, used_names, temple_region_names.cave_1_red_bridge,
                          temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
-                         item_name.key_teleport, 1, True, True, True)
+                         item_name.key_teleport, 1, True, True, rando_all_exits)
     else:
         connect_exit(world, used_names, temple_region_names.cave_1_red_bridge,
                      temple_region_names.boss_1_entrance, entrance_names.t_b1_start, entrance_names.t_c3_end,
-                     item_name.key_teleport, 3, False, True, True)
+                     item_name.key_teleport, 3, False, True, rando_all_exits)
 
     connect(world, used_names, temple_region_names.boss_1_entrance, temple_region_names.boss_1_arena,
             True)  # We shouldn't include boss teleporters in ER, it's kinda mean lol
@@ -4709,7 +4709,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
 
     connect_exit(world, used_names, temple_region_names.hub_main, temple_region_names.b3_main,
                  entrance_names.t_b3, entrance_names.t_hub_b3,
-                 item_name.ev_solar_node, 6, False, rando_all_exits, True)
+                 item_name.ev_solar_node, 6, False, rando_all_exits, rando_all_exits)
     connect(world, used_names, temple_region_names.b3_main, temple_region_names.b3_platform_1, False)
     connect(world, used_names, temple_region_names.b3_platform_1, temple_region_names.b3_platform_2, False)
     connect(world, used_names, temple_region_names.b3_platform_2, temple_region_names.b3_platform_3, False)
@@ -5036,7 +5036,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
 
 def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str,
                  exit_code: str, return_code: str = None, pass_item: str = None, item_count=1, items_consumed=True,
-                 two_way=True, boss_exit=False):
+                 two_way=True, randomize_exit=True):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -5047,10 +5047,7 @@ def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     source_region.exits.append(connection)
 
     connect_regions = False
-    if world.options.exit_randomization.value == world.options.exit_randomization.option_off:
-        connect_regions = True
-    elif world.options.exit_randomization.value == world.options.exit_randomization.option_no_boss_exits and boss_exit:
-        two_way = False  # We don't need the return entrance as the boss rooms are always one-way
+    if world.options.exit_randomization.value == world.options.exit_randomization.option_off or not randomize_exit:
         connect_regions = True
 
     if connect_regions:
@@ -5061,7 +5058,7 @@ def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
 
     if two_way and return_code is not None:
         connect_exit(world, used_names, target, source, return_code, exit_code, pass_item, item_count,
-                     items_consumed, False, boss_exit)
+                     items_consumed, False, randomize_exit)
 
 
 def get_shop_region_name(world: "HammerwatchWorld", shop_loc_name: str):
