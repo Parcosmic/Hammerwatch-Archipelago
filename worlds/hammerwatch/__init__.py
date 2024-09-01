@@ -15,7 +15,7 @@ from .options import HammerwatchOptions, client_required_options, option_groups,
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
-# from Utils import visualize_regions
+from Utils import visualize_regions
 from Fill import fill_restrictive
 
 

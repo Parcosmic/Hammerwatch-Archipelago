@@ -460,18 +460,18 @@ c_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceBlockType, ty
     entrance_names.c_p3_b_return: (1, EntranceBlockType.OneWay, None),  # Leads to 10, b_ent, 1
     entrance_names.c_p3_portal: (1, EntranceBlockType.Unblocked, None),
     entrance_names.c_p3_b_ent: (1, EntranceBlockType.Unblocked, None),
-    entrance_names.c_p3_boss: (1, EntranceBlockType.Unblocked, None),
+    entrance_names.c_p3_boss: (1, EntranceBlockType.Blocked, None),  # Blocked by the boss gate
     entrance_names.c_n1_0: (1, EntranceBlockType.Unblocked, None),
     entrance_names.c_b1_0: (2, EntranceBlockType.Unblocked,
                             [castle_region_names.p1_from_p3_n, castle_region_names.p2_s,
                              castle_region_names.p3_s_gold_gate]),
-    entrance_names.c_b1_1: (2, EntranceBlockType.DeadEnd, None),
+    entrance_names.c_b1_1: (2, EntranceBlockType.DeadEnd, [castle_region_names.b1_defeated]),
     # Technically blocked, but after the wall opens can't move on
     entrance_names.c_a1_0: (2, EntranceBlockType.Unblocked, None),
     entrance_names.c_a1_1: (2, EntranceBlockType.DeadEnd, None),
     entrance_names.c_a1_a2: (2, EntranceBlockType.Unblocked, None),
     entrance_names.c_a1_a3: (2, EntranceBlockType.Unblocked, None),
-    entrance_names.c_a1_boss: (2, EntranceBlockType.Unblocked, None),
+    entrance_names.c_a1_boss: (2, EntranceBlockType.Blocked, None),  # Blocked by the boss gate
     entrance_names.c_a2_0: (2, EntranceBlockType.Unblocked, None),
     entrance_names.c_a2_1: (2, EntranceBlockType.Unblocked, None),
     entrance_names.c_a2_2: (2, EntranceBlockType.Blocked, None),  # Need to push button to open walls
@@ -484,7 +484,7 @@ c_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceBlockType, ty
     entrance_names.c_n2_0: (2, EntranceBlockType.Unblocked, None),
     entrance_names.c_b2_0: (3, EntranceBlockType.Unblocked,
                             [castle_region_names.a1_w, castle_region_names.a2_ne, castle_region_names.a3_main]),
-    entrance_names.c_b2_1: (3, EntranceBlockType.DeadEnd, None),
+    entrance_names.c_b2_1: (3, EntranceBlockType.DeadEnd, [castle_region_names.b2_defeated]),
     entrance_names.c_r1_0: (3, EntranceBlockType.Unblocked, None),
     entrance_names.c_r1_1: (3, EntranceBlockType.Unblocked, None),
     entrance_names.c_r1_2: (3, EntranceBlockType.Blocked, None),
@@ -494,7 +494,7 @@ c_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceBlockType, ty
     entrance_names.c_r2_200: (3, EntranceBlockType.DeadEnd, None),  # Not a dead end if you aren't a coward :)
     entrance_names.c_r3_0: (3, EntranceBlockType.Unblocked, None),
     entrance_names.c_r3_b_return: (3, EntranceBlockType.OneWay, None),
-    entrance_names.c_r3_boss: (3, EntranceBlockType.Blocked, None),  # Need to open wall
+    entrance_names.c_r3_boss: (3, EntranceBlockType.Blocked, [castle_region_names.b3_defeated]),  # Need to open wall and boss gate
     entrance_names.c_r3_b_ent: (3, EntranceBlockType.Blocked, None),
     entrance_names.c_r3_250: (3, EntranceBlockType.Blocked, None),
     entrance_names.c_n3_0: (3, EntranceBlockType.OneWay, None),  # Nothing is blocked so we can make this one way
