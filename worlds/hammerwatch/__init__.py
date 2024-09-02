@@ -574,6 +574,8 @@ class HammerwatchWorld(World):
 
     def get_random_location(self, rloc_name: str):
         # If UT is generating the first time we just pass a dummy value as it'll restart gen anyway
-        if is_using_universal_tracker(self) and not hasattr(self.multiworld, "re_gen_passthrough"):
+        if is_using_universal_tracker(self):
+            if hasattr(self.multiworld, "re_gen_passthrough"):
+                return self.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"][rloc_name]
             return 0
         return self.random_locations[rloc_name]

@@ -2364,7 +2364,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.c_p2_5, True)
     if buttonsanity:
-        p2_shortcut = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n, True)
+        p2_shortcut = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s, True)
         p2_shortcut_items = (
             item_name.btnc_p2_shortcut_n,
             item_name.btnc_p2_shortcut_s,
@@ -4264,11 +4264,12 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
         key_silver.append(item_name.key_gold_b1)
         key_gold = [f"Temple Floor {i+1} Master Gold Key" for i in range(2)]
         key_gold.append(item_name.key_gold_b1)
+        key_bonus = item_name.key_bonus_pof
         gate_counts = [{key_silver[i]: 999999999, key_gold[i]: 999999999} for i in range(3)]
     else:
         key_silver = [item_name.key_silver for _ in range(3)]
         key_gold = [item_name.key_gold for _ in range(3)]
-
+        key_bonus = item_name.key_bonus
         gate_counts = [all_gate_counts for _ in range(3)]
 
     # pan_item = item_name.pan
@@ -4640,7 +4641,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
         connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_gates, False,
                 item_name.btn_t3_pillars, 1, False)
         connect(world, used_names, temple_region_names.t3_main, temple_region_names.t3_puzzle_room, False,
-                item_name.btn_t3_puzzle_room, 1, False)
+                item_name.btn_t3_pillars, 1, False)
     else:
         connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_gates, False)
         connect(world, used_names, temple_region_names.t3_gates, temple_region_names.t3_puzzle_room, False)
@@ -4677,7 +4678,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.pof_1_s_halls, temple_region_names.pof_1_sw_gate, True,
             item_name.btn_pof_1_walls_s, 1, False)
     connect_gate(world, used_names, temple_region_names.pof_1_sw_gate, temple_region_names.pof_1_center,
-                 item_name.key_bonus, None, None, None, True)
+                 key_bonus, None, None, None, True)
     connect(world, used_names, temple_region_names.pof_1_center, temple_region_names.pof_1_nw,
             True, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect_exit(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_n_room,
@@ -4685,7 +4686,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.pof_1_nw, temple_region_names.pof_1_exit_hall, True,
             item_name.btn_pof_1_exit, 1, False)
     connect_gate(world, used_names, temple_region_names.pof_1_exit_hall, temple_region_names.pof_1_gate_2,
-                 item_name.key_bonus, None, None, None, True)
+                 key_bonus, None, None, None, True)
     connect_exit(world, used_names, temple_region_names.pof_1_gate_2, temple_region_names.pof_2_entrance,
                  entrance_names.t_n1_2_start, None)  # entrance_names.t_n1_20)
     connect(world, used_names, temple_region_names.pof_2_entrance, temple_region_names.pof_2_entrance_blocks,

@@ -180,12 +180,12 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
         key_names = [
             item_name.mirror,
             item_name.key_teleport,
-            item_name.key_bonus,
         ]
         if world.options.key_mode.value != world.options.key_mode.option_floor_master:
             key_names.extend([
                 item_name.key_silver,
                 item_name.key_gold,
+                item_name.key_bonus,
             ])
     return key_names
 

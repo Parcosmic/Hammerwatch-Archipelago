@@ -2,7 +2,7 @@ import typing
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
 from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names,
-                   get_random_elements, PlayerClass, get_shopsanity_classes)
+                   get_random_elements, PlayerClass, get_shopsanity_classes, is_using_universal_tracker)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -402,7 +402,7 @@ temple_button_table: typing.Dict[str, ItemData] = {
     item_name.btn_t2_s_gate_hall: ItemData(counter.count(), ItemClassification.useful),
     item_name.btn_t2_s_spikes: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t2_portal_gate: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btn_t3_puzzle_room: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_gold_chutes: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t3_fall_1: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t3_fall_2: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t3_fall_3: ItemData(counter.count(), ItemClassification.progression),
@@ -776,6 +776,9 @@ shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {
 
 
 def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: typing.Dict[str, int]):
+    if is_using_universal_tracker(world):
+        return item_counts_table, 0
+
     extra_items: int = 0
 
     secrets: int = item_counts_table.pop(item_name.secret)

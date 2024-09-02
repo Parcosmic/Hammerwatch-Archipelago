@@ -631,7 +631,7 @@ btnc_a1_open_se_wall = "Open AmF4 South Wall"
 btnc_a1_open_se_rune = "Open AmF4 SE Rune Room"
 btnc_a2_pyramid_nw = "Teleport AmF5 NW Pyramid Item"
 btnc_a2_bspikes_tp = "Teleport AmF5 Blue Spikes Item"
-btnc_a2_open_bonus = "Open AmF5 Bonus Portal"
+btnc_a2_open_bonus = "Activate AmF5 Bonus Portal"
 btnc_a3_pyramid_ne = "Teleport AmF6 NE Pyramid Item"
 btnc_a2_pyramid_sw = "Teleport AmF5 SW Pyramid Item"
 btnc_a2_pyramid_se = "Teleport AmF5 SE Pyramid Item"
@@ -793,11 +793,11 @@ btn_t2_s_gate_shortcut = "Open TF2 South Gate Shortcut"
 btn_t2_s_gate_hall = "Open TF2 South Gate Hall"  # Useless, mark as filler
 btn_t2_s_spikes = "Disable TF2 South Spikes"
 btn_t2_portal_gate = "Open TF2 SW Portal Gate"
-btn_t3_puzzle_room = "Open TF3 Puzzle Room"
+btn_t3_gold_chutes = "Activate TF3 Gold Chutes"
 btn_t3_fall_1 = "Open TF3 SE Boss Fall Room"
 btn_t3_fall_2 = "Open TF3 NE Boss Fall Room"
 btn_t3_fall_3 = "Open TF3 West Boss Fall Room"
-btn_t3_pillars = "Disable TF3 Pillar Walls"
+btn_t3_pillars = "Disable TF3 North Pillar Walls"
 btn_t3_gate_s = "Open TF3 South Gate"
 btn_pof_1_walls_s = "Open PoF Level 1 South Walls"
 btn_pof_1_exit = "Open PoF Level 1 Exit"
@@ -1013,7 +1013,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_t2_s_gate_hall,
         btn_t2_s_spikes,
         btn_t2_portal_gate,
-        btn_t3_puzzle_room,
+        btn_t3_gold_chutes,
         btn_t3_puzzle_room_part,
         btn_t3_fall_1,
         btn_t3_fall_2,

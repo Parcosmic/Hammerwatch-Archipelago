@@ -2905,7 +2905,7 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t2_pof: item_name.btn_pof,
     temple_location_names.btn_t2_runes: item_name.btn_t2_light_bridges,
     temple_location_names.btn_t2_portal: item_name.btn_t2_portal,
-    temple_location_names.btn_t3_levers: item_name.btn_t3_puzzle_room,
+    temple_location_names.btn_t3_levers: item_name.btn_t3_gold_chutes,
 }
 
 temple_part_items: typing.Set[str] = {
