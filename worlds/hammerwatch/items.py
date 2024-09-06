@@ -972,9 +972,9 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         for item in get_random_elements(world, world.options.trap_item_weights.value, trap_item_count):
             item_counts_table[item] += 1
 
-    # For Necessary we set the number of bonus chests equal to each extra item
+    # For Necessary we set the number of bonus chests equal to number of extra items
     if world.options.bonus_behavior.value == world.options.bonus_behavior.option_necessary:
-        item_counts_table[item_name.bonus_chest] = max(item_counts_table[item_name.bonus_chest], extra_items, 0)
+        item_counts_table[item_name.bonus_chest] = max(extra_items, 0)
 
     return item_counts_table, extra_items
 

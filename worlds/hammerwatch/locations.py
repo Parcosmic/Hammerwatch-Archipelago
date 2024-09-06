@@ -3133,9 +3133,7 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             remove_location(castle_location_names.e4_main, item_name.apple)
 
     # Shortcut teleporter
-    if world.options.shortcut_teleporter.value:
-        remove_location(castle_location_names.p2_by_boss_switch, item_name.potion_rejuvenation)
-    else:
+    if not world.options.shortcut_teleporter.value:
         remove_location(castle_location_names.p3_skip_boss_switch_1, item_name.diamond_small)
         remove_location(castle_location_names.p3_skip_boss_switch_2, item_name.diamond)
         remove_location(castle_location_names.p3_skip_boss_switch_3, item_name.diamond_small)

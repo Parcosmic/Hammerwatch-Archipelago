@@ -10,7 +10,7 @@ from .locations import (LocationData, all_locations, setup_locations, castle_eve
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
 from .rules import set_rules, connect_regions_er
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
-                   is_using_universal_tracker)
+                   is_using_universal_tracker, get_random_element, get_random_elements)
 from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
@@ -195,35 +195,49 @@ class HammerwatchWorld(World):
 
         # Add items
         total_items = 0
-        present_filler_items = []
+        # present_filler_items = []
+        present_filler_item_counts = {}
         for item in item_counts:
             total_items += item_counts[item]
             if item_table[item].classification == ItemClassification.filler and item_counts[item] > 0:
-                present_filler_items.append(item)
+                # present_filler_items.append(item)
+                present_filler_item_counts[item] = item_counts[item]
 
         # Add/remove junk items depending if we have not enough/too many locations
         junk: int = total_required_locations - total_items
         if junk > 0:
-            for name in self.random.choices(present_filler_items, k=junk):
-                item_counts[name] += 1
+            # for name in self.random.choices(present_filler_items, k=junk):
+            #     item_counts[name] += 1
+            for junk_name in get_random_elements(self, present_filler_item_counts, junk):
+                item_counts[junk_name] += 1
         else:
             while junk < 0:
                 junk += 1
-                junk_item = self.random.choice(present_filler_items)
+                # junk_item = self.random.choice(present_filler_items)
+                junk_item = get_random_element(self, present_filler_item_counts)
                 item_counts[junk_item] -= 1
+                present_filler_item_counts[junk_item] -= 1
                 if item_counts[junk_item] == 0:
-                    present_filler_items.remove(junk_item)
-                    if len(present_filler_items) == 0:
+                    # present_filler_items.remove(junk_item)
+                    # if len(present_filler_items) == 0:
+                    #     break
+                    present_filler_item_counts.pop(junk_item)
+                    if len(present_filler_item_counts) == 0:
                         break
             # Remove trap items if we've run out of filler
-            present_trap_items = [trap_item for trap_item in trap_items if trap_item in item_counts]
+            # present_trap_items = [trap_item for trap_item in trap_items if trap_item in item_counts]
+            present_trap_item_counts = {trap_item: item_counts[trap_item] for trap_item in trap_items if trap_item in item_counts}
             while junk < 0:
                 junk += 1
-                trap_item = self.random.choice(present_trap_items)
+                # trap_item = self.random.choice(present_trap_items)
+                trap_item = get_random_element(self, present_trap_item_counts)
                 item_counts[trap_item] -= 1
+                present_trap_item_counts[trap_item] -= 1
                 if item_counts[trap_item] == 0:
-                    present_trap_items.remove(trap_item)
-                    if len(present_trap_items) == 0:
+                    # present_trap_items.remove(trap_item)
+                    present_trap_item_counts.pop(trap_item)
+                    if len(present_trap_item_counts) == 0:
+                    # if len(present_trap_items) == 0:
                         logging.warning(f"HammerwatchWorld for player {self.multiworld.player_name[self.player]} "
                                         f"(slot {self.player}) ran out of filler and trap items to remove. Some items "
                                         f"will remain unplaced!")

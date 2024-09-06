@@ -1447,8 +1447,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.r3_miniboss_eye_e_2,
         castle_location_names.r3_miniboss_eye_n_1,
         castle_location_names.r3_miniboss_eye_n_2,
-        castle_location_names.r3_miniboss_eye_s_1,
-        castle_location_names.r3_miniboss_eye_s_2,
         castle_location_names.r3_tower_plant_1,
         castle_location_names.r3_tower_plant_2,
         castle_location_names.r3_tower_plant_4,
@@ -1474,6 +1472,8 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
     castle_region_names.r3_s_room: [
         castle_location_names.r3_s_shops_room_1,
         castle_location_names.r3_s_shops_room_2,
+        castle_location_names.r3_miniboss_eye_s_1,
+        castle_location_names.r3_miniboss_eye_s_2,
         castle_location_names.btn_r3_floor_s_room,
     ],
     castle_region_names.r3_w_ggate: [
@@ -2157,8 +2157,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.b4_e_7,
         castle_location_names.b4_e_8,
         castle_location_names.b4_dragon_12,
-        castle_location_names.b4_miniboss_lich_1,
-        castle_location_names.b4_miniboss_lich_2,
     ],
     castle_region_names.b4_defeated: [
         castle_location_names.b4_dragon_1,
@@ -2184,6 +2182,8 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.b4_plank_10,
         castle_location_names.b4_plank_11,
         castle_location_names.ev_beat_boss_4,
+        castle_location_names.b4_miniboss_lich_1,
+        castle_location_names.b4_miniboss_lich_2,
     ],
     castle_region_names.e1_main: None,
     castle_region_names.e2_main: [
@@ -2847,7 +2847,8 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_spike_island, buttonsanity,
             item_name.btnc_r2_open_spikes_l, 1, False, buttonsanity)
     # Spike turrets passable
-    connect(world, used_names, castle_region_names.r2_puzzle_room, castle_region_names.r2_puzzle, False)
+    connect(world, used_names, castle_region_names.r2_puzzle_room, castle_region_names.r2_puzzle, False,
+            item_name.btnc_r2_puzzle, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.r2_s, castle_region_names.r2_w, False,
             item_name.btnc_r2_open_s_l, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.r2_from_r3, castle_region_names.r2_ne_cache, False,
