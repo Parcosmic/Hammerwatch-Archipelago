@@ -240,25 +240,33 @@ class ShopsanityClass(Choice):
 
 class ShopsanityP1Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
-    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    All members of the same class will receive their upgrades together and will have the same items in their shops
+    WARNING: there is normally not enough gold to purchase all upgrades.
+    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
     display_name = "Shopsanity Player 1 Class"
 
 
 class ShopsanityP2Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
-    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    All members of the same class will receive their upgrades together and will have the same items in their shops
+    WARNING: there is normally not enough gold to purchase all upgrades.
+    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
     display_name = "Shopsanity Player 2 Class"
 
 
 class ShopsanityP3Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
-    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    All members of the same class will receive their upgrades together and will have the same items in their shops
+    WARNING: there is normally not enough gold to purchase all upgrades.
+    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
     display_name = "Shopsanity Player 3 Class"
 
 
 class ShopsanityP4Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
-    All members of the same class will receive their upgrades together and will have the same items in their shops"""
+    All members of the same class will receive their upgrades together and will have the same items in their shops
+    WARNING: there is normally not enough gold to purchase all upgrades.
+    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
     display_name = "Shopsanity Player 4 Class"
 
 

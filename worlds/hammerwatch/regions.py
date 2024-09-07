@@ -3239,10 +3239,10 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.c3_tower_plant_small_4,
         temple_location_names.c3_tower_plant_small_5,
         temple_location_names.c3_tower_plant_small_6,
+        temple_location_names.cave3_guard,  # Hammer requirement set in rules
         temple_location_names.btn_c3_bridge,
     ],
     temple_region_names.c3_main_secrets: [
-        temple_location_names.cave3_guard,
         temple_location_names.cave3_secret_n,
         temple_location_names.cave3_secret_nw,
         temple_location_names.cave3_secret_s,
@@ -4655,10 +4655,16 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             False, item_name.mirror, 1)
     # More wonky logic, I hope everything works out!
     connect(world, used_names, temple_region_names.t3_s_node_blocks_2, temple_region_names.t3_s_node, False)
-    connect(world, used_names, temple_region_names.t3_boss_fall_1, temple_region_names.t3_main, buttonsanity,
+    connect(world, used_names, temple_region_names.t3_boss_fall_1, temple_region_names.t3_blockade_s, buttonsanity,
             item_name.btn_t3_fall_1, 1, False, buttonsanity)
-    connect(world, used_names, temple_region_names.t3_boss_fall_2, temple_region_names.t3_main, buttonsanity,
-            item_name.btn_t3_fall_2, 1, False, buttonsanity)
+    # The second boss fall leads to the right of the sun blocks, we can only access main if we broke the blocks
+    t3_fall2_entr = connect(world, used_names, temple_region_names.t3_boss_fall_2, temple_region_names.t3_main,
+                            False, item_name.btn_t3_fall_2, 1, False, buttonsanity)
+    add_rule(t3_fall2_entr, lambda state: state.can_reach_region(temple_region_names.t3_n_node_blocks, world.player))
+    world.multiworld.register_indirect_condition(temple_region_names.t3_n_node_blocks, t3_fall2_entr)
+    if buttonsanity:
+        connect(world, used_names, temple_region_names.t3_n_node_blocks, temple_region_names.t3_boss_fall_2,
+                False, item_name.btn_t3_fall_2, 1, False)
     connect(world, used_names, temple_region_names.t3_boss_fall_3, temple_region_names.t3_main, buttonsanity,
             item_name.btn_t3_fall_3, 1, False, buttonsanity)
 
