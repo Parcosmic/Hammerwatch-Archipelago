@@ -3243,7 +3243,7 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.c3_tower_plant_small_4,
         temple_location_names.c3_tower_plant_small_5,
         temple_location_names.c3_tower_plant_small_6,
-        temple_location_names.cave3_guard,  # Hammer requirement set in rules
+        temple_location_names.cave3_guard,  # Hammer requirement set in rules.py
         temple_location_names.btn_c3_bridge,
     ],
     temple_region_names.c3_main_secrets: [
@@ -3265,9 +3265,9 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.c3_tower_plant_small_7,
         temple_location_names.c3_tower_plant_small_8,
         temple_location_names.ev_c3_portal,
+        temple_location_names.cave3_trapped_guard,  # Hammer requirement set in rules.py
     ],
     temple_region_names.c3_e_guard_secret: [
-        temple_location_names.cave3_trapped_guard,
     ],
     temple_region_names.cave_3_fall: [
         temple_location_names.cave3_fall_nw,
@@ -3354,6 +3354,7 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.c2_tower_plant_small_20,
         temple_location_names.c2_tower_plant_small_21,
         temple_location_names.c2_tower_plant_small_23,
+        temple_location_names.cave2_guard,  # Hammer logic handled in rules.py
         temple_location_names.btn_c2_red,
         temple_location_names.btn_c2_green,
         temple_location_names.btn_c2_pumps,
@@ -3362,7 +3363,6 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
     temple_region_names.c2_main_secrets: [
         temple_location_names.cave2_secret_ne,
         temple_location_names.cave2_secret_m,
-        temple_location_names.cave2_guard,
     ],
     temple_region_names.cave_2_pumps: [
         temple_location_names.cave2_pumps_wall_r,
@@ -4561,9 +4561,10 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.t_t2_0, False)
     connect_gate(world, used_names, temple_region_names.t2_melt_ice, temple_region_names.t2_s_gate,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.t_t2_1, False)
-    connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_sdoor_gate, False,
-            item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
-    connect(world, used_names, temple_region_names.t2_sdoor_gate, temple_region_names.t2_s_gate, False,
+    if buttonsanity:
+        connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_sdoor_gate, False,
+                item_name.btn_t2_s_gate_shortcut, 1, False)
+    connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_sdoor_gate, buttonsanity,
             item_name.btn_t2_s_gate_shortcut, 1, False, buttonsanity)
     # Technically should be two-way, but you have to have been to t2_main before getting here so it's not needed
     connect_gate(world, used_names, temple_region_names.t2_main, temple_region_names.t2_ornate,

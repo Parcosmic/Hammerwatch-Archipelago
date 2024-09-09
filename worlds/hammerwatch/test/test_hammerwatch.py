@@ -262,5 +262,5 @@ class TestTrapItems(HammerwatchTestBase):
 
     def test_no_filler_if_all_trap_items(self):
         filler_items = [item for item in self.multiworld.itempool if item.classification == item.classification.filler]
-        self.assertEquals(len(filler_items), 0,
-                          f"Filler items found when {option_names.trap_item_percent} is 100%!")
+        self.assertEqual(len(filler_items), 0,
+                         f"Filler items found when {option_names.trap_item_percent} is 100%!")

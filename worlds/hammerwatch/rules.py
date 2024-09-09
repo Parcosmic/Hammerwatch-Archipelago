@@ -224,14 +224,21 @@ def set_extra_rules(world: "HammerwatchWorld"):
         add_rule(world.multiworld.get_location(temple_location_names.ev_t2_portal, world.player), portal_rule)
         add_rule(world.multiworld.get_location(temple_location_names.ev_t3_portal, world.player), portal_rule)
 
-        # Extra rules for locations in cave level 3 that can be accessed after opening the temple shortcut
+        # Extra rules for locations in the cave levels that can be accessed after certain events occur
         if world.options.hammer_fragments > 0:
+            # CL3 guard items where the walls are broken after opening the shortcut
             hammer_item = item_name.hammer if world.options.hammer_fragments == 1 else item_name.hammer_fragment
             add_rule(world.multiworld.get_location(temple_location_names.cave3_guard, world.player),
                      lambda state: (state.has(hammer_item, world.player, world.options.hammer_fragments.value)
                                     or state.has(item_name.ev_open_temple_entrance_shortcut, world.player)))
-        if world.random_locations[temple_location_names.rloc_squire] == 1:
-            add_loc_item_rule(world, temple_location_names.cave3_squire, item_name.ev_open_temple_entrance_shortcut)
+            add_rule(world.multiworld.get_location(temple_location_names.cave3_trapped_guard, world.player),
+                     lambda state: (state.has(hammer_item, world.player, world.options.hammer_fragments.value)
+                                    or state.has(item_name.ev_open_temple_entrance_shortcut, world.player)))
+            # CL2 NW guard item where the wall is broken after completing the pump lever
+            lever_item = item_name.lever if world.options.lever_fragments == 1 else item_name.lever_fragment
+            add_rule(world.multiworld.get_location(temple_location_names.cave2_guard, world.player),
+                     lambda state: (state.has(hammer_item, world.player, world.options.hammer_fragments.value)
+                                    or state.has(lever_item, world.player, world.options.lever_fragments)), "or")
 
         # Extra rules for T1 north node blocks locations
         t1_sun_block_entr = get_etr_name(temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall)
@@ -242,12 +249,11 @@ def set_extra_rules(world: "HammerwatchWorld"):
             lambda state: state.has(item_name.evt_t1_n_mirrors, world.player))
 
         # Extra rules for completing the T2 rune sequence
-        if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
-            def t2_seq_rule(state):
-                return (state.can_reach_region(temple_region_names.t2_boulder_room, world.player)
-                        and state.can_reach_region(temple_region_names.t2_s_gate, world.player)
-                        and state.can_reach_region(temple_region_names.t2_ornate, world.player))
-            add_rule(world.multiworld.get_location(temple_location_names.btn_t2_runes, world.player), t2_seq_rule)
+        def t2_seq_rule(state):
+            return (state.can_reach_region(temple_region_names.t2_boulder_room, world.player)
+                    and state.can_reach_region(temple_region_names.t2_s_gate, world.player)
+                    and state.can_reach_region(temple_region_names.t2_ornate, world.player))
+        add_rule(world.multiworld.get_location(temple_location_names.btn_t2_runes, world.player), t2_seq_rule)
 
         # Add requirement that you need the blue spikes switch to access the item on the spikes in T2
         add_loc_item_rule(world, temple_location_names.t2_gold_beetle_barricade, item_name.btn_t2_blue)
