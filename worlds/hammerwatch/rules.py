@@ -230,7 +230,8 @@ def set_extra_rules(world: "HammerwatchWorld"):
             add_rule(world.multiworld.get_location(temple_location_names.cave3_guard, world.player),
                      lambda state: (state.has(hammer_item, world.player, world.options.hammer_fragments.value)
                                     or state.has(item_name.ev_open_temple_entrance_shortcut, world.player)))
-        add_loc_item_rule(world, temple_location_names.cave3_squire, item_name.ev_open_temple_entrance_shortcut)
+        if world.random_locations[temple_location_names.rloc_squire] == 1:
+            add_loc_item_rule(world, temple_location_names.cave3_squire, item_name.ev_open_temple_entrance_shortcut)
 
         # Extra rules for T1 north node blocks locations
         t1_sun_block_entr = get_etr_name(temple_region_names.t1_ice_turret, temple_region_names.t1_sun_block_hall)
@@ -243,9 +244,9 @@ def set_extra_rules(world: "HammerwatchWorld"):
         # Extra rules for completing the T2 rune sequence
         if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
             def t2_seq_rule(state):
-                return (state.can_reach_region(temple_region_names.t2_boulder_room)
-                        and state.can_reach_region(temple_region_names.t2_s_gate)
-                        and state.can_reach_region(temple_region_names.t2_ornate))
+                return (state.can_reach_region(temple_region_names.t2_boulder_room, world.player)
+                        and state.can_reach_region(temple_region_names.t2_s_gate, world.player)
+                        and state.can_reach_region(temple_region_names.t2_ornate, world.player))
             add_rule(world.multiworld.get_location(temple_location_names.btn_t2_runes, world.player), t2_seq_rule)
 
         # Add requirement that you need the blue spikes switch to access the item on the spikes in T2

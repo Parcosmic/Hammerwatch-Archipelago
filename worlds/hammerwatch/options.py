@@ -341,11 +341,19 @@ class ExtraKeysPercent(Range):
     default = 0
 
 
-class OpenCastle(Toggle):
-    """(Castle only) Unlocks travel to/from all acts at the start of the game. Pairs well with Act Specific Keys!
-    """
+class OpenCastle(Removed):
+    """Removed, use the Open Castle Portals option instead"""
     display_name = "Open Castle"
-    default = False
+
+
+class OpenCastlePortals(Range):
+    """(Castle only) Starts the game with the specified number of portals open in the hub
+    This starts with the prison portal and goes up to the chambers portal
+    """
+    display_name = "Open Castle Portals"
+    range_start = 0
+    range_end = 4
+    default = 0
 
 
 class ActSpecificKeys(Removed):
@@ -523,7 +531,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     randomize_puzzles: RandomizePuzzles
     randomize_enemy_loot: RandomizeEnemyLoot
     buttonsanity: Buttonsanity
-    open_castle: OpenCastle
+    open_castle_portals: OpenCastlePortals
     key_mode: KeyMode
     extra_keys_percent: ExtraKeysPercent
     big_bronze_key_percent: BigBronzeKeyPercent
@@ -574,7 +582,7 @@ client_required_options = [
     option_names.randomize_puzzles,
     option_names.randomize_enemy_loot,
     option_names.buttonsanity,
-    option_names.open_castle,
+    option_names.open_castle_portals,
     option_names.key_mode,
     option_names.shortcut_teleporter,
     option_names.portal_accessibility,
@@ -620,7 +628,7 @@ option_presets = {
         option_names.randomize_puzzles: "random",
         option_names.randomize_enemy_loot: "random",
         option_names.buttonsanity: "random",
-        option_names.open_castle: "random",
+        option_names.open_castle_portals: "random",
         option_names.key_mode: "random",
         option_names.extra_keys_percent: "random",
         option_names.big_bronze_key_percent: "random",
@@ -660,7 +668,7 @@ option_presets = {
         option_names.randomize_puzzles: RandomizePuzzles.default,
         option_names.randomize_enemy_loot: RandomizeEnemyLoot.default,
         option_names.buttonsanity: Buttonsanity.option_off,
-        option_names.open_castle: OpenCastle.option_false,
+        option_names.open_castle_portals: 0,
         option_names.key_mode: KeyMode.default,
         option_names.extra_keys_percent: ExtraKeysPercent.default,
         option_names.big_bronze_key_percent: BigBronzeKeyPercent.default,
@@ -736,7 +744,7 @@ option_groups = [
         TrapItemWeights,
     ]),
     OptionGroup("Layout", [
-        OpenCastle,
+        OpenCastlePortals,
         ShortcutTeleporter,
         ExitRandomization,
         ERActRange,

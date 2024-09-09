@@ -2321,10 +2321,14 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         connect(world, used_names, castle_region_names.menu, castle_region_names.p1_start, False)
     connect(world, used_names, castle_region_names.p1_start, castle_region_names.hub, True)
 
-    if world.options.open_castle.value:
-        connect(world, used_names, castle_region_names.hub, castle_region_names.a1_start, True)
-        connect(world, used_names, castle_region_names.hub, castle_region_names.r1_start, True)
-        connect(world, used_names, castle_region_names.hub, castle_region_names.c1_start, True)
+    hub_start_regions = [
+        castle_region_names.p1_start,
+        castle_region_names.a1_start,
+        castle_region_names.r1_start,
+        castle_region_names.c1_start,
+    ]
+    for i in range(world.options.open_castle_portals.value):
+        connect(world, used_names, castle_region_names.hub, hub_start_regions[i], True)
 
     # Prison Floor 1
     connect(world, used_names, castle_region_names.p1_start, castle_region_names.p1_nw,
@@ -4579,14 +4583,17 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_nw_button_gate, False,
             item_name.btn_t2_nw_gate, 1, False, buttonsanity)
-    connect(world, used_names, temple_region_names.t2_n_node, temple_region_names.t2_boulder_room, False,
-            item_name.btn_t2_boulder_room, 1, False, buttonsanity)
+    if buttonsanity:
+        connect(world, used_names, temple_region_names.t2_n_gate, temple_region_names.t2_boulder_room, False,
+                item_name.btn_t2_boulder_room, 1, False)
+    else:
+        connect(world, used_names, temple_region_names.t2_n_node, temple_region_names.t2_boulder_room, False)
     connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_jail_sw, False,
             item_name.btn_t2_blue, 1, False)
     connect(world, used_names, temple_region_names.t2_jail_sw, temple_region_names.t2_s_gate, buttonsanity,
             item_name.btn_t2_jail_w, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_boulder_room, temple_region_names.t2_n_hidden_hall, False,
-            item_name.btn_t2_s_gate_hall, 1, False, buttonsanity)
+            item_name.btn_t2_boulder_passage, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_n_hidden_hall, temple_region_names.t2_jones_hall, False,
             item_name.btn_t2_jones_hall_back, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t2_s_gate, temple_region_names.t2_s_gate_secret,
