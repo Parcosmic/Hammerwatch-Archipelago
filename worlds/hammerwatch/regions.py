@@ -3036,19 +3036,12 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
             item_name.btnc_c2_sw_room, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_wall, False,
             item_name.btnc_c2_w_shortcut, 1, False, buttonsanity)
-    connect(world, used_names, castle_region_names.c2_w_shops_2, castle_region_names.c2_e_wall, buttonsanity,
+    connect(world, used_names, castle_region_names.c2_e_shops_2, castle_region_names.c2_e_wall, buttonsanity,
             item_name.btnc_c2_e_shop, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_spikes, False,
             item_name.btnc_c2_tp_spikes, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.c2_n, castle_region_names.c2_bonus, buttonsanity,
             item_name.btnc_c2_bonus_room, 1, False, buttonsanity)
-    if buttonsanity:
-        connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
-                     entrance_names.c_n4_0, entrance_names.c_c2_b_ent,
-                     item_name.btnc_c2_bonus, 1, False)
-    else:
-        connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
-                     entrance_names.c_n4_0, entrance_names.c_c2_b_ent)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_shops_1,
                  key_silver[10], gate_codes, gate_counts[10], gate_names.c_c2_11, False)
     connect_gate(world, used_names, castle_region_names.c2_w_shops_3, castle_region_names.c2_w_shops_2,
@@ -3060,12 +3053,17 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_e_shops_2,
                  key_bronze[10], gate_codes, gate_counts[10], gate_names.c_c2_16, False)
     if buttonsanity:
+        connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
+                     entrance_names.c_n4_0, entrance_names.c_c2_b_ent,
+                     item_name.btnc_c2_bonus, 1, False)
         connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_e_wall, False,
                 item_name.btnc_c2_e_shop, 1, False)
         connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_puzzle_room, False,
                 item_name.btnc_c2_open_puzzle, 1, False)
     else:
         connect(world, used_names, castle_region_names.c2_e_shops_1, castle_region_names.c2_puzzle_room, False)
+        connect_exit(world, used_names, castle_region_names.c2_bonus, castle_region_names.n4_main,
+                     entrance_names.c_n4_0, entrance_names.c_c2_b_ent)
     connect(world, used_names, castle_region_names.c2_puzzle_room, castle_region_names.c2_puzzle, False,
             item_name.btnc_c2_puzzle, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.c2_main, castle_region_names.c2_exit_bgate,
