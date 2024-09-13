@@ -4,7 +4,8 @@ from BaseClasses import Location
 from .names import castle_location_names, temple_location_names, item_name, option_names, shop_location_names
 from .util import (Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes,
                    is_using_universal_tracker)
-from .items import castle_item_counts, temple_item_counts, recovery_table, get_item_counts, id_start
+from .items import (castle_item_counts, temple_item_counts, castle_button_item_counts, temple_button_item_counts,
+                    recovery_table, get_item_counts, id_start)
 from enum import IntFlag
 
 if typing.TYPE_CHECKING:
@@ -1690,12 +1691,13 @@ castle_event_buttons: typing.Dict[str, str] = {
     castle_location_names.btn_c2_wall_n_exit_gate: item_name.btnc_c2_n_room,
     castle_location_names.btn_c2_floor_t_hall: item_name.btnc_c2_n_shops,
     castle_location_names.btn_c3_wall_red: item_name.btnc_c3_red_spikes,
-    castle_location_names.btn_c3_rune_n: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_ne: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_e: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_se: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_w: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_s: item_name.btnc_c3_sw_room_part,
+    castle_location_names.btn_c3_rune: item_name.btnc_c3_sw_room,
+    # castle_location_names.btn_c3_rune_n: item_name.btnc_c3_sw_room_part,
+    # castle_location_names.btn_c3_rune_ne: item_name.btnc_c3_sw_room_part,
+    # castle_location_names.btn_c3_rune_e: item_name.btnc_c3_sw_room_part,
+    # castle_location_names.btn_c3_rune_se: item_name.btnc_c3_sw_room_part,
+    # castle_location_names.btn_c3_rune_w: item_name.btnc_c3_sw_room_part,
+    # castle_location_names.btn_c3_rune_s: item_name.btnc_c3_sw_room_part,
     castle_location_names.btn_c3_wall_fire_floor: item_name.btnc_c3_tp_se,
 
     castle_location_names.btn_p1_boss: item_name.btnc_b1_rune_1,
@@ -1720,73 +1722,30 @@ castle_locations: typing.Dict[str, LocationData] = {
 }
 castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_p1_boss: item_name.btnc_b1_rune_1,
-    castle_location_names.btn_p1_boss_1: item_name.btnc_b1_rune_1_part,
-    castle_location_names.btn_p1_boss_2: item_name.btnc_b1_rune_1_part,
-    castle_location_names.btn_p1_boss_3: item_name.btnc_b1_rune_1_part,
-    castle_location_names.btn_p1_boss_4: item_name.btnc_b1_rune_1_part,
     castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,
     castle_location_names.btn_p2_boss: item_name.btnc_b1_rune_2,
-    castle_location_names.btn_p2_boss_2: item_name.btnc_b1_rune_2_part,
-    castle_location_names.btn_p2_boss_4: item_name.btnc_b1_rune_2_part,
-    castle_location_names.btn_p2_boss_1: item_name.btnc_b1_rune_2_part,
-    castle_location_names.btn_p2_boss_3: item_name.btnc_b1_rune_2_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_1: item_name.btnc_p2_spike_puzzle_r_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_2: item_name.btnc_p2_spike_puzzle_r_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_e_3: item_name.btnc_p2_spike_puzzle_r_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_3: item_name.btnc_p2_spike_puzzle_t_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_2: item_name.btnc_p2_spike_puzzle_t_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_n_1: item_name.btnc_p2_spike_puzzle_t_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_3: item_name.btnc_p2_spike_puzzle_b_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_2: item_name.btnc_p2_spike_puzzle_b_part,
-    castle_location_names.btn_p2_floor_spike_puzzle_s_1: item_name.btnc_p2_spike_puzzle_b_part,
     castle_location_names.btn_p2_floor_red: item_name.btnc_p2_red_spikes,
     castle_location_names.btn_p2_floor_tp_item_2: item_name.btnc_p2_tp_jail,
     castle_location_names.btn_p2_floor_tp_item_1: item_name.btnc_p2_open_w_jail,
     castle_location_names.btn_p2_floor_e_save: item_name.btnc_p2_e_save,
     castle_location_names.btn_p2_puzzle: item_name.btnc_p2_puzzle,
     castle_location_names.btn_p2_rune_puzzle: item_name.btnc_p2_tp_w,
-    castle_location_names.btn_p2_rune_puzzle_1: item_name.btnc_p2_tp_w_part,
-    castle_location_names.btn_p2_rune_puzzle_2: item_name.btnc_p2_tp_w_part,
-    castle_location_names.btn_p2_rune_puzzle_3: item_name.btnc_p2_tp_w_part,
-    castle_location_names.btn_p2_rune_puzzle_4: item_name.btnc_p2_tp_w_part,
     castle_location_names.btn_p2_rune_sequence: item_name.btnc_p2_rune_sequence,
-    castle_location_names.btn_p2_rune_sequence_1: item_name.btnc_p2_rune_sequence_part,
-    castle_location_names.btn_p2_rune_sequence_2: item_name.btnc_p2_rune_sequence_part,
-    castle_location_names.btn_p2_rune_sequence_4: item_name.btnc_p2_rune_sequence_part,
-    castle_location_names.btn_p2_rune_sequence_3: item_name.btnc_p2_rune_sequence_part,
     castle_location_names.btn_p2_wall_from_p1: item_name.btnc_p2_m_stairs,
     castle_location_names.btn_p2_wall_shortcut_1: item_name.btnc_p2_shortcut_n,
     castle_location_names.btn_p2_wall_shortcut_2: item_name.btnc_p2_shortcut_s,
     castle_location_names.btn_p3_boss_door: item_name.btnc_p3_boss_door,
     castle_location_names.btn_p3_boss_s: item_name.btnc_b1_rune_3,
-    castle_location_names.btn_p3_boss_s_3: item_name.btnc_b1_rune_3_part,
-    castle_location_names.btn_p3_boss_s_4: item_name.btnc_b1_rune_3_part,
-    castle_location_names.btn_p3_boss_s_1: item_name.btnc_b1_rune_3_part,
-    castle_location_names.btn_p3_boss_s_2: item_name.btnc_b1_rune_3_part,
     castle_location_names.btn_p3_floor: item_name.btnc_p3_sgate_spikes,
     castle_location_names.btn_p3_floor_red: item_name.btnc_p3_red_spikes,
     castle_location_names.btn_p3_floor_blue: item_name.btnc_p3_blue_spikes,
     castle_location_names.btn_p3_floor_sw: item_name.btnc_p3_e_passage,
     castle_location_names.btn_p3_floor_arrow_hall: item_name.btnc_p3_s_spikes,
-    castle_location_names.btn_p3_rune_bonus_1: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_4: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_2: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_6: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_3: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_5: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_7: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_8: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_rune_bonus_9: item_name.btnc_p3_portal_part,
-    castle_location_names.btn_p3_wall_bonus_nw: item_name.btnc_p3_open_bonus_part,
     castle_location_names.btn_p3_wall_start: item_name.btnc_p3_start,
     castle_location_names.btn_p3_wall_start_n: item_name.btnc_p3_shop,
     castle_location_names.btn_p3_wall_bonus: item_name.btnc_p3_bonus_side,
-    castle_location_names.btn_p3_wall_bonus_ne: item_name.btnc_p3_open_bonus_part,
     castle_location_names.btn_p3_wall_sw: item_name.btnc_p3_sw_shortcut,
-    castle_location_names.btn_p3_wall_bonus_w_1: item_name.btnc_p3_open_bonus_part,
     castle_location_names.btn_p3_wall_bonus_w_2: item_name.btnc_p3_open_n_shortcut,
-    castle_location_names.btn_p3_wall_bonus_s: item_name.btnc_p3_open_bonus_part,
-    castle_location_names.btn_p3_wall_bonus_se: item_name.btnc_p3_open_bonus_part,
     castle_location_names.btn_p3_wall_secret_arrow_hall: item_name.btnc_p3_s_passage,
     castle_location_names.btn_p3_wall_boss_door: item_name.btnc_p3_s_exit_l,
     castle_location_names.btn_p3_wall_to_p1_s: item_name.btnc_p3_s_exit_r,
@@ -1794,29 +1753,17 @@ castle_button_items: typing.Dict[str, str] = {
     # castle_location_names.btn_b1_2: item_name.btnc_b1_right,
     castle_location_names.btn_a1_boss_door: item_name.btnc_a1_boss_door,
     castle_location_names.btn_a1_boss: item_name.btnc_b2_rune_1,
-    castle_location_names.btn_a1_boss_2: item_name.btnc_b2_rune_1_part,
-    castle_location_names.btn_a1_boss_1: item_name.btnc_b2_rune_1_part,
-    castle_location_names.btn_a1_boss_3: item_name.btnc_b2_rune_1_part,
-    castle_location_names.btn_a1_boss_4: item_name.btnc_b2_rune_1_part,
     castle_location_names.btn_a1_floor_tp_n: item_name.btnc_a1_tp_n,
     castle_location_names.btn_a1_floor_shortcut: item_name.btnc_a1_m_shortcut,
     castle_location_names.btn_a1_floor_red: item_name.btnc_a1_red_spikes,
     castle_location_names.btn_a1_floor_sw: item_name.btnc_a1_sw_spikes,
     castle_location_names.btn_a1_puzzle: item_name.btnc_a1_puzzle,
     castle_location_names.btn_a1_rune: item_name.btnc_a1_open_se_cache,
-    castle_location_names.btn_a1_rune_1: item_name.btnc_a1_open_se_cache_part,
-    castle_location_names.btn_a1_rune_2: item_name.btnc_a1_open_se_cache_part,
-    castle_location_names.btn_a1_rune_3: item_name.btnc_a1_open_se_cache_part,
-    castle_location_names.btn_a1_rune_4: item_name.btnc_a1_open_se_cache_part,
     castle_location_names.btn_a1_wall_m_cache: item_name.btnc_a1_open_m_cache,
     castle_location_names.btn_a1_wall_red_spikes: item_name.btnc_a1_open_ne_cache,
     castle_location_names.btn_a1_wall_start: item_name.btnc_a1_open_se_wall,
     castle_location_names.btn_a1_wall_se: item_name.btnc_a1_open_se_rune,
     castle_location_names.btn_a2_boss: item_name.btnc_b2_rune_2,
-    castle_location_names.btn_a2_boss_2: item_name.btnc_b2_rune_2_part,
-    castle_location_names.btn_a2_boss_1: item_name.btnc_b2_rune_2_part,
-    castle_location_names.btn_a2_boss_3: item_name.btnc_b2_rune_2_part,
-    castle_location_names.btn_a2_boss_4: item_name.btnc_b2_rune_2_part,
     castle_location_names.btn_a2_floor_pyramid_nw: item_name.btnc_a2_pyramid_nw,
     castle_location_names.btn_a2_floor_tp_n: item_name.btnc_a2_bspikes_tp,
     castle_location_names.btn_a2_floor_pyramid_ne: item_name.btnc_a2_open_bonus,
@@ -1828,29 +1775,14 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_a2_floor_tp_se: item_name.btnc_a2_tp_se,
     castle_location_names.btn_a2_puzzle: item_name.btnc_a2_puzzle,
     castle_location_names.btn_a2_rune: item_name.btnc_a2_tp_ne_gates,
-    castle_location_names.btn_a2_rune_2: item_name.btnc_a2_tp_ne_gates_part,
-    castle_location_names.btn_a2_rune_1: item_name.btnc_a2_tp_ne_gates_part,
-    castle_location_names.btn_a2_rune_4: item_name.btnc_a2_tp_ne_gates_part,
-    castle_location_names.btn_a2_rune_3: item_name.btnc_a2_tp_ne_gates_part,
     castle_location_names.btn_a2_wall_nw: item_name.btnc_a2_open_w_exit,
     castle_location_names.btn_a2_wall_sw: item_name.btnc_a2_open_shortcut,
     castle_location_names.btn_a2_wall_se: item_name.btnc_a2_open_se_room_l,
     castle_location_names.btn_a2_wall_e: item_name.btnc_a2_open_se_room_t,
     castle_location_names.btn_n2_floor_blue: item_name.btnc_a2_blue_spikes,
     castle_location_names.btn_a3_boss: item_name.btnc_b2_rune_3,
-    castle_location_names.btn_a3_boss_1: item_name.btnc_b2_rune_3_part,
-    castle_location_names.btn_a3_boss_3: item_name.btnc_b2_rune_3_part,
-    castle_location_names.btn_a3_boss_2: item_name.btnc_b2_rune_3_part,
-    castle_location_names.btn_a3_boss_4: item_name.btnc_b2_rune_3_part,
-    castle_location_names.btn_a3_floor_knife_1: item_name.btnc_a3_open_knife_part,
-    castle_location_names.btn_a3_floor_knife_3: item_name.btnc_a3_open_knife_part,
-    castle_location_names.btn_a3_floor_knife_4: item_name.btnc_a3_open_knife_part,
-    castle_location_names.btn_a3_floor_knife_5: item_name.btnc_a3_open_knife_part,
-    castle_location_names.btn_a3_floor_knife_2: item_name.btnc_a3_open_knife_part,
     castle_location_names.btn_a3_floor_tp_m: item_name.btnc_a3_tp_m,
     castle_location_names.btn_a3_floor_stairs_in_wall: item_name.btnc_a3_bgate_tp,
-    castle_location_names.btn_a3_wall_knife_1: item_name.btnc_a3_open_knife_2_part,
-    castle_location_names.btn_a3_wall_knife_2: item_name.btnc_a3_open_knife_2_part,
     castle_location_names.btn_a3_wall_from_a2: item_name.btnc_a3_open_m_stairs,
     castle_location_names.btn_a3_wall_start: item_name.btnc_a3_open_start_n,
     castle_location_names.btn_a3_wall_end: item_name.btnc_a3_open_start_e,
@@ -1868,14 +1800,6 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_r1_wall_se: item_name.btnc_r1_open_se_room,
     castle_location_names.btn_r2_boss_n: item_name.btnc_b3_rune_2,
     castle_location_names.btn_r2_boss_e: item_name.btnc_b3_rune_1,
-    castle_location_names.btn_r2_boss_n_2: item_name.btnc_b3_rune_2_part,
-    castle_location_names.btn_r2_boss_n_1: item_name.btnc_b3_rune_2_part,
-    castle_location_names.btn_r2_boss_n_4: item_name.btnc_b3_rune_2_part,
-    castle_location_names.btn_r2_boss_n_3: item_name.btnc_b3_rune_2_part,
-    castle_location_names.btn_r2_boss_e_2: item_name.btnc_b3_rune_1_part,
-    castle_location_names.btn_r2_boss_e_1: item_name.btnc_b3_rune_1_part,
-    castle_location_names.btn_r2_boss_e_3: item_name.btnc_b3_rune_1_part,
-    castle_location_names.btn_r2_boss_e_4: item_name.btnc_b3_rune_1_part,
     castle_location_names.btn_r2_floor_nw: item_name.btnc_r2_open_bs_l,
     castle_location_names.btn_r2_floor_boss_rune: item_name.btnc_r2_open_bs_r,
     castle_location_names.btn_r2_floor_ne: item_name.btnc_r2_open_fire_t,
@@ -1885,10 +1809,6 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_r2_floor_sw: item_name.btnc_r2_open_s_l,
     castle_location_names.btn_r2_puzzle: item_name.btnc_r2_puzzle,
     castle_location_names.btn_r2_rune: item_name.btnc_r2_open_puzzle,
-    castle_location_names.btn_r2_rune_1: item_name.btnc_r2_open_puzzle_part,
-    castle_location_names.btn_r2_rune_2: item_name.btnc_r2_open_puzzle_part,
-    castle_location_names.btn_r2_rune_3: item_name.btnc_r2_open_puzzle_part,
-    castle_location_names.btn_r2_rune_4: item_name.btnc_r2_open_puzzle_part,
     castle_location_names.btn_r2_wall_nw: item_name.btnc_r2_nw_shortcut,
     castle_location_names.btn_r2_wall_start: item_name.btnc_r2_open_start,
     castle_location_names.btn_r2_wall_spike_island_n: item_name.btnc_r2_open_spikes_t,
@@ -1896,10 +1816,6 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_r2_wall_ne: item_name.btnc_r2_open_ne_cache,
     castle_location_names.btn_r3_boss_door: item_name.btnc_r3_boss_door,
     castle_location_names.btn_r3_boss: item_name.btnc_b3_rune_3,
-    castle_location_names.btn_r3_boss_3: item_name.btnc_b3_rune_3_part,
-    castle_location_names.btn_r3_boss_4: item_name.btnc_b3_rune_3_part,
-    castle_location_names.btn_r3_boss_1: item_name.btnc_b3_rune_3_part,
-    castle_location_names.btn_r3_boss_2: item_name.btnc_b3_rune_3_part,
     castle_location_names.btn_r3_floor_passage: item_name.btnc_r3_passage_room_2,
     castle_location_names.btn_r3_floor_passage_end: item_name.btnc_r3_tp_nw,
     castle_location_names.btn_r3_floor_gate_nw: item_name.btnc_r3_open_exit,
@@ -1911,27 +1827,12 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_r3_floor_se: item_name.btnc_r3_open_bs,
     castle_location_names.btn_r3_floor_simon: item_name.btnc_r3_simon,
     castle_location_names.btn_r3_rune: item_name.btnc_r3_bonus_bridge,
-    castle_location_names.btn_r3_rune_4: item_name.btnc_r3_bonus_bridge_part,
     castle_location_names.btn_r3_simon: item_name.btnc_r3_bonus,
-    castle_location_names.btn_r3_simon_4: item_name.btnc_r3_bonus_part,
-    castle_location_names.btn_r3_rune_3: item_name.btnc_r3_bonus_bridge_part,
-    castle_location_names.btn_r3_simon_1: item_name.btnc_r3_bonus_part,
-    castle_location_names.btn_r3_rune_2: item_name.btnc_r3_bonus_bridge_part,
-    castle_location_names.btn_r3_simon_5: item_name.btnc_r3_bonus_part,
-    castle_location_names.btn_r3_rune_1: item_name.btnc_r3_bonus_bridge_part,
-    castle_location_names.btn_r3_simon_2: item_name.btnc_r3_bonus_part,
-    castle_location_names.btn_r3_simon_3: item_name.btnc_r3_bonus_part,
-    castle_location_names.btn_r3_simon_6: item_name.btnc_r3_bonus_part,
     castle_location_names.btn_r3_wall_passage_room_2: item_name.btnc_r3_passage_end,
     castle_location_names.btn_r3_wall_passage_room_1: item_name.btnc_r3_passage_room_1,
     castle_location_names.btn_r3_wall_ne_2: item_name.btnc_r3_tp_ne_t,
     castle_location_names.btn_r3_wall_ne_1: item_name.btnc_r3_tp_ne_b,
-    castle_location_names.btn_r3_wall_seq_n: item_name.btnc_r3_simon_room_part,
-    castle_location_names.btn_r3_wall_seq_ne: item_name.btnc_r3_simon_room_part,
     castle_location_names.btn_r3_wall_sw_gate: item_name.btnc_r3_sw_room,
-    castle_location_names.btn_r3_wall_seq_w: item_name.btnc_r3_simon_room_part,
-    castle_location_names.btn_r3_wall_seq_m: item_name.btnc_r3_simon_room_part,
-    castle_location_names.btn_r3_wall_seq_se: item_name.btnc_r3_simon_room_part,
     castle_location_names.btn_c1_floor_n: item_name.btnc_c1_n_spikes,
     castle_location_names.btn_c1_floor_red: item_name.btnc_c1_red_spikes,
     castle_location_names.btn_c1_wall_red: item_name.btnc_c1_red_spike_turrets,
@@ -1939,44 +1840,15 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_c1_wall_s_gate: item_name.btnc_c1_s_shortcut,
     castle_location_names.btn_pstart_puzzle: item_name.btnc_pstart_puzzle,
     castle_location_names.btn_pstart_rune: item_name.btnc_pstart_bridge,
-    castle_location_names.btn_pstart_rune_4: item_name.btnc_pstart_bridge_part,
-    castle_location_names.btn_pstart_rune_3: item_name.btnc_pstart_bridge_part,
-    castle_location_names.btn_pstart_rune_2: item_name.btnc_pstart_bridge_part,
-    castle_location_names.btn_pstart_rune_1: item_name.btnc_pstart_bridge_part,
     castle_location_names.btn_c2_boss_w: item_name.btnc_b4_rune_2,
     castle_location_names.btn_c2_boss_e: item_name.btnc_b4_rune_1,
-    castle_location_names.btn_c2_boss_w_1: item_name.btnc_b4_rune_2_part,
-    castle_location_names.btn_c2_boss_w_3: item_name.btnc_b4_rune_2_part,
-    castle_location_names.btn_c2_boss_w_2: item_name.btnc_b4_rune_2_part,
-    castle_location_names.btn_c2_boss_w_4: item_name.btnc_b4_rune_2_part,
-    castle_location_names.btn_c2_boss_e_2: item_name.btnc_b4_rune_1_part,
-    castle_location_names.btn_c2_boss_e_1: item_name.btnc_b4_rune_1_part,
-    castle_location_names.btn_c2_boss_e_3: item_name.btnc_b4_rune_1_part,
-    castle_location_names.btn_c2_boss_e_4: item_name.btnc_b4_rune_1_part,
     castle_location_names.btn_c2_floor_sw: item_name.btnc_c2_sw_room,
     castle_location_names.btn_c2_floor_t_hall: item_name.btnc_c2_n_shops,
     castle_location_names.btn_c2_floor_w: item_name.btnc_c2_w_shortcut,
     castle_location_names.btn_c2_puzzle: item_name.btnc_c2_puzzle,
     castle_location_names.btn_c2_rune_bonus: item_name.btnc_c2_bonus,
-    castle_location_names.btn_c2_rune_bonus_1: item_name.btnc_c2_bonus_part,
     castle_location_names.btn_c2_rune: item_name.btnc_c2_tp_spikes,
-    castle_location_names.btn_c2_rune_1: item_name.btnc_c2_tp_spikes_part,
-    castle_location_names.btn_c2_rune_bonus_2: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_2: item_name.btnc_c2_tp_spikes_part,
-    castle_location_names.btn_c2_rune_bonus_3: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_3: item_name.btnc_c2_tp_spikes_part,
-    castle_location_names.btn_c2_rune_bonus_8: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_4: item_name.btnc_c2_tp_spikes_part,
-    castle_location_names.btn_c2_rune_bonus_4: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_bonus_6: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_bonus_7: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_rune_bonus_5: item_name.btnc_c2_bonus_part,
-    castle_location_names.btn_c2_wall_seq_nw: item_name.btnc_c2_bonus_room_part,
-    castle_location_names.btn_c2_wall_seq_ne: item_name.btnc_c2_bonus_room_part,
     castle_location_names.btn_c2_wall_n_exit_gate: item_name.btnc_c2_n_room,
-    castle_location_names.btn_c2_wall_seq_w: item_name.btnc_c2_bonus_room_part,
-    castle_location_names.btn_c2_wall_seq_s: item_name.btnc_c2_bonus_room_part,
-    castle_location_names.btn_c2_wall_seq_e: item_name.btnc_c2_bonus_room_part,
     castle_location_names.btn_c2_wall_red_n: item_name.btnc_c2_n_red_flame_turret_on,
     castle_location_names.btn_c2_wall_blue: item_name.btnc_c2_blue_spike_turret,
     castle_location_names.btn_c2_wall_portal_shop: item_name.btnc_c2_open_puzzle,
@@ -1984,18 +1856,8 @@ castle_button_items: typing.Dict[str, str] = {
     castle_location_names.btn_c2_wall_red_s: item_name.btnc_c2_s_red_flame_turret,
     castle_location_names.btn_c2_wall_s_save: item_name.btnc_c2_s_shortcut,
     castle_location_names.btn_c3_boss: item_name.btnc_b4_rune_3,
-    castle_location_names.btn_c3_boss_1: item_name.btnc_b4_rune_3_part,
-    castle_location_names.btn_c3_boss_3: item_name.btnc_b4_rune_3_part,
-    castle_location_names.btn_c3_boss_2: item_name.btnc_b4_rune_3_part,
-    castle_location_names.btn_c3_boss_4: item_name.btnc_b4_rune_3_part,
     castle_location_names.btn_c3_floor: item_name.btnc_c3_e_shortcut,
     castle_location_names.btn_c3_rune: item_name.btnc_c3_sw_room,
-    castle_location_names.btn_c3_rune_s: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_se: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_w: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_e: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_n: item_name.btnc_c3_sw_room_part,
-    castle_location_names.btn_c3_rune_ne: item_name.btnc_c3_sw_room_part,
     castle_location_names.btn_c3_wall_red: item_name.btnc_c3_red_spikes,
     castle_location_names.btn_c3_wall_blue: item_name.btnc_c3_blue_fire_turrets_on,
     castle_location_names.btn_c3_wall_w: item_name.btnc_c3_tp_m,
@@ -2795,38 +2657,14 @@ temple_event_buttons = {
     temple_location_names.btn_pof_2_panel_w: item_name.btn_pof_2_exit,
     temple_location_names.btn_t2_floor_blue: item_name.btn_t2_blue,
     temple_location_names.btn_t2_runes: item_name.btn_t2_light_bridges,
-    temple_location_names.btn_t2_rune_n: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_w: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_e: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
+    # temple_location_names.btn_t2_rune_n: item_name.btn_t2_light_bridges_part,
+    # temple_location_names.btn_t2_rune_w: item_name.btn_t2_light_bridges_part,
+    # temple_location_names.btn_t2_rune_e: item_name.btn_t2_light_bridges_part,
+    # temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
+    # temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
 }
 
 temple_button_items: typing.Dict[str, str] = {
-    temple_location_names.btn_hub_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_hub_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_hub_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_hub_pof_4: item_name.btn_pof_part,
-    temple_location_names.btn_c3_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_c3_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_c3_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_c3_pof_4: item_name.btn_pof_part,
-    temple_location_names.btn_c2_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_c2_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_c2_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_c2_pof_4: item_name.btn_pof_part,
-    temple_location_names.btn_c1_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_c1_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_c1_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_c1_pof_4: item_name.btn_pof_part,
-    temple_location_names.btn_t1_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_t1_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_t1_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_t1_pof_4: item_name.btn_pof_part,
-    temple_location_names.btn_t2_pof_1: item_name.btn_pof_part,
-    temple_location_names.btn_t2_pof_2: item_name.btn_pof_part,
-    temple_location_names.btn_t2_pof_3: item_name.btn_pof_part,
-    temple_location_names.btn_t2_pof_4: item_name.btn_pof_part,
     temple_location_names.btn_c3_floor_fall: item_name.btn_c3_fall_bridge,
     temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
     temple_location_names.btn_c3_puzzle: item_name.btn_c3_puzzle,
@@ -2857,11 +2695,6 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t2_puzzle_e: item_name.btn_t2_puzzle_e,
     temple_location_names.btn_t2_puzzle_s: item_name.btn_t2_puzzle_s,
     temple_location_names.btn_t2_puzzle_w: item_name.btn_t2_puzzle_w,
-    temple_location_names.btn_t2_rune_n: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_e: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_w: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
-    temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
     temple_location_names.btn_t2_wall_n_hidden_hall: item_name.btn_t2_jones_hall_back,
     temple_location_names.btn_t2_wall_nw_gate: item_name.btn_t2_nw_gate,
     temple_location_names.btn_t2_wall_jones_hall: item_name.btn_t2_jones_hall,
@@ -2871,8 +2704,8 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t2_wall_w_ice_gate: item_name.btn_t2_ice_gate_w,
     temple_location_names.btn_t2_wall_e_ice_gate: item_name.btn_t2_ice_gate_e,
     temple_location_names.btn_t2_wall_n_node: item_name.btn_t2_boulder_room,
-    temple_location_names.btn_t2_wall_portal_w: item_name.btn_t2_portal_part,
-    temple_location_names.btn_t2_wall_portal_e: item_name.btn_t2_portal_part,
+    # temple_location_names.btn_t2_wall_portal_w: item_name.btn_t2_portal_part,
+    # temple_location_names.btn_t2_wall_portal_e: item_name.btn_t2_portal_part,
     temple_location_names.btn_t2_wall_jail_w: item_name.btn_t2_jail_w,
     temple_location_names.btn_t2_wall_jail_e: item_name.btn_t2_jail_e,
     temple_location_names.btn_t2_wall_jail_s: item_name.btn_t2_s_spikes,
@@ -2880,10 +2713,6 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t2_wall_s_gate_hall: item_name.btn_t2_s_gate_hall,
     temple_location_names.btn_t2_wall_pof: item_name.btn_t2_jail_s,
     temple_location_names.btn_t2_floor_portal: item_name.btn_t2_portal_gate,
-    temple_location_names.btn_t3_lever_1: item_name.btn_t3_puzzle_room_part,
-    temple_location_names.btn_t3_lever_2: item_name.btn_t3_puzzle_room_part,
-    temple_location_names.btn_t3_lever_3: item_name.btn_t3_puzzle_room_part,
-    temple_location_names.btn_t3_lever_4: item_name.btn_t3_puzzle_room_part,
     temple_location_names.btn_t3_puzzle: item_name.btn_t3_puzzle,
     temple_location_names.btn_t3_wall_fall_1: item_name.btn_t3_fall_1,
     temple_location_names.btn_t3_wall_fall_2: item_name.btn_t3_fall_2,
@@ -2906,13 +2735,6 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t2_runes: item_name.btn_t2_light_bridges,
     temple_location_names.btn_t2_portal: item_name.btn_t2_portal,
     temple_location_names.btn_t3_levers: item_name.btn_t3_gold_chutes,
-}
-
-temple_part_items: typing.Set[str] = {
-    item_name.btn_pof_part,
-    item_name.btn_t2_light_bridges_part,
-    item_name.btn_t2_portal_part,
-    item_name.btn_t3_puzzle_room_part,
 }
 
 temple_locations: typing.Dict[str, LocationData] = {
@@ -2951,8 +2773,8 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     item_counts: typing.Dict[str, int] = {}
     bonus_locations: typing.Dict[str, LocationData] = {}
     random_locations: typing.Dict[str, int] = {}
-    button_items = {}
-    map_button_items: typing.Dict[str, str]
+    # button_items = {}
+    map_button_items: typing.Dict[str, int]
     event_buttons: typing.Dict[str, str]
     combo_button_locs: typing.Set[str]
     pickup_locs: typing.Dict[str, LocationData]
@@ -2961,35 +2783,23 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     location_table = {}
     if hw_map == Campaign.Castle:
         item_counts.update(castle_item_counts)
-        map_button_items = castle_button_items
+        map_button_items = castle_button_item_counts
         button_locations = castle_button_locations
         combo_button_locs = castle_combo_button_locations
         hw_map_locations = get_base_locations(world, castle_pickup_locations, castle_enemy_loot_locations,
                                               button_locations, castle_event_buttons, combo_button_locs)
     else:  # Need a default case for this else tests will complain
         item_counts.update(temple_item_counts)
-        map_button_items = temple_button_items
+        map_button_items = temple_button_item_counts
         button_locations = temple_button_locations
         combo_button_locs = temple_combo_button_locations
         hw_map_locations = get_base_locations(world, temple_pickup_locations, temple_enemy_loot_locations,
                                               button_locations, temple_event_buttons, combo_button_locs)
 
     if world.options.buttonsanity > 0:
-        for loc, itm in map_button_items.items():
-            if (button_locations[loc].loc_type & LocType.Buttoninsanity) == LocType.Buttoninsanity:
-                continue
-            if itm not in button_items:
-                button_items[itm] = 0
-            button_items[itm] += 1
-        if hw_map == Campaign.Castle:
-            # Special override as the spike puzzle locations exist for both buttonsanity options
-            button_items.pop(item_name.btnc_p2_spike_puzzle_r_part)
-            button_items.pop(item_name.btnc_p2_spike_puzzle_b_part)
-            button_items.pop(item_name.btnc_p2_spike_puzzle_t_part)
-            button_items[item_name.btnc_p2_spike_puzzle_r] = 1
-            button_items[item_name.btnc_p2_spike_puzzle_b] = 1
-            button_items[item_name.btnc_p2_spike_puzzle_t] = 1
-    item_counts.update(button_items)
+        for itm, count in map_button_items.items():
+            item_counts[itm] = count
+    # item_counts.update(button_items)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
     for name, data in hw_map_locations.items():
@@ -3769,8 +3579,8 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     if random_locations[temple_location_names.rloc_t2_portal] != 2:
         remove_location(temple_location_names.t2_teleporter, item_name.stat_upgrade)
         if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:
-            remove_button(temple_location_names.btn_t2_wall_portal_w)
-            remove_button(temple_location_names.btn_t2_wall_portal_e)
+            location_table.pop(temple_location_names.btn_t2_wall_portal_w)
+            location_table.pop(temple_location_names.btn_t2_wall_portal_e)
         elif world.options.buttonsanity.value > 0:
             remove_button(temple_location_names.btn_t2_portal)
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] = world.random.randrange(2)

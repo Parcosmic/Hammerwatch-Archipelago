@@ -296,7 +296,7 @@ def set_connections(world: "HammerwatchWorld",
             start_code = world.random.choice(available_start_codes)
             world.start_exit = start_code
             start_region = code_to_region[start_code]
-            start_entrance = connect(world, {}, castle_region_names.menu, start_region.name, False)
+            start_entrance = connect(world, {}, castle_region_names.menu, start_region.name, False)[0]
         else:
             start_region = world.multiworld.get_region(castle_region_names.menu, world.player)
         entrances = start_region.exits.copy()

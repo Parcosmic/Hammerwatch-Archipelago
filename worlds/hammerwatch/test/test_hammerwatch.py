@@ -199,11 +199,12 @@ class TestCastleButtonsanityOff(HammerwatchTestBase):
         self.test_fill()
 
         for location in self.multiworld.get_locations(1):
-            if location.name not in locations.all_locations:
+            if location.name not in locations.all_locations or location.item.code is None:
                 continue
             loc_type = locations.all_locations[location.name].loc_type
             if loc_type & locations.LocType.Button:
-                self.assertTrue(location.item.name in items.castle_button_table)
+                self.assertTrue(location.item.name in items.castle_button_table,
+                                f"Non-button item {location.item} found in button location: {location.name}")
 
 
 class TestTempleButtonsanityOff(HammerwatchTestBase):

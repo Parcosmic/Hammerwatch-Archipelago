@@ -2368,12 +2368,12 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.c_p2_5, True)
     if buttonsanity:
-        p2_shortcut = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s, True)
-        p2_shortcut_items = (
-            item_name.btnc_p2_shortcut_n,
-            item_name.btnc_p2_shortcut_s,
-        )
-        add_rule(p2_shortcut, lambda state: state.has_all(p2_shortcut_items, world.player))
+        p2_shortcuts = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s, True)
+
+        def p2_passage_rule(state):
+            return state.has_all((item_name.btnc_p2_shortcut_n, item_name.btnc_p2_shortcut_s), world.player)
+        for entr in p2_shortcuts:
+            add_rule(entr, p2_passage_rule)
     connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False,
             item_name.btnc_p2_spike_puzzle_r, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.p2_spike_puzzle_bottom, castle_region_names.p2_spike_puzzle_left,
@@ -2402,7 +2402,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                  key_bronze[1], gate_codes, gate_counts[1], gate_names.c_p2_6, False)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_se_bronze_gate,
                  key_bronze[1], gate_codes, gate_counts[1], gate_names.c_p2_2, False)
-    if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
+    if world.options.buttonsanity.value:
         connect(world, used_names, castle_region_names.p2_s, castle_region_names.p2_gg_room_reward,
                 False, item_name.btnc_p2_rune_sequence, 1, False)
     else:
@@ -3151,12 +3151,8 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     for gate in c3_n_internals:
         connect_gate(world, used_names, castle_region_names.c3_nw, castle_region_names.c3_nw,
                      key_bronze[11], gate_codes, gate_counts[11], gate, False)
-    if world.options.buttonsanity.value == world.options.buttonsanity.option_normal:
-        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden, buttonsanity,
-                item_name.btnc_c3_sw_room, 1, False)
-    else:
-        connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden, buttonsanity,
-                item_name.btnc_c3_sw_room_part, 6, False)
+    connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_sw_hidden,
+            buttonsanity, item_name.btnc_c3_sw_room, 1, False)
     if buttonsanity:
         connect(world, used_names, castle_region_names.c3_rspikes, castle_region_names.c3_se_hidden, False,
                 item_name.btnc_c3_open_s_hall, 1, False)
@@ -4337,7 +4333,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
                (item_name.btn_c3_e_bridge, item_name.btn_c2_pumps), True)
     connect(world, used_names, temple_region_names.c3_e, temple_region_names.c3_e_guard_secret,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
-    connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, False,
+    connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, buttonsanity,
             item_name.btn_c3_fall_bridge, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_3_secret, temple_region_names.c3_e,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
@@ -4665,7 +4661,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.btn_t3_fall_1, 1, False, buttonsanity)
     # The second boss fall leads to the right of the sun blocks, we can only access main if we broke the blocks
     t3_fall2_entr = connect(world, used_names, temple_region_names.t3_boss_fall_2, temple_region_names.t3_main,
-                            False, item_name.btn_t3_fall_2, 1, False, buttonsanity)
+                            False, item_name.btn_t3_fall_2, 1, False, buttonsanity)[0]
     add_rule(t3_fall2_entr, lambda state: state.can_reach_region(temple_region_names.t3_n_node_blocks, world.player))
     world.multiworld.register_indirect_condition(temple_region_names.t3_n_node_blocks, t3_fall2_entr)
     if buttonsanity:
@@ -4927,8 +4923,14 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
-    return connect_region(world, used_names, source_region, target_region, two_way, pass_item, item_count,
-                          items_consumed, use_pass_item)
+    connections = [connect_region(world, used_names, source_region, target_region, two_way, pass_item, item_count,
+                   items_consumed, use_pass_item)]
+
+    if two_way:
+        connections.append(connect_region(world, used_names, target_region, source_region, False, pass_item, item_count,
+                           items_consumed, use_pass_item))
+
+    return connections
 
 
 def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
@@ -5043,7 +5045,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     connection.connect(target_region)
 
     if two_way:
-        entrances.append(connect(world, used_names, target, source, False, key_item_name, 1, consumed))
+        entrances.append(connect(world, used_names, target, source, False, key_item_name, 1, consumed)[0])
 
     return entrances
 

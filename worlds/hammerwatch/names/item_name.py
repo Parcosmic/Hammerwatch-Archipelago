@@ -556,18 +556,6 @@ btnc_b3_rune_3 = "Archives Boss Rune A"
 btnc_b4_rune_1 = "Chambers Boss Rune y"
 btnc_b4_rune_2 = "Chambers Boss Rune n"
 btnc_b4_rune_3 = "Chambers Boss Rune A"
-btnc_b1_rune_1_part = "Prison Boss Rune y Progress"
-btnc_b1_rune_2_part = "Prison Boss Rune n Progress"
-btnc_b1_rune_3_part = "Prison Boss Rune A Progress"
-btnc_b2_rune_1_part = "Armory Boss Rune y Progress"
-btnc_b2_rune_2_part = "Armory Boss Rune n Progress"
-btnc_b2_rune_3_part = "Armory Boss Rune A Progress"
-btnc_b3_rune_1_part = "Archives Boss Rune y Progress"
-btnc_b3_rune_2_part = "Archives Boss Rune n Progress"
-btnc_b3_rune_3_part = "Archives Boss Rune A Progress"
-btnc_b4_rune_1_part = "Chambers Boss Rune y Progress"
-btnc_b4_rune_2_part = "Chambers Boss Rune n Progress"
-btnc_b4_rune_3_part = "Chambers Boss Rune A Progress"
 btnc_pstart_puzzle = "Activate PrF1 Puzzle"
 btnc_p2_puzzle = "Activate PrF2 Puzzle"
 btnc_a1_puzzle = "Activate AmF4 Puzzle"
@@ -579,17 +567,12 @@ btnc_p1_floor = "Open PrF1 Passage"
 btnc_p2_spike_puzzle_r = "Enable PrF2 Spike Puzzle East Buttons"
 btnc_p2_spike_puzzle_b = "Enable PrF2 Spike Puzzle South Buttons"
 btnc_p2_spike_puzzle_t = "Enable PrF2 Spike Puzzle North Buttons"
-btnc_p2_spike_puzzle_r_part = "Enable PrF2 Spike Puzzle East Buttons Progress"
-btnc_p2_spike_puzzle_b_part = "Enable PrF2 Spike Puzzle South Buttons Progress"
-btnc_p2_spike_puzzle_t_part = "Enable PrF2 Spike Puzzle North Buttons Progress"
 btnc_p2_red_spikes = "Disable PrF2 Red Spikes"
 btnc_p2_open_w_jail = "Open PrF2 West Treasure Room"
 btnc_p2_tp_jail = "Teleport PrF2 West Treasure Room Item"
 btnc_p2_e_save = "Open PrF2 East Save Room"
 btnc_p2_tp_w = "Teleport PrF2 West Rune Puzzle Item"
-btnc_p2_tp_w_part = "Teleport PrF2 West Rune Puzzle Item Progress"
 btnc_p2_rune_sequence = "Activate PrF2 SE Rune Puzzle Reward"
-btnc_p2_rune_sequence_part = "Activate PrF2 SE Rune Puzzle Reward Progress"
 btnc_p2_m_stairs = "Open PrF2 Middle Entrance Room"
 btnc_p2_shortcut_n = "Open PrF2 Middle Shortcut Top"
 btnc_p2_shortcut_s = "Open PrF2 Middle Shortcut Bottom"
@@ -600,9 +583,7 @@ btnc_p3_blue_spikes = "Disable PrF3 Blue Spikes"
 btnc_p3_e_passage = "Open PrF3 SE Passage"
 btnc_p3_s_spikes = "Disable PrF3 South Spikes"
 btnc_p3_portal = "Open PrF3 Bonus Portal"
-btnc_p3_portal_part = "Open PrF3 Bonus Portal Progress"
 btnc_p3_open_bonus = "Open PrF3 Bonus Room"
-btnc_p3_open_bonus_part = "Open PrF3 Bonus Room Progress"
 btnc_p3_start = "Open PrF3 Entrance Room"
 btnc_p3_shop = "Open PrF3 North Secret Shop Room"
 btnc_p3_bonus_side = "Open PrF3 Bonus Room Side Hall"
@@ -624,7 +605,6 @@ btnc_a1_m_shortcut = "Open AmF4 Middle Shortcut"
 btnc_a1_red_spikes = "Disable AmF4 Red Spikes"
 btnc_a1_sw_spikes = "Disable AmF4 SW Spikes"
 btnc_a1_open_se_cache = "Open AmF4 SE Cache"
-btnc_a1_open_se_cache_part = "Open AmF4 SE Cache Progress"
 btnc_a1_open_m_cache = "Open AmF4 Middle Cache"
 btnc_a1_open_ne_cache = "Open AmF4 NE Cache"
 btnc_a1_open_se_wall = "Open AmF4 South Wall"
@@ -639,7 +619,6 @@ btnc_a2_tp_ne = "Teleport AmF5 NE Fireball Hall Item"
 btnc_a2_tp_sw = "Teleport AmF5 SW Item"
 btnc_a2_tp_se = "Teleport AmF5 SE Item"
 btnc_a2_tp_ne_gates = "Teleport AmF5 NE Gates Item"
-btnc_a2_tp_ne_gates_part = "Teleport AmF5 NE Gates Item Progress"
 btnc_a2_open_w_exit = "Open AmF5 West Exits Hall"
 btnc_a2_open_shortcut = "Open AmF5 Start Shortcut"  # Useful
 btnc_a2_open_se_room_l = "Open AmF5 SE Tower Room Left Side"
@@ -649,11 +628,9 @@ btnc_n2_open_se_room = "Open AmB SE Room"
 btnc_n2_open_ne_room = "Open AmB NE Room"
 btnc_n2_open_exit = "Open AmB Exit"
 btnc_a3_open_knife = "Open AmF6 Spike Turret Reward Rooms"
-btnc_a3_open_knife_part = "Open AmF6 Spike Turret Reward Rooms Progress"
 btnc_a3_tp_m = "Teleport AmF6 Middle Item"
 btnc_a3_bgate_tp = "Teleport AmF6 South Pyramid South Bronze Gate Item"
 btnc_a3_open_knife_2 = "Open AmF6 Spike Turret 2nd Reward Rooms"
-btnc_a3_open_knife_2_part = "Open AmF6 Spike Turret 2nd Reward Rooms Progress"
 btnc_a3_open_m_stairs = "Open AmF6 Middle Exit"
 btnc_a3_open_start_n = "Open AmF6 Start North Wall"
 btnc_a3_open_start_e = "Open AmF6 Start East Wall"
@@ -676,7 +653,6 @@ btnc_r2_open_s_r = "Open AvF8 South Area Right Side"
 btnc_r2_open_fire_b = "Open AvF8 Fire Trap Room Bottom Side"
 btnc_r2_open_s_l = "Open AvF8 South Area Left Side"
 btnc_r2_open_puzzle = "Open AvF8 Puzzle Room"
-btnc_r2_open_puzzle_part = "Open AvF8 Puzzle Room Progress"
 btnc_r2_nw_shortcut = "Open AvF8 NW Shortcut"  # Useful
 btnc_r2_open_start = "Open AvF8 Middle Entrance"
 btnc_r2_open_spikes_t = "Open AvF8 Spike Turret Island Top Shortcut"
@@ -695,15 +671,12 @@ btnc_r3_open_s_r = "Open AvF9 South Room Right Side"
 btnc_r3_open_bs = "Open AvF9 Boss Rune Room"
 btnc_r3_simon = "Activate AvF9 Simon Says Puzzle"
 btnc_r3_bonus_bridge = "Activate AvF9 Bonus Return Light Bridge"
-btnc_r3_bonus_bridge_part = "Activate AvF9 Bonus Return Light Bridge Progress"
 btnc_r3_bonus = "Open AvF9 Bonus Portal Passage"
-btnc_r3_bonus_part = "Open AvF9 Bonus Portal Passage Progress"
 btnc_r3_passage_end = "Open AvF9 Secret Passage End"
 btnc_r3_passage_room_1 = "Open AvF9 Secret Passage South Room"
 btnc_r3_tp_ne_t = "Teleport AvF9 NE Top Item"
 btnc_r3_tp_ne_b = "Teleport AvF9 NE Bottom Item"
 btnc_r3_simon_room = "Open AvF9 Simon Says Room"
-btnc_r3_simon_room_part = "Open AvF9 Simon Says Room Progress"
 btnc_r3_sw_room = "Open AvF9 SW Secret Room"
 btnc_r3_passage = "Open AvF9 Secret Passage"
 btnc_c1_n_spikes = "Disable ChF10 North Spikes"
@@ -713,16 +686,12 @@ btnc_c1_red_flame_turrets = "Disable ChF10 Red Flame Turret"  # Useful
 btnc_c1_s_shortcut = "Open ChF10 South Shortcut"
 btnc_c1_sw_exit = "Open ChF10 SW Exit"
 btnc_pstart_bridge = "Activate PrF1 SW Light Bridge"
-btnc_pstart_bridge_part = "Activate PrF1 SW Light Bridge Progress"
 btnc_c2_sw_room = "Open ChF11 SW Secret Room"
 btnc_c2_n_shops = "Open ChF11 North Shops Room"
 btnc_c2_w_shortcut = "Open ChF11 West Shortcut"
 btnc_c2_bonus = "Open ChF11 Bonus Portal"
-btnc_c2_bonus_part = "Open ChF11 Bonus Portal Progress"
 btnc_c2_tp_spikes = "Teleport ChF11 West Spike Items"
-btnc_c2_tp_spikes_part = "Teleport ChF11 West Spike Items Progress"
 btnc_c2_bonus_room = "Open ChF11 Bonus Room"
-btnc_c2_bonus_room_part = "Open ChF11 Bonus Room Progress"
 btnc_c2_n_room = "Open ChF11 North Exit Closed Room"
 btnc_c2_n_red_flame_turret_on = "Activate ChF11 North Red Flame Turret"  # Useful
 btnc_c2_blue_spike_turret = "Disable ChF11 Blue Spike Turret"  # Useful
@@ -732,7 +701,6 @@ btnc_c2_s_red_flame_turret = "Disable ChF11 South Red Flame Turrets"  # Useful
 btnc_c2_s_shortcut = "Open ChF11 South Entrance Shortcut"  # Useful
 btnc_c3_e_shortcut = "Open ChF12 East Shortcut"
 btnc_c3_sw_room = "Open ChF12 SW Hidden Hall"
-btnc_c3_sw_room_part = "Open ChF12 SW Hidden Hall Progress"
 btnc_c3_red_spikes = "Disable ChF12 Red Spikes"
 btnc_c3_blue_fire_turrets_on = "Activate ChF12 Blue Flame Turrets"  # Trap
 btnc_c3_tp_m = "Teleport ChF12 Middle Item"
@@ -740,6 +708,39 @@ btnc_c3_red_spike_turrets = "Disable ChF12 Red Spike Turrets"  # Useful
 btnc_c3_tp_se = "Teleport ChF12 Fire Floor Item"
 btnc_c3_open_w_room = "Open ChF12 West Secret Room"
 btnc_c3_open_s_hall = "Open ChF12 South Hidden Hall"
+
+# btnc_b1_rune_1_part = "Prison Boss Rune y Progress"
+# btnc_b1_rune_2_part = "Prison Boss Rune n Progress"
+# btnc_b1_rune_3_part = "Prison Boss Rune A Progress"
+# btnc_b2_rune_1_part = "Armory Boss Rune y Progress"
+# btnc_b2_rune_2_part = "Armory Boss Rune n Progress"
+# btnc_b2_rune_3_part = "Armory Boss Rune A Progress"
+# btnc_b3_rune_1_part = "Archives Boss Rune y Progress"
+# btnc_b3_rune_2_part = "Archives Boss Rune n Progress"
+# btnc_b3_rune_3_part = "Archives Boss Rune A Progress"
+# btnc_b4_rune_1_part = "Chambers Boss Rune y Progress"
+# btnc_b4_rune_2_part = "Chambers Boss Rune n Progress"
+# btnc_b4_rune_3_part = "Chambers Boss Rune A Progress"
+# btnc_p2_spike_puzzle_r_part = "Enable PrF2 Spike Puzzle East Buttons Progress"
+# btnc_p2_spike_puzzle_b_part = "Enable PrF2 Spike Puzzle South Buttons Progress"
+# btnc_p2_spike_puzzle_t_part = "Enable PrF2 Spike Puzzle North Buttons Progress"
+# btnc_p2_tp_w_part = "Teleport PrF2 West Rune Puzzle Item Progress"
+btnc_p2_rune_sequence_part = "Activate PrF2 SE Rune Puzzle Reward Progress"
+# btnc_p3_portal_part = "Open PrF3 Bonus Portal Progress"
+# btnc_p3_open_bonus_part = "Open PrF3 Bonus Room Progress"
+# btnc_a1_open_se_cache_part = "Open AmF4 SE Cache Progress"
+# btnc_a2_tp_ne_gates_part = "Teleport AmF5 NE Gates Item Progress"
+# btnc_a3_open_knife_part = "Open AmF6 Spike Turret Reward Rooms Progress"
+# btnc_a3_open_knife_2_part = "Open AmF6 Spike Turret 2nd Reward Rooms Progress"
+# btnc_r2_open_puzzle_part = "Open AvF8 Puzzle Room Progress"
+# btnc_r3_bonus_bridge_part = "Activate AvF9 Bonus Return Light Bridge Progress"
+# btnc_r3_bonus_part = "Open AvF9 Bonus Portal Passage Progress"
+# btnc_r3_simon_room_part = "Open AvF9 Simon Says Room Progress"
+# btnc_pstart_bridge_part = "Activate PrF1 SW Light Bridge Progress"
+# btnc_c2_bonus_part = "Open ChF11 Bonus Portal Progress"
+# btnc_c2_tp_spikes_part = "Teleport ChF11 West Spike Items Progress"
+# btnc_c2_bonus_room_part = "Open ChF11 Bonus Room Progress"
+# btnc_c3_sw_room_part = "Open ChF12 SW Hidden Hall Progress"
 
 # Temple button item names
 btn_pof = "Elevate PoF Pyramid"
@@ -804,10 +805,11 @@ btn_pof_1_exit = "Open PoF Level 1 Exit"
 btn_pof_2_puzzle = "Open PoF Level 2 Puzzle Room"
 btn_pof_2_exit = "Open PoF Level 2 Exit"
 btn_pof_3_start = "Open PoF Level 3 Start Room"
-btn_pof_part = "Elevate PoF Pyramid Progress"
-btn_t2_light_bridges_part = "Activate TF2 Light Bridges Progress"
-btn_t2_portal_part = "Open TF2 Portal Room Shortcut Progress"
-btn_t3_puzzle_room_part = "Open TF3 Puzzle Room Progress"
+
+# btn_pof_part = "Elevate PoF Pyramid Progress"
+# btn_t2_light_bridges_part = "Activate TF2 Light Bridges Progress"
+# btn_t2_portal_part = "Open TF2 Portal Room Shortcut Progress"
+# btn_t3_puzzle_room_part = "Open TF3 Puzzle Room Progress"
 
 # Event/Button Names
 evc_escaped = "Escaped Castle Hammerwatch"
@@ -960,7 +962,6 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
     },
     group_buttons: {
         btn_pof,
-        btn_pof_part,
         btn_c3_puzzle,
         btn_c2_puzzle,
         btn_c1_puzzle_e,
@@ -994,7 +995,6 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_t1_runway,
         btn_t2_blue,
         btn_t2_light_bridges,
-        btn_t2_light_bridges_part,
         btn_t2_jones_hall_back,
         btn_t2_jones_hall,
         btn_t2_nw_gate,
@@ -1005,7 +1005,6 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_t2_ice_gate_e,
         btn_t2_boulder_room,
         btn_t2_portal,
-        btn_t2_portal_part,
         btn_t2_jail_e,
         btn_t2_jail_w,
         btn_t2_jail_s,
@@ -1014,7 +1013,6 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_t2_s_spikes,
         btn_t2_portal_gate,
         btn_t3_gold_chutes,
-        btn_t3_puzzle_room_part,
         btn_t3_fall_1,
         btn_t3_fall_2,
         btn_t3_fall_3,
@@ -1030,33 +1028,21 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btnc_b1_rune_1,
         btnc_b1_rune_2,
         btnc_b1_rune_3,
-        btnc_b1_rune_1_part,
-        btnc_b1_rune_2_part,
-        btnc_b1_rune_3_part,
     },
     group_b2_boss: {
         btnc_b2_rune_1,
         btnc_b2_rune_2,
         btnc_b2_rune_3,
-        btnc_b2_rune_1_part,
-        btnc_b2_rune_2_part,
-        btnc_b2_rune_3_part,
     },
     group_b3_boss: {
         btnc_b3_rune_1,
         btnc_b3_rune_2,
         btnc_b3_rune_3,
-        btnc_b3_rune_1_part,
-        btnc_b3_rune_2_part,
-        btnc_b3_rune_3_part,
     },
     group_b4_boss: {
         btnc_b4_rune_1,
         btnc_b4_rune_2,
         btnc_b4_rune_3,
-        btnc_b4_rune_1_part,
-        btnc_b4_rune_2_part,
-        btnc_b4_rune_3_part,
     },
     group_shop_items: {
         *class_shop_upgrades[util.PlayerClass.Paladin],
