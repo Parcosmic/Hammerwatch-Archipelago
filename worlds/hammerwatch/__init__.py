@@ -2,7 +2,7 @@ import logging
 import typing
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
-    entrance_names, option_names, gate_names
+    entrance_names, option_names, gate_names, location_groups
 from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items,
                     castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
@@ -56,6 +56,7 @@ class HammerwatchWorld(World):
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
     item_name_groups = item_name.item_groups
+    location_name_groups = location_groups.location_groups
 
     campaign: Campaign
     active_location_list: typing.Dict[str, LocationData]
