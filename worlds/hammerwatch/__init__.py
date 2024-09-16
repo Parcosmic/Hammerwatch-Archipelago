@@ -165,9 +165,10 @@ class HammerwatchWorld(World):
 
         # Add floor master key items to item_counts
         if self.options.key_mode.value == self.options.key_mode.option_floor_master:
-            if not self.options.randomize_bonus_keys.value:
+            if self.options.randomize_bonus_keys.value:
+                self.item_counts.update(self.key_item_counts)
+            else:
                 self.item_counts.update({key: num for key, num in self.key_item_counts.items() if "Bonus" not in key})
-            self.item_counts.update(self.key_item_counts)
 
         # First create and place our locked items so we know how many are left over
         if self.campaign == Campaign.Castle:
@@ -390,8 +391,11 @@ class HammerwatchWorld(World):
         # Force Dune Shark key location to be the correct key if randomize enemy loot is off
         if self.options.randomize_enemy_loot.value == 0:
             if self.options.key_mode.value == self.options.key_mode.option_floor_master:
-                dune_shark_key_loc = self.multiworld.get_location(temple_location_names.b1_boss_worm_key, self.player)
-                dune_shark_key_loc.place_locked_item(self.create_item(item_name.key_gold_b1))
+                dune_shark_key_name = item_name.key_gold_b1
+            else:
+                dune_shark_key_name = item_name.key_gold
+            dune_shark_key_loc = self.multiworld.get_location(temple_location_names.b1_boss_worm_key, self.player)
+            dune_shark_key_loc.place_locked_item(self.create_item(dune_shark_key_name))
 
         # Pyramid of Fear Bonus Keys
         if not self.options.randomize_bonus_keys.value:

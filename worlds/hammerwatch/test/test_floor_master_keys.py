@@ -51,6 +51,7 @@ class TestCastleFloorMasterKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_castle_escape,
         option_names.key_mode: options.KeyMode.option_floor_master,
+        option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_true,
     }
 
     def test_no_duplicate_floor_master_keys(self):
@@ -76,6 +77,7 @@ class TestTempleFloorMasterKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_temple_all_bosses,
         option_names.key_mode: options.KeyMode.option_floor_master,
+        option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_true,
     }
 
     def test_no_duplicate_floor_master_keys(self):
@@ -100,6 +102,20 @@ class TestTempleFloorMasterKeys(HammerwatchTestBase):
 class TestCastleMasterBonusKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_castle_escape,
+        option_names.key_mode: options.KeyMode.option_floor_master,
+        option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_false,
+    }
+
+    def test_no_bonus_floor_master_keys_exist_in_pool(self):
+        self.world_setup()
+        for item in self.multiworld.itempool:
+            self.assertFalse(item.name.endswith("Master Bonus Key"),
+                             f"{item.name} exists in itempool when only bonus act keys should!")
+
+
+class TestTempleMasterBonusKeys(HammerwatchTestBase):
+    options = {
+        option_names.goal: options.Goal.option_temple_all_bosses,
         option_names.key_mode: options.KeyMode.option_floor_master,
         option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_false,
     }

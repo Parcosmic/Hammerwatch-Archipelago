@@ -402,7 +402,7 @@ temple_button_table: typing.Dict[str, ItemData] = {
     item_name.btn_t2_s_gate_hall: ItemData(counter.count(), ItemClassification.useful),
     item_name.btn_t2_s_spikes: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t2_portal_gate: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btn_t3_gold_chutes: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t3_gold_chutes: ItemData(counter.count(), ItemClassification.useful),
     item_name.btn_t3_fall_1: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t3_fall_2: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t3_fall_3: ItemData(counter.count(), ItemClassification.progression),
@@ -797,6 +797,30 @@ temple_button_item_counts: typing.Dict[str, int] = {
     item_name.btn_t2_light_bridges: 1,
     item_name.btn_t2_portal: 1,
     item_name.btn_t3_gold_chutes: 1,
+}
+
+puzzle_button_items: typing.Set[str] = {
+    item_name.btnc_pstart_puzzle,
+    item_name.btnc_p2_puzzle,
+    item_name.btnc_a1_puzzle,
+    item_name.btnc_a2_puzzle,
+    item_name.btnc_r1_puzzle,
+    item_name.btnc_r2_puzzle,
+    item_name.btnc_c2_puzzle,
+
+    item_name.btn_c3_puzzle,
+    item_name.btn_c2_puzzle,
+    item_name.btn_c1_puzzle_e,
+    item_name.btn_c1_puzzle_w,
+    item_name.btn_p_puzzle,
+    item_name.btn_t1_puzzle_w,
+    item_name.btn_t1_puzzle_e,
+    item_name.btn_t2_puzzle_w,
+    item_name.btn_t2_puzzle_e,
+    item_name.btn_t2_puzzle_n,
+    item_name.btn_t2_puzzle_s,
+    item_name.btn_t3_puzzle,
+    item_name.btn_pof_puzzle,
 }
 
 shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {

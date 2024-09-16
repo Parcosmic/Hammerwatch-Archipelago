@@ -5,7 +5,7 @@ from .names import castle_location_names, temple_location_names, item_name, opti
 from .util import (Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes,
                    is_using_universal_tracker)
 from .items import (castle_item_counts, temple_item_counts, castle_button_item_counts, temple_button_item_counts,
-                    recovery_table, get_item_counts, id_start)
+                    recovery_table, get_item_counts, id_start, puzzle_button_items)
 from enum import IntFlag
 
 if typing.TYPE_CHECKING:
@@ -1675,6 +1675,7 @@ castle_combo_button_locations: typing.Set[str] = {
     castle_location_names.btn_a3_seq_knife_2,
     castle_location_names.btn_r3_seq_simon_room,
     castle_location_names.btn_c2_seq_bonus,
+    castle_location_names.btn_c3_rune,
 }
 
 castle_event_buttons: typing.Dict[str, str] = {
@@ -2797,8 +2798,13 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
                                               button_locations, temple_event_buttons, combo_button_locs)
 
     if world.options.buttonsanity > 0:
-        for itm, count in map_button_items.items():
-            item_counts[itm] = count
+        if world.options.randomize_puzzles:
+            for itm, count in map_button_items.items():
+                item_counts[itm] = count
+        else:
+            for itm, count in map_button_items.items():
+                if itm not in puzzle_button_items:
+                    item_counts[itm] = count
     # item_counts.update(button_items)
 
     # Add bonus locations if the setting is on, and add bonus locations to a special list for handling below
@@ -3581,6 +3587,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         if world.options.buttonsanity.value == world.options.buttonsanity.option_insanity:
             location_table.pop(temple_location_names.btn_t2_wall_portal_w)
             location_table.pop(temple_location_names.btn_t2_wall_portal_e)
+            item_counts.pop(item_name.btn_t2_portal)
         elif world.options.buttonsanity.value > 0:
             remove_button(temple_location_names.btn_t2_portal)
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] = world.random.randrange(2)
@@ -3816,9 +3823,8 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         item_counts[item_name.vendor_coin] -= item_counts[item_name.miniboss_stat_upgrade]
         item_counts.pop(item_name.miniboss_stat_upgrade)
         # Hack to force the dune sharks key location to always exist
-        if world.options.key_mode.value == world.options.key_mode.option_floor_master:
-            key_loc_name = temple_location_names.b1_boss_worm_key
-            location_table[key_loc_name] = temple_enemy_loot_locations[key_loc_name]
+        key_loc_name = temple_location_names.b1_boss_worm_key
+        location_table[key_loc_name] = temple_enemy_loot_locations[key_loc_name]
     item_counts.pop(item_name.loot_tower)
     item_counts.pop(item_name.loot_flower)
     item_counts.pop(item_name.loot_mini_flower)
