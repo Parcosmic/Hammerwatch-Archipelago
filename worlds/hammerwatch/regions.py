@@ -4494,7 +4494,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.t1_main, temple_region_names.t1_node_1,
             False, item_name.mirror, 3)
     connect(world, used_names, temple_region_names.t1_node_1, temple_region_names.t1_w, False)
-    connect(world, used_names, temple_region_names.t1_w, temple_region_names.t1_runway_halls, buttonsanity,
+    connect(world, used_names, temple_region_names.t1_w, temple_region_names.t1_runway_halls, False,
             item_name.btn_t1_runway, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.t1_runway_halls, temple_region_names.t1_main, buttonsanity,
             item_name.btn_t1_runway, 1, False, buttonsanity)
