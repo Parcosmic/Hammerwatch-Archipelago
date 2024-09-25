@@ -999,7 +999,10 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
 
     # Remove bonus keys from the item counts as they are placed elsewhere
     if world.options.randomize_bonus_keys.value == 0:
-        item_counts_table.pop(item_name.key_bonus)
+        item_counts_names = list(item_counts_table.keys())
+        for _item_name in item_counts_names:
+            if item_name.key_bonus in _item_name:
+                item_counts_table.pop(_item_name)
 
     # Strange planks
     goal = get_goal_type(world)

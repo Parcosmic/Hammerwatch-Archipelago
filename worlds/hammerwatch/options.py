@@ -81,7 +81,7 @@ class RemoveExtraLives(Toggle):
     """Removes extra lives (Ankhs) from the item pool and replaces them with filler.
     Recommended to have enabled when playing with the infinite lives or no extra lives modifiers"""
     display_name = "Remove Extra Lives"
-    default = False
+    default = True
 
 
 class RandomizeRecoveryItems(Toggle):
@@ -242,31 +242,31 @@ class ShopsanityP1Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
     WARNING: there is normally not enough gold to purchase all upgrades.
-    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
+    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!
+    WARNING #2: there is no logic for shop upgrades!
+    This means you could get into a situation where you are required to play much of your game with no upgrades.
+    Consider making shop upgrades local if you're playing in a larger multiworld"""
     display_name = "Shopsanity Player 1 Class"
 
 
 class ShopsanityP2Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
-    WARNING: there is normally not enough gold to purchase all upgrades.
-    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
+    WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 2 Class"
 
 
 class ShopsanityP3Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
-    WARNING: there is normally not enough gold to purchase all upgrades.
-    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
+    WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 3 Class"
 
 
 class ShopsanityP4Class(ShopsanityClass):
     """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
-    WARNING: there is normally not enough gold to purchase all upgrades.
-    It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!"""
+    WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 4 Class"
 
 
@@ -485,6 +485,7 @@ class GameModifiers(OptionDict):
     infinite_lives, hp_regen, double_damage, double_lives, and 5x_mana_regen"""
     display_name = "Game Modifiers"
     schema = Schema({Optional(mod): bool for mod in option_names.game_modifier_names})
+    default = {option_names.mod_infinite_lives: True}
 
 
 class ERSeed(FreeText):
