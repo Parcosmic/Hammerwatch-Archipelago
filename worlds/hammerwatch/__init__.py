@@ -47,7 +47,7 @@ class HammerwatchWorld(World):
     topology_present: bool = True
     remote_start_inventory: bool = True
 
-    apworld_version = "1.2"
+    apworld_version = "3.0"
     hw_client_version = "1.2"
 
     web = HammerwatchWeb()
