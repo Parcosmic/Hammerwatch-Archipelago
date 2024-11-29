@@ -235,7 +235,7 @@ class ShopsanityClass(Choice):
     option_thief = 5
     option_priest = 6
     option_sorcerer = 7
-    option_randon_class = 8
+    option_random_class = 8
     default = option_off
 
 

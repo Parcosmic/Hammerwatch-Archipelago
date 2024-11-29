@@ -139,13 +139,13 @@ class HammerwatchWorld(World):
                 self.door_counts[key] = item_counts[key]
 
         # Roll shopsanity class if any are on random class
-        if self.options.shopsanity_p1.value == self.options.shopsanity_p1.option_randon_class:
+        if self.options.shopsanity_p1.value == self.options.shopsanity_p1.option_random_class:
             self.options.shopsanity_p1.value = self.random.randint(1, 7)
-        if self.options.shopsanity_p2.value == self.options.shopsanity_p2.option_randon_class:
+        if self.options.shopsanity_p2.value == self.options.shopsanity_p2.option_random_class:
             self.options.shopsanity_p2.value = self.random.randint(1, 7)
-        if self.options.shopsanity_p3.value == self.options.shopsanity_p3.option_randon_class:
+        if self.options.shopsanity_p3.value == self.options.shopsanity_p3.option_random_class:
             self.options.shopsanity_p3.value = self.random.randint(1, 7)
-        if self.options.shopsanity_p4.value == self.options.shopsanity_p4.option_randon_class:
+        if self.options.shopsanity_p4.value == self.options.shopsanity_p4.option_random_class:
             self.options.shopsanity_p4.value = self.random.randint(1, 7)
 
         self.active_location_list, self.item_counts, self.random_locations = setup_locations(self, self.campaign)

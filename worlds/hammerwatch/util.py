@@ -98,6 +98,8 @@ def get_option_value_from_class_name(class_name: str):
 
 def get_shopsanity_classes(world: "HammerwatchWorld") -> typing.List[PlayerClass]:
     classes = []
+    if is_using_universal_tracker(world):
+        return [player_class for player_class in PlayerClass]
     if world.options.shopsanity_p1 > 0:
         p1_class = get_class_from_option_value(world.options.shopsanity_p1.value)
         classes.append(p1_class)
