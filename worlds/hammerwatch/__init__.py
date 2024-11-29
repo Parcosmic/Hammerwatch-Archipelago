@@ -11,7 +11,7 @@ from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, conne
 from .rules import set_rules, connect_regions_er
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
                    is_using_universal_tracker, get_random_element, get_random_elements)
-from .options import HammerwatchOptions, client_required_options, option_groups, option_presets
+from .options import HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
@@ -137,6 +137,16 @@ class HammerwatchWorld(World):
         for key in active_keys:
             if key in item_counts.keys():
                 self.door_counts[key] = item_counts[key]
+
+        # Roll shopsanity class if any are on random class
+        if self.options.shopsanity_p1.value == self.options.shopsanity_p1.option_randon_class:
+            self.options.shopsanity_p1.value = self.random.randint(1, 7)
+        if self.options.shopsanity_p2.value == self.options.shopsanity_p2.option_randon_class:
+            self.options.shopsanity_p2.value = self.random.randint(1, 7)
+        if self.options.shopsanity_p3.value == self.options.shopsanity_p3.option_randon_class:
+            self.options.shopsanity_p3.value = self.random.randint(1, 7)
+        if self.options.shopsanity_p4.value == self.options.shopsanity_p4.option_randon_class:
+            self.options.shopsanity_p4.value = self.random.randint(1, 7)
 
         self.active_location_list, self.item_counts, self.random_locations = setup_locations(self, self.campaign)
 
@@ -537,18 +547,24 @@ class HammerwatchWorld(World):
     def stage_post_fill(cls, multiworld: MultiWorld):
         # If buttonsanity is on for a given Hammerwatch world swap shop upgrades so the base upgrade is always first
         world_shopsanity_items: typing.Dict[int, typing.Dict[str, typing.Optional[typing.Tuple]]] = {}
+        swap_mode = 0
         for world in multiworld.get_game_worlds("Hammerwatch"):
             assert isinstance(world, HammerwatchWorld)
             if len(get_shopsanity_classes(world)):
                 world_shopsanity_items[world.player] = {}
+            swap_mode = max(world.options.shopsanity_assist.value, swap_mode)
 
-        if len(world_shopsanity_items) == 0:
+        if len(world_shopsanity_items) == 0 or swap_mode < ShopsanityAssist.option_swap_base_upgrades:
             return
 
+        if swap_mode == ShopsanityAssist.option_swap_base_upgrades_experimental:
+            logging.warning("WARNING: Hammerwatch worlds are in experimental shopsanity swap mode, "
+                            "some apworlds may not work properly!")
         spheres = multiworld.get_spheres()
         for sphere_num, sphere in enumerate(spheres, 0):
             for loc in sphere:
-                if loc.game != "Hammerwatch":  # or loc.player not in world_shopsanity_items:
+                if ((swap_mode == ShopsanityAssist.option_swap_base_upgrades and loc.game != "Hammerwatch")
+                   or loc.item.game != "Hammerwatch"):
                     continue
                 loc_item = loc.item
                 # Is this a shopsanity item that has a prerequisite or is it a root upgrade?

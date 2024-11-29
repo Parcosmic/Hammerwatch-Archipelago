@@ -2320,7 +2320,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
     # If not doing entrance randomization or randomizing the start we start in the normal spot
     if not world.options.exit_randomization.value or not world.options.random_start_exit.value:
         connect(world, used_names, castle_region_names.menu, castle_region_names.p1_start, False)
-    connect(world, used_names, castle_region_names.p1_start, castle_region_names.hub, True)
+    connect(world, used_names, castle_region_names.p1_start, castle_region_names.hub, False)
 
     hub_start_regions = [
         castle_region_names.p1_start,
@@ -4932,10 +4932,6 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
 
     connections = [connect_region(world, used_names, source_region, target_region, two_way, pass_item, item_count,
                    items_consumed, use_pass_item)]
-
-    if two_way:
-        connections.append(connect_region(world, used_names, target_region, source_region, False, pass_item, item_count,
-                           items_consumed, use_pass_item))
 
     return connections
 

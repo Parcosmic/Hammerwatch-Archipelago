@@ -1164,6 +1164,13 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     player_classes = get_shopsanity_classes(world)
     for player_class in player_classes:
         item_counts_table.update(shop_item_counts[player_class])
+    # Shopsanity assist: dupe base upgrades
+    if world.options.shopsanity_assist.value == world.options.shopsanity_assist.option_duplicate_base_upgrades:
+        ignore_items = (item_name.shop_priest_cripple_aura_mana_drain, item_name.shop_wizard_fire_shield)
+        for player_class in player_classes:
+            for player_upgrade, upgrade_count in shop_item_counts[player_class].items():
+                if upgrade_count == 1 and player_upgrade not in ignore_items:
+                    item_counts_table[player_upgrade] = 2
     # If shopsanity is being played in the temple campaign, we need to increase the amount of ore in the pool
     # This is because there isn't enough ore in vanilla to upgrade all the shops!
     if len(player_classes) > 0 and campaign == Campaign.Temple:

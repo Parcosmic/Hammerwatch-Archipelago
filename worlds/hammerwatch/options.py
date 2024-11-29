@@ -235,6 +235,7 @@ class ShopsanityClass(Choice):
     option_thief = 5
     option_priest = 6
     option_sorcerer = 7
+    option_randon_class = 8
     default = option_off
 
 
@@ -295,6 +296,22 @@ class ShopsanityBalanceCosts(Toggle):
     """
     display_name = "Balance Shopsanity Costs"
     default = True
+
+
+class ShopsanityAssist(Choice):
+    """
+    Various methods to make base shop upgrades more accessible
+    Duplicate Base Upgrades: add an extra copy of each base upgrade to the item pool
+    Swap Base Upgrades: swap base upgrades with the earliest version of its sub upgrade so you should find base upgrades first
+    only considers Hammerwatch locations
+    Swap Base Upgrades Experimental: like Swap Base Upgrades, but will swap with ANY location. This may cause issues with certain apworlds!
+    """
+    display_name = "Balance Assist"
+    option_none = 0
+    option_duplicate_base_upgrades = 1
+    option_swap_base_upgrades = 2
+    option_swap_base_upgrades_experimental = 3
+    default = 2
 
 
 class EnemyShuffle(Removed):
@@ -521,6 +538,7 @@ class HammerwatchOptions(PerGameCommonOptions):
     shopsanity_p4: ShopsanityP4Class
     shopsanity_trap_obfuscation: ShopsanityTrapObfuscation
     shopsanity_balance_costs: ShopsanityBalanceCosts
+    shopsanity_assist: ShopsanityAssist
     enemy_shuffle_mode: EnemyShuffleMode
     enemy_shuffle_act_range: EnemyShuffleBalancing
     enemy_shuffle_keep_tier: EnemyShuffleKeepTier
@@ -770,6 +788,7 @@ option_groups = [
         ShopCostRandoMax,
         ShopsanityTrapObfuscation,
         ShopsanityBalanceCosts,
+        ShopsanityAssist,
         GameModifiers,
         DeathLink,
     ]),
