@@ -14,6 +14,7 @@ import Utils
 from NetUtils import NetworkItem
 from .names import const
 from .locations import all_locations
+from .client_util import ClientContextData
 
 from CommonClient import CommonContext, server_loop, gui_enabled, ClientCommandProcessor, logger, \
     get_base_parser
@@ -144,8 +145,9 @@ def teardown(ctx, msg):
 
 def patch_game(ctx: SWD2Context):
     logger.info("Patching game")
-    locations: Dict[int, NetworkItem] = ctx.locations_info
-    patch_files(locations, ctx.game_dir, ctx.slot_data, ctx.items_received)
+    client_data = ClientContextData(ctx.game_dir, ctx.slot, ctx.slot_data, ctx.items_received, ctx.locations_info,
+                                    ctx.item_names, ctx.location_names, ctx.player_names)
+    patch_files(client_data)
     ctx.patched.set()
 
 

@@ -179,14 +179,14 @@ default_locs: Dict[str, LocationData] = {
 counter = Counter(id_start + 0x100 - 1)
 shop_locs: Dict[str, LocationData] = {
     location_name.em_heisenberg: LocationData(counter.count(), LocType.Upgrade),
-    location_name.em_carson_1: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_2: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_3: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_4: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_5: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_6: LocationData(counter.count(), LocType.Cog),
-    location_name.em_carson_7: LocationData(counter.count(), LocType.Cog),
-    location_name.em_artifact_1: LocationData(counter.count(), LocType.Upgrade),
+    # location_name.em_carson_1: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_2: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_3: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_4: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_5: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_6: LocationData(counter.count(), LocType.Cog),
+    # location_name.em_carson_7: LocationData(counter.count(), LocType.Cog),
+    location_name.em_artifact_1: LocationData(counter.count(8), LocType.Upgrade),
     location_name.em_artifact_3: LocationData(counter.count(), LocType.Upgrade),
     location_name.em_artifact_6: LocationData(counter.count(), LocType.Upgrade),
     location_name.em_artifact_10: LocationData(counter.count(), LocType.Upgrade),
@@ -277,13 +277,13 @@ def setup_locations(world: "SWD2World"):
         active_locations.add(loc)
 
     # Remove unimplemented locations
-    active_locations.remove(location_name.em_carson_1)
-    active_locations.remove(location_name.em_carson_2)
-    active_locations.remove(location_name.em_carson_3)
-    active_locations.remove(location_name.em_carson_4)
-    active_locations.remove(location_name.em_carson_5)
-    active_locations.remove(location_name.em_carson_6)
-    active_locations.remove(location_name.em_carson_7)
+    # active_locations.remove(location_name.em_carson_1)
+    # active_locations.remove(location_name.em_carson_2)
+    # active_locations.remove(location_name.em_carson_3)
+    # active_locations.remove(location_name.em_carson_4)
+    # active_locations.remove(location_name.em_carson_5)
+    # active_locations.remove(location_name.em_carson_6)
+    # active_locations.remove(location_name.em_carson_7)
     if world.options.randomize_shops == world.options.randomize_shops.option_randomize:
         active_locations.remove(location_name.em_lamp_1)
         active_locations.remove(location_name.em_tank_1)

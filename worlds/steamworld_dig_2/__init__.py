@@ -76,14 +76,10 @@ class SWD2World(World):
     swapped_doors: Dict[str, str]
 
     def fill_slot_data(self) -> Dict[str, Any]:
-        # for orig, new_door in self.swapped_doors.items():
-        #     print(f"{orig} > {new_door} > {self.swapped_doors[new_door]}")
         return {
             **self.options.as_dict(*client_required_options),
             "APWorld Version": const.apworld_version,
             "Client Mod Version": const.hw_client_version,
-            # "Entrance Swaps": [(REGIONS.index(entr.parent_region.name), REGIONS.index(entr.target_region.name),
-            #                    REGIONS.index(entr.connected_region.name)) for entr in self.swapped_entrances],
             "Entrance Swaps": {entrance_name.DOORS.index(vanilla_door): entrance_name.DOORS.index(new_door)
                                for vanilla_door, new_door in self.swapped_doors.items()},
         }
@@ -134,12 +130,10 @@ class SWD2World(World):
 
         # Add items
         total_items = 0
-        # present_filler_items = []
         present_filler_item_counts = {}
         for item in item_counts:
             total_items += item_counts[item]
             if item_table[item].classification == ItemClassification.filler and item_counts[item] > 0:
-                # present_filler_items.append(item)
                 present_filler_item_counts[item] = item_counts[item]
 
         # Add/remove junk items depending if we have not enough/too many locations
@@ -156,31 +150,23 @@ class SWD2World(World):
         else:
             while junk < 0:
                 junk += 1
-                # junk_item = self.random.choice(present_filler_items)
                 junk_item = get_random_element(self, present_filler_item_counts)
                 item_counts[junk_item] -= 1
                 present_filler_item_counts[junk_item] -= 1
                 if item_counts[junk_item] == 0:
-                    # present_filler_items.remove(junk_item)
-                    # if len(present_filler_items) == 0:
-                    #     break
                     present_filler_item_counts.pop(junk_item)
                     if len(present_filler_item_counts) == 0:
                         break
             # Remove trap items if we've run out of filler
-            # present_trap_items = [trap_item for trap_item in trap_items if trap_item in item_counts]
             present_trap_item_counts = {trap_item: item_counts[trap_item] for trap_item in trap_items if trap_item in item_counts}
             while junk < 0:
                 junk += 1
-                # trap_item = self.random.choice(present_trap_items)
                 trap_item = get_random_element(self, present_trap_item_counts)
                 item_counts[trap_item] -= 1
                 present_trap_item_counts[trap_item] -= 1
                 if item_counts[trap_item] == 0:
-                    # present_trap_items.remove(trap_item)
                     present_trap_item_counts.pop(trap_item)
                     if len(present_trap_item_counts) == 0:
-                    # if len(present_trap_items) == 0:
                         logging.warning(f"SWD2World for player {self.multiworld.player_name[self.player]} "
                                         f"(slot {self.player}) ran out of filler and trap items to remove. Some items "
                                         f"will remain unplaced!")
@@ -212,6 +198,8 @@ class SWD2World(World):
 
         if not self.options.randomize_artifacts:
             artifact_locs = dict(zip(artifact_locations, item_name.artifacts))
+            if not self.options.randomize_trials_reward:
+                artifact_locs.pop(location_name.c_hell_end)
             events.update(artifact_locs)
 
         for loc, itm in events.items():
@@ -251,5 +239,4 @@ class SWD2World(World):
         pass
 
     def interpret_slot_data(self, slot_data: Dict[str, Any]):
-        # self.gate_types = slot_data["Gate Types"]
-        return {"er_seed": slot_data["er_seed"],}
+        return {"er_seed": slot_data["er_seed"]}

@@ -5,12 +5,12 @@ import os
 import io
 import shutil
 import random
-import xml.etree.ElementTree as et
-from typing import List, Dict, Any, Callable, Tuple, Optional
-from pathlib import Path
+from typing import List, Dict, Any, Callable, Tuple, Optional, Iterable
+from copy import deepcopy
 from NetUtils import NetworkItem
 from zipfile import ZipFile, ZIP_DEFLATED
-from CommonClient import logger
+from CommonClient import logger, CommonContext
+from BaseClasses import ItemClassification
 
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
                               COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item)
@@ -18,34 +18,33 @@ from .names import option_name, item_name, location_name, entrance_name
 from . import options
 from .items import item_table, lookup_id_to_name, ItemType
 from .regions import REGIONS
-from .client_node_helper import *
+from .client_util import *
 
 import zlib
 
 
-def patch_files(locations: Dict[int, NetworkItem], game_dir: Path, slot_data: Dict[str, Any],
-                items_received: list[NetworkItem]):
-    bundle_dir = os.path.join(game_dir, "Bundle")
+def patch_files(ctx: ClientContextData):
+    bundle_dir = os.path.join(ctx.game_dir, "Bundle")
     data_dir = os.path.join(bundle_dir, "data01")
 
-    non_data_files: List[str] = extract_game_files(game_dir)
-
-    patch_lang_file(bundle_dir)
+    non_data_files: List[str] = extract_game_files(ctx.game_dir)
 
     # Convenience patches
-    patch_quests(data_dir, slot_data)
+    patch_quests(data_dir)
     patch_damage_types(data_dir)
     patch_levels(data_dir)
-    patch_resources(data_dir, slot_data)
-    patch_blueprints(data_dir, slot_data, locations)
-    patch_entities(data_dir, slot_data, locations)
+    patch_resources(data_dir, ctx)
+    language_lines_to_add, offworld_item_names = patch_blueprints(data_dir, ctx)
+    patch_entities(data_dir, offworld_item_names)
 
-    patch_start_location_and_inventory(data_dir, slot_data, items_received)
+    patch_start_location_and_inventory(data_dir, ctx)
 
     # Patches for items
-    patch_patchsets(bundle_dir, slot_data, locations)
+    patch_patchsets(bundle_dir, ctx)
 
-    pack_game_files(game_dir, non_data_files)
+    patch_lang_file(bundle_dir, language_lines_to_add)
+
+    pack_game_files(ctx.game_dir, non_data_files)
 
 
 non_data_files_that_need_patching = [
@@ -55,7 +54,7 @@ non_data_files_that_need_patching = [
 ]
 
 
-def extract_game_files(game_dir: Path):
+def extract_game_files(game_dir: str):
     bundle_dir = os.path.join(game_dir, "Bundle")
     data_dir = os.path.join(bundle_dir, "data01")
     if os.path.exists(data_dir):
@@ -87,7 +86,7 @@ def extract_game_files(game_dir: Path):
     return non_data_files
 
 
-def pack_game_files(game_dir: Path, non_data_files: List[str]):
+def pack_game_files(game_dir: str, non_data_files: List[str]):
     bundle_dir = os.path.join(game_dir, "Bundle")
     data_dir = os.path.join(bundle_dir, "data01")
     impak_file = os.path.join(bundle_dir, "data01.impak")
@@ -101,7 +100,7 @@ def pack_game_files(game_dir: Path, non_data_files: List[str]):
         compress_file(non_data_info)
 
 
-def patch_lang_file(bundle_dir: str):
+def patch_lang_file(bundle_dir: str, language_lines_to_add: Iterable[tuple[str, str]]):
     language_dir = os.path.join(bundle_dir, "Language")
     decomp_language_file = os.path.join(language_dir, "en.csv")
 
@@ -109,6 +108,7 @@ def patch_lang_file(bundle_dir: str):
         ("apitem", "Archipelago Item"),
         ("upgrade_cog_desc", "Used to enable Cog Mods."),
         ("upgrade_cog_flavor", "\"\"\"Upgrades, people, upgrades!\"\"\""),
+        *language_lines_to_add
     ]
 
     with open(decomp_language_file, "a") as csv_writer:
@@ -116,7 +116,10 @@ def patch_lang_file(bundle_dir: str):
             csv_writer.write(f"{line[0]}\t{line[1]}\n")
 
 
-def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any], items_received: list[NetworkItem]):
+def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextData):
+    slot_data: Dict[str, Any] = ctx_data.slot_data
+    items_received: list[NetworkItem] = ctx_data.items_received
+
     outsets_file = os.path.join(data_dir, "Definitions", "outsets.xml")
     outsets_doc = et.parse(outsets_file)
     outsets_root = outsets_doc.getroot()
@@ -134,13 +137,14 @@ def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any],
     start_items: Dict[str, int] = {
         item_name.lamp: 2,
         item_name.armor: 1,
-        item_name.pickaxe: 1,
+        item_name.pickaxe: 7,
         item_name.backpack: 1,
         item_name.tank: 1,
         "fate": 1,
         "buddy": 1,
         "minimap": 1,
         "minimap.quest_pointer": 1,
+        # "ap_upgrades": 1,
     }
     for item_id in start_inventory:
         if item_id not in start_items:
@@ -148,11 +152,11 @@ def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any],
         start_items[lookup_id_to_name[item_id]] += 1
     # Hack testing full mobility, remove for release
     # start_items.update({
-    #     item_name.armor: 6,
+    #     # item_name.armor: 6,
     #     item_name.sprint: 1,
     #     item_name.bomb: 1,
-    #     item_name.hammer: 1,
-    #     item_name.jetpack: 1,
+    #     item_name.jackhammer: 1,
+    #     item_name.jetengine: 1,
     #     item_name.hookshot: 1,
     #     item_name.up_lamp_secret_sight: 1,
     # })
@@ -162,9 +166,9 @@ def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any],
 
     new_game_outset = outsets_root.find(".//Outset[@Name='new_game']")
     new_game_outset.find(".//Level").text = start_location_data[start_location]
+    # new_game_outset.find(".//Level").text = "yarrow_cave_run"
     # new_game_outset.find(".//Level").text = "west_desert"
     # new_game_outset.find(".//Level").text = "temple_of_guidance"
-    # new_game_outset.find(".//Level").text = "yarrow_cave_gauntlet"
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "outside_temple_spawnpoint"
     # new_game_outset.append(entrance_node)
@@ -223,7 +227,7 @@ def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any],
         ("quest_earthquake", "in_progress"),
         ("quest_lit_the_lamp", "completed"),
         ("quest_enter_temple", "completed"),
-        ("guard_quest_pathfinder_deactivate", "completed"),
+        # ("guard_quest_pathfinder_deactivate", "completed"),
         ("quest_tutorial_indicators", "completed"),
         ("quest_find_the_hub", "in_progress"),
     ]
@@ -248,6 +252,8 @@ def patch_start_location_and_inventory(data_dir: str, slot_data: Dict[str, Any],
 
 
 def get_location_from_vanilla_item(vanilla_item: str, locations: Dict[int, NetworkItem]):
+    if vanilla_item not in in_game_item_data:
+        return None
     loc_id = in_game_item_data[vanilla_item].ap_loc_id
     if loc_id not in locations:
         return None
@@ -259,7 +265,7 @@ def get_randomized_item(vanilla_item: str, locations: Dict[int, NetworkItem]):
     if loc_id is None:
         return None
     network_item = locations[loc_id]
-    return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
+    return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else f"ap_{loc_id}"
 
 
 def get_randomized_shop_item(tool_name: str, tier_index: int, locations: Dict[int, NetworkItem]):
@@ -282,14 +288,18 @@ def get_randomized_item_at_location(loc_id: int, locations: Dict[int, NetworkIte
     if loc_id not in locations:
         return None
     network_item = locations[loc_id]
-    return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
+    return network_item
+    # return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
 
 
 def is_item_upgrade(name: str):
     return name != cog_item and "collectible" not in name
 
 
-def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[int, NetworkItem]):
+def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
+    slot_data: Dict[str, Any] = ctx_data.slot_data
+    locations: Dict[int, NetworkItem] = ctx_data.locations
+
     data_dir = os.path.join(bundle_dir, "data01")
     patchsets_dir = os.path.join(data_dir, "Patchsets")
     walk_results = [(dirpath, dirnames, files) for (dirpath, dirnames, files) in os.walk(patchsets_dir)]
@@ -308,12 +318,20 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
         os.path.join(patchsets_dir, "TheHub", "the_hub_patch_main.le"): patch_oasis,
         os.path.join(patchsets_dir, "Archaea", "archaea_cave_vectron_entrance.le"): patch_vectron,
     }
+    return_tubes: List[Tuple[str, int, int]] = {
+        ("temple_of_guidance.le", -240, 0),
+        ("archaea_cave_pressurebomb.le", -240, 0),
+        ("archaea_cave_jackhammer.le", 240, 0),
+        ("the_hub_cave_grapplinghook.le", -240, 0),
+        ("archaea_cave_vectron_entrance.le", 240, 0),
+        ("temple_of_guidance_2_cave_maze.le", -240, 0),
+        ("firetemple_cave_flamer.le", 240, 0),
+        ("yarrow_cave_steampack_slayer.le", 240, 0),
+    }
 
     entrance_swaps: Dict[str, int] = slot_data["Entrance Swaps"]
     randomize_cogs: Dict[str, int] = slot_data["randomize_cogs"]
     randomize_artifacts: Dict[str, int] = slot_data["randomize_artifacts"]
-    doors = {}
-    door_levels: Dict[str, str] = {}
     for patchset_file in patchset_files:
         patchset_doc = et.parse(patchset_file)
         patchset_root = patchset_doc.getroot()
@@ -321,15 +339,22 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
         if patchset_file in custom_patches:
             custom_patches[patchset_file](patchset_root)
 
+        entity_parent_node = patchset_root.find(".//TileLayer[Name='Foreground']/Entities")
+
         # Patch randomized locations
         upgrade_nodes = []
-        entity_parent_node = patchset_root.find(".//TileLayer[Name='Foreground']/Entities")
-        upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium']"))
-        upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium1']"))
-        upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint']"))
-        upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint1']"))
+        upgrade_podium_nodes: List[et.Element] = [
+            *patchset_root.findall(".//CustomEntity[Definition='upgrade_podium']"),
+        ]
+        upgrade_nodes.extend(upgrade_podium_nodes)
+        # upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium']"))
+        # upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium1']"))
+        upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Definition='GiveBlueprint']"))
+        # upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint1']"))
         for upgrade_node in upgrade_nodes:
             upgrade_value_node = upgrade_node.find(".//Property/Value")
+            if upgrade_value_node is None:
+                continue
             loc_vanilla_item = upgrade_value_node.text
             # if loc_vanilla_item == "run_boots":  # For testing
             #     # property_name_node = upgrade_node.find(".//Property/Name")
@@ -339,8 +364,7 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
             # else:
             randomized_item = get_randomized_item(loc_vanilla_item, locations)
             if randomized_item is None:
-                logger.error(f"""Could not find a randomized item for vanilla location {loc_vanilla_item},
-                              ap item: {locations[in_game_item_data[loc_vanilla_item].ap_loc_id].item}""")
+                logger.error(f"""Could not find a randomized item for vanilla item {loc_vanilla_item}""")
             else:
                 if not is_item_upgrade(randomized_item):
                     entity_node_name = upgrade_node.find("./Name").text + "_item"
@@ -363,7 +387,7 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
                                                                 "0, 0, 0.5, 0.5",
                                                                 "86, 83",
                                                                 "pickup_collectible")
-                        entity_node.append(create_property_node("EditorPickup", randomized_item))
+                        entity_node.append(create_property_node("EditorPickup", "String", randomized_item))
                     entity_parent_node.append(entity_node)
                     randomized_item = ""
                 upgrade_value_node.text = randomized_item
@@ -385,24 +409,28 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
             property_value_node = None
             if has_property_node:
                 property_value_node = freestanding_node.find(".//Property/Value")
-            #     # if property_value_node.text == "collectible_07":
-            #     #     randomized_item = "collectible_01"
-            #     # else:
-            #     randomized_item = get_randomized_item(property_value_node.text, locations)
-            # else:  # Get item from entity id
-            randomized_item = get_randomized_item_at_location(int(id_node.text), locations)
+            # Get item from entity id
+            node_loc_id = int(id_node.text)
+            randomized_item = get_randomized_item_at_location(node_loc_id, locations)
             if randomized_item is None:
                 continue
-            if randomized_item == cog_item:
+            if randomized_item.item in ap_item_to_in_game_name:
+                randomized_item_pickup_name = ap_item_to_in_game_name[randomized_item.item]
+            else:
+                randomized_item_pickup_name = f"ap_{randomized_item.location}"
+            if randomized_item_pickup_name == cog_item:
                 asset_name_node.text = "Sprites/General/UpgradeCogContainer/all.png"
                 size_node.text = "120, 120"
                 definition_node.text = "upgrade_cog_container"
                 if has_property_node:
                     freestanding_node.remove(property_node)
             else:
-                if "collectible" in randomized_item:
+                if "collectible" in randomized_item_pickup_name:
                     asset_name = "Editor/Textures/collectible.png"
                     definition_name = "pickup_collectible"
+                elif randomized_item_pickup_name.startswith("ap_"):
+                    asset_name = "Editor/Textures/pickup_blueprint.png"
+                    definition_name = "ap_item_offworld"
                 else:
                     asset_name = "Editor/Textures/pickup_blueprint.png"
                     definition_name = "pickup_blueprint"
@@ -413,7 +441,7 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
                     property_node = create_property_node()
                     property_value_node = property_node.find(".//Value")
                     freestanding_node.append(property_node)
-                property_value_node.text = randomized_item
+                property_value_node.text = randomized_item_pickup_name
 
         # Patch entrances
         door_nodes = patchset_root.findall(".//CustomEntity[Definition='door']")
@@ -431,6 +459,23 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
 
             dest_level_value_node.text = entrance_name.door_levels[new_door]
             dest_entitiy_value_node.text = new_door
+
+        # Hack in tubes in upgrade caves to prevent softlocks
+        for return_tube_data in return_tubes:
+            if patchset_file.endswith(return_tube_data[0]):
+                if len(upgrade_podium_nodes):
+                    podium_node = upgrade_podium_nodes[0]
+                    podium_position = podium_node.find("Position").text
+                else:
+                    logger.error("Could not find podiums for patchset " + return_tube_data[0])
+                    continue
+                podium_x_str, podium_y_str = podium_position.split(", ")
+                position_str = f"{float(podium_x_str)+return_tube_data[1]}, {float(podium_y_str)+return_tube_data[2]}"
+                tube_entity = create_custom_entity_node(999999999, "town_teleporter", position_str, True,
+                                                        "Editor/Textures/pneumatic_chamber.png", "0, 0, 0.5, 1",
+                                                        "142, 196", "teleporter_ap")
+                tube_entity.append(create_property_node("DisableMapPing", "Boolean", "True"))
+                entity_parent_node.append(tube_entity)
 
         patchset_doc.write(patchset_file)
 
@@ -452,7 +497,7 @@ def patch_patchsets(bundle_dir: str, slot_data: Dict[str, Any], locations: Dict[
     collectors_doc.write(collectors_file)
 
 
-def patch_quests(data_dir: str, slot_data: Dict[str, Any]):
+def patch_quests(data_dir: str):
     # Edit initial quests, might not be needed now that we can manipulate quests from the outsets file?
     quests_file = os.path.join(data_dir, "Definitions", "quests.xml")
     quests_doc = et.parse(quests_file)
@@ -527,7 +572,8 @@ def patch_levels(data_dir: str):
     level_defs_doc.write(level_defs_file)
 
 
-def patch_resources(data_dir: str, slot_data: Dict[str, Any]):
+def patch_resources(data_dir: str, ctx: ClientContextData):
+    slot_data: Dict[str, Any] = ctx.slot_data
     if slot_data[option_name.shuffle_resources] == 0:
         return
     resources_file = os.path.join(data_dir, "Definitions", "resource_table.xml")
@@ -744,7 +790,53 @@ def patch_vectron(cave_patch_root: et.Element):
     tiles_node.find(".//Tiles")[33].text = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 1 0 0 0 0 0 0 1 17 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1"
 
 
-def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[int, NetworkItem]):
+def get_ap_item_upgrade_name(item: NetworkItem):
+    return f"ap_item_{item.item}_{item.player}_{item.flags}"
+
+
+def get_ap_item_desc_and_flavor(item: NetworkItem, ap_item_player):
+    ap_item_desc = ""
+    ap_item_flavor = "\"\"\""
+    if item.flags & ItemClassification.progression:
+        if item.flags & ItemClassification.skip_balancing:
+            ap_item_desc += f"A somewhat important item for {ap_item_player}"
+            ap_item_flavor += "Probably just a Power Star..."
+        elif item.flags & ItemClassification.useful:
+            ap_item_desc += f"A very important item for {ap_item_player}"
+            ap_item_flavor += "This'll get me out of BK!"
+        else:
+            ap_item_desc += f"An important item for {ap_item_player}"
+            ap_item_flavor += "Gotta have it!"
+        if item.flags & ItemClassification.trap:
+            ap_item_desc += f", with risky consequences."
+            ap_item_flavor = "\"\"\"How important is this, really?"
+        else:
+            ap_item_desc += f"."
+    elif item.flags & ItemClassification.useful:
+        if item.flags & ItemClassification.trap:
+            ap_item_desc += f"A useful item for {ap_item_player}, with risky consequences."
+            ap_item_flavor += "How useful is this, really?"
+        else:
+            ap_item_desc += f"A useful item for {ap_item_player}."
+            ap_item_flavor += "This might be helpful!"
+    elif item.flags & ItemClassification.trap:
+        ap_item_desc += f"A suspicious item for {ap_item_player}."
+        ap_item_flavor += "Do I hear... bees?"
+    else:
+        ap_item_desc += f"An item for {ap_item_player}."
+        ap_item_flavor += "It looks strange, like it's from another world."
+    ap_item_flavor += "\"\"\""
+
+    return ap_item_desc, ap_item_flavor
+
+
+def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterable[Tuple[str, str]], List[str]]:
+    slot: int = ctx_data.slot
+    slot_data: Dict[str, Any] = ctx_data.slot_data
+    locations: Dict[int, NetworkItem] = ctx_data.locations
+    item_names: CommonContext.NameLookupDict = ctx_data.item_names
+    player_names: Dict[int, str] = ctx_data.player_names
+
     shop_cost_min: int = slot_data[option_name.shop_cost_min]
     shop_cost_max: int = slot_data[option_name.shop_cost_max]
 
@@ -766,6 +858,7 @@ def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[i
     #     new_cost_string += str(new_cost) + ", "
     # carson_costs_node.text = new_cost_string[:-2]
 
+    # Reduce cost of the triple grenade blueprint
     triple_blueprint_node = prices_root.find(".//PriceList[@Name='blueprint_vendor_02']/Prices")
     triple_blueprint_node.text = "200"
 
@@ -817,11 +910,12 @@ def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[i
             ("jackhammer", None, ["jackhammer.shockwave", "jackhammer.improved_water"] if use_unused else None),
             ("steampack", ["steampack.slayer"], None),
         ]
-        upgrade_subupgrades = {}
+        upgrade_subupgrades: Dict[et.Element, List[str]] = {}
+        used_subupgrades = set()
         for upgrade_data in items_to_randomize:
-            upgrade_subupgrades[upgrade_data[0]] = []
             upgrades = []
             upgrade_node = upgrades_root.find(f".//Upgrade[@Name='{upgrade_data[0]}']")
+            upgrade_subupgrades[upgrade_node] = []
             # We're randomizing locked upgrades as actual items, don't remove and add to the available upgrade pool
             # locked_upgrades_node = upgrade_node.find("./LockedUpgrades")
             # if locked_upgrades_node is not None:
@@ -845,6 +939,7 @@ def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[i
                     upgrades.append(None)
                 else:
                     upgrades.append(sub_upgrade_node.attrib["Id"])
+                    upgrade_subupgrades[upgrade_node].append(sub_upgrade_node.attrib["Id"])
                     upgrade_tier_node.remove(sub_upgrade_node)
             if randomize_shops == 1:  # Shuffle
                 # Add upgrades to the list, replacing None's if they exist
@@ -868,29 +963,32 @@ def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[i
                 for t in range(len(upgrade_tier_nodes)):
                     randomized_item = get_randomized_shop_item(upgrade_data[0], t, locations)
                     if randomized_item is not None:
+                        used_subupgrades.add(randomized_item)
                         sub_node = et.Element("SubUpgrade")
                         sub_node.attrib["Id"] = randomized_item
                         upgrade_tier_nodes[t].append(sub_node)
                         if randomized_item in upgrades:
                             upgrades.remove(randomized_item)
-                # Add remaining items to locked upgrades so they appear when they're unlocked
-                if len(upgrades) > 0:
-                    locked_upgrades_node = upgrade_node.find(".//LockedUpgrades")
-                    if locked_upgrades_node is None:
-                        locked_upgrades_node = et.Element("LockedUpgrades")
-                        upgrade_node.append(locked_upgrades_node)
-                    else:
-                        for locked_upgrade in locked_upgrades_node:
-                            locked_upgrade_id = locked_upgrade.attrib["Id"]
-                            if locked_upgrade_id in upgrades:
-                                upgrades.remove(locked_upgrade_id)
-                    for remaining in upgrades:
-                        if remaining is None:
-                            continue
-                        locked_upgrade_node = et.Element("LockedUpgrade")
-                        locked_upgrade_node.attrib["Id"] = remaining
-                        locked_upgrade_node.attrib["AfterTier"] = "100"
-                        locked_upgrades_node.append(locked_upgrade_node)
+        for upgrade_node, subupgrades in upgrade_subupgrades.items():
+            # Add remaining items to locked upgrades so they appear when they're unlocked
+            locked_upgrades_node = upgrade_node.find(".//LockedUpgrades")
+            if locked_upgrades_node is None:
+                locked_upgrades_node = et.Element("LockedUpgrades")
+                upgrade_node.append(locked_upgrades_node)
+            else:
+                # Probably remove the locked upgrade nodes, we'll recreate them down below if we need them
+                # Actually add them to subupgrades?
+                for locked_upgrade in locked_upgrades_node:
+                    locked_upgrade_id = locked_upgrade.attrib["Id"]
+                    if locked_upgrade_id not in used_subupgrades:
+                        used_subupgrades.add(locked_upgrade_id)
+            for subupgrade in subupgrades:
+                if subupgrade in used_subupgrades:
+                    continue
+                locked_upgrade_node = et.Element("LockedUpgrade")
+                locked_upgrade_node.attrib["Id"] = subupgrade
+                locked_upgrade_node.attrib["AfterTier"] = "100"
+                locked_upgrades_node.append(locked_upgrade_node)
 
     # Cog cost randomization
     total_cog_costs = slot_data[option_name.randomize_cog_costs]
@@ -932,46 +1030,79 @@ def patch_blueprints(data_dir: str, slot_data: Dict[str, Any], locations: Dict[i
                                            collectible_node.find("./DescStringId").text,
                                            collectible_node.find("./FlavorStringId").text,
                                            collectible_node.find("./Icon").text)
-        # upgrade_node.attrib["Name"] = collectible_node.attrib["Name"]
-        # name_string_id_node = collectible_node.find("./NameStringId")
-        # flavor_string_id_node = collectible_node.find("./FlavorStringId")
-        # icon_node = collectible_node.find("./Icon")
-        # category_string_id_node = et.Element("CategoryStringId")
-        # category_string_id_node.text = name_string_id_node.text
-        # upgrade_node.append(category_string_id_node)
-        # upgrade_node.append(collectible_node.find("./DescStringId"))
-        # tier_node = et.Element("Tier")
-        # tier_node.append(icon_node)
-        # tier_node.append(name_string_id_node)
-        # desc_string_id_node = et.Element("DescStringId")
-        # desc_string_id_node.text = flavor_string_id_node.text
-        # tier_node.append(desc_string_id_node)
-        # upgrade_node.append(tier_node)
         upgrades_root.append(upgrade_node)
     upgrades_root.append(create_upgrade_node(cog_item, "upgrade_cog",
                                              "upgrade_cog_desc",
                                              "upgrade_cog_flavor",
                                              "Icons/Currency/cogs_big"))
 
+    # Create upgrades for other people's items
+    # test_root_upgrade = create_upgrade_node("ap_upgrades", "upgrade_cog",
+    #                                         "upgrade_cog_desc",
+    #                                         "upgrade_cog_flavor",
+    #                                         "Icons/Currency/cogs_big", True)
+    # upgrades_root.append(test_root_upgrade)
+    lang_lines_to_add = []
+    name_data_created_items = set()
+    offworld_item_names = []
+    for _, item in locations.items():
+        if item.player != slot:
+            name = f"ap_{item.location}"
+            offworld_item_names.append(name)
+            offworld_item_name = get_ap_item_upgrade_name(item)
+            desc = offworld_item_name + "_desc"
+            flavor = offworld_item_name + "_flavor"
+            offworld_upgrade_node = create_upgrade_node(name,
+                                                        offworld_item_name,
+                                                        desc,
+                                                        flavor,
+                                                        "Icons/Currency/cogs_big")
+            upgrades_root.append(offworld_upgrade_node)
+            if offworld_item_name in name_data_created_items:
+                continue
+            ap_item_name = item_names.lookup_in_slot(item.item, item.player)
+            ap_item_player = player_names[item.player]
+            ap_item_display_name = f"{ap_item_player}'s {ap_item_name}"
+            ap_item_desc, ap_item_flavor = get_ap_item_desc_and_flavor(item, ap_item_player)
+            lang_lines_to_add.extend([
+                (offworld_item_name, ap_item_display_name),
+                (desc, ap_item_desc),
+                (flavor, ap_item_flavor),
+            ])
+            name_data_created_items.add(offworld_item_name)
+    # ap_locked_upgrades_node = et.Element("LockedUpgrades")
+    # for ap_upgrade in offworld_item_names:
+    #     ap_locked_upgrades_node.append(create_node_with_attributes("LockedUpgrade", {"Id": ap_upgrade}))
+    # test_root_upgrade.append(ap_locked_upgrades_node)
+
     upgrades_doc.write(upgrades_file)
 
+    return lang_lines_to_add, offworld_item_names
 
-def patch_entities(data_dir: str, slot_data: Dict[str, Any], locations: Dict[int, NetworkItem]):
+
+def patch_entities(data_dir: str, offworld_item_names: List[str]):
     pickups_file = os.path.join(data_dir, "Definitions", "entities.pickups.xml")
     pickups_doc = et.parse(pickups_file)
     pickups_root = pickups_doc.getroot()
 
     # Edit sprite of freestanding blueprints
-    pickup_blueprint_node = pickups_root.find(".//Entity[@Name='pickup_blueprint']/RigidCharacter/File")
-    # pickup_blueprint_node.text = "Sprites/Pickups/ResourceBloodstone/resource_bloodstone.irc2"  # Default
-    # pickup_blueprint_node.text = "Sprites/Archaea/Dummy/SteamEngine_RustyCog.irc2"  # Too large but looks decent
-    # pickup_blueprint_node.text = "Sprites/ElMachino/cog_01.irc2"  # Also too large, a lighter color
-    pickup_blueprint_node.text = "Sprites/ElMachino/cog_03.irc2"  # Not a bad size, lightish color
-    # pickup_blueprint_node.text = "Icons/Symbols/upgrade_arrow"
-    # pickup_blueprint_node.text = "Icons/Symbols/upgrade_arrow_frozen"
-    # pickup_blueprint_node.text = "$sym_215"  # In game_menus
+    pickup_blueprint_node = pickups_root.find(".//Entity[@Name='pickup_blueprint']")
+    blueprint_rigid_character_node = pickup_blueprint_node.find("./RigidCharacter/File")
+    # blueprint_rigid_character_node.text = "Sprites/Pickups/ResourceBloodstone/resource_bloodstone.irc2"  # Default
+    # blueprint_rigid_character_node.text = "Sprites/Archaea/Dummy/SteamEngine_RustyCog.irc2"  # Too large but looks ok
+    # blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_01.irc2"  # Also too large, a lighter color
+    blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_03.irc2"  # Not a bad size, lightish color
+    # blueprint_rigid_character_node.text = "Icons/Symbols/upgrade_arrow"
+    # blueprint_rigid_character_node.text = "Icons/Symbols/upgrade_arrow_frozen"
+    # blueprint_rigid_character_node.text = "$sym_215"  # In game_menus
 
     # Add custom archipelago pickups when we get around to making them
+    ap_offworld_item_node = deepcopy(pickup_blueprint_node)
+    ap_offworld_item_node.attrib["Name"] = "ap_item_offworld"
+    ap_rigid_character_node = ap_offworld_item_node.find("./RigidCharacter/File")
+    ap_rigid_character_node.text = "Sprites/FireTemple/cog_03.irc2"
+    ap_offworld_item_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
+    pickups_root.append(ap_offworld_item_node)
 
     pickups_doc.write(pickups_file)
 
@@ -979,8 +1110,12 @@ def patch_entities(data_dir: str, slot_data: Dict[str, Any], locations: Dict[int
     editor_pickups_doc = et.parse(editor_pickups_file)
     editor_pickups_root = editor_pickups_doc.getroot()
 
+    editor_pickup_entries_to_add = [
+        *in_game_item_data.keys(),
+        *offworld_item_names,
+    ]
     # Add custom blueprint pickup items
-    for editor_string in in_game_item_data.keys():
+    for editor_string in editor_pickup_entries_to_add:
         if "collectible" in editor_string:
             continue
         editor_pickup_node = et.Element("EditorPickup")
@@ -996,46 +1131,13 @@ def patch_entities(data_dir: str, slot_data: Dict[str, Any], locations: Dict[int
     objects_doc = et.parse(objects_file)
     objects_root = objects_doc.getroot()
 
-    artifact_podium = et.fromstring("""<Entity Name="upgrade_podium_artifact" PersistentInCaves="true">
-    <Physics>
-    <CollisionType>trigger</CollisionType>
-    <Bounds>-5, -120, 10, 120</Bounds>
-    <Sensor>true</Sensor>
-    <GravityMultiplier>0</GravityMultiplier>
-    <StartSleeping>true</StartSleeping>
-    </Physics>
-    <Interactable>
-    <InteractionBounds>-120, -90, 240, 90</InteractionBounds>
-    <Action>upgradepodium</Action>
-    <IsTouchActivated>true</IsTouchActivated>
-    <TouchPlayerOnly>true</TouchPlayerOnly>
-    <SwitchMode>once</SwitchMode>
-    <TutorialIndicator>use</TutorialIndicator>
-    </Interactable>
-    <RigidCharacter>
-    <File>Sprites/General/UpgradePodium2/UpgradeMachineBack.irc2</File>
-    <Priority>-2</Priority>
-    <Scale>120</Scale>
-    </RigidCharacter>
-    <Podium>
-    <FrontEntity>upgrade_podium_front</FrontEntity>
-    </Podium>
-    <Animation>
-    <Animation Name="animation_podium"/>
-    </Animation>
-    <Audio>
-    <Music Cue="upgrade_room" InnerAmount="1.0" InnerRange="900" OuterRange="1300" InterpolationMethod="Linear"/>
-    </Audio>
-    <Editor>
-    <DefaultProperties AssetName="Sprites/General/UpgradePodium2/all.png" SnapToTile="true" Origin="0, 0, 0.5, 1.0"/>
-    <Property Name="EditorPickup" Type="String" Default="" Visible="true" ReadOnly="false" Description="The name of the upgrade it unlocks."/>
-    </Editor>
-    <Minimap>
-    <Texture>podium</Texture>
-    </Minimap>
-    </Entity>""")
-
-    objects_root.append(artifact_podium)
+    teleporter_ap_object = deepcopy(objects_root.find("./Entity[@Name='teleporter']"))
+    teleporter_ap_object.attrib["Name"] = "teleporter_ap"
+    teleporter_blocker_info = teleporter_ap_object.find("./Blocker")
+    teleporter_blocker_info.find("./ThemedBlockerEntities").clear()
+    # teleporter_blocker_info.find("./UnblockBanner").attrib["IsTeleporter"] = "false"
+    # teleporter_ap_object.remove(teleporter_blocker_info)
+    objects_root.append(teleporter_ap_object)
 
     objects_doc.write(objects_file)
 
