@@ -377,7 +377,7 @@ temple_button_table: typing.Dict[str, ItemData] = {
     item_name.btn_c1_green: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_c1_tunnel: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_b1_bridge: ItemData(counter.count(), ItemClassification.progression),
-    item_name.btn_t1_jail_n: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_t1_jail_n: ItemData(counter.count(), ItemClassification.useful),
     item_name.btn_t1_jail_e: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t1_telarian: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_t1_guard: ItemData(counter.count(), ItemClassification.progression),

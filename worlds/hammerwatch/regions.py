@@ -3924,6 +3924,7 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.t2_boulder_room_1,
         temple_location_names.t2_boulder_room_2,
         temple_location_names.t2_boulder_room_block,
+        temple_location_names.t2_gold_beetle_barricade,
         temple_location_names.btn_t2_rune_w,
         temple_location_names.btn_t2_wall_boulder_room,
     ],
@@ -3939,7 +3940,6 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.ev_t2_s_node,
     ],
     temple_region_names.t2_jail_sw: [
-        temple_location_names.t2_gold_beetle_barricade,
         temple_location_names.t2_w_gold_beetle_room_1,
         temple_location_names.t2_w_gold_beetle_room_2,
         temple_location_names.t2_w_gold_beetle_room_3,
@@ -4930,15 +4930,19 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
-    connections = [connect_region(world, used_names, source_region, target_region, two_way, pass_item, item_count,
+    connections = [connect_region(world, used_names, source_region, target_region, pass_item, item_count,
                    items_consumed, use_pass_item)]
+
+    if two_way:
+        connections.append(connect_region(world, used_names, target_region, source_region, pass_item, item_count,
+                           items_consumed, use_pass_item))
 
     return connections
 
 
 def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
                    source_region: Region, target_region: Region,
-                   two_way: bool, pass_item: str = None, item_count=1, items_consumed=True, use_pass_item=True):
+                   pass_item: str = None, item_count=1, items_consumed=True, use_pass_item=True):
     entrance_name = get_entrance_name(used_names, source_region.name, target_region.name)
 
     if not use_pass_item:
@@ -4949,10 +4953,6 @@ def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
 
     source_region.exits.append(connection)
     connection.connect(target_region)
-
-    if two_way:
-        connect_region(world, used_names, target_region, source_region, False, pass_item, item_count,
-                       items_consumed, use_pass_item)
 
     return connection
 
