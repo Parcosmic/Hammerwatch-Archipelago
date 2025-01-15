@@ -58,10 +58,7 @@ class SWD2Context(CommonContext):
         self.game_watcher_task = None
         self.locations = [False] * len(all_locations)
         self.game_dir = os.path.dirname(SWD2World.settings.game_path)
-        if args.rcon_port:
-            self.rcon_port = args.rcon_port
-        else:
-            self.rcon_port = DEFAULT_RCON_PORT
+        self.rcon_port = args.rcon_port
         self.syncing = False
         self.want_slot_data = True
         self.slot_data: Dict[str, Any] = None
@@ -156,7 +153,7 @@ def launch_game(ctx: SWD2Context):
     exec_dir = Path(ctx.game_dir).expanduser()
     exec_path = Path(exec_dir).joinpath("Dig2.exe")
     subprocess.Popen([exec_path], cwd=exec_dir)
-    ctx.syncing = True
+    ctx.syncing = False  # TODO: set to True when we have a working interface
     teardown(ctx, "Mod hasn't been implemented yet, disconnecting")
 
 

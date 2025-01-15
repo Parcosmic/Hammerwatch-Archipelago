@@ -11,6 +11,7 @@ from NetUtils import NetworkItem
 from zipfile import ZipFile, ZIP_DEFLATED
 from CommonClient import logger, CommonContext
 from BaseClasses import ItemClassification
+import xml.etree.ElementTree as et
 
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
                               COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item)
@@ -137,7 +138,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     start_items: Dict[str, int] = {
         item_name.lamp: 2,
         item_name.armor: 1,
-        item_name.pickaxe: 7,
+        item_name.pickaxe: 1,
         item_name.backpack: 1,
         item_name.tank: 1,
         "fate": 1,
@@ -230,6 +231,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
         # ("guard_quest_pathfinder_deactivate", "completed"),
         ("quest_tutorial_indicators", "completed"),
         ("quest_find_the_hub", "in_progress"),
+        ("quest_workbench_cog_conversation", "completed"),  # For convenience
     ]
 
     for quest_data in quest_states:
@@ -298,7 +300,7 @@ def is_item_upgrade(name: str):
 
 def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     slot_data: Dict[str, Any] = ctx_data.slot_data
-    locations: Dict[int, NetworkItem] = ctx_data.locations
+    locations: Dict[int, NetworkItem] = ctx_data.locations_info
 
     data_dir = os.path.join(bundle_dir, "data01")
     patchsets_dir = os.path.join(data_dir, "Patchsets")
@@ -318,7 +320,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         os.path.join(patchsets_dir, "TheHub", "the_hub_patch_main.le"): patch_oasis,
         os.path.join(patchsets_dir, "Archaea", "archaea_cave_vectron_entrance.le"): patch_vectron,
     }
-    return_tubes: List[Tuple[str, int, int]] = {
+    return_tubes: List[Tuple[str, int, int]] = [
         ("temple_of_guidance.le", -240, 0),
         ("archaea_cave_pressurebomb.le", -240, 0),
         ("archaea_cave_jackhammer.le", 240, 0),
@@ -327,7 +329,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         ("temple_of_guidance_2_cave_maze.le", -240, 0),
         ("firetemple_cave_flamer.le", 240, 0),
         ("yarrow_cave_steampack_slayer.le", 240, 0),
-    }
+    ]
 
     entrance_swaps: Dict[str, int] = slot_data["Entrance Swaps"]
     randomize_cogs: Dict[str, int] = slot_data["randomize_cogs"]
@@ -833,7 +835,7 @@ def get_ap_item_desc_and_flavor(item: NetworkItem, ap_item_player):
 def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterable[Tuple[str, str]], List[str]]:
     slot: int = ctx_data.slot
     slot_data: Dict[str, Any] = ctx_data.slot_data
-    locations: Dict[int, NetworkItem] = ctx_data.locations
+    locations: Dict[int, NetworkItem] = ctx_data.locations_info
     item_names: CommonContext.NameLookupDict = ctx_data.item_names
     player_names: Dict[int, str] = ctx_data.player_names
 
@@ -969,26 +971,26 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
                         upgrade_tier_nodes[t].append(sub_node)
                         if randomized_item in upgrades:
                             upgrades.remove(randomized_item)
-        for upgrade_node, subupgrades in upgrade_subupgrades.items():
-            # Add remaining items to locked upgrades so they appear when they're unlocked
-            locked_upgrades_node = upgrade_node.find(".//LockedUpgrades")
-            if locked_upgrades_node is None:
-                locked_upgrades_node = et.Element("LockedUpgrades")
-                upgrade_node.append(locked_upgrades_node)
-            else:
-                # Probably remove the locked upgrade nodes, we'll recreate them down below if we need them
-                # Actually add them to subupgrades?
-                for locked_upgrade in locked_upgrades_node:
-                    locked_upgrade_id = locked_upgrade.attrib["Id"]
-                    if locked_upgrade_id not in used_subupgrades:
-                        used_subupgrades.add(locked_upgrade_id)
-            for subupgrade in subupgrades:
-                if subupgrade in used_subupgrades:
-                    continue
-                locked_upgrade_node = et.Element("LockedUpgrade")
-                locked_upgrade_node.attrib["Id"] = subupgrade
-                locked_upgrade_node.attrib["AfterTier"] = "100"
-                locked_upgrades_node.append(locked_upgrade_node)
+        # for upgrade_node, subupgrades in upgrade_subupgrades.items():
+        #     # Add remaining items to locked upgrades so they appear when they're unlocked
+        #     locked_upgrades_node = upgrade_node.find(".//LockedUpgrades")
+        #     if locked_upgrades_node is None:
+        #         locked_upgrades_node = et.Element("LockedUpgrades")
+        #         upgrade_node.append(locked_upgrades_node)
+        #     else:
+        #         # Probably remove the locked upgrade nodes, we'll recreate them down below if we need them
+        #         # Actually add them to subupgrades?
+        #         for locked_upgrade in locked_upgrades_node:
+        #             locked_upgrade_id = locked_upgrade.attrib["Id"]
+        #             if locked_upgrade_id not in used_subupgrades:
+        #                 used_subupgrades.add(locked_upgrade_id)
+        #     for subupgrade in subupgrades:
+        #         if subupgrade in used_subupgrades:
+        #             continue
+        #         locked_upgrade_node = et.Element("LockedUpgrade")
+        #         locked_upgrade_node.attrib["Id"] = subupgrade
+        #         locked_upgrade_node.attrib["AfterTier"] = "100"
+        #         locked_upgrades_node.append(locked_upgrade_node)
 
     # Cog cost randomization
     total_cog_costs = slot_data[option_name.randomize_cog_costs]
