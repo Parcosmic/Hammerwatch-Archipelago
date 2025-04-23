@@ -97,6 +97,11 @@ trap_table: typing.Dict[str, ItemData] = {
     item_name.trap_confuse: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_banner: ItemData(counter.count(), ItemClassification.trap),
     # item_name.trap_flies: ItemData(counter.count(), ItemClassification.trap),
+    item_name.trap_disarm: ItemData(counter.count(2), ItemClassification.trap),
+    item_name.trap_stun: ItemData(counter.count(), ItemClassification.trap),
+    item_name.trap_chaser: ItemData(counter.count(), ItemClassification.trap),
+    # item_name.trap_hey: ItemData(counter.count(), ItemClassification.trap),
+    # item_name.trap_escape: ItemData(counter.count(), ItemClassification.trap),
 }
 
 counter = Counter(id_start + 0x200 - 1)

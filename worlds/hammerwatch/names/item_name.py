@@ -138,6 +138,11 @@ trap_frost = "Frost Trap"
 trap_fire = "Fire Trap"
 trap_banner = "Banner Trap"
 trap_flies = "Fly Trap"
+trap_disarm = "Disarm Trap"
+trap_stun = "Stun Trap"
+trap_chaser = "Chaser Trap"
+trap_hey = "Hey! Trap"
+trap_escape = "Escape Trap"
 
 # Shop item names
 
@@ -959,6 +964,11 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_confuse,
         trap_banner,
         # trap_flies,
+        trap_disarm,
+        trap_stun,
+        trap_chaser,
+        # trap_hey,
+        # trap_escape,
     },
     group_buttons: {
         btn_pof,
