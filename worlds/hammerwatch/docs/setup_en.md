@@ -3,7 +3,7 @@
 ## Required Software
 
 - Hammerwatch: [Hammerwatch Steam Page](https://store.steampowered.com/app/239070/Hammerwatch/)
-- Hammerwatch Client Mod Installer: [Hammerwatch Archipelago Mod Installer Page](https://github.com/Parcosmic/HammerwatchAPModInstaller/releases)
+- Hammerwatch Client Mod Installer: [Hammerwatch Archipelago Mod Installer Page](https://github.com/Parcosmic/HammerwatchAPMod/releases)
 - Archipelago: [Archipelago Releases Page](https://github.com/ArchipelagoMW/Archipelago/releases)
 
 ## Hammerwatch Mod Installation Procedures
