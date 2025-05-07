@@ -138,26 +138,6 @@ def set_extra_rules(world: "HammerwatchWorld"):
         elif goal == GoalType.FullCompletion:
             world.multiworld.completion_condition[world.player] = lambda state: state.has(item_name.evc_escaped,
                                                                                           world.player)
-            # Exclude all locations that are in the escape sequence
-            escape_locations = (
-                castle_location_names.b4_plank_1,
-                castle_location_names.b4_plank_2,
-                castle_location_names.b4_plank_3,
-                castle_location_names.b4_plank_4,
-                castle_location_names.b4_plank_5,
-                castle_location_names.b4_plank_6,
-                castle_location_names.b4_plank_7,
-                castle_location_names.b4_plank_8,
-                castle_location_names.b4_plank_9,
-                castle_location_names.b4_plank_10,
-                castle_location_names.b4_plank_11,
-                castle_location_names.e2_entrance,
-                castle_location_names.e2_end,
-                castle_location_names.e3_entrance_1,
-                castle_location_names.e3_entrance_2,
-                castle_location_names.e4_main,
-            )
-            world.options.exclude_locations.value.update(escape_locations)
         # Buttonsanity additional rules
         if world.options.buttonsanity.value > 0:
             boss_gate_locs: typing.Dict[str, typing.Tuple[str, str, str]] = {
