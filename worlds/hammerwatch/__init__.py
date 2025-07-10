@@ -52,6 +52,10 @@ class HammerwatchWorld(World):
 
     web = HammerwatchWeb()
 
+    tracker_world = {"map_page_folder": "HammerwatchTrackerPack",
+                     "map_page_maps": "maps/maps.json",
+                     "map_page_locations": "locations/castle_locations.json"}
+
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
 
@@ -86,6 +90,11 @@ class HammerwatchWorld(World):
 
     def generate_early(self):
         self.campaign = get_campaign(self)
+
+        # Hack to test if we can hotswap the maps and locations for UT map tracking
+        if self.campaign == Campaign.Temple:
+            self.tracker_world["map_page_maps"] = "maps/maps_temple.json"
+            self.tracker_world["map_page_locations"] = "locations/temple_locations.json"
 
         # Validate act specific keys option
         if self.campaign == Campaign.Temple and self.options.key_mode == self.options.key_mode.option_act_specific:
