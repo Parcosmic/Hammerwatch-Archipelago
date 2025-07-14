@@ -967,7 +967,7 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         trap_disarm,
         trap_stun,
         trap_chaser,
-        # trap_hey,
+        trap_hey,
         # trap_escape,
     },
     group_buttons: {
