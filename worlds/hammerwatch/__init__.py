@@ -9,8 +9,9 @@ from .locations import (LocationData, all_locations, setup_locations, castle_eve
                         castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
 from .rules import set_rules, connect_regions_er
+from . import tracker
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
-                   is_using_universal_tracker, get_random_element, get_random_elements)
+                   get_random_element, get_random_elements)
 from .options import HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
@@ -52,9 +53,11 @@ class HammerwatchWorld(World):
 
     web = HammerwatchWeb()
 
-    tracker_world = {"map_page_folder": "HammerwatchTrackerPack",
-                     "map_page_maps": "maps/maps.json",
-                     "map_page_locations": "locations/castle_locations.json"}
+    # Universal tracker variables
+    is_using_ut: bool
+    ut_re_gen_passthrough: dict[str, typing.Any]
+    ut_can_gen_without_yaml = True
+    tracker_world = tracker.default_tracker_world
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {name: data.code for name, data in all_locations.items()}
@@ -89,12 +92,13 @@ class HammerwatchWorld(World):
         }
 
     def generate_early(self):
+        self.is_using_ut = hasattr(self.multiworld, "generation_is_fake")
+        tracker.set_options_from_slot_data(self)
+
         self.campaign = get_campaign(self)
 
-        # Hack to test if we can hotswap the maps and locations for UT map tracking
-        if self.campaign == Campaign.Temple:
-            self.tracker_world["map_page_maps"] = "maps/maps_temple.json"
-            self.tracker_world["map_page_locations"] = "locations/temple_locations.json"
+        # Get the tracker world for our world
+        self.tracker_world = tracker.get_tracker_world(self)
 
         # Validate act specific keys option
         if self.campaign == Campaign.Temple and self.options.key_mode == self.options.key_mode.option_act_specific:
@@ -201,7 +205,7 @@ class HammerwatchWorld(World):
                     self.item_counts[item_name.key_silver_b1] = 0
 
         # If we're using UT we don't need to create any items
-        if is_using_universal_tracker(self):
+        if self.is_using_ut:
             return
 
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
@@ -301,7 +305,7 @@ class HammerwatchWorld(World):
                 location.place_locked_item(self.create_event(itm))
 
         # Don't place non-event items if we're using Universal Tracker
-        if is_using_universal_tracker(self):
+        if self.is_using_ut:
             return
 
         # Bonus Key Locations
@@ -404,7 +408,7 @@ class HammerwatchWorld(World):
                 location.place_locked_item(self.create_event(itm))
 
         # Don't place non-event items if we're using Universal Tracker
-        if is_using_universal_tracker(self):
+        if self.is_using_ut:
             return
 
         # Force Dune Shark key location to be the correct key if randomize enemy loot is off
@@ -554,7 +558,7 @@ class HammerwatchWorld(World):
 
     @classmethod
     def stage_post_fill(cls, multiworld: MultiWorld):
-        # If buttonsanity is on for a given Hammerwatch world swap shop upgrades so the base upgrade is always first
+        # If shopsanity is on for a given Hammerwatch world swap shop upgrades so the base upgrade is always first
         world_shopsanity_items: typing.Dict[int, typing.Dict[str, typing.Optional[typing.Tuple]]] = {}
         swap_mode = 0
         for world in multiworld.get_game_worlds("Hammerwatch"):
@@ -612,14 +616,15 @@ class HammerwatchWorld(World):
     def interpret_slot_data(self, slot_data: typing.Dict[str, typing.Any]):
         # self.gate_types = slot_data["Gate Types"]
         return {"Gate Types": {int(gate_index): key_type for gate_index, key_type in slot_data["Gate Types"].items()},
-                "er_seed": slot_data["er_seed"],
                 "Random Locations": slot_data["Random Locations"],
-                "Shop Locations": slot_data["Shop Locations"]}
+                "Shop Locations": slot_data["Shop Locations"],
+                **{option: (slot_data[option] if option in slot_data else 0) for option in client_required_options},
+                }
 
     def get_random_location(self, rloc_name: str):
         # If UT is generating the first time we just pass a dummy value as it'll restart gen anyway
-        if is_using_universal_tracker(self):
-            if hasattr(self.multiworld, "re_gen_passthrough"):
-                return self.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"][rloc_name]
+        if self.is_using_ut:
+            if self.ut_re_gen_passthrough:
+                return self.ut_re_gen_passthrough["Random Locations"][rloc_name]
             return 0
         return self.random_locations[rloc_name]

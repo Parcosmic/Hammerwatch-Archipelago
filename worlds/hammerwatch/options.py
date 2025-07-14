@@ -595,6 +595,7 @@ client_required_options = [
     option_names.enemy_shuffle_mode,
     option_names.enemy_shuffle_act_range,
     option_names.enemy_shuffle_keep_tier,
+    option_names.bonus_behavior,  # Needed for UT
     option_names.randomize_bonus_keys,
     option_names.randomize_recovery_items,
     option_names.randomize_secrets,

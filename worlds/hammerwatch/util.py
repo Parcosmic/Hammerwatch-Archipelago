@@ -98,8 +98,6 @@ def get_option_value_from_class_name(class_name: str):
 
 def get_shopsanity_classes(world: "HammerwatchWorld") -> typing.List[PlayerClass]:
     classes = []
-    if is_using_universal_tracker(world):
-        return [player_class for player_class in PlayerClass]
     if world.options.shopsanity_p1 > 0:
         p1_class = get_class_from_option_value(world.options.shopsanity_p1.value)
         classes.append(p1_class)
@@ -226,7 +224,3 @@ def add_loc_rule(world: World, loc_name: str, rule: CollectionRule):
 
 def add_loc_item_rule(world: World, loc_name: str, item: str, item_count=1):
     add_loc_rule(world, loc_name, lambda state: state.has(item, world.player, item_count))
-
-
-def is_using_universal_tracker(world: World):
-    return hasattr(world.multiworld, "generation_is_fake")

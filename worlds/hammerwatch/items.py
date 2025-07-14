@@ -2,7 +2,7 @@ import typing
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
 from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names,
-                   get_random_elements, PlayerClass, get_shopsanity_classes, is_using_universal_tracker)
+                   get_random_elements, PlayerClass, get_shopsanity_classes)
 
 if typing.TYPE_CHECKING:
     from . import HammerwatchWorld
@@ -995,7 +995,7 @@ shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {
 
 
 def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: typing.Dict[str, int]):
-    if is_using_universal_tracker(world):
+    if world.is_using_ut:
         return item_counts_table, 0
 
     extra_items: int = 0
