@@ -323,13 +323,17 @@ class EnemyShuffle(Removed):
 class EnemyShuffleMode(Choice):
     """Shuffles the locations of enemies, spawners, mini-bosses, and towers in each level
     Individual: enemies will be shuffled individually regardless of type, keeping the same ratios as vanilla
-    Type: converts all enemies of a single type into another. For example all tier 1 bats can become tier 1 beetles"""
+    Type: converts all enemies of a single type into another. For example all tier 1 bats can become tier 1 beetles
+    Chaos: enemies will be shuffled individually regardless of type or ratio
+    """
     display_name = "Enemy Shuffle Mode"
     option_off = 0
     option_individual = 1
     option_type = 2
+    option_chaos = 3
     alias_false = 0
     alias_true = 1
+    alias_group = 2
     default = 0
 
 
@@ -512,7 +516,8 @@ class ERSeed(FreeText):
 
 
 class DeathLink(DeathLink):
-    """When anybody dies, everyone dies. This also applies to all multiplayer players within a single game"""
+    """When anybody dies, everyone dies. This also applies to all multiplayer players within a single game
+    This can be changed later in game in the Archipelago options menu"""
     display_name = "Death Link"
 
 
