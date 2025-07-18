@@ -24,7 +24,7 @@ See the guide for info about YAML files on the Archipelago setup guide:
 
 ### Where do I get a config file?
 
-You can configure the settings for your game on the Player Settings page and export them as a config file.
+You can configure the options for your game on the Player Options page and export them as a config file.
 Player settings page: [Hammerwatch Player Settings Page](/games/Hammerwatch/player-settings)
 
 ### Verifying your config file
