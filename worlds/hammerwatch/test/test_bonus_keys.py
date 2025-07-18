@@ -1,6 +1,6 @@
 import typing
 
-from . import HammerwatchTestBase
+from .base import HammerwatchTestBase
 from .. import item_name, option_names
 from .. import options, locations, items
 from ..rules import get_unique_entrance_id

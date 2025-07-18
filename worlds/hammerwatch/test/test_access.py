@@ -1,6 +1,6 @@
 import typing
 
-from . import HammerwatchTestBase
+from .base import HammerwatchTestBase
 from .. import item_name, castle_region_names, option_names
 from .. import options, locations, items
 from .. import castle_location_names
