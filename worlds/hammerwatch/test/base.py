@@ -20,3 +20,7 @@ class HammerwatchTestBase(WorldTestBase):
                     remaining_locs.pop(loc.name)
             assert len(remaining_locs) == 0, f"{option_set_name}: The following locations are active but have not " \
                                              f"been created: {remaining_locs.keys()}"
+
+    def collect_count(self, item_name, count):
+        items = map(self.world.create_item, [item_name] * count)
+        self.collect(items)
