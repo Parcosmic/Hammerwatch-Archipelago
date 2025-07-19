@@ -2874,9 +2874,9 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
                                 item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
 
-    if hasattr(world.multiworld, "re_gen_passthrough"):
-        random_locations = world.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"]
     if world.is_using_ut:
+        if world.ut_re_gen_passthrough:
+            random_locations = world.ut_re_gen_passthrough["Random Locations"]
         item_counts.pop(item_name.loot_tower)
         item_counts.pop(item_name.loot_flower)
         return location_table, item_counts, random_locations
@@ -3205,8 +3205,9 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
                               item_counts: typing.Dict[str, int]):
     random_locations: typing.Dict[str, int] = {}
 
-    if hasattr(world.multiworld, "re_gen_passthrough"):
-        random_locations = world.multiworld.re_gen_passthrough["Hammerwatch"]["Random Locations"]
+    if world.is_using_ut:
+        if world.ut_re_gen_passthrough:
+            random_locations = world.ut_re_gen_passthrough["Random Locations"]
         item_counts.pop(item_name.loot_tower)
         item_counts.pop(item_name.loot_flower)
         item_counts.pop(item_name.loot_mini_flower)

@@ -25,7 +25,7 @@ def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
     else:
         second_region_name = temple_region_names.hub_main
     second_region = world.multiworld.get_region(second_region_name, world.player)
-    loop_entrances = prune_entrances(menu_region, second_region)
+    loop_entrances = get_entrance_loops(menu_region, second_region)
 
     set_door_access_rules(world, door_counts, loop_entrances)
 
@@ -82,8 +82,8 @@ def connect_regions_er(world: "HammerwatchWorld"):
     stop_threshold = 100000
     random_state = world.random.getstate()
     er_seed = world.options.er_seed.value
-    if hasattr(world.multiworld, "re_gen_passthrough"):
-        er_seed = world.multiworld.re_gen_passthrough["Hammerwatch"]["er_seed"]
+    if world.is_using_ut and world.ut_re_gen_passthrough:
+        er_seed = world.ut_re_gen_passthrough["er_seed"]
     if er_seed == "random":
         er_seed = ''.join(random.choices(string.ascii_letters, k=16))
         world.options.er_seed.value = er_seed
@@ -725,7 +725,7 @@ def get_valid_exits(entrance_block_types, open_codes: typing.List[str], code_to_
     return exits
 
 
-def prune_entrances(start_region: Region, next_region: Region):
+def get_entrance_loops(start_region: Region, next_region: Region):
     # Find loops
     loops = []
     # The purpose of this list to prevent loops from appearing twice
@@ -768,34 +768,6 @@ def prune_entrances(start_region: Region, next_region: Region):
             cycle_search(exit_.connected_region, node, visited.copy(), entrances)
 
     cycle_search(next_region, start_region, [], [])
-
-    # Prune backwards entrances
-    seen_region_names = [start_region.name]
-    next_regions = [start_region]
-    entrances_to_delete = []
-    delete_ids = []
-    while len(next_regions) > 0:
-        regions_to_explore = next_regions.copy()
-        next_regions.clear()
-        for region in regions_to_explore:
-            for entrance in region.exits:
-                if entrance.connected_region.name in seen_region_names:
-                    if entrance.connected_region.name != region.name:
-                        entr_id = get_entrance_id(entrance)
-                        if entr_id in delete_ids:
-                            continue
-                        delete_ids.append(entr_id)
-                        entrances_to_delete.append(entrance)
-                    continue
-                seen_region_names.append(entrance.connected_region.name)
-                next_regions.append(entrance.connected_region)
-
-        while len(entrances_to_delete) > 0:
-            del_entrance = entrances_to_delete.pop(0)
-            # print(f"Deleted {del_entrance.parent_region} -> {del_entrance.connected_region}")
-            if del_entrance.exit_code is not None:
-                continue
-            # delete_entrance(del_entrance)
 
     return loop_entrances
 
@@ -911,6 +883,11 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[st
             if exit_.pass_item not in door_counts.keys():
                 continue  # If the item isn't in door_counts then it's being excluded and we don't set logic
             needed_keys = door_counts[exit_.pass_item] - exit_.downstream_count
+            # Kind of a hack, but if the downstream count is equal to the number of gates then we have a loop
+            if needed_keys == 0:
+                needed_keys = door_counts[exit_.pass_item]
+            if needed_keys < 0:
+                raise Exception(f"Needed keys for pass item {exit_.pass_item} is zero or less!")
             # add_rule(exit_, lambda state, this=exit_, num=needed_keys: state.has(this.pass_item, world.player, num), "and")
             if exit_.pass_item in big_key_table:
                 def key_rule(state, this=exit_, num=needed_keys):

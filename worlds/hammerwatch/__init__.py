@@ -165,9 +165,11 @@ class HammerwatchWorld(World):
 
     def create_regions(self) -> None:
         self.level_exits = []
-        if hasattr(self.multiworld, "re_gen_passthrough"):
-            self.gate_types = self.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"]
-        self.gate_types = create_regions(self, self.campaign, self.active_location_list)
+        if self.is_using_ut and self.ut_re_gen_passthrough:
+            self.gate_types = self.ut_re_gen_passthrough["Gate Types"]
+        else:
+            self.gate_types = dict()
+        create_regions(self, self.campaign, self.active_location_list, self.gate_types)
         self.exit_swaps = {}
         connect_regions_er(self)
         connect_shops(self)
@@ -542,9 +544,10 @@ class HammerwatchWorld(World):
         #                      True, False, True, None, False, True, "Button Shuffle")
 
         # state = self.multiworld.get_all_state(False)
+        # state = CollectionState(self.multiworld)
         # state.update_reachable_regions(self.player)
         # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
-        #                   highlight_regions=state.reachable_regions[self.player])
+        #                   regions_to_highlight=state.reachable_regions[self.player])
 
         # In the castle campaign if buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
         blue_button_trap_chance = 0.5
@@ -627,4 +630,4 @@ class HammerwatchWorld(World):
             if self.ut_re_gen_passthrough:
                 return self.ut_re_gen_passthrough["Random Locations"][rloc_name]
             return 0
-        return self.random_locations[rloc_name]
+        return self.random_locations[rloc_name] if rloc_name in self.random_locations else 0

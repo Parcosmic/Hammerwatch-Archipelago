@@ -49,16 +49,15 @@ class HWEntrance(Entrance):
         self.swapped = False
 
 
-def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: typing.Dict[str, LocationData]):
-    gate_codes = {}
+def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: typing.Dict[str, LocationData],
+                   gate_types: dict[str, int]):
     if campaign == Campaign.Castle:
         create_castle_regions(world, active_locations)
-        connect_castle_regions(world, gate_codes)
+        connect_castle_regions(world, gate_types)
     else:
         create_tots_regions(world, active_locations)
-        connect_tots_regions(world, gate_codes)
+        connect_tots_regions(world, gate_types)
     create_shop_regions(world, active_locations)
-    return gate_codes
 
 
 castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
@@ -2244,7 +2243,7 @@ def create_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     world.multiworld.regions.extend(created_shop_regions)
 
 
-def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
+def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, int]):
     used_names: typing.Dict[str, int] = {}
     gate_counts: typing.List[typing.Dict[str, int]]
     all_gate_counts: typing.Dict[str, int] = {
@@ -2332,13 +2331,13 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
         connect(world, used_names, castle_region_names.hub, hub_start_regions[i], True)
 
     # Prison Floor 1
+    connect_gate(world, used_names, castle_region_names.p1_start, castle_region_names.p1_s,
+                 key_bronze[0], gate_codes, gate_counts[0], gate_names.c_p1_0, True)
     connect(world, used_names, castle_region_names.p1_start, castle_region_names.p1_nw,
             True, item_name.btnc_p1_floor, 1, False)
     connect(world, used_names, castle_region_names.p1_nw, castle_region_names.p1_secret,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect(world, used_names, castle_region_names.p1_nw, castle_region_names.p1_nw_left, False)
-    connect_gate(world, used_names, castle_region_names.p1_start, castle_region_names.p1_s,
-                 key_bronze[0], gate_codes, gate_counts[0], gate_names.c_p1_0, True)
     connect(world, used_names, castle_region_names.p1_s, castle_region_names.p1_sw_secret,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect_gate(world, used_names, castle_region_names.p1_s, castle_region_names.p1_sw_bronze_gate,
@@ -2368,13 +2367,6 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
             item_name.btnc_p2_m_stairs, 1, False, buttonsanity)
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_n,
                  key_silver[1], gate_codes, gate_counts[1], gate_names.c_p2_5, True)
-    if buttonsanity:
-        p2_shortcuts = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s, True)
-
-        def p2_passage_rule(state):
-            return state.has_all((item_name.btnc_p2_shortcut_n, item_name.btnc_p2_shortcut_s), world.player)
-        for entr in p2_shortcuts:
-            add_rule(entr, p2_passage_rule)
     connect(world, used_names, castle_region_names.p2_n, castle_region_names.p2_spike_puzzle_bottom, False,
             item_name.btnc_p2_spike_puzzle_r, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.p2_spike_puzzle_bottom, castle_region_names.p2_spike_puzzle_left,
@@ -2397,6 +2389,12 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
                 item_name.btnc_p2_e_save, 1, False)
     connect_gate(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s,
                  key_gold[1], gate_codes, gate_counts[1], gate_names.c_p2_4, True)
+    if buttonsanity:
+        p2_shortcuts = connect(world, used_names, castle_region_names.p2_m, castle_region_names.p2_s, True)
+        def p2_passage_rule(state) -> bool:
+            return state.has_all((item_name.btnc_p2_shortcut_n, item_name.btnc_p2_shortcut_s), world.player)
+        for entr in p2_shortcuts:
+            add_rule(entr, p2_passage_rule)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_e_bronze_gate_2,
                  key_bronze[1], gate_codes, gate_counts[1], gate_names.c_p2_7, False)
     connect_gate(world, used_names, castle_region_names.p2_s, castle_region_names.p2_m_bronze_gate,
@@ -4251,7 +4249,7 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         region.locations.append(HammerwatchLocation(world.player, loc_name, None, region))
 
 
-def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, str]):
+def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, int]):
     used_names: typing.Dict[str, int] = {}
 
     gate_counts: typing.List[typing.Dict[str, int]]
@@ -4789,8 +4787,8 @@ def connect_shops(world: "HammerwatchWorld"):
             castle_location_names.shop_c2_def_2: ShopInfo(ShopType.Defense, 5),
         }
 
-        if hasattr(world.multiworld, "re_gen_passthrough"):
-            shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
+        if world.is_using_ut and world.ut_re_gen_passthrough:
+            shop_slot_data = world.ut_re_gen_passthrough["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
                 world.shop_locations[loc_name].from_int(shop_str)
         else:
@@ -4860,8 +4858,8 @@ def connect_shops(world: "HammerwatchWorld"):
             temple_location_names.shop_def: ShopInfo(ShopType.Defense, 0),
         }
 
-        if hasattr(world.multiworld, "re_gen_passthrough"):
-            shop_slot_data = world.multiworld.re_gen_passthrough["Hammerwatch"]["Shop Locations"]
+        if world.is_using_ut and world.ut_re_gen_passthrough:
+            shop_slot_data = world.ut_re_gen_passthrough["Shop Locations"]
             for loc_name, shop_str in shop_slot_data.items():
                 world.shop_locations[loc_name].from_int(shop_str)
         else:
@@ -4998,7 +4996,7 @@ def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], sou
 
 
 def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, key_type: str,
-                 gate_codes: typing.Dict[str, str] = None, gate_items: typing.Dict[str, int] = None,
+                 gate_codes: typing.Dict[str, int] = None, gate_items: typing.Dict[str, int] = None,
                  gate_code: str = None, two_way=True):
     entrances = []
 
@@ -5011,9 +5009,10 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     # Override the key item if gate shuffle is on
     if world.options.gate_shuffle.value and gate_code is not None:
         # Special handling for Universal Tracker
-        if hasattr(world.multiworld, "re_gen_passthrough"):
-            gate_types = world.multiworld.re_gen_passthrough["Hammerwatch"]["Gate Types"]
-            key_code = gate_types[gate_names.gate_name_indices[gate_code]]
+        if world.is_using_ut and world.ut_re_gen_passthrough:
+            gate_types = world.ut_re_gen_passthrough["Gate Types"]
+            gate_name_index = str(gate_names.gate_name_indices[gate_code])
+            key_code: int = gate_types[gate_name_index] if gate_name_index in gate_types else 0
             key_item_name = get_key_name(key_code).capitalize() + " Key"
             if world.options.key_mode.value == world.options.key_mode.option_act_specific:
                 key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
@@ -5021,10 +5020,10 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
                 key_item_name = " ".join(key_type.split()[:-2]) + " " + key_item_name
         else:
             key_item_name = get_random_element(world, gate_items)
-        gate_items[key_item_name] -= 1
-        if gate_items[key_item_name] == 0:
-            gate_items.pop(key_item_name)
-        gate_codes[gate_code] = get_key_code(key_item_name.split(" ")[-2].lower())
+            gate_items[key_item_name] -= 1
+            if gate_items[key_item_name] == 0:
+                gate_items.pop(key_item_name)
+            gate_codes[gate_code] = get_key_code(key_item_name.split(" ")[-2].lower())
 
     consumed = True
     if world.options.key_mode.value == world.options.key_mode.option_floor_master:
