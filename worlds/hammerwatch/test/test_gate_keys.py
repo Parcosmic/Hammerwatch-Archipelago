@@ -52,22 +52,37 @@ class TestCastleGateKeys(HammerwatchTestBase):
         self.options[option_names.buttonsanity] = options.Buttonsanity.option_normal
         _test_gate_keys(self)
 
+    def test_er(self):
+        self.options[option_names.key_mode] = options.KeyMode.option_vanilla
+        self.options[option_names.exit_randomization] = options.ExitRandomization.option_no_boss_exits
+        _test_gate_keys(self)
+
+    def test_er_buttonsanity(self):
+        self.options[option_names.key_mode] = options.KeyMode.option_vanilla
+        self.options[option_names.buttonsanity] = options.Buttonsanity.option_normal
+        self.options[option_names.exit_randomization] = options.ExitRandomization.option_no_boss_exits
+        _test_gate_keys(self)
+
 
 class TestTempleGateKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_temple_all_bosses,
+        option_names.key_mode: options.KeyMode.option_vanilla,
         option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_true,
     }
 
     def test_keys(self):
-        self.options[option_names.key_mode] = options.KeyMode.option_vanilla
-        _test_gate_keys(self)
-
-    def test_act_keys(self):
-        self.options[option_names.key_mode] = options.KeyMode.option_act_specific
         _test_gate_keys(self)
 
     def test_buttonsanity(self):
-        self.options[option_names.key_mode] = options.KeyMode.option_vanilla
         self.options[option_names.buttonsanity] = options.Buttonsanity.option_normal
+        _test_gate_keys(self)
+
+    def test_er(self):
+        self.options[option_names.exit_randomization] = options.ExitRandomization.option_no_boss_exits
+        _test_gate_keys(self)
+
+    def test_er_buttonsanity(self):
+        self.options[option_names.buttonsanity] = options.Buttonsanity.option_normal
+        self.options[option_names.exit_randomization] = options.ExitRandomization.option_no_boss_exits
         _test_gate_keys(self)
