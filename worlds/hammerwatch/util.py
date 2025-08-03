@@ -179,7 +179,6 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
     else:
         key_names = [
             item_name.mirror,
-            item_name.key_teleport,
         ]
         if world.options.key_mode.value != world.options.key_mode.option_floor_master:
             key_names.extend([
@@ -187,6 +186,9 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
                 item_name.key_gold,
                 item_name.key_bonus,
             ])
+        # If ER is on don't care about rune key logic, it's not even real logic anyways
+        if not world.options.exit_randomization:
+            key_names.append(item_name.key_teleport)
     return key_names
 
 

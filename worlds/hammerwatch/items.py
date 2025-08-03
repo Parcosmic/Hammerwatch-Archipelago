@@ -29,7 +29,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     item_name.chest_red: ItemData(counter.count(), ItemClassification.filler),
     item_name.chest_wood: ItemData(counter.count(), ItemClassification.filler),
     item_name.vendor_coin: ItemData(counter.count(), ItemClassification.filler),
-    item_name.plank: ItemData(counter.count(), ItemClassification.progression),
+    item_name.plank: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.key_bronze: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.key_silver: ItemData(counter.count(), ItemClassification.progression),
     item_name.key_gold: ItemData(counter.count(), ItemClassification.progression),
@@ -75,11 +75,11 @@ tool_table: typing.Dict[str, ItemData] = {
     item_name.pan: ItemData(counter.count(), ItemClassification.progression),
     item_name.lever: ItemData(counter.count(), ItemClassification.progression),
     item_name.pickaxe: ItemData(counter.count(), ItemClassification.progression),
-    item_name.pan_fragment: ItemData(counter.count(), ItemClassification.progression),
-    item_name.lever_fragment: ItemData(counter.count(), ItemClassification.progression),
-    item_name.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression),
+    item_name.pan_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.lever_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.hammer: ItemData(counter.count(), ItemClassification.progression),
-    item_name.hammer_fragment: ItemData(counter.count(), ItemClassification.progression),
+    item_name.hammer_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
 }
 
 special_table: typing.Dict[str, ItemData] = {

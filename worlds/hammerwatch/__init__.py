@@ -274,12 +274,19 @@ class HammerwatchWorld(World):
         if self.campaign == Campaign.Temple and len(get_shopsanity_classes(self)) > 0:
             ore_count = item_counts.pop(item_name.ore)
             for i in range(ore_count):
-                self.world_itempool.append(self.create_item_with_flags(item_name.ore, ItemClassification.progression))
+                self.world_itempool.append(self.create_item_with_flags(item_name.ore, ItemClassification.progression_skip_balancing))
 
         # Create items and add to item pool
-        for item in item_counts:
-            for i in range(item_counts[item]):
+        # Ensure Strange Planks are last in the itempool so they are placed first near the end of the seed
+        plank_count = 0
+        if item_name.plank in item_counts:
+            plank_count = item_counts.pop(item_name.plank)
+        for item, count in item_counts.items():
+            for i in range(count):
                 self.world_itempool.append(self.create_item(item))
+        if plank_count > 0:
+            for p in range(plank_count):
+                self.world_itempool.append(self.create_item(item_name.plank))
 
         self.multiworld.itempool += self.world_itempool
 
@@ -362,13 +369,23 @@ class HammerwatchWorld(World):
                         loc = self.multiworld.get_location(loc_name, self.player)
                         loc.place_locked_item(self.create_item(bonus_key_names[k]))
 
-        # Add a starting item to local_early_items to get out of an overly restrictive start with buttonsanity
-        if (self.options.buttonsanity.value > 0 and self.start_exit == entrance_names.c_p1_start
-                and self.options.randomize_recovery_items.value == 0):
+        # Add a starting item to local_early_items to get out of an overly restrictive start
+        if self.start_exit == entrance_names.c_p1_start and self.options.randomize_recovery_items.value == 0:
+            # This combination of options will just send us through the shortcut teleporter
+            if not self.options.buttonsanity and self.options.hammer_fragments == 0 and self.options.shortcut_teleporter:
+                return
             start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
             start_gate = self.multiworld.get_entrance(start_gate_name, self.player)
             assert isinstance(start_gate, HWEntrance)
-            start_item_name = self.random.choice((start_gate.pass_item, item_name.btnc_p1_floor))
+            start_items = [
+                start_gate.pass_item,
+            ]
+            if self.options.buttonsanity:
+                start_items.append(item_name.btnc_p1_floor)
+            start_item_name = self.random.choice(start_items)
+            # With hammer fragments we have an EXTREMELY restrictive start, also make one of the keys early
+            if self.options.hammer_fragments > 1 and start_item_name == item_name.btnc_p1_floor:
+                start_item_name = start_gate.pass_item
             if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
                 if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
                     start_item_name = f"Big {start_item_name}"
@@ -546,6 +563,7 @@ class HammerwatchWorld(World):
         # state = self.multiworld.get_all_state(False)
         # state = CollectionState(self.multiworld)
         # state.update_reachable_regions(self.player)
+        # state.sweep_for_advancements()
         # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
         #                   regions_to_highlight=state.reachable_regions[self.player])
 
