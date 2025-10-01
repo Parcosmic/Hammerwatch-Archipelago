@@ -31,10 +31,10 @@ class LocationData(typing.NamedTuple):
 class HammerwatchLocation(Location):
     game: str = "Hammerwatch"
 
-    def __init__(self, player: int, name: str = '', code: int = None, parent=None):
-        super().__init__(player, name, code, parent)
-        self.event = code is None
-        self.show_in_spoiler = code is not None
+    def __init__(self, player: int, name: str = '', address: int = None, parent=None):
+        super().__init__(player, name, address, parent)
+        self.event = address is None
+        self.show_in_spoiler = address is not None
 
 
 counter = Counter(id_start + 0x1000)

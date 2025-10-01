@@ -129,7 +129,8 @@ class Buttonsanity(Choice):
 class ExitRandomization(Choice):
     """Randomizes where level exits and portals lead
     No Boss Exits: exits to boss levels will not be shuffled
-    All: all exits including bosses will be shuffled"""
+    All: all exits including bosses will be shuffled
+    WARNING: This option has a moderate chance of causing generation to fail, use at your own risk!"""
     display_name = "Exit Randomization"
     option_off = 0
     option_no_boss_exits = 1
