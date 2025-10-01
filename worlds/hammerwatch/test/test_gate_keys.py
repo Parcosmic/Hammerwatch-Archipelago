@@ -16,7 +16,8 @@ def _test_gate_keys(self):
         item_counts = castle_item_counts
     else:
         item_counts = temple_item_counts
-        active_keys.remove(item_name.key_teleport)
+        if item_name.key_teleport in active_keys:
+            active_keys.remove(item_name.key_teleport)
     gate_key_counts = {key_name: item_counts[key_name] if key_name in item_counts else 1 for key_name in active_keys}
     gate_counts = {key_name: 0 for key_name in gate_key_counts.keys()}
     seen_gate_entr_ids = {key_name: [] for key_name in gate_key_counts.keys()}

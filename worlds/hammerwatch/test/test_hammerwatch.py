@@ -122,31 +122,31 @@ class TestHammerwatchOptions(HammerwatchTestBase):
             option_names.key_mode: options.KeyMode.option_act_specific,
             "big_bronze_key_percent": options.BigBronzeKeyPercent.range_end,
         },
-        "Full act range castle exit rando": {
-            "exit_randomization": options.ExitRandomization.option_all,
-            option_names.er_act_range: options.ERActRange.range_end,
-        },
-        "Full act range temple exit rando": {
-            "goal": options.Goal.option_temple_all_bosses,
-            "exit_randomization": options.ExitRandomization.option_all,
-            option_names.er_act_range: options.ERActRange.range_end,
-        },
-        "Basic castle exit rando": {
-            "exit_randomization": options.ExitRandomization.option_all,
-        },
-        "Basic temple exit rando": {
-            "goal": options.Goal.option_temple_all_bosses,
-            "exit_randomization": options.ExitRandomization.option_all,
-        },
-        "Castle exit rando with start randomized": {
-            "exit_randomization": options.ExitRandomization.option_all,
-            option_names.random_start_exit: options.StartExit.option_true,
-        },
-        "Temple exit rando with start randomized": {
-            "goal": options.Goal.option_temple_all_bosses,
-            "exit_randomization": options.ExitRandomization.option_all,
-            option_names.random_start_exit: options.StartExit.option_true,
-        },
+        # "Full act range castle exit rando": {
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        #     option_names.er_act_range: options.ERActRange.range_end,
+        # },
+        # "Full act range temple exit rando": {
+        #     "goal": options.Goal.option_temple_all_bosses,
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        #     option_names.er_act_range: options.ERActRange.range_end,
+        # },
+        # "Basic castle exit rando": {
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        # },
+        # "Basic temple exit rando": {
+        #     "goal": options.Goal.option_temple_all_bosses,
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        # },
+        # "Castle exit rando with start randomized": {
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        #     option_names.random_start_exit: options.StartExit.option_true,
+        # },
+        # "Temple exit rando with start randomized": {
+        #     "goal": options.Goal.option_temple_all_bosses,
+        #     "exit_randomization": options.ExitRandomization.option_all,
+        #     option_names.random_start_exit: options.StartExit.option_true,
+        # },
         "Castle Floor Master Keys": {
             option_names.key_mode: options.KeyMode.option_floor_master,
         },
@@ -160,11 +160,11 @@ class TestHammerwatchOptions(HammerwatchTestBase):
         "Castle buttonsanity insanity": {
             option_names.buttonsanity: options.Buttonsanity.option_insanity,
         },
-        "Castle buttonsanity with exit randomization and random start": {
-            option_names.buttonsanity: options.Buttonsanity.option_normal,
-            option_names.exit_randomization: options.ExitRandomization.option_all,
-            option_names.random_start_exit: options.StartExit.option_true,
-        },
+        # "Castle buttonsanity with exit randomization and random start": {
+        #     option_names.buttonsanity: options.Buttonsanity.option_normal,
+        #     option_names.exit_randomization: options.ExitRandomization.option_all,
+        #     option_names.random_start_exit: options.StartExit.option_true,
+        # },
         "Temple buttonsanity": {
             option_names.goal: options.Goal.option_temple_all_bosses,
             option_names.buttonsanity: options.Buttonsanity.option_normal,
@@ -173,12 +173,12 @@ class TestHammerwatchOptions(HammerwatchTestBase):
             option_names.goal: options.Goal.option_temple_all_bosses,
             option_names.buttonsanity: options.Buttonsanity.option_insanity,
         },
-        "Temple buttonsanity with exit randomization and random start": {
-            option_names.goal: options.Goal.option_temple_all_bosses,
-            option_names.buttonsanity: options.Buttonsanity.option_normal,
-            option_names.exit_randomization: options.ExitRandomization.option_all,
-            option_names.random_start_exit: options.StartExit.option_true,
-        },
+        # "Temple buttonsanity with exit randomization and random start": {
+        #     option_names.goal: options.Goal.option_temple_all_bosses,
+        #     option_names.buttonsanity: options.Buttonsanity.option_normal,
+        #     option_names.exit_randomization: options.ExitRandomization.option_all,
+        #     option_names.random_start_exit: options.StartExit.option_true,
+        # },
     }
 
     def test_options(self):

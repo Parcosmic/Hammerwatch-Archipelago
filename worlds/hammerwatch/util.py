@@ -174,8 +174,17 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
                 item_name.key_bronze,
                 item_name.key_silver,
                 item_name.key_gold,
-                item_name.key_bonus,
             ]
+            # If we're not randomizing bonus keys, we treat them as act specific under the hood
+            if world.options.randomize_bonus_keys.value:
+                key_names.append(item_name.key_bonus)
+            else:
+                key_names.extend([
+                    item_name.key_bonus_prison,
+                    item_name.key_bonus_armory,
+                    item_name.key_bonus_archives,
+                    item_name.key_bonus_chambers,
+                ])
     else:
         key_names = [
             item_name.mirror,

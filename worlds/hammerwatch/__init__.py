@@ -12,7 +12,8 @@ from .rules import set_rules, connect_regions_er
 from . import tracker
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
                    get_random_element, get_random_elements)
-from .options import HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist
+from .options import (HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist,
+                      KeyMode, RandomizeBonusKeys, Buttonsanity)
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
@@ -347,27 +348,16 @@ class HammerwatchWorld(World):
                     castle_location_names.n4_by_exit,
                 )
             )
-            if self.options.key_mode == self.options.key_mode.option_vanilla:
-                bonus_key_locs = [
-                    *act_bonus_key_locs[0],
-                    *act_bonus_key_locs[1],
-                    *act_bonus_key_locs[2],
-                    *act_bonus_key_locs[3],
-                ]
-                for loc_name in bonus_key_locs:
+            bonus_key_names = (
+                item_name.key_bonus_prison,
+                item_name.key_bonus_armory,
+                item_name.key_bonus_archives,
+                item_name.key_bonus_chambers,
+            )
+            for k in range(len(bonus_key_names)):
+                for loc_name in act_bonus_key_locs[k]:
                     loc = self.multiworld.get_location(loc_name, self.player)
-                    loc.place_locked_item(self.create_item(item_name.key_bonus))
-            else:
-                bonus_key_names = (
-                    item_name.key_bonus_prison,
-                    item_name.key_bonus_armory,
-                    item_name.key_bonus_archives,
-                    item_name.key_bonus_chambers,
-                )
-                for k in range(len(bonus_key_names)):
-                    for loc_name in act_bonus_key_locs[k]:
-                        loc = self.multiworld.get_location(loc_name, self.player)
-                        loc.place_locked_item(self.create_item(bonus_key_names[k]))
+                    loc.place_locked_item(self.create_item(bonus_key_names[k]))
 
         # Add a starting item to local_early_items to get out of an overly restrictive start
         if self.start_exit == entrance_names.c_p1_start and self.options.randomize_recovery_items.value == 0:
@@ -381,11 +371,15 @@ class HammerwatchWorld(World):
                 start_gate.pass_item,
             ]
             if self.options.buttonsanity:
-                start_items.append(item_name.btnc_p1_floor)
+                # If shortcut teleporter is on with buttonsanity, logically a key will be useless here
+                if self.options.shortcut_teleporter:
+                    start_items = []
+                # With hammer fragments and buttonsanity we have an EXTREMELY restrictive start, make a key early
+                if self.options.hammer_fragments > 1:
+                    start_items = [start_gate.pass_item]
+                else:
+                    start_items.append(item_name.btnc_p1_floor)
             start_item_name = self.random.choice(start_items)
-            # With hammer fragments we have an EXTREMELY restrictive start, also make one of the keys early
-            if self.options.hammer_fragments > 1 and start_item_name == item_name.btnc_p1_floor:
-                start_item_name = start_gate.pass_item
             if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
                 if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
                     start_item_name = f"Big {start_item_name}"
