@@ -307,7 +307,7 @@ class ShopsanityAssist(Choice):
     only considers Hammerwatch locations
     Swap Base Upgrades Experimental: like Swap Base Upgrades, but will swap with ANY location. This may cause issues with certain apworlds!
     """
-    display_name = "Balance Assist"
+    display_name = "Shopsanity Base Upgrade Assist"
     option_none = 0
     option_duplicate_base_upgrades = 1
     option_swap_base_upgrades = 2
