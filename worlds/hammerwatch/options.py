@@ -6,7 +6,7 @@ from .items import trap_table
 
 
 class Goal(Choice):
-    """Determines the goal of the seed. Some goals are specific to certain campaigns
+    """Determines the goal of the slot. Some goals are specific to certain campaigns
     Options starting with "Castle" are played in the Castle Hammerwatch campaign, while "Temple" options are played in the Temple of the Sun Campaign
     Castle All Bosses: Defeat all the bosses in Castle Hammerwatch. Escaping is NOT required
     Castle Escape: Find at least 12 Strange Planks, defeat Worldfire, and escape with your life
@@ -41,8 +41,8 @@ class Difficulty(Choice):
 class BonusChestLocationBehavior(Choice):
     """Determines how bonus chest locations in bonus levels are handled
     None: Don't include any bonus chest items/locations
-    Necessary: Include bonus level locations for each extra item in the pool
-    All: Include all bonus chest items/locations. Extra items will replace junk items as normal"""
+    Necessary: Include bonus level locations for any extra items in the pool
+    All: Include all bonus chest items/locations. Extra items will replace filler items as normal"""
     display_name = "Bonus Level Location Behavior"
     option_none = 0
     option_necessary = 1
@@ -51,9 +51,8 @@ class BonusChestLocationBehavior(Choice):
 
 
 class PlanksRequiredCount(Range):
-    """Determines the amount of Strange Planks required to win the game for the Plank Hunt goals.
-    This option does nothing in other goals"""
-    display_name = "Planks to Win"
+    """Determines the amount of Strange Planks required to win the game for the Plank Hunt goals"""
+    display_name = "Plank Hunt Requirement"
     range_start = 1
     range_end = 25
     default = 12
@@ -62,9 +61,7 @@ class PlanksRequiredCount(Range):
 class ExtraPlankPercent(Range):
     """Determines the percentage of extra Strange Planks in the item pool
     For the Castle Escape goal, the required planks count is 12
-    For the Plank Hunt goals, the required planks count is determined by the Planks to Win setting
-    Formula: Total Planks = required planks * (1 + Extra Plank Percentage / 100)
-    This option does nothing in other goals"""
+    For the Plank Hunt goals, the required planks count is determined by the Plank Hunt Requirement setting"""
     display_name = "Extra Plank Percentage"
     range_start = 0
     range_end = 100
@@ -79,9 +76,9 @@ class RandomizeBonusKeys(Toggle):
 
 class RemoveExtraLives(Toggle):
     """Removes extra lives (Ankhs) from the item pool and replaces them with filler.
-    Recommended to have enabled when playing with the infinite lives or no extra lives modifiers"""
+    Recommended to have enabled when playing with the infinite_lives or no_extra_lives modifiers"""
     display_name = "Remove Extra Lives"
-    default = True
+    default = False  # False because the Game Modifiers option doesn't export from the WebHost anymore :(
 
 
 class RandomizeRecoveryItems(Toggle):
@@ -93,7 +90,7 @@ class RandomizeRecoveryItems(Toggle):
 class RandomizeSecrets(Toggle):
     """(TotS only) Whether items from random secrets (small rooms with cracked walls in the cave levels) are shuffled into the item pool
     """
-    display_name = "Randomize Random Secrets"
+    display_name = "Randomize Temple Random Secrets"
     default = False
 
 
@@ -111,14 +108,13 @@ class RandomizeEnemyLoot(Toggle):
 
 class Buttonsanity(Choice):
     """Whether the effects of buttons and switches are shuffled into the item pool
-    Normal: button effects can be found anywhere in the multiworld
-    Insanity: button effects will be split into progressive versions based on the number of buttons required to trigger the effect in vanilla
+    Normal: button/switch effects are turned into locations, so completing a button sequence or puzzle is one location
+    Insanity: all buttons/switches will be locations, regardless if the button would do anything by itself or not
     """
     # Shuffle: all effects from buttons and switches will be shuffled only amongst your own button and switch locations
     display_name = "Buttonsanity"
     option_off = 0
     # option_shuffle = 1  # Disabled for now, keeps failing fill due to how restrictive button placements are
-    # Would likely need to use item rules on every location to make this work, but this'll be insanely slow
     option_normal = 2
     alias_on = 2
     option_insanity = 3
@@ -149,7 +145,7 @@ class ERActRange(Range):
 
 
 class StartExit(Toggle):
-    """If Exit Randomization is on, will place you at a random exit at the start of the game
+    """If Exit Randomization is on, you will start the game at a random exit determined by the Start Location Act option
     Use the /t command in game to return if you get stuck!"""
     display_name = "Randomize Start Location"
     default = False
@@ -164,7 +160,7 @@ class StartExitAct(Range):
 
 
 class GateShuffle(Toggle):
-    """Shuffles the type of bronze, silver, and gold gates"""
+    """Shuffles whether gates are bronze, silver, or gold"""
     display_name = "Gate Shuffle"
     default = False
 
@@ -219,14 +215,8 @@ class ShopCostRandoMax(Range):
     default = 100
 
 
-class Shopsanity(Toggle):
-    """Adds all shop upgrades to the item pool and enables items to appear in the shop"""
-    display_name = "Shopsanity"
-    default = False
-
-
 class ShopsanityClass(Choice):
-    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in their shop
     All members of the same class will receive their upgrades together and will have the same items in their shops"""
     option_off = 0
     option_paladin = 1
@@ -241,32 +231,32 @@ class ShopsanityClass(Choice):
 
 
 class ShopsanityP1Class(ShopsanityClass):
-    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in their shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
     WARNING: there is normally not enough gold to purchase all upgrades.
     It is strongly recommended to reduce the costs of shop items so you will not have to grind excessively for gold!
-    WARNING #2: there is no logic for shop upgrades!
+    WARNING #2: there is no extra logic for shop upgrades!
     This means you could get into a situation where you are required to play much of your game with no upgrades.
     Consider making shop upgrades local if you're playing in a larger multiworld"""
     display_name = "Shopsanity Player 1 Class"
 
 
 class ShopsanityP2Class(ShopsanityClass):
-    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in their shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
     WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 2 Class"
 
 
 class ShopsanityP3Class(ShopsanityClass):
-    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in their shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
     WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 3 Class"
 
 
 class ShopsanityP4Class(ShopsanityClass):
-    """Adds shop upgrades of this player's class to the item pool and enables items to appear in the shop
+    """Adds shop upgrades of this player's class to the item pool and enables items to appear in their shop
     All members of the same class will receive their upgrades together and will have the same items in their shops
     WARNING: see the warnings in the Shopsanity Player 1 Class option!"""
     display_name = "Shopsanity Player 4 Class"
@@ -275,13 +265,13 @@ class ShopsanityP4Class(ShopsanityClass):
 class ShopsanityTrapObfuscation(Choice):
     """
     Cause the names and descriptions of trap items in shops to mimic another item in the world of the receiving player
-    On: trap names/descriptions will mimic another item perfectly
+    On: trap names/descriptions will mimic another item
     Imperfect: trap names/descriptions will mimic another item, but with subtle changes in letters/punctuation
     L33T: 7r4p n4m35/d35cr1p710n5 w1ll b3 1n 4ll l3375p34k
     OwO: twap names/descwiptions wiww be in aww owo
     All Mystery: instead hides ALL item names/descriptions, so none of the items will be known!
     """
-    display_name = "Shady Shops"
+    display_name = "Shopsanity Obfuscation"
     option_off = 0
     option_on = 1
     option_imperfect = 2
@@ -292,8 +282,8 @@ class ShopsanityTrapObfuscation(Choice):
 
 class ShopsanityBalanceCosts(Toggle):
     """
-    Reduces the costs of items in shops based on their type
-    If the item is useful, it will cost 50% as much and filler items will cost 10% as much
+    Reduces the costs of items in shops based on their classifications
+    If the item is not progression it will cost 50% as much, and filler items will cost 10% as much
     """
     display_name = "Balance Shopsanity Costs"
     default = True
@@ -305,7 +295,7 @@ class ShopsanityAssist(Choice):
     Duplicate Base Upgrades: add an extra copy of each base upgrade to the item pool
     Swap Base Upgrades: swap base upgrades with the earliest version of its sub upgrade so you should find base upgrades first
     only considers Hammerwatch locations
-    Swap Base Upgrades Experimental: like Swap Base Upgrades, but will swap with ANY location. This may cause issues with certain apworlds!
+    Swap Base Upgrades Experimental: like Swap Base Upgrades, but will swap with locations in ANY game. This may cause issues with other apworlds!
     """
     display_name = "Shopsanity Base Upgrade Assist"
     option_none = 0
@@ -340,7 +330,7 @@ class EnemyShuffleMode(Choice):
 
 class EnemyShuffleBalancing(Range):
     """How many acts away enemies can be shuffled to
-    When set to 0 only enemies on the same act will be shuffled
+    When set to 0 only enemies in the same act will be shuffled
     When set to 3 enemies can be shuffled to any act"""
     display_name = "Enemy Shuffle Act Range"
     range_start = 0
@@ -384,13 +374,14 @@ class ActSpecificKeys(Removed):
 
 
 class KeyMode(Choice):
-    """Changes the behavior of keys
-    Vanilla: keys can be used anywhere on their respective gates
-    Act Specific: (castle only) replaces keys with versions that can only be used on a specific act
+    """Changes the behavior of how keys interact with gates
+    Generic: keys can be used anywhere on their respective gates (WARNING: can cause generation failures!)
+    Act Specific: (castle only) replaces keys with versions that can only be used in a specific act
     Floor Master: consolidates keys on a floor into a single item that unlocks all gates of that type on an entire floor
     """
     display_name = "Key Mode"
-    option_vanilla = 0
+    option_generic = 0
+    alias_vanilla = 0
     option_act_specific = 1
     option_floor_master = 2
     default = 1
@@ -414,8 +405,8 @@ class ShortcutTeleporter(Toggle):
 
 
 class PortalAccessibility(Toggle):
-    """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that portals are
-    more easily accessible"""
+    """(TotS only) Ensures rune keys will be placed locally on the floor they would normally appear so that hub portals
+    are more easily accessible"""
     display_name = "Portal Accessibility"
     default = True
 
@@ -442,7 +433,7 @@ class TreasureShuffle(Toggle):
 
 
 class PanFragments(Range):
-    """(TotS only) If greater than 1 separates the pan into multiple fragments that are shuffled into the item pool
+    """(TotS only) If greater than 1 separates the pan into multiple fragments
     All fragments must be collected in order to purchase from the consumables merchant"""
     display_name = "Pan Fragments"
     range_start = 1
@@ -451,7 +442,7 @@ class PanFragments(Range):
 
 
 class LeverFragments(Range):
-    """(TotS only) If greater than 1 separates the pumps lever into multiple fragments that are shuffled into the item pool
+    """(TotS only) If greater than 1 separates the pumps lever into multiple fragments
     All fragments must be collected in order to turn on the pumps"""
     display_name = "Pumps Lever Fragments"
     range_start = 1
@@ -460,8 +451,8 @@ class LeverFragments(Range):
 
 
 class PickaxeFragments(Range):
-    """(TotS only) If greater than 1 separates the pickaxe into multiple fragments that are shuffled into the item pool
-    All fragments must be collected in order to break the rocks outside the temple"""
+    """(TotS only) If greater than 1 separates the pickaxe into multiple fragments
+    All fragments must be collected in order for the rocks outside the temple to be broken"""
     display_name = "Pickaxe Fragments"
     range_start = 1
     range_end = 5
@@ -469,9 +460,9 @@ class PickaxeFragments(Range):
 
 
 class HammerFragments(Range):
-    """If not 0 makes fragile walls unbreakable without receiving a custom hammer item that is added to the item pool
-    If greater than 1 separates the hammer into multiple fragments that are shuffled into the item pool
-    All fragments must be collected in order to break down secret walls"""
+    """If not 0 makes fragile walls unbreakable without receiving a custom hammer item
+    If greater than 1 separates the hammer into multiple fragments
+    All fragments must be collected in order to break down fragile walls"""
     display_name = "Hammer Fragments"
     range_start = 0
     range_end = 5
@@ -479,7 +470,7 @@ class HammerFragments(Range):
 
 
 class TrapItemPercentage(Range):
-    """What percentage of junk items are replaced with traps"""
+    """What percentage of filler items are replaced with traps"""
     display_name = "Trap Percent"
     range_start = 0
     range_end = 100
