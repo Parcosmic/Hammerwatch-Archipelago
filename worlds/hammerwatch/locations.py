@@ -1,13 +1,15 @@
 import typing
 
+from typing import TYPE_CHECKING, Iterable
 from BaseClasses import Location
-from .names import castle_location_names, temple_location_names, item_name, option_names, shop_location_names
+from .names import castle_location_names, temple_location_names, item_name, shop_location_names
 from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes
 from .items import (castle_item_counts, temple_item_counts, castle_button_item_counts, temple_button_item_counts,
                     recovery_table, get_item_counts, id_start, puzzle_button_items)
+from .options import RandomizeEnemyLoot
 from enum import IntFlag
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
@@ -2856,7 +2858,7 @@ def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, 
                        event_buttons: typing.Dict[str, str], combo_button_locs: typing.Set[str]):
     location_table: typing.Dict[str, LocationData] = {}
     location_table.update(pickup_locs)
-    if world.options.randomize_enemy_loot.value:
+    if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:
         location_table.update(enemy_loot_locs)
 
     button_locations: typing.Dict[str, LocationData] = {}
@@ -2874,6 +2876,48 @@ def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, 
     location_table.update(button_locations)
 
     return location_table
+
+
+def get_flower_loot_table(world: "HammerwatchWorld"):
+    if world.options.randomize_enemy_loot == RandomizeEnemyLoot.option_all:
+        flower_loot_chances = (
+            (0.01 / .21, item_name.vendor_coin),
+            (0.20 / .21, item_name.stat_upgrade)
+        )
+    else:
+        flower_loot_chances = (
+            (0.01, item_name.vendor_coin),
+            (0.20, item_name.stat_upgrade)
+        )
+    return flower_loot_chances
+
+
+def get_mini_flower_loot_table(world: "HammerwatchWorld"):
+    if world.options.randomize_enemy_loot == RandomizeEnemyLoot.option_all:
+        mini_flower_loot_chances = (
+            (0.05 / .3, item_name.vendor_coin),
+            (0.25 / .3, item_name.valuable_6)
+        )
+    else:
+        mini_flower_loot_chances = (
+            (0.05, item_name.vendor_coin),
+            (0.25, item_name.valuable_6)
+        )
+    return mini_flower_loot_chances
+
+
+def get_tower_loot_table(world: "HammerwatchWorld"):
+    if world.options.randomize_enemy_loot == RandomizeEnemyLoot.option_all:
+        tower_loot_chances = (
+            (0.2, item_name.vendor_coin),
+            (0.8, item_name.stat_upgrade)
+        )
+    else:
+        tower_loot_chances = (
+            (0.05, item_name.vendor_coin),
+            (0.20, item_name.stat_upgrade)
+        )
+    return tower_loot_chances
 
 
 def set_castle_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
@@ -2914,6 +2958,15 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
         for p in range(25):
             pegs += world.random.randrange(2)
         random_locations[rloc_name] = pegs
+
+    def roll_enemy_loot_locations(locations: Iterable[str], loot_table, loot_item: str):
+        for _loc in locations:
+            _item = roll_for_item(world, loot_table)
+            if _item is None:
+                if _loc in location_table:
+                    remove_location(_loc, loot_item)
+            else:
+                item_counts[_item] += 1
 
     puzzle_locs = {
         castle_location_names.crloc_p2_puzzle: castle_location_names.p2_puzzle_1,
@@ -3085,7 +3138,7 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
         for rloc, loc in puzzle_locs.items():
             remove_puzzle_locations(loc[:-1], rloc)
     # Enemy loot locations
-    if world.options.randomize_enemy_loot.value:
+    if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:
         flower_locs = [
             castle_location_names.p2_tower_plant_1,
             castle_location_names.p2_tower_plant_2,
@@ -3098,16 +3151,8 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             castle_location_names.p3_tower_plant_7,
             castle_location_names.p3_tower_plant_8,
         ]
-        flower_loot_chances = (
-            (0.01, item_name.vendor_coin),
-            (0.20, item_name.stat_upgrade)
-        )
-        for loc in flower_locs:
-            item = roll_for_item(world, flower_loot_chances)
-            if item is None:
-                remove_location(loc, item_name.loot_flower)
-            else:
-                item_counts[item] += 1
+        flower_loot_chances = get_flower_loot_table(world)
+        roll_enemy_loot_locations(flower_locs, flower_loot_chances, item_name.loot_flower)
         tower_locs = [
             castle_location_names.a1_tower_ice_1,
             castle_location_names.a1_tower_ice_2,
@@ -3188,16 +3233,8 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             castle_location_names.c3_tower_ice_9,
             castle_location_names.c3_tower_ice_10,
         ]
-        tower_loot_chances = (
-            (0.05, item_name.vendor_coin),
-            (0.20, item_name.stat_upgrade)
-        )
-        for loc in tower_locs:
-            item = roll_for_item(world, tower_loot_chances)
-            if item is None:
-                remove_location(loc, item_name.loot_tower)
-            else:
-                item_counts[item] += 1
+        tower_loot_chances = get_tower_loot_table(world)
+        roll_enemy_loot_locations(tower_locs, tower_loot_chances, item_name.loot_tower)
     else:
         item_counts[item_name.vendor_coin] -= 17
         item_counts.pop(item_name.miniboss_stat_upgrade)
@@ -3264,6 +3301,15 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         for p in range(25):
             pegs += world.random.randrange(2)
         random_locations[rloc_name] = pegs
+
+    def roll_enemy_loot_locations(locations: Iterable[str], loot_table, loot_item: str):
+        for _loc in locations:
+            _item = roll_for_item(world, loot_table)
+            if _item is None:
+                if _loc in location_table:
+                    remove_location(_loc, loot_item)
+            else:
+                item_counts[_item] += 1
 
     # Secrets
     secret_locs = {
@@ -3686,7 +3732,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         item_counts[item_name.potion_rejuvenation] -= len(puzzle_locs)
 
     # Enemy loot locations
-    if world.options.randomize_enemy_loot.value:
+    if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:
         flower_locs = (
             temple_location_names.c3_tower_plant,
             temple_location_names.c2_tower_plant_1,
@@ -3697,16 +3743,8 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             temple_location_names.c1_tower_plant_3,
             temple_location_names.c1_tower_plant_4,
         )
-        flower_loot_chances = (
-            (0.01, item_name.vendor_coin),
-            (0.20, item_name.stat_upgrade)
-        )
-        for loc in flower_locs:
-            item = roll_for_item(world, flower_loot_chances)
-            if item is None:
-                remove_location(loc, item_name.loot_flower)
-            else:
-                item_counts[item] += 1
+        flower_loot_chances = get_flower_loot_table(world)
+        roll_enemy_loot_locations(flower_locs, flower_loot_chances, item_name.loot_flower)
         mini_flower_locs = (
             temple_location_names.c3_tower_plant_small_1,
             temple_location_names.c3_tower_plant_small_2,
@@ -3760,17 +3798,8 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             temple_location_names.p_tower_plant_small_5,
             temple_location_names.p_tower_plant_small_6,
         )
-        mini_flower_loot_chances = (
-            (0.05, item_name.vendor_coin),
-            (0.25, item_name.valuable_6)
-        )
-        for loc in mini_flower_locs:
-            item = roll_for_item(world, mini_flower_loot_chances)
-            if item is None:
-                if loc in location_table.keys():
-                    remove_location(loc, item_name.loot_mini_flower)
-            else:
-                item_counts[item] += 1
+        mini_flower_loot_chances = get_mini_flower_loot_table(world)
+        roll_enemy_loot_locations(mini_flower_locs, mini_flower_loot_chances, item_name.loot_mini_flower)
         tower_locs = (
             temple_location_names.t1_tower_fire,
             temple_location_names.t1_tower_ice,
@@ -3792,16 +3821,8 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             temple_location_names.b3_tower_fire_2,
             temple_location_names.b3_tower_fire_3,
         )
-        tower_loot_chances = (
-            (0.05, item_name.vendor_coin),
-            (0.20, item_name.stat_upgrade)
-        )
-        for loc in tower_locs:
-            item = roll_for_item(world, tower_loot_chances)
-            if item is None:
-                remove_location(loc, item_name.loot_tower)
-            else:
-                item_counts[item] += 1
+        tower_loot_chances = get_tower_loot_table(world)
+        roll_enemy_loot_locations(tower_locs, tower_loot_chances, item_name.loot_tower)
         # Dune shark locations
         dune_shark_upgrade_locs = (
             temple_location_names.b1_boss_worm_1_1,
@@ -3809,22 +3830,28 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             temple_location_names.b1_boss_worm_3_1,
             temple_location_names.b1_boss_worm_4_1,
         )
-        for loc in dune_shark_upgrade_locs:
-            if world.random.random() >= 0.1:
-                location_table.pop(loc)
-            else:
-                item_counts[item_name.stat_upgrade] += 1
+        if world.options.randomize_enemy_loot == RandomizeEnemyLoot.option_on:
+            for loc in dune_shark_upgrade_locs:
+                if world.random.random() >= 0.1:
+                    location_table.pop(loc)
+                else:
+                    item_counts[item_name.stat_upgrade] += 1
+        else:  # All
+            item_counts[item_name.stat_upgrade] += len(dune_shark_upgrade_locs)
         dune_shark_steak_locs = (
             temple_location_names.b1_boss_worm_1_2,
             temple_location_names.b1_boss_worm_2_2,
             temple_location_names.b1_boss_worm_3_2,
             temple_location_names.b1_boss_worm_4_2,
         )
-        for loc in dune_shark_steak_locs:
-            if world.random.random() >= 0.05:
-                location_table.pop(loc)
-            else:
-                item_counts[item_name.steak] += 1
+        if world.options.randomize_enemy_loot == RandomizeEnemyLoot.option_on:
+            for loc in dune_shark_steak_locs:
+                if world.random.random() >= 0.05:
+                    location_table.pop(loc)
+                else:
+                    item_counts[item_name.steak] += 1
+        else:  # All
+            item_counts[item_name.steak] += len(dune_shark_steak_locs)
     else:
         item_counts[item_name.vendor_coin] -= item_counts[item_name.miniboss_stat_upgrade]
         item_counts.pop(item_name.miniboss_stat_upgrade)
@@ -3838,7 +3865,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     return location_table, item_counts, random_locations
 
 
-def roll_for_item(world, loot_chances: typing.Iterable[typing.Tuple[float, str]]):
+def roll_for_item(world, loot_chances: Iterable[tuple[float, str]]):
     rnd = world.random.random()
     for item in loot_chances:
         rnd -= item[0]
@@ -3847,5 +3874,4 @@ def roll_for_item(world, loot_chances: typing.Iterable[typing.Tuple[float, str]]
     return None
 
 
-lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if
-                                            data.code}
+lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if data.code}

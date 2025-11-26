@@ -100,10 +100,17 @@ class RandomizePuzzles(Toggle):
     default = False
 
 
-class RandomizeEnemyLoot(Toggle):
-    """Whether items dropped by minibosses and towers are shuffled into the item pool"""
+class RandomizeEnemyLoot(Choice):
+    """Whether items dropped by minibosses and towers are shuffled into the item pool
+    On: major enemy loot locations will exist using the vanilla loot drop chances
+    All: forces all major enemy loot locations to exist and have items"""
     display_name = "Randomize Major Enemy Loot"
-    default = False
+    option_off = 0
+    option_on = 1
+    option_all = 2
+    alias_false = 0
+    alias_true = 1
+    default = 0
 
 
 class Buttonsanity(Choice):

@@ -13,7 +13,7 @@ from . import tracker
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
                    get_random_element, get_random_elements)
 from .options import (HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist,
-                      KeyMode, RandomizeBonusKeys, Buttonsanity)
+                      KeyMode, RandomizeBonusKeys, Buttonsanity, RandomizeEnemyLoot)
 
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
@@ -190,7 +190,7 @@ class HammerwatchWorld(World):
         self.world_itempool = []
 
         # Add floor master key items to item_counts
-        if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+        if self.options.key_mode == KeyMode.option_floor_master:
             if self.options.randomize_bonus_keys.value:
                 self.item_counts.update(self.key_item_counts)
             else:
@@ -201,9 +201,9 @@ class HammerwatchWorld(World):
             self.place_castle_locked_items()
         else:
             self.place_tots_locked_items()
-            # If we're playing with enemy loot on and key mode is floor master we already place this key
-            if self.options.randomize_enemy_loot.value == 0:
-                if self.options.key_mode.value == self.options.key_mode.option_floor_master:
+            # If we're playing with enemy loot off and key mode is floor master we already place this key
+            if self.options.randomize_enemy_loot == RandomizeEnemyLoot.option_off:
+                if self.options.key_mode == KeyMode.option_floor_master:
                     self.item_counts[item_name.key_gold_b1] = 0
                     self.item_counts[item_name.key_silver_b1] = 0
 
@@ -425,7 +425,7 @@ class HammerwatchWorld(World):
             return
 
         # Force Dune Shark key location to be the correct key if randomize enemy loot is off
-        if self.options.randomize_enemy_loot.value == 0:
+        if self.options.randomize_enemy_loot == RandomizeEnemyLoot.option_off:
             if self.options.key_mode.value == self.options.key_mode.option_floor_master:
                 dune_shark_key_name = item_name.key_gold_b1
             else:

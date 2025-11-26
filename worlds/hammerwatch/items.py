@@ -1147,7 +1147,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
             item_counts_table.pop(recovery, 0)
 
     # Enemy loot
-    if world.options.randomize_enemy_loot.value:
+    if item_name.miniboss_stat_upgrade in item_counts_table:
         miniboss_stat_upgrade_chances = (
             (0.3, item_name.stat_upgrade_health),
             (0.3, item_name.stat_upgrade_mana),
