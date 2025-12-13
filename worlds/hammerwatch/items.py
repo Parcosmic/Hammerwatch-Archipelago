@@ -312,7 +312,7 @@ castle_button_table: typing.Dict[str, ItemData] = {
     item_name.btnc_c2_bonus_room: ItemData(counter.count(2), ItemClassification.progression),
     # item_name.btnc_c2_bonus_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.btnc_c2_n_room: ItemData(counter.count(2), ItemClassification.progression),
-    item_name.btnc_c2_n_red_flame_turret_on: ItemData(counter.count(), ItemClassification.useful),
+    item_name.btnc_c2_n_red_flame_turret_on: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_c2_blue_spike_turret: ItemData(counter.count(), ItemClassification.useful),
     item_name.btnc_c2_open_puzzle: ItemData(counter.count(), ItemClassification.progression),
     item_name.btnc_c2_e_shop: ItemData(counter.count(), ItemClassification.progression),

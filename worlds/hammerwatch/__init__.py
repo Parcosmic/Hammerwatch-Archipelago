@@ -106,7 +106,7 @@ class HammerwatchWorld(World):
             slot_name = self.multiworld.player_name[self.player]
             logging.warning(f"Slot \"{slot_name}\": Act Specific Keys option not compatible with temple campaign, "
                             f"switching to vanilla")
-            self.options.key_mode.value = self.options.key_mode.option_vanilla
+            self.options.key_mode.value = self.options.key_mode.option_generic
 
         # Validate game modifiers
         exclusive_mod_groups = ((option_names.mod_no_extra_lives, option_names.mod_infinite_lives,
@@ -385,6 +385,16 @@ class HammerwatchWorld(World):
                     start_item_name = f"Big {start_item_name}"
             self.multiworld.local_early_items[self.player][start_item_name] = 1
 
+        # If buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
+        blue_button_trap_chance = 1
+        if (get_campaign(self) == Campaign.Castle and self.options.buttonsanity > 0
+                and self.random.random() < blue_button_trap_chance):
+            button_loc = self.multiworld.get_location(castle_location_names.btn_c3_wall_blue, self.player)
+            trap_pool = {item: count for item, count in self.item_counts.items() if item_table[item].classification & ItemClassification.trap}
+            trap_item: str = util.get_random_element(self, trap_pool)
+            button_loc.place_locked_item(self.create_item(trap_item))
+            self.item_counts[trap_item] -= 1
+
     def place_tots_locked_items(self):
         temple_events = {
             temple_location_names.ev_c1_portal: item_name.ev_c1_portal,
@@ -560,16 +570,7 @@ class HammerwatchWorld(World):
         # state.sweep_for_advancements()
         # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
         #                   regions_to_highlight=state.reachable_regions[self.player])
-
-        # In the castle campaign if buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
-        blue_button_trap_chance = 0.5
-        if (get_campaign(self) == Campaign.Castle and self.options.buttonsanity > 0
-                and self.random.random() > blue_button_trap_chance):
-            button_loc = self.multiworld.get_location(castle_location_names.btn_c3_wall_blue, self.player)
-            trap_pool = [item for item in self.multiworld.itempool if item.classification == ItemClassification.trap]
-            trap_item: Item = self.random.choice(trap_pool)
-            self.multiworld.itempool.remove(trap_item)
-            button_loc.place_locked_item(trap_item)
+        pass
 
     @classmethod
     def stage_post_fill(cls, multiworld: MultiWorld):

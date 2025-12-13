@@ -17,10 +17,10 @@ def _test_no_bonus_keys(self):
                             "Bonus Key found in not locked location when not randomized!")
 
 
-class TestCastleNoBonusVanillaKeys(HammerwatchTestBase):
+class TestCastleNoBonusGenericKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_castle_all_bosses,
-        option_names.key_mode: options.KeyMode.option_vanilla,
+        option_names.key_mode: options.KeyMode.option_generic,
         option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_false,
     }
 
@@ -50,10 +50,10 @@ class TestCastleNoBonusMasterKeys(HammerwatchTestBase):
         _test_no_bonus_keys(self)
 
 
-class TestTempleNoBonusVanillaKeys(HammerwatchTestBase):
+class TestTempleNoBonusGenericKeys(HammerwatchTestBase):
     options = {
         option_names.goal: options.Goal.option_temple_all_bosses,
-        option_names.key_mode: options.KeyMode.option_vanilla,
+        option_names.key_mode: options.KeyMode.option_generic,
         option_names.randomize_bonus_keys: options.RandomizeBonusKeys.option_false,
     }
 

@@ -1734,7 +1734,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.pstart_puzzle_4,
     ],
     castle_region_names.c2_main: [
-        castle_location_names.c2_ne_platform_5,
         castle_location_names.c2_e_fire_floor_1,
         castle_location_names.c2_w_spikes_s_2,
         castle_location_names.c2_w_spikes_s_1,
@@ -1764,7 +1763,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.c2_w_spikes_e_3,
         castle_location_names.c2_ne_platform_n_1,
         castle_location_names.c2_ne_5,
-        castle_location_names.c2_ne_platform_4,
         castle_location_names.c2_by_tp_island_1,
         castle_location_names.c2_w_spikes_s_7,
         castle_location_names.c2_w_knife_traps_2,
@@ -1776,7 +1774,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.c2_se_flame_turrets_4,
         castle_location_names.c2_exit,
         castle_location_names.c2_ne_platform_n_3,
-        castle_location_names.c2_ne_platform_6,
         castle_location_names.c2_by_tp_island_3,
         castle_location_names.c2_w_knife_traps_1,
         castle_location_names.c2_s_7,
@@ -1803,17 +1800,12 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.c2_se_flame_turrets_3,
         castle_location_names.c2_se_flame_turrets_5,
         castle_location_names.c2_e_fire_floor_2,
-        castle_location_names.c2_ne_platform_1,
         castle_location_names.c2_w_spikes_e_4,
-        castle_location_names.c2_ne_platform_3,
-        castle_location_names.c2_ne_platform_2,
         castle_location_names.c2_s_4,
         castle_location_names.c2_miniboss_lich_ne_1,
         castle_location_names.c2_miniboss_lich_ne_2,
         castle_location_names.c2_miniboss_lich_m_1,
         castle_location_names.c2_miniboss_lich_m_2,
-        castle_location_names.c2_tower_plant_2,
-        castle_location_names.c2_tower_plant_3,
         castle_location_names.c2_tower_plant_4,
         castle_location_names.c2_tower_plant_5,
         castle_location_names.c2_tower_plant_6,
@@ -1821,7 +1813,6 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.c2_tower_plant_8,
         castle_location_names.c2_tower_ice_1,
         castle_location_names.c2_tower_ice_2,
-        castle_location_names.c2_tower_ice_3,
         castle_location_names.c2_tower_ice_4,
         castle_location_names.c2_tower_ice_5,
         castle_location_names.c2_tower_ice_9,
@@ -1845,6 +1836,17 @@ castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         castle_location_names.btn_c2_wall_blue,
         castle_location_names.btn_c2_wall_red_s,
         castle_location_names.btn_c2_wall_s_save,
+    ],
+    castle_region_names.c2_east_bridge: [
+        castle_location_names.c2_ne_platform_1,
+        castle_location_names.c2_ne_platform_2,
+        castle_location_names.c2_ne_platform_3,
+        castle_location_names.c2_ne_platform_4,
+        castle_location_names.c2_ne_platform_5,
+        castle_location_names.c2_ne_platform_6,
+        castle_location_names.c2_tower_plant_2,
+        castle_location_names.c2_tower_plant_3,
+        castle_location_names.c2_tower_ice_3,
     ],
     castle_region_names.c2_boss: None,
     castle_region_names.c2_exit_bgate: [
@@ -3035,6 +3037,8 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
             item_name.btnc_pstart_puzzle, 1, False, use_puzzle_button_rule)
 
     # Chambers Floor 11
+    connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_east_bridge, False,
+            item_name.btnc_c2_n_red_flame_turret_on, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_sw_wall, False,
             item_name.btnc_c2_sw_room, 1, False, buttonsanity)
     connect(world, used_names, castle_region_names.c2_main, castle_region_names.c2_w_wall, False,

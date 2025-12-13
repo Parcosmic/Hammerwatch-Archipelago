@@ -270,6 +270,7 @@ pstart_puzzle_island = "PrF1: Chambers Return Chance Puzzle Island"
 pstart_puzzle = "PrF1: Chambers Return Chance Puzzle"
 
 c2_main = "ChF11: South"
+c2_east_bridge = "ChF11: East Bridge"
 c2_sw_wall = "ChF11: SW In Wall"
 c2_w_wall = "ChF11: West In Wall"
 c2_e_wall = "ChF11: East In Wall"
