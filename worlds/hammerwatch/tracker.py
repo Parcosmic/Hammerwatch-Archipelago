@@ -50,6 +50,10 @@ map_page_indices_castle = {
     "boss_3": 18,
     "boss_4": 19,
     "shop": 20,
+    "esc_1": 0,
+    "esc_2": 3,
+    "esc_3": 6,
+    "esc_4": 9,
 }
 
 map_page_indices_temple = {
