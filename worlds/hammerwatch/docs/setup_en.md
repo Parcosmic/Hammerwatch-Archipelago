@@ -15,23 +15,6 @@ installed! You may launch Hammerwatch as normal using Steam to play with Archipe
 
 To uninstall the mod run APModUninstall.bat to remove all mod files.
 
-## Configuring your config (.yaml) file
-
-### What is a config file and why do I need one?
-
-See the guide for info about YAML files on the Archipelago setup guide: 
-[Archipelago Setup Guide](/tutorial/Archipelago/setup/en)
-
-### Where do I get a config file?
-
-You can configure the options for your game on the Player Options page and export them as a config file.
-Player settings page: [Hammerwatch Player Settings Page](/games/Hammerwatch/player-settings)
-
-### Verifying your config file
-
-To make sure your config file is formatted correctly you can check it on the YAML Validation page:
-[YAML Validation page](/mysterycheck)
-
 ## Joining a multiworld game
 
 1. Run Hammerwatch.exe using Steam or by double-clicking the exe
