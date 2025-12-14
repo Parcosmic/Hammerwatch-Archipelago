@@ -2936,28 +2936,11 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             location_table.pop(location)
         item_counts[loc_item] -= 1
 
-    def remove_puzzle_locations(base_name: str, rloc_name: str):
-        if random_locations[rloc_name] < 18:
-            remove_location(f"{base_name}4", item_name.chest_purple)
-        if random_locations[rloc_name] < 14:
-            remove_location(f"{base_name}3", item_name.stat_upgrade)
-        if random_locations[rloc_name] < 10:
-            remove_location(f"{base_name}2", item_name.ankh)
-        if random_locations[rloc_name] < 1:
-            remove_location(f"{base_name}1", item_name.potion_rejuvenation)
-
-    def keep_one_location(locations: typing.List[str], rloc_name: str):
-        random_locations[rloc_name] = world.random.randrange(len(locations))
-        locations.pop(random_locations[rloc_name])
+    def keep_one_location(locations: typing.List[str]):
+        locations.pop(world.random.randrange(len(locations)))
         for location in locations:
             location_table.pop(location)
         return location_table
-
-    def randomize_puzzle(rloc_name: str):
-        pegs = 0
-        for p in range(25):
-            pegs += world.random.randrange(2)
-        random_locations[rloc_name] = pegs
 
     def roll_enemy_loot_locations(locations: Iterable[str], loot_table, loot_item: str):
         for _loc in locations:
@@ -2968,23 +2951,30 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             else:
                 item_counts[_item] += 1
 
-    puzzle_locs = {
-        castle_location_names.crloc_p2_puzzle: castle_location_names.p2_puzzle_1,
-        castle_location_names.crloc_a1_puzzle: castle_location_names.a1_puzzle_1,
-        castle_location_names.crloc_a2_puzzle: castle_location_names.a2_puzzle_1,
-        castle_location_names.crloc_r1_puzzle: castle_location_names.r1_puzzle_1,
-        castle_location_names.crloc_r2_puzzle: castle_location_names.r2_puzzle_1,
-        castle_location_names.crloc_ps_puzzle: castle_location_names.pstart_puzzle_1,
-        castle_location_names.crloc_c2_puzzle: castle_location_names.c2_puzzle_1,
-    }
-
-    # Set puzzle random values
-    if world.options.randomize_puzzles.value:
-        for rloc in puzzle_locs.keys():
-            randomize_puzzle(rloc)
-    else:
-        for rloc in puzzle_locs.keys():
-            random_locations[rloc] = -1
+    # Roll for puzzle locations
+    puzzle_locs: list[str] = [
+        castle_location_names.p2_puzzle_1,
+        castle_location_names.a1_puzzle_1,
+        castle_location_names.a2_puzzle_1,
+        castle_location_names.r1_puzzle_1,
+        castle_location_names.r2_puzzle_1,
+        castle_location_names.pstart_puzzle_1,
+        castle_location_names.c2_puzzle_1,
+    ]
+    if world.options.randomize_puzzles:
+        for loc in puzzle_locs:
+            pegs = 0
+            for p in range(25):
+                pegs += world.random.randrange(2)
+            base_name = loc[:-1]
+            if pegs < 18:
+                remove_location(f"{base_name}4", item_name.chest_purple)
+            if pegs < 14:
+                remove_location(f"{base_name}3", item_name.stat_upgrade)
+            if pegs < 10:
+                remove_location(f"{base_name}2", item_name.ankh)
+            if pegs < 1:
+                remove_location(loc, item_name.potion_rejuvenation)
 
     # Goal stuff
     if get_goal_type(world) != GoalType.FullCompletion:
@@ -3016,127 +3006,106 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
         remove_location(castle_location_names.p3_skip_boss_switch_6, item_name.diamond_small)
 
     # Prison Floor 1 Locations
-    p1_bkey_1_locs: typing.List[str] = [
+    location_table = keep_one_location([  # Bronze key 1
         castle_location_names.p1_entrance_s,
         castle_location_names.p1_entrance_w,
-    ]
-    location_table = keep_one_location(p1_bkey_1_locs, castle_location_names.crloc_p1_bronze_key_entrance)
-    p1_bkey_2_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 2
         castle_location_names.p1_by_sw_bronze_gate_1,
         castle_location_names.p1_s_w_bridges_w,
         castle_location_names.p1_by_sw_bronze_gate_4,
-    ]
-    location_table = keep_one_location(p1_bkey_2_locs, castle_location_names.crloc_p1_bronze_key_sw)
-    p1_bkey_3_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 3
         castle_location_names.p1_n_of_se_bridge,
         castle_location_names.p1_s_of_e_save_room,
         castle_location_names.p1_w_of_se_bronze_gate_5,
         castle_location_names.p1_w_of_se_bronze_gate_1,
-    ]
-    location_table = keep_one_location(p1_bkey_3_locs, castle_location_names.crloc_p1_bronze_key_se)
-    p1_bkey_4_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 4
         castle_location_names.p1_e_bridges_5,
         castle_location_names.p1_e_bridges_4,
         castle_location_names.p1_ne_arrow_traps,
-    ]
-    location_table = keep_one_location(p1_bkey_4_locs, castle_location_names.crloc_p1_bronze_key_e)
-    p1_bkey_5_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 5
         castle_location_names.p1_room_by_exit,
         castle_location_names.p1_by_exit_3,
-    ]
-    location_table = keep_one_location(p1_bkey_5_locs, castle_location_names.crloc_p1_bronze_key_n)
+    ])
     # Prison Floor 2
-    p2_bkey_1_locs: typing.List[str] = [
+    location_table = keep_one_location([  # Bronze key 1
         castle_location_names.p2_entrance_1,
         castle_location_names.p2_entrance_2,
         castle_location_names.p2_entrance_3,
         castle_location_names.p2_entrance_4,
         castle_location_names.p2_w_of_gold_gate,
-    ]
-    location_table = keep_one_location(p2_bkey_1_locs, castle_location_names.crloc_p2_bkey_1)
-    p2_bkey_2_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 2
         castle_location_names.p2_e_gold_gate_room_3,
         castle_location_names.p2_e_gold_gate_room_2,
         castle_location_names.p2_e_gold_gate_room_1,
-    ]
-    location_table = keep_one_location(p2_bkey_2_locs, castle_location_names.crloc_p2_bkey_2)
-    p2_bkey_3_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 3
         castle_location_names.p2_e_gold_gate_room_4,
         castle_location_names.p2_e_gold_gate_room_5,
         castle_location_names.p2_e_gold_gate_room_6,
-    ]
-    location_table = keep_one_location(p2_bkey_3_locs, castle_location_names.crloc_p2_bkey_3)
-    p2_bkey_4_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 4
         castle_location_names.p2_e_gold_gate_room_13,
         castle_location_names.p2_e_gold_gate_room_12,
         castle_location_names.p2_e_gold_gate_room_11,
-    ]
-    location_table = keep_one_location(p2_bkey_4_locs, castle_location_names.crloc_p2_bkey_4)
-    p2_skey_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Silver key
         castle_location_names.p2_nw_island_5,
         castle_location_names.p2_nw_island_3,
         castle_location_names.p2_nw_island_4,
-    ]
-    location_table = keep_one_location(p2_skey_locs, castle_location_names.crloc_p2_skey)
-    p2_gkey_1_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Gold key 1
         castle_location_names.p2_e_of_red_spikes_2,
         castle_location_names.p2_e_of_red_spikes_3,
         castle_location_names.p2_e_of_red_spikes_4,
         castle_location_names.p2_e_of_red_spikes_1,
-    ]
-    location_table = keep_one_location(p2_gkey_1_locs, castle_location_names.crloc_p2_gkey_1)
-    p2_gkey_2_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Gold key 2
         castle_location_names.p2_beetle_boss_room_2,
         castle_location_names.p2_beetle_boss_room_1,
         castle_location_names.p2_beetle_boss_room_3,
-    ]
-    location_table = keep_one_location(p2_gkey_2_locs, castle_location_names.crloc_p2_gkey_2)
+    ])
     if world.options.difficulty.value == world.options.difficulty.option_easier:
         remove_location(castle_location_names.p2_toggle_spike_trap_reward_2, item_name.chest_wood)
         remove_location(castle_location_names.p2_toggle_spike_trap_reward_3, item_name.chest_wood)
     # Prison Floor 3
-    p3_bkey_1_locs: typing.List[str] = [
+    location_table = keep_one_location([  # Bronze key 1
         castle_location_names.p3_entrance_w,
         castle_location_names.p3_entrance_n_1,
         castle_location_names.p3_entrance_n_2,
         castle_location_names.p3_entrance_m_4,
         castle_location_names.p3_entrance_n_of_poker,
-    ]
-    location_table = keep_one_location(p3_bkey_1_locs, castle_location_names.crloc_p3_bkey_1)
-    p3_bkey_2_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 2
         castle_location_names.p3_s_of_silver_gate,
         castle_location_names.p3_entrance_sw,
         castle_location_names.p3_entrance_s_3,
         castle_location_names.p3_entrance_s_of_poker_3,
-    ]
-    location_table = keep_one_location(p3_bkey_2_locs, castle_location_names.crloc_p3_bkey_2)
-    p3_bkey_3_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Bronze key 3
         castle_location_names.p3_se_m_2,
         castle_location_names.p3_arrow_hall_1,
         castle_location_names.p3_arrow_hall_2,
         castle_location_names.p3_se_cross_hall_se,
-    ]
-    location_table = keep_one_location(p3_bkey_3_locs, castle_location_names.crloc_p3_bkey_3)
-    p3_skey_1_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Silver key 1
         castle_location_names.p3_nw_se,
         castle_location_names.p3_nw_m,
         castle_location_names.p3_nw_nw_3,
         castle_location_names.p3_nw_sw_1,
         castle_location_names.p3_nw_sw_2,
-    ]
-    location_table = keep_one_location(p3_skey_1_locs, castle_location_names.crloc_p3_skey)
-    p3_gkey_1_locs: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Gold key 1
         castle_location_names.p3_w_of_bridge,
         castle_location_names.p3_nw_of_bridge,
         castle_location_names.p3_s_of_w_poker,
         castle_location_names.p3_w_of_w_poker,
         castle_location_names.p3_n_of_bridge_5,
-    ]
-    location_table = keep_one_location(p3_gkey_1_locs, castle_location_names.crloc_p3_gkey)
-    # Remove puzzles
-    if world.options.randomize_puzzles:
-        for rloc, loc in puzzle_locs.items():
-            remove_puzzle_locations(loc[:-1], rloc)
+    ])
     # Enemy loot locations
     if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:
         flower_locs = [
@@ -3260,8 +3229,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     buttonsanity = world.options.buttonsanity.value > 0
 
     def remove_location(location: str, loc_item: str):
-        if not world.options.randomize_recovery_items.value and loc_item in recovery_table.keys():
-            return
+        if not location in location_table: return
         location_table.pop(location)
         item_counts[loc_item] -= 1
 
@@ -3271,36 +3239,25 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         if button_item in item_counts:
             item_counts[button_item] -= 1
 
-    def remove_puzzle_button(location: str):
-        if buttonsanity and world.options.randomize_puzzles:
-            remove_button(location)
-
     def remove_secret(secret_location: str):
-        if secret_location in location_table.keys():
-            remove_location(secret_location, item_name.secret)
+        remove_location(secret_location, item_name.secret)
 
-    def remove_puzzle_locations(base_name: str, rloc_name: str):
-        if random_locations[rloc_name] < 18:
-            remove_location(f"{base_name}4", item_name.chest_purple)
-        if random_locations[rloc_name] < 14:
-            remove_location(f"{base_name}3", item_name.stat_upgrade)
-        if random_locations[rloc_name] < 10:
-            remove_location(f"{base_name}2", item_name.ankh)
-        if random_locations[rloc_name] < 1:
-            remove_location(f"{base_name}1", item_name.potion_rejuvenation)
+    def remove_puzzle(puzzle_location_1: str, button_location: str):
+        if not world.options.randomize_puzzles: return
+        puzzle_base_name = puzzle_location_1[:-1]
+        remove_location(f"{puzzle_base_name}4", item_name.chest_purple)
+        remove_location(f"{puzzle_base_name}3", item_name.stat_upgrade)
+        remove_location(f"{puzzle_base_name}2", item_name.ankh)
+        remove_location(puzzle_location_1, item_name.potion_rejuvenation)
+        if buttonsanity:
+            remove_button(button_location)
 
-    def keep_one_location(locations: typing.List[str], rloc_name: str):
-        random_locations[rloc_name] = world.random.randrange(len(locations))
-        locations.pop(random_locations[rloc_name])
+    def keep_one_location(locations: typing.List[str]):
+        index = world.random.randrange(len(locations))
+        locations.pop(index)
         for location in locations:
             location_table.pop(location)
         return location_table
-
-    def randomize_puzzle(rloc_name: str):
-        pegs = 0
-        for p in range(25):
-            pegs += world.random.randrange(2)
-        random_locations[rloc_name] = pegs
 
     def roll_enemy_loot_locations(locations: Iterable[str], loot_table, loot_item: str):
         for _loc in locations:
@@ -3312,60 +3269,71 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
                 item_counts[_item] += 1
 
     # Secrets
-    secret_locs = {
-        temple_location_names.rloc_c3_secret_n: temple_location_names.cave3_secret_n,
-        temple_location_names.rloc_c3_secret_nw: temple_location_names.cave3_secret_nw,
-        temple_location_names.rloc_c3_secret_s: temple_location_names.cave3_secret_s,
-        temple_location_names.rloc_c2_secret_1: temple_location_names.cave2_secret_ne,
-        temple_location_names.rloc_c2_secret_2: temple_location_names.cave2_secret_w,
-        temple_location_names.rloc_c2_secret_3: temple_location_names.cave2_secret_m,
-        temple_location_names.rloc_c1_secret_1: temple_location_names.cave1_secret_nw,
-        temple_location_names.rloc_c1_secret_2: temple_location_names.cave1_secret_n_hidden_room,
-        temple_location_names.rloc_c1_secret_3: temple_location_names.cave1_secret_ne,
-        temple_location_names.rloc_c1_secret_4: temple_location_names.cave1_secret_w,
-        temple_location_names.rloc_c1_secret_5: temple_location_names.cave1_secret_m,
-        temple_location_names.rloc_c1_secret_6: temple_location_names.cave1_secret_e,
-        temple_location_names.rloc_b1_secret: temple_location_names.boss1_secret,
-        temple_location_names.rloc_p_secret_1: temple_location_names.p_ent2_secret,
-        temple_location_names.rloc_p_secret_2: temple_location_names.p_mid3_secret_1,
-        temple_location_names.rloc_p_secret_3: temple_location_names.p_mid3_secret_2,
-        temple_location_names.rloc_p_secret_4: temple_location_names.p_mid3_secret_3,
-        temple_location_names.rloc_p_secret_5: temple_location_names.p_mid3_secret_4,
-        temple_location_names.rloc_p_secret_6: temple_location_names.p_end1_secret,
-        temple_location_names.rloc_p_secret_7: temple_location_names.p_mid5_secret,
-    }
-    if world.options.randomize_secrets.value:
-        for secret_key in secret_locs.keys():
-            random_locations[secret_key] = world.random.randrange(2)
+    secret_locs = [
+        temple_location_names.cave3_secret_n,
+        temple_location_names.cave3_secret_nw,
+        temple_location_names.cave3_secret_s,
+        temple_location_names.cave2_secret_ne,
+        temple_location_names.cave2_secret_w,
+        temple_location_names.cave2_secret_m,
+        temple_location_names.cave1_secret_nw,
+        temple_location_names.cave1_secret_n_hidden_room,
+        temple_location_names.cave1_secret_ne,
+        temple_location_names.cave1_secret_w,
+        temple_location_names.cave1_secret_m,
+        temple_location_names.cave1_secret_e,
+        temple_location_names.boss1_secret,
+        temple_location_names.p_ent2_secret,
+        temple_location_names.p_mid3_secret_1,
+        temple_location_names.p_mid3_secret_2,
+        temple_location_names.p_mid3_secret_3,
+        temple_location_names.p_mid3_secret_4,
+        temple_location_names.p_end1_secret,
+        temple_location_names.p_mid5_secret,
+    ]
+    if world.options.randomize_secrets:
+        for secret_loc in secret_locs:
+            if world.random.randrange(2) == 0:
+                remove_secret(secret_loc)
     else:
-        for secret_key in secret_locs.keys():
-            random_locations[secret_key] = 0
-    for rloc_, loc_ in secret_locs.items():
-        if random_locations[rloc_] == 0:
-            remove_secret(loc_)
+        for secret_loc in secret_locs:
+            remove_secret(secret_loc)
 
     # Set puzzle random values
     puzzle_locs = {
-        temple_location_names.rloc_c3_puzzle: temple_location_names.c3_puzzle_1,
-        temple_location_names.rloc_c2_puzzle: temple_location_names.c2_puzzle_1,
-        temple_location_names.rloc_c1_puzzle_n: temple_location_names.c1_n_puzzle_1,
-        temple_location_names.rloc_c1_puzzle_e: temple_location_names.c1_e_puzzle_1,
-        temple_location_names.rloc_p_puzzle: temple_location_names.p_puzzle_1,
-        temple_location_names.rloc_t1_puzzle_w: temple_location_names.t1_w_puzzle_1,
-        temple_location_names.rloc_t1_puzzle_e: temple_location_names.t1_e_puzzle_1,
-        temple_location_names.rloc_t2_puzzle_n: temple_location_names.t2_n_puzzle_1,
-        temple_location_names.rloc_t2_puzzle_nw: temple_location_names.t2_nw_puzzle_1,
-        temple_location_names.rloc_t2_puzzle_e: temple_location_names.t2_e_puzzle_1,
-        temple_location_names.rloc_t2_puzzle_sw: temple_location_names.t2_sw_puzzle_1,
-        temple_location_names.rloc_t3_puzzle: temple_location_names.t3_puzzle_1,
-        temple_location_names.rloc_pof_puzzle: temple_location_names.pof_puzzle_1,
+        temple_location_names.c3_puzzle_1,
+        temple_location_names.c2_puzzle_1,
+        temple_location_names.c1_n_puzzle_1,
+        temple_location_names.c1_e_puzzle_1,
+        temple_location_names.p_puzzle_1,
+        temple_location_names.t1_w_puzzle_1,
+        temple_location_names.t1_e_puzzle_1,
+        temple_location_names.t2_n_puzzle_1,
+        temple_location_names.t2_nw_puzzle_1,
+        temple_location_names.t2_e_puzzle_1,
+        temple_location_names.t2_sw_puzzle_1,
+        temple_location_names.t3_puzzle_1,
+        temple_location_names.pof_puzzle_1,
     }
-    if world.options.randomize_puzzles.value:
-        for puzzle_loc in puzzle_locs.keys():
-            randomize_puzzle(puzzle_loc)
+    if world.options.randomize_puzzles:
+        for loc in puzzle_locs:
+            pegs = 0
+            for p in range(25):
+                pegs += world.random.randrange(2)
+            base_name = loc[:-1]
+            if pegs < 18:
+                remove_location(f"{base_name}4", item_name.chest_purple)
+            if pegs < 14:
+                remove_location(f"{base_name}3", item_name.stat_upgrade)
+            if pegs < 10:
+                remove_location(f"{base_name}2", item_name.ankh)
+            if pegs < 1:
+                remove_location(loc, item_name.potion_rejuvenation)
     else:
-        for puzzle_loc in puzzle_locs.keys():
-            random_locations[puzzle_loc] = -1
+        item_counts[item_name.chest_purple] -= len(puzzle_locs)
+        item_counts[item_name.stat_upgrade] -= len(puzzle_locs)
+        item_counts[item_name.ankh] -= len(puzzle_locs)
+        item_counts[item_name.potion_rejuvenation] -= len(puzzle_locs)
 
     # Goal stuff
     if get_goal_type(world) == GoalType.AltCompletion:
@@ -3373,11 +3341,10 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     # Dunes
     random_locations[temple_location_names.rloc_t3_entrance] = world.random.randrange(3)
     # Cave level 3
-    random_locations[temple_location_names.rloc_squire] = world.random.randrange(6)
-    if random_locations[temple_location_names.rloc_squire] != 1:
+    if world.random.randrange(6) != 1:
         remove_location(temple_location_names.cave3_squire, item_name.stat_upgrade)
     # Pan location
-    pan_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Pan locations
         temple_location_names.cave3_nw,
         temple_location_names.cave3_m,
         temple_location_names.cave3_se,
@@ -3387,17 +3354,15 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         temple_location_names.cave1_n_bridges_4,
         temple_location_names.cave1_double_room_l,
         temple_location_names.cave1_e_3,
-    ]
-    location_table = keep_one_location(pan_locations, temple_location_names.rloc_pan)
+    ])
     # Cave level 2
-    c2_keystone_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Keystone
         temple_location_names.cave2_guard_s,
         temple_location_names.cave2_nw_3,
         temple_location_names.cave2_w_miniboss_4,
         temple_location_names.cave2_red_bridge_3,
         temple_location_names.cave2_below_pumps_3
-    ]
-    location_table = keep_one_location(c2_keystone_locations, temple_location_names.rloc_c2_keystone)
+    ])
     random_locations[temple_location_names.rloc_c2_portal] = world.random.randrange(3)
     if random_locations[temple_location_names.rloc_c2_portal] == 0:
         remove_location(temple_location_names.cave2_nw_4, item_name.apple)
@@ -3411,12 +3376,11 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         remove_location(temple_location_names.cave2_sw_hidden_room_3, item_name.ankh)
         remove_location(temple_location_names.cave2_sw_hidden_room_4, item_name.chest_wood)
     # Cave level 1
-    c1_keystone_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Keystone
         temple_location_names.cave1_ne_grubs,
         temple_location_names.cave1_w_by_water_2,
         temple_location_names.cave1_m
-    ]
-    location_table = keep_one_location(c1_keystone_locations, temple_location_names.rloc_c1_keystone)
+    ])
     random_locations[temple_location_names.rloc_c1_portal] = world.random.randrange(3)
     if random_locations[temple_location_names.rloc_c1_portal] == 0:
         remove_location(temple_location_names.cave1_n_bridges_5, item_name.chest_wood)
@@ -3436,8 +3400,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     random_locations[temple_location_names.rloc_c1_hall_e] = world.random.randrange(4)
     random_locations[temple_location_names.rloc_c1_exit] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_c1_exit] == 0:
-        random_locations[temple_location_names.rloc_c1_puzzle_e] = -1
-        remove_puzzle_button(temple_location_names.btn_c1_puzzle_e)
+        remove_puzzle(temple_location_names.c1_e_puzzle_1, temple_location_names.btn_c1_puzzle_e)
     # Passage
     random_locations[temple_location_names.rloc_passage_entrance] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_passage_entrance] == 0:
@@ -3513,8 +3476,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         mid_locations_to_remove.remove(temple_location_names.p_mid5_secret)
     # Remove puzzle locations
     if random_locations[temple_location_names.rloc_passage_middle] != 2:
-        random_locations[temple_location_names.rloc_p_puzzle] = -1
-        remove_puzzle_button(temple_location_names.btn_p_puzzle)
+        remove_puzzle(temple_location_names.p_puzzle_1, temple_location_names.btn_p_puzzle)
     for loc in mid_locations_to_remove:
         if temple_locations[loc].loc_type == LocType.Secret:
             remove_secret(loc)
@@ -3548,9 +3510,9 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         temple_location_names.t1_ledge_after_block_trap_1,
         temple_location_names.t1_sw_sdoor_3
     ]
-    random_locations[temple_location_names.rloc_t1_keystone] = world.random.randrange(len(t1_keystone_locations))
-    t1_keystone_locations.pop(random_locations[temple_location_names.rloc_t1_keystone])
-    if random_locations[temple_location_names.rloc_t1_keystone] == 2:  # Remove the diamond that would spawn there
+    t1_keystone = world.random.randrange(len(t1_keystone_locations))
+    t1_keystone_locations.pop(t1_keystone)
+    if t1_keystone == 2:  # Remove the diamond that would spawn there
         item_counts[item_name.diamond_small] -= 1
     else:
         t1_keystone_locations.remove(temple_location_names.t1_ledge_after_block_trap_1)  # Remove the diamond-filled loc
@@ -3559,51 +3521,42 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     random_locations[temple_location_names.rloc_t1_portal] = world.random.randrange(3)
     if random_locations[temple_location_names.rloc_t1_portal] == 2:
         remove_location(temple_location_names.t1_sun_turret_3, item_name.chest_green)
-    t1_silver_key_s_locations: typing.List[str] = [
+    location_table = keep_one_location([  # South silver key
         temple_location_names.t1_s_bridge_1,
         temple_location_names.t1_above_s_bridge,
         temple_location_names.t1_sw_corner_room,
-    ]
-    location_table = keep_one_location(t1_silver_key_s_locations,
-                                       temple_location_names.rloc_t1_silver_key_s)
-    t1_silver_key_n_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # North silver key
         temple_location_names.t1_n_sunbeam_treasure_3,
         temple_location_names.t1_boulder_hallway_by_ice_turret_4,
-    ]
-    location_table = keep_one_location(t1_silver_key_n_locations,
-                                       temple_location_names.rloc_t1_silver_key_n)
-    t1_silver_key_ice_turret_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Ice turret silver key
         temple_location_names.t1_ice_turret_1,
         temple_location_names.t1_ice_turret_2,
-    ]
-    location_table = keep_one_location(t1_silver_key_ice_turret_locations,
-                                       temple_location_names.rloc_t1_silver_key_ice_turret)
-    random_locations[temple_location_names.rloc_t1_silver_key_funky] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t1_silver_key_funky] == 0:
+    ])
+    t1_silver_key_funky = world.random.randrange(2)
+    if t1_silver_key_funky == 0:
         location_table.pop(temple_location_names.t1_e_of_double_gate_room_2)
-        random_locations[temple_location_names.rloc_t1_ore_funky] = world.random.randrange(2)
+        t1_ore_funky = world.random.randrange(2)
     else:
-        random_locations[temple_location_names.rloc_t1_ore_funky] = -1
-    if random_locations[temple_location_names.rloc_t1_ore_funky] != 0:
+        t1_ore_funky = -1
+    if t1_ore_funky != 0:
         location_table.pop(temple_location_names.t1_fire_trap_by_sun_turret_4)
-    if random_locations[temple_location_names.rloc_t1_ore_funky] != 1:
+    if t1_ore_funky != 1:
         location_table.pop(temple_location_names.t1_mana_drain_fire_trap)
-    t1_gold_key_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Gold key
         temple_location_names.t1_n_cache_by_ice_turret_5,
         temple_location_names.t1_s_cache_by_ice_turret_3,
-    ]
-    location_table = keep_one_location(t1_gold_key_locations, temple_location_names.rloc_t1_gold_key)
-    t1_ore_e_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # East ore
         temple_location_names.t1_sun_block_hall_3,
         temple_location_names.t1_e_gold_beetles,
-    ]
-    location_table = keep_one_location(t1_ore_e_locations, temple_location_names.rloc_t1_ore_e)
-    t1_mirror_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Mirror
         temple_location_names.t1_ledge_after_block_trap_2,
         temple_location_names.t1_ice_block_chamber_3,
         temple_location_names.t1_ice_block_chamber_2
-    ]
-    location_table = keep_one_location(t1_mirror_locations, temple_location_names.rloc_t1_mirror)
+    ])
     # There's a 1/5 chance to potentially open the way to the hidden room
     random_locations[temple_location_names.rloc_t1_sw_hidden_room_random_node] = world.random.randrange(5)
     random_locations[temple_location_names.rloc_t1_sw_hidden_room] = world.random.randrange(2)
@@ -3616,13 +3569,11 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         random_locations[temple_location_names.rloc_t1_sw_hidden_room] = 1
     random_locations[temple_location_names.rloc_t1_puzzle_spawn] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t1_puzzle_spawn] == 0:
-        random_locations[temple_location_names.rloc_t1_puzzle_e] = -1
-        remove_puzzle_button(temple_location_names.btn_t1_puzzle_e)
+        remove_puzzle(temple_location_names.t1_e_puzzle_1, temple_location_names.btn_t1_puzzle_e)
     else:
-        random_locations[temple_location_names.rloc_t1_puzzle_w] = -1
-        remove_puzzle_button(temple_location_names.btn_t1_puzzle_w)
+        remove_puzzle(temple_location_names.t1_w_puzzle_1, temple_location_names.btn_t1_puzzle_w)
     # Temple Level 2
-    t2_keystone_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Keystones
         temple_location_names.t2_se_banner_chamber_5,
         temple_location_names.t2_s_balcony_2,
         temple_location_names.t2_s_of_portal,
@@ -3630,8 +3581,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         temple_location_names.t2_nw_ice_turret_4,
         temple_location_names.t2_boulder_chamber_3,
         temple_location_names.t2_left_of_pof_switch_2,
-    ]
-    location_table = keep_one_location(t2_keystone_locations, temple_location_names.rloc_t2_keystone)
+    ])
     random_locations[temple_location_names.rloc_t2_entrance] = world.random.randrange(2)
     random_locations[temple_location_names.rloc_t2_portal] = world.random.randrange(4)
     if random_locations[temple_location_names.rloc_t2_portal] != 2:
@@ -3645,11 +3595,9 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] = world.random.randrange(2)
     random_locations[temple_location_names.rloc_t2_w_hidden_room] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t2_puzzle_spawn_1] == 0:
-        random_locations[temple_location_names.rloc_t2_puzzle_e] = -1  # Turn off east puzzle
-        remove_puzzle_button(temple_location_names.btn_t2_puzzle_e)
+        remove_puzzle(temple_location_names.t2_e_puzzle_1, temple_location_names.btn_t2_puzzle_e)
     else:
-        random_locations[temple_location_names.rloc_t2_puzzle_nw] = -1
-        remove_puzzle_button(temple_location_names.btn_t2_puzzle_w)
+        remove_puzzle(temple_location_names.t2_nw_puzzle_1, temple_location_names.btn_t2_puzzle_w)
         random_locations[temple_location_names.rloc_t2_w_hidden_room] = 1
     if random_locations[temple_location_names.rloc_t2_w_hidden_room] != 0:
         # Prevent items from appearing behind the west puzzle in the cache
@@ -3660,76 +3608,54 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         remove_location(temple_location_names.t2_nw_puzzle_cache_5, item_name.ankh)
     random_locations[temple_location_names.rloc_t2_puzzle_spawn_2] = world.random.randrange(2)
     if random_locations[temple_location_names.rloc_t2_puzzle_spawn_2] == 0:
-        random_locations[temple_location_names.rloc_t2_puzzle_n] = -1
-        remove_puzzle_button(temple_location_names.btn_t2_puzzle_n)
+        remove_puzzle(temple_location_names.t2_n_puzzle_1, temple_location_names.btn_t2_puzzle_n)
     else:
-        random_locations[temple_location_names.rloc_t2_puzzle_sw] = -1
-        remove_puzzle_button(temple_location_names.btn_t2_puzzle_s)
-    random_locations[temple_location_names.rloc_t2_jones_reward] = world.random.randrange(2)
+        remove_puzzle(temple_location_names.t2_sw_puzzle_1, temple_location_names.btn_t2_puzzle_s)
+    t2_jones_reward = world.random.randrange(2)
     t2_gold_key_locations: typing.List[str] = [
         temple_location_names.t2_right_of_pof_switch,
         temple_location_names.t2_sw_jail_2,
         temple_location_names.t2_boulder_room_2,
     ]
-    if random_locations[temple_location_names.rloc_t2_jones_reward] == 0:
-        location_table = keep_one_location(t2_gold_key_locations, temple_location_names.rloc_t2_gold_key)
+    if t2_jones_reward == 0:
+        location_table = keep_one_location(t2_gold_key_locations)
     else:
         item_counts[item_name.stat_upgrade] -= 1
         for loc in t2_gold_key_locations:
             location_table.pop(loc)
-    t2_silver_key_1_locations: typing.List[str] = [
+    location_table = keep_one_location([  # Silver key 1
         temple_location_names.t2_fire_trap_maze_5,
         temple_location_names.t2_fire_trap_maze_6,
         temple_location_names.t2_w_hall_dead_end_5,
         temple_location_names.t2_nw_of_s_ice_turret,
         temple_location_names.t2_n_of_portal,
-    ]
-    location_table = keep_one_location(t2_silver_key_1_locations,
-                                       temple_location_names.rloc_t2_silver_key_1)
-    t2_silver_key_2_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Silver key 2
         temple_location_names.t2_se_fireball_hall,
         temple_location_names.t2_se_banner_chamber_4,
         temple_location_names.t2_s_balcony_1,
         temple_location_names.t2_boulder_chamber_4,
-    ]
-    location_table = keep_one_location(t2_silver_key_2_locations,
-                                       temple_location_names.rloc_t2_silver_key_2)
-    t2_pickaxe_locations: typing.List[str] = [
+    ])
+    location_table = keep_one_location([  # Pickaxe
         temple_location_names.t2_w_ice_block_gate,
         temple_location_names.t2_e_ice_block_gate
-    ]
-    location_table = keep_one_location(t2_pickaxe_locations, temple_location_names.rloc_t2_pickaxe)
+    ])
     if buttonsanity:
-        if random_locations[temple_location_names.rloc_t2_pickaxe] == 0:
+        if temple_location_names.t2_w_ice_block_gate in location_table:
             remove_button(temple_location_names.btn_t2_wall_e_ice_gate)
         else:
             remove_button(temple_location_names.btn_t2_wall_w_ice_gate)
     # Temple Level 3
-    random_locations[temple_location_names.rloc_t3_s_beam_1] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t3_s_beam_1] == 0:
+    if world.random.randrange(2) == 0:
         remove_location(temple_location_names.t3_n_node_blocks_1, item_name.vendor_coin)
-    random_locations[temple_location_names.rloc_t3_s_beam_2] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t3_s_beam_2] == 0:
+    if world.random.randrange(2) == 0:
         remove_location(temple_location_names.t3_n_node_blocks_2, item_name.vendor_coin)
-    random_locations[temple_location_names.rloc_t3_s_beam_3] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t3_s_beam_3] == 0:
+    if world.random.randrange(2) == 0:
         remove_location(temple_location_names.t3_n_node_blocks_3, item_name.vendor_coin)
-    random_locations[temple_location_names.rloc_t3_s_beam_4] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t3_s_beam_4] == 0:
+    if world.random.randrange(2) == 0:
         remove_location(temple_location_names.t3_n_node_blocks_4, item_name.vendor_coin)
-    random_locations[temple_location_names.rloc_t3_s_beam_5] = world.random.randrange(2)
-    if random_locations[temple_location_names.rloc_t3_s_beam_5] == 0:
+    if world.random.randrange(2) == 0:
         remove_location(temple_location_names.t3_n_node_blocks_5, item_name.vendor_coin)
-
-    # Remove puzzle locations
-    if world.options.randomize_puzzles:
-        for rloc, loc in puzzle_locs.items():
-            remove_puzzle_locations(loc[:-1], rloc)
-    else:
-        item_counts[item_name.chest_purple] -= len(puzzle_locs)
-        item_counts[item_name.stat_upgrade] -= len(puzzle_locs)
-        item_counts[item_name.ankh] -= len(puzzle_locs)
-        item_counts[item_name.potion_rejuvenation] -= len(puzzle_locs)
 
     # Enemy loot locations
     if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:

@@ -1628,39 +1628,6 @@ btn_c3_wall_fire_floor = "ChF12: Fire Floor Wall Button"
 btn_c3_wall_se_hidden = "ChF12: Hidden SE Hall Wall Button"
 btn_c3_wall_sw_hidden = "ChF12: SW Hidden Room Hidden Wall Button"
 
-# Random Locations
-crloc_p1_bronze_key_entrance = "Prison 1 Bronze Key 1"
-crloc_p1_bronze_key_sw = "Prison 1 Bronze Key 2"
-crloc_p1_bronze_key_se = "Prison 1 Bronze Key 3"
-crloc_p1_bronze_key_e = "Prison 1 Bronze Key 4"
-crloc_p1_bronze_key_n = "Prison 1 Bronze Key 5"
-
-crloc_p2_bkey_1 = "Prison 2 Bronze Key 1"
-crloc_p2_bkey_2 = "Prison 2 Bronze Key 2"
-crloc_p2_bkey_3 = "Prison 2 Bronze Key 3"
-crloc_p2_bkey_4 = "Prison 2 Bronze Key 4"
-crloc_p2_skey = "Prison 2 Silver Key 1"
-crloc_p2_gkey_1 = "Prison 2 Gold Key 1"
-crloc_p2_gkey_2 = "Prison 2 Gold Key 2"
-crloc_p2_puzzle = "Prison 2 Puzzle 1"
-
-crloc_p3_bkey_1 = "Prison 3 Bronze Key 1"
-crloc_p3_bkey_2 = "Prison 3 Bronze Key 2"
-crloc_p3_bkey_3 = "Prison 3 Bronze Key 3"
-crloc_p3_skey = "Prison 3 Silver Key 1"
-crloc_p3_gkey = "Prison 3 Gold Key 1"
-
-crloc_a1_puzzle = "Armory 4 Puzzle 1"
-
-crloc_a2_puzzle = "Armory 5 Puzzle 1"
-
-crloc_r1_puzzle = "Archives 7 Puzzle 1"
-crloc_r2_puzzle = "Archives 8 Puzzle 1"
-
-crloc_ps_puzzle = "Prison Return Puzzle 1"
-
-crloc_c2_puzzle = "Chambers 11 Puzzle 1"
-
 shop_p1_combo = "Prison 1 Combo Shop"
 shop_p1_misc = "Prison 1 Vitality Shop"
 shop_p2_off = "Prison 2 Offense Shop"

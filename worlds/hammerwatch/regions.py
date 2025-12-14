@@ -4564,7 +4564,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
             item_name.btn_t2_puzzle_e, 1, False, use_puzzle_button_rule)
     connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_melt_ice,
             True, item_name.evt_beat_boss_2, 1, False)
-    if world.get_random_location(temple_location_names.rloc_t2_pickaxe) == 0:
+    if temple_location_names.t2_w_ice_block_gate in world.active_location_list:
         ice_gate_button = item_name.btn_t2_ice_gate_w
     else:
         ice_gate_button = item_name.btn_t2_ice_gate_e
