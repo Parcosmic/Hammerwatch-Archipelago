@@ -179,6 +179,16 @@ class TestHammerwatchOptions(HammerwatchTestBase):
         #     option_names.exit_randomization: options.ExitRandomization.option_all,
         #     option_names.random_start_exit: options.StartExit.option_true,
         # },
+        "Temple split lever non-buttonsanity": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.lever_fragments: options.LeverFragments.special_range_names["per_level"],
+            option_names.buttonsanity: options.Buttonsanity.option_off,
+        },
+        "Temple split lever buttonsanity": {
+            option_names.goal: options.Goal.option_temple_all_bosses,
+            option_names.lever_fragments: options.LeverFragments.special_range_names["per_level"],
+            option_names.buttonsanity: options.Buttonsanity.option_normal,
+        },
     }
 
     def test_options(self):

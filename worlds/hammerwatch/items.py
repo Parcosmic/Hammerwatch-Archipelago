@@ -80,6 +80,9 @@ tool_table: typing.Dict[str, ItemData] = {
     item_name.pickaxe_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     item_name.hammer: ItemData(counter.count(), ItemClassification.progression),
     item_name.hammer_fragment: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+    item_name.lever_c3: ItemData(counter.count(), ItemClassification.progression),
+    item_name.lever_c2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.lever_c1: ItemData(counter.count(), ItemClassification.progression),
 }
 
 special_table: typing.Dict[str, ItemData] = {
@@ -423,6 +426,10 @@ temple_button_table: typing.Dict[str, ItemData] = {
     # item_name.btn_t2_light_bridges_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     # item_name.btn_t2_portal_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     # item_name.btn_t3_puzzle_room_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
+
+    item_name.btn_c2_pumps_3: ItemData(counter.count(5), ItemClassification.progression),
+    item_name.btn_c2_pumps_2: ItemData(counter.count(), ItemClassification.progression),
+    item_name.btn_c2_pumps_1: ItemData(counter.count(), ItemClassification.progression),
 }
 
 button_table = {
@@ -1104,6 +1111,18 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
             item_counts_table.pop(item_name.lever)
             item_counts_table.update({item_name.lever_fragment: lever_fragments})
             extra_items += lever_fragments - 1
+        elif lever_fragments == 0:
+            item_counts_table.pop(item_name.lever)
+            item_counts_table[item_name.lever_c1] = 1
+            item_counts_table[item_name.lever_c2] = 1
+            item_counts_table[item_name.lever_c3] = 1
+            extra_items += 2
+            if world.options.buttonsanity > 0:
+                item_counts_table.pop(item_name.btn_c2_pumps)
+                item_counts_table[item_name.btn_c2_pumps_1] = 1
+                item_counts_table[item_name.btn_c2_pumps_2] = 1
+                item_counts_table[item_name.btn_c2_pumps_3] = 1
+                # There are no extra items as we create new locations for these
         pickaxe_fragments = world.options.pickaxe_fragments.value
         if pickaxe_fragments > 1:
             item_counts_table.pop(item_name.pickaxe)

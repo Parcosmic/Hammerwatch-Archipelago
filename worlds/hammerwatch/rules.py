@@ -245,9 +245,16 @@ def set_extra_rules(world: "HammerwatchWorld"):
         if lever_fragments > 1:
             add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps, world.player),
                      lambda state: state.has(item_name.lever_fragment, world.player, lever_fragments))
-        else:
+        elif lever_fragments == 1:
             add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps, world.player),
                      lambda state: state.has(item_name.lever, world.player))
+        else:
+            add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps, world.player),
+                     lambda state: state.has(item_name.lever_c3, world.player))
+            add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps_2, world.player),
+                     lambda state: state.has(item_name.lever_c2, world.player))
+            add_rule(world.multiworld.get_location(temple_location_names.btn_c2_pumps_3, world.player),
+                     lambda state: state.has(item_name.lever_c1, world.player))
 
         if world.options.buttonsanity.value > 0:
             add_rule(world.multiworld.get_location(temple_location_names.btn_t1_wall_guard, world.player),

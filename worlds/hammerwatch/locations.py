@@ -2636,6 +2636,9 @@ temple_button_locations: typing.Dict[str, LocationData] = {
     temple_location_names.btn_t2_runes: LocationData(counter.count(), LocType.Button),
     temple_location_names.btn_t2_portal: LocationData(counter.count(), LocType.Button),
     temple_location_names.btn_t3_levers: LocationData(counter.count(), LocType.Button),
+
+    temple_location_names.btn_c2_pumps_2: LocationData(counter.count(), LocType.Button),
+    temple_location_names.btn_c2_pumps_3: LocationData(counter.count(), LocType.Button),
 }
 
 temple_combo_button_locations: typing.Set[str] = {
@@ -2653,7 +2656,9 @@ temple_combo_button_locations: typing.Set[str] = {
 # These locked items correspond to buttons that require logic even with buttonsanity off
 temple_event_buttons = {
     temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
-    temple_location_names.btn_c2_pumps: item_name.btn_c2_pumps,
+    temple_location_names.btn_c2_pumps: item_name.btn_c2_pumps,  # or btn_c2_pumps_3
+    temple_location_names.btn_c2_pumps_2: item_name.btn_c2_pumps_2,
+    temple_location_names.btn_c2_pumps_3: item_name.btn_c2_pumps_1,
     temple_location_names.btn_hub_pof: item_name.btn_pof,
     temple_location_names.btn_c1_pof: item_name.btn_pof,
     temple_location_names.btn_c2_pof: item_name.btn_pof,
@@ -2671,7 +2676,7 @@ temple_event_buttons = {
     # temple_location_names.btn_t2_rune_se: item_name.btn_t2_light_bridges_part,
     # temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
 }
-
+# Purely for remove_button in set_tots_random_locations, only needs data for buttons that could potentially not exist
 temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_c3_floor_fall: item_name.btn_c3_fall_bridge,
     temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
@@ -2765,8 +2770,6 @@ for _player_class, shop_type_locs in shop_location_names.shop_class_location_nam
 shop_locations: typing.Dict[str, LocationData] = {
     **class_shop_table,
 }
-# for name, item_data in shop_locations.items():
-#     print(f"{name}:{item_data.code}")
 
 all_locations: typing.Dict[str, LocationData] = {
     **castle_locations,
@@ -2775,18 +2778,31 @@ all_locations: typing.Dict[str, LocationData] = {
 }
 
 
+def get_event_buttons(world: "HammerwatchWorld") -> dict[str, str]:
+    if world.campaign == Campaign.Castle:
+        event_buttons = castle_event_buttons
+    else:
+        event_buttons = dict(temple_event_buttons)
+        # The lever location normally activate all pumps, if split lever is on we have to make it activate just one level
+        if world.options.lever_fragments == 0:
+            event_buttons[temple_location_names.btn_c2_pumps] = item_name.btn_c2_pumps_3
+        else:
+            event_buttons.pop(temple_location_names.btn_c2_pumps_2)
+            event_buttons.pop(temple_location_names.btn_c2_pumps_3)
+    return event_buttons
+
+
 def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
-    location_table: typing.Dict[str, LocationData]
-    hw_map_locations: typing.Dict[str, LocationData]
-    item_counts: typing.Dict[str, int] = {}
-    bonus_locations: typing.Dict[str, LocationData] = {}
-    random_locations: typing.Dict[str, int] = {}
-    # button_items = {}
-    map_button_items: typing.Dict[str, int]
-    event_buttons: typing.Dict[str, str]
-    combo_button_locs: typing.Set[str]
-    pickup_locs: typing.Dict[str, LocationData]
-    enemy_loot_locs: typing.Dict[str, LocationData]
+    location_table: dict[str, LocationData]
+    hw_map_locations: dict[str, LocationData]
+    item_counts: dict[str, int] = {}
+    bonus_locations: dict[str, LocationData] = {}
+    random_locations: dict[str, int] = {}
+    map_button_items: dict[str, int]
+    event_buttons: dict[str, str] = get_event_buttons(world)
+    combo_button_locs: set[str]
+    pickup_locs: dict[str, LocationData]
+    enemy_loot_locs: dict[str, LocationData]
 
     location_table = {}
     if hw_map == Campaign.Castle:
@@ -2795,14 +2811,14 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
         button_locations = castle_button_locations
         combo_button_locs = castle_combo_button_locations
         hw_map_locations = get_base_locations(world, castle_pickup_locations, castle_enemy_loot_locations,
-                                              button_locations, castle_event_buttons, combo_button_locs)
+                                              button_locations, event_buttons, combo_button_locs)
     else:  # Need a default case for this else tests will complain
         item_counts.update(temple_item_counts)
         map_button_items = temple_button_item_counts
         button_locations = temple_button_locations
         combo_button_locs = temple_combo_button_locations
         hw_map_locations = get_base_locations(world, temple_pickup_locations, temple_enemy_loot_locations,
-                                              button_locations, temple_event_buttons, combo_button_locs)
+                                              button_locations, event_buttons, combo_button_locs)
 
     if world.options.buttonsanity > 0:
         if world.options.randomize_puzzles:
@@ -2823,7 +2839,7 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
             continue
         if data.loc_type & LocType.Puzzle and not world.options.randomize_puzzles:
             if name in map_button_items:
-                item_counts[map_button_items[name]] -= 1
+                item_counts[name] -= 1
             continue
         location_table[name] = data
 
@@ -2837,6 +2853,10 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     if hw_map == Campaign.Castle:  # Castle Hammerwatch
         location_table, item_counts, random_locations = set_castle_random_locations(world, location_table, item_counts)
     elif hw_map == Campaign.Temple:
+        # Split tool options
+        if world.options.buttonsanity and world.options.lever_fragments != 0:
+            location_table.pop(temple_location_names.btn_c2_pumps_2)
+            location_table.pop(temple_location_names.btn_c2_pumps_3)
         location_table, item_counts, random_locations = set_tots_random_locations(world, location_table, item_counts)
 
     item_counts, extra_items = get_item_counts(world, hw_map, item_counts)

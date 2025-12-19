@@ -5,8 +5,8 @@ from .names import item_name, castle_region_names, castle_location_names, temple
     entrance_names, option_names, gate_names, location_groups
 from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_items,
                     castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
-from .locations import (LocationData, all_locations, setup_locations, castle_event_buttons, temple_event_buttons,
-                        castle_button_locations, temple_button_locations, castle_button_items, temple_button_items)
+from .locations import (LocationData, all_locations, setup_locations, get_event_buttons,
+                        castle_button_locations, temple_button_locations)
 from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
 from .rules import set_rules, connect_regions_er
 from . import tracker
@@ -309,7 +309,7 @@ class HammerwatchWorld(World):
             location.address = None
             location.place_locked_item(self.create_event(itm))
         if not self.options.buttonsanity.value:
-            for loc, itm in castle_event_buttons.items():
+            for loc, itm in get_event_buttons(self).items():
                 location = self.multiworld.get_location(loc, self.player)
                 location.address = None
                 location.place_locked_item(self.create_event(itm))
@@ -425,7 +425,7 @@ class HammerwatchWorld(World):
             location.address = None
             location.place_locked_item(self.create_event(itm))
         if not self.options.buttonsanity.value:
-            for loc, itm in temple_event_buttons.items():
+            for loc, itm in get_event_buttons(self).items():
                 location = self.multiworld.get_location(loc, self.player)
                 location.address = None
                 location.place_locked_item(self.create_event(itm))

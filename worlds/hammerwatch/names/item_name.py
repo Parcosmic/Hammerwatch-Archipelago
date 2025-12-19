@@ -60,6 +60,10 @@ pan_fragment = "Frying Pan Fragment"
 lever_fragment = "Pumps Lever Fragment"
 pickaxe_fragment = "Pickaxe Fragment"
 
+lever_c3 = "Cave Level 3 Pumps Lever"
+lever_c2 = "Cave Level 2 Pumps Lever"
+lever_c1 = "Cave Level 1 Pumps Lever"
+
 # Special Item Names
 sonic_ring = "Gold Ring"
 serious_health = "Serious Health Upgrade"
@@ -779,6 +783,9 @@ btn_pof_1_exit = "Open PoF Level 1 Exit"
 btn_pof_2_puzzle = "Open PoF Level 2 Puzzle Room"
 btn_pof_2_exit = "Open PoF Level 2 Exit"
 btn_pof_3_start = "Open PoF Level 3 Start Room"
+btn_c2_pumps_1 = "Activate Cave Level 1 Water Pumps"
+btn_c2_pumps_2 = "Activate Cave Level 2 Water Pumps"
+btn_c2_pumps_3 = "Activate Cave Level 3 Water Pumps"
 
 # Event/Button Names
 evc_escaped = "Escaped Castle Hammerwatch"
@@ -918,6 +925,9 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         pan_fragment,
         lever_fragment,
         pickaxe_fragment,
+        lever_c1,
+        lever_c2,
+        lever_c3,
     },
     group_traps: {
         trap_bomb,
@@ -997,6 +1007,9 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         btn_pof_2_puzzle,
         btn_pof_2_exit,
         btn_pof_3_start,
+        btn_c2_pumps_1,
+        btn_c2_pumps_2,
+        btn_c2_pumps_3,
     },
     group_b1_boss: {
         btnc_b1_rune_1,

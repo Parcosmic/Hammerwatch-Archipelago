@@ -3361,6 +3361,8 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
         temple_location_names.btn_c2_red,
         temple_location_names.btn_c2_green,
         temple_location_names.btn_c2_pumps,
+        temple_location_names.btn_c2_pumps_2,
+        temple_location_names.btn_c2_pumps_3,
         temple_location_names.ev_c2_portal,
     ],
     temple_region_names.c2_main_secrets: [
@@ -4283,22 +4285,24 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
         key_bonus = item_name.key_bonus
         gate_counts = [all_gate_counts for _ in range(3)]
 
-    # pan_item = item_name.pan
-    # lever_item = item_name.lever
+    # Lever item rules are set in rules.set_extra_rules
     pickaxe_item = item_name.pickaxe
-    # pan_item_count = world.options.pan_fragments.value
-    # lever_item_count = world.options.lever_fragments.value
     pickaxe_item_count = world.options.pickaxe_fragments.value
-    # if pan_item_count > 1:
-    #     pan_item = item_name.pan_fragment
-    # if lever_item_count > 1:
-    #     lever_item = item_name.lever_fragment
     if pickaxe_item_count > 1:
         pickaxe_item = item_name.pickaxe_fragment
     hammer_item = item_name.hammer
     hammer_item_count = world.options.hammer_fragments.value
     if hammer_item_count > 1:
         hammer_item = item_name.hammer_fragment
+
+    if world.options.lever_fragments == 0:
+        pumps_activated = [
+            item_name.btn_c2_pumps_3,
+            item_name.btn_c2_pumps_2,
+            item_name.btn_c2_pumps_1,
+        ]
+    else:
+        pumps_activated = [item_name.btn_c2_pumps for _ in range(3)]
 
     exit_rando = world.options.exit_randomization.value > 0
     rando_all_exits = world.options.exit_randomization.value == world.options.exit_randomization.option_all
@@ -4337,16 +4341,16 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect_exit(world, used_names, temple_region_names.library, temple_region_names.cave_3_main,
                  entrance_names.t_c1_start, None)
     connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.cave_3_fields,
-            False, item_name.btn_c2_pumps, 1, False)
+            False, pumps_activated[0], 1, False)
     connect(world, used_names, temple_region_names.c3_e, temple_region_names.c3_e_water,
-            False, item_name.btn_c2_pumps, 1, False)
+            False, pumps_activated[0], 1, False)
     connect(world, used_names, temple_region_names.c3_e_water, temple_region_names.cave_3_main, False)
     connect(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_main_secrets,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect(world, used_names, temple_region_names.c3_main_secrets, temple_region_names.c3_puzzle, False,
             item_name.btn_c3_puzzle, 1, False, use_puzzle_button_rule)
     connect_or(world, used_names, temple_region_names.cave_3_main, temple_region_names.c3_e, True,
-               (item_name.btn_c3_e_bridge, item_name.btn_c2_pumps), True)
+               (item_name.btn_c3_e_bridge, pumps_activated[0]), True)
     connect(world, used_names, temple_region_names.c3_e, temple_region_names.c3_e_guard_secret,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect(world, used_names, temple_region_names.cave_3_fall, temple_region_names.cave_3_main, buttonsanity,
@@ -4369,7 +4373,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_main_secrets,
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
     connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.cave_2_pumps,
-            False, item_name.btn_c2_pumps, 1, False)
+            False, pumps_activated[1], 1, False)
     connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_red_bridge, False,
             item_name.btn_c2_red, 1, False, buttonsanity)
     connect(world, used_names, temple_region_names.cave_2_main, temple_region_names.c2_green_bridge, False,
@@ -4434,7 +4438,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect(world, used_names, temple_region_names.cave_1_blue_bridge, temple_region_names.c1_secret_hall, False,
             item_name.btn_c1_tunnel, 1, False, buttonsanity and world.get_random_location(temple_location_names.rloc_c1_hidden_room) < 2)
     connect(world, used_names, temple_region_names.cave_1_main, temple_region_names.cave_1_pumps,
-            True, item_name.btn_c2_pumps, 1, False)
+            True, pumps_activated[2], 1, False)
     connect(world, used_names, temple_region_names.cave_1_pumps, temple_region_names.c1_storage_island, False)
     connect_exit(world, used_names, temple_region_names.c1_storage_island, temple_region_names.boss2_main,
                  entrance_names.t_b2, entrance_names.t_c3_boss, None, 1, False,

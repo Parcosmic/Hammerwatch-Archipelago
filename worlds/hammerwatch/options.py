@@ -1,6 +1,7 @@
 from schema import Schema, Optional, And
 from dataclasses import dataclass
-from Options import Choice, Range, Toggle, DeathLink, OptionDict, FreeText, PerGameCommonOptions, Removed, OptionGroup
+from Options import (Choice, Range, Toggle, DeathLink, OptionDict, FreeText, PerGameCommonOptions, Removed, OptionGroup,
+                     NamedRange)
 from .names import option_names
 from .items import trap_table
 
@@ -448,11 +449,17 @@ class PanFragments(Range):
     default = 1
 
 
-class LeverFragments(Range):
-    """(TotS only) If greater than 1 separates the pumps lever into multiple fragments
-    All fragments must be collected in order to turn on the pumps"""
-    display_name = "Pumps Lever Fragments"
-    range_start = 1
+class LeverFragments(NamedRange):
+    """(TotS only) Determines if/how the pumps lever is split into multiple items
+    If 0 or 'per_level' the pumps lever will be split into 3 items that only lower the water on a specific cave level
+    If greater than 1 separates the pumps lever into multiple fragments
+    All fragments must be collected in order to turn on all the pumps"""
+    display_name = "Split Pumps Lever Mode"
+    special_range_names = {
+        "per_level": 0,
+        "no_split": 1,
+    }
+    range_start = 0
     range_end = 5
     default = 1
 
