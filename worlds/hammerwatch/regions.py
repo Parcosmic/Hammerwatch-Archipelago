@@ -5058,7 +5058,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
         world.key_item_counts[key_item_name] += 1
     else:
         if world.key_item_counts[key_item_name] > 1:
-            print("Something is consumed and also not consumed")
+            raise Exception("A non-consumed key has a key item count above 1!")
         world.key_item_counts[key_item_name] = 1
 
     connection = HWEntrance(world.player, entrance_name, source_region, target_region, key_item_name, 1, consumed, None)
