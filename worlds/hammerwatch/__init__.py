@@ -11,7 +11,7 @@ from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, conne
 from .rules import set_rules, connect_regions_er
 from . import tracker
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
-                   get_random_element, get_random_elements)
+                   get_random_element, get_random_elements, get_goal_type, GoalType)
 from .options import (HammerwatchOptions, client_required_options, option_groups, option_presets, ShopsanityAssist,
                       KeyMode, RandomizeBonusKeys, Buttonsanity, RandomizeEnemyLoot)
 
@@ -286,8 +286,12 @@ class HammerwatchWorld(World):
             for i in range(count):
                 self.world_itempool.append(self.create_item(item))
         if plank_count > 0:
+            plank_flags = item_table[item_name.plank].classification
+            # In Plank Hunt make planks deprioritized, as they aren't used for anything other than the goal
+            if get_goal_type(self) == GoalType.PlankHunt:
+                plank_flags |= ItemClassification.deprioritized
             for p in range(plank_count):
-                self.world_itempool.append(self.create_item(item_name.plank))
+                self.world_itempool.append(self.create_item_with_flags(item_name.plank, plank_flags))
 
         self.multiworld.itempool += self.world_itempool
 
