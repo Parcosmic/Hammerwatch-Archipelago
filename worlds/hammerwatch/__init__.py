@@ -362,28 +362,36 @@ class HammerwatchWorld(World):
         # Add a starting item to local_early_items to get out of an overly restrictive start
         if self.start_exit == entrance_names.c_p1_start and self.options.randomize_recovery_items.value == 0:
             # This combination of options will just send us through the shortcut teleporter
-            if not self.options.buttonsanity and self.options.hammer_fragments == 0 and self.options.shortcut_teleporter:
-                return
-            start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
-            start_gate = self.multiworld.get_entrance(start_gate_name, self.player)
-            assert isinstance(start_gate, HWEntrance)
-            start_items = [
-                start_gate.pass_item,
-            ]
-            if self.options.buttonsanity:
-                # If shortcut teleporter is on with buttonsanity, logically a key will be useless here
-                if self.options.shortcut_teleporter:
-                    start_items = []
-                # With hammer fragments and buttonsanity we have an EXTREMELY restrictive start, make a key early
-                if self.options.hammer_fragments > 1:
-                    start_items = [start_gate.pass_item]
-                else:
-                    start_items.append(item_name.btnc_p1_floor)
-            start_item_name = self.random.choice(start_items)
-            if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
-                if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
-                    start_item_name = f"Big {start_item_name}"
-            self.multiworld.local_early_items[self.player][start_item_name] = 1
+            # if not self.options.buttonsanity and self.options.hammer_fragments == 0 and self.options.shortcut_teleporter:
+            if self.options.buttonsanity or self.options.hammer_fragments > 0 or not self.options.shortcut_teleporter:
+                start_gate_name = get_etr_name(castle_region_names.p1_start, castle_region_names.p1_s)
+                start_gate = self.multiworld.get_entrance(start_gate_name, self.player)
+                assert isinstance(start_gate, HWEntrance)
+                start_items = [
+                    start_gate.pass_item,
+                ]
+                if self.options.buttonsanity:
+                    # If shortcut teleporter is on with buttonsanity, logically a key will be useless here
+                    if self.options.shortcut_teleporter:
+                        start_items = []
+                    # With hammer fragments and buttonsanity we have an EXTREMELY restrictive start, make a key early
+                    if self.options.hammer_fragments > 1:
+                        start_items = [start_gate.pass_item]
+                    else:
+                        start_items.append(item_name.btnc_p1_floor)
+                # If one of the valid start items are in start_inventory, then we don't need to make an item early
+                use_local_early = True
+                if self.options.start_inventory:
+                    for start_item in start_items:
+                        if start_item in self.options.start_inventory:
+                            use_local_early = False
+                            break
+                if use_local_early:
+                    start_item_name = self.random.choice(start_items)
+                    if start_item_name.endswith(item_name.key_bronze) and start_item_name != item_name.key_bronze_prison_1:
+                        if self.random.random() < (self.options.big_bronze_key_percent.value / 100):
+                            start_item_name = f"Big {start_item_name}"
+                    self.multiworld.local_early_items[self.player][start_item_name] = 1
 
         # If buttonsanity is on, make the ChF12 blue wall button have a chance of a trap
         blue_button_trap_chance = 1
