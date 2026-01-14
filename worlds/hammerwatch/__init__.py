@@ -403,7 +403,7 @@ class HammerwatchWorld(World):
                 and self.random.random() < blue_button_trap_chance):
             button_loc = self.multiworld.get_location(castle_location_names.btn_c3_wall_blue, self.player)
             trap_pool = {item: count for item, count in self.item_counts.items() if item_table[item].classification & ItemClassification.trap}
-            trap_item: str = util.get_random_element(self, trap_pool)
+            trap_item: str = get_random_element(self, trap_pool)
             button_loc.place_locked_item(self.create_item(trap_item))
             self.item_counts[trap_item] -= 1
 

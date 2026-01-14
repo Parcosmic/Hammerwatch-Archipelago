@@ -94,10 +94,15 @@ key_bronze_big_armory = "Big Armory Bronze Key"
 key_bronze_big_archives = "Big Archives Bronze Key"
 key_bronze_big_chambers = "Big Chambers Bronze Key"
 
+castle_act_bonus_keys = [
+    key_bonus_prison,
+    key_bonus_armory,
+    key_bonus_archives,
+    key_bonus_chambers,
+]
+
+# Floor master keys
 key_bronze_prison_1 = "Prison Floor 1 Master Bronze Key"
-key_bronze_prison_2 = "Prison Floor 2 Master Bronze Key"
-key_bronze_prison_3 = "Prison Floor 3 Master Bronze Key"
-key_bronze_armory_1 = "Armory Floor 4 Master Bronze Key"
 
 key_bonus_prison_master = "Prison Master Bonus Key"
 key_bonus_armory_master = "Armory Master Bonus Key"
@@ -112,17 +117,32 @@ key_gold_temple_1 = "Temple Floor 1 Master Gold Key"
 key_gold_temple_2 = "Temple Floor 2 Master Gold Key"
 key_bonus_pof = "Pyramid of Fear Master Bonus Key"
 
-castle_act_bonus_keys = [
-    key_bonus_prison,
-    key_bonus_armory,
-    key_bonus_archives,
-    key_bonus_chambers,
-]
+castle_act_names = (
+    "Prison",
+    "Armory",
+    "Archives",
+    "Chambers",
+)
 castle_master_bonus_keys = [
     key_bonus_prison_master,
     key_bonus_armory_master,
     key_bonus_archives_master,
     key_bonus_chambers_master,
+]
+castle_floor_master_keys = [
+    *[f"{castle_act_names[k//3]} Floor {k+1} Master Bronze Key" for k in range(12)],
+    *[f"{castle_act_names[k//3]} Floor {k+1} Master Silver Key" for k in range(12)],
+    *[f"{castle_act_names[k//3]} Floor {k+1} Master Gold Key" for k in range(12)],
+    *castle_master_bonus_keys,
+]
+temple_floor_master_keys = [
+    key_silver_b1,
+    key_silver_temple_1,
+    key_silver_temple_2,
+    key_gold_b1,
+    key_gold_temple_1,
+    key_gold_temple_2,
+    key_bonus_pof,
 ]
 
 # Special Generation stuff
@@ -149,7 +169,6 @@ trap_hey = "Hey! Trap"
 trap_escape = "Escape Trap"
 
 # Shop item names
-
 shop_paladin_health = "Progressive Paladin Health Pool"
 shop_paladin_mana = "Progressive Paladin Mana Pool"
 shop_paladin_armor = "Progressive Paladin Armor"
@@ -875,6 +894,8 @@ item_groups: typing.Dict[str, typing.Set[str]] = {
         key_bronze_big_armory,
         key_bronze_big_archives,
         key_bronze_big_chambers,
+        *castle_floor_master_keys,
+        *temple_floor_master_keys,
     },
     group_ankhs: {
         ankh,

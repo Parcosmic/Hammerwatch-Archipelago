@@ -133,15 +133,8 @@ custom_table: typing.Dict[str, ItemData] = {
 }
 
 castle_floor_master_keys: typing.Dict[str, ItemData] = {}
-castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Bronze Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
-castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Silver Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
-castle_floor_master_keys.update({f"{castle_act_names[k//3]} Floor {k+1} Master Gold Key": ItemData(counter.count(), ItemClassification.progression) for k in range(12)})
-castle_floor_master_keys.update({
-    item_name.key_bonus_prison_master: ItemData(counter.count(), ItemClassification.progression),
-    item_name.key_bonus_armory_master: ItemData(counter.count(), ItemClassification.progression),
-    item_name.key_bonus_archives_master: ItemData(counter.count(), ItemClassification.useful),
-    item_name.key_bonus_chambers_master: ItemData(counter.count(), ItemClassification.progression),
-})
+castle_floor_master_keys.update({key: ItemData(counter.count(), ItemClassification.progression) for key in item_name.castle_floor_master_keys})
+castle_floor_master_keys[item_name.key_bonus_archives_master] = ItemData(castle_floor_master_keys[item_name.key_bonus_archives_master].code, ItemClassification.useful)
 
 temple_floor_master_keys: typing.Dict[str, ItemData] = {
     item_name.key_silver_b1: ItemData(counter.count(), ItemClassification.progression),
