@@ -68,10 +68,10 @@ cave_1_temple = "CL1: Temple"
 c1_n_puzzle = "CL1: West Puzzle"
 c1_e_puzzle = "CL1: East Puzzle"
 
-boss_1_entrance = "Dune Sharks Entrance"
-b1_back = "Dune Sharks Back"
-b1_back_secret = "Dune Sharks Secret"
-boss_1_arena = "Dune Sharks Arena"
+boss_1_entrance = "Arena Entrance"
+b1_back = "Arena Back"
+b1_back_secret = "Arena Secret"
+boss_1_arena = "The Arena"
 boss_1_defeated = "Dune Sharks Defeated"
 
 passage_entrance = "SP: Entrance"
@@ -107,7 +107,7 @@ t1_ice_chamber_melt_ice = "TF1: Ice Block Chamber Ice Block"
 t1_w_puzzle = "TF1: West Puzzle"
 t1_e_puzzle = "TF1: East Puzzle"
 
-boss2_main = "Krilith Arena"
+boss2_main = "Storage Room"
 boss2_defeated = "Krilith Defeated"
 
 t2_main = "TF2: Center"

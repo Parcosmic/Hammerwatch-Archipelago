@@ -197,13 +197,13 @@ c1_e_puzzle_3 = "CL1: East Chance Puzzle Reward #3"
 c1_e_puzzle_4 = "CL1: East Chance Puzzle Reward #4"
 
 # Boss 1
-boss1_guard_l = "Dune Sharks: Guard Left"
-boss1_guard_r_1 = "Dune Sharks: Guard Right #1"
-boss1_guard_r_2 = "Dune Sharks: Guard Right #2"
+boss1_guard_l = "The Arena: Guard Left"
+boss1_guard_r_1 = "The Arena: Guard Right #1"
+boss1_guard_r_2 = "The Arena: Guard Right #2"
 
-boss1_bridge = "Dune Sharks: Bridge"
-boss1_bridge_n = "Dune Sharks: Bridge Left"
-boss1_secret = "Dune Sharks: Secret"
+boss1_bridge = "The Arena: Bridge"
+boss1_bridge_n = "The Arena: Bridge Left"
+boss1_secret = "The Arena: Secret"
 
 # Passage
 p_ent2_secret = "SP: Entrance Secret"
@@ -340,8 +340,8 @@ t1_e_puzzle_3 = "TF1: East Chance Puzzle Reward #3"
 t1_e_puzzle_4 = "TF1: East Chance Puzzle Reward #4"
 
 # Boss 2 Defeated
-boss2_nw = "Krilith: NW Ice Block"
-boss2_se = "Krilith: SE Ice Block"
+boss2_nw = "Storage Room: NW Ice Block"
+boss2_se = "Storage Room: SE Ice Block"
 
 # Temple Floor 2
 t2_n_of_portal = "TF2: North of Portal"
@@ -745,7 +745,7 @@ btn_c2_blue = "CL2: Blue Button"
 btn_c2_green = "CL2: Green Button"
 btn_c2_bridges = "CL2: South Bridges Button"
 btn_c2_s_bridge = "CL2: Exit Shortcut Bridge Button"
-btn_c2_pumps = "CL2: Pumps Lever"
+btn_c2_pumps = "CL2: Pumps Lever #1"
 btn_c2_pumps_2 = "CL2: Pumps Lever #2"
 btn_c2_pumps_3 = "CL2: Pumps Lever #3"
 btn_c2_puzzle = "CL2: Chance Puzzle Button"
@@ -755,7 +755,7 @@ btn_c1_green = "CL1: Green Button"
 btn_c1_puzzle_w = "CL1: West Chance Puzzle Button"
 btn_c1_puzzle_e = "CL1: East Chance Puzzle Button"
 btn_c1_wall = "CL1: NE Cache Wall Button"
-btn_b1_bridge = "Dune Sharks: Bridge Button"
+btn_b1_bridge = "The Arena: Bridge Button"
 btn_p_puzzle = "SP: Chance Puzzle Button"
 btn_t1_puzzle_w = "TF1: West Chance Puzzle Button"
 btn_t1_puzzle_e = "TF1: East Chance Puzzle Button"

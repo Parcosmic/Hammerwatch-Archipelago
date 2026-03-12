@@ -493,14 +493,14 @@ temple_region_groups: Dict[str, List[str]] = {
         temple_region_names.pof_3_main,
         temple_region_names.pof_puzzle,
     ],
-    "Dune Sharks Arena Locations": [
+    "Arena Locations": [
         temple_region_names.boss_1_entrance,
         temple_region_names.b1_back,
         temple_region_names.b1_back_secret,
         temple_region_names.boss_1_arena,
         temple_region_names.boss_1_defeated,
     ],
-    "Krilith Arena Locations": [
+    "Storage Room Locations": [
         temple_region_names.boss2_main,
         temple_region_names.boss2_defeated,
     ],
