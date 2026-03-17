@@ -179,7 +179,7 @@ region_data: Dict[str, RegionData] = {
     ], [
         ExitData(region_name.temple_guidance_right, ExitType.Internal, has_sprint),
         ExitData(region_name.temple_guidance_cistern, ExitType.Internal,
-                 lambda s, p: has_sprint(s, p) and has_vertical(s, p)),
+                 lambda s, p: (has_sprint(s, p) or has_hookshot(s, p)) and has_vertical(s, p)),
     ]),
     region_name.temple_guidance_right: RegionData([
         LocData(location_name.gt_tut_above_hallway, has_vertical),
@@ -237,17 +237,17 @@ region_data: Dict[str, RegionData] = {
     region_name.west_desert_r: RegionData([
         LocData(location_name.wd_right, lambda s, p: (has_bomb(s, p) and can_high_jump(s, p) or can_ramjet(s, p))),
     ], [
-            # ExitData(region_name.temple_guidance_right, ExitType.Level),
-            ExitData(region_name.machino, ExitType.Level),
-            ExitData(region_name.west_desert_m, ExitType.Level, lambda s, p: has_bomb(s, p) or has_vertical(s, p)),
+        # ExitData(region_name.temple_guidance_right, ExitType.Level),
+        ExitData(region_name.machino, ExitType.Level),
+        ExitData(region_name.west_desert_m, ExitType.Level, lambda s, p: has_bomb(s, p) or has_vertical(s, p)),
     ]),
     region_name.west_desert_m: RegionData([
         LocData(location_name.wd_top),
         LocData(location_name.wd_bottom),
     ], [
-            ExitData(region_name.west_desert_start, ExitType.Level),
-            DoorData(region_name.tenacious_trollies,
-                     entrance_name.door_cavecartpuzzle_wdes, entrance_name.door_wdes_cavecartpuzzle),
+        ExitData(region_name.west_desert_start, ExitType.Level),
+        DoorData(region_name.tenacious_trollies,
+                 entrance_name.door_cavecartpuzzle_wdes, entrance_name.door_wdes_cavecartpuzzle),
     ]),
     region_name.tenacious_trollies: RegionData([
         LocData(location_name.c_tt_breakable_wall, can_dig_distance),

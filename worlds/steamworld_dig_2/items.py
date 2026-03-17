@@ -187,7 +187,7 @@ item_counts: Dict[str, int] = {
 }
 
 active_filler_items: List[str] = [
-    item_name.cog,
+    item_name.ore_pack,
 ]
 
 

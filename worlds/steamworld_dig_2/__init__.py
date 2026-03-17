@@ -84,10 +84,17 @@ class SWD2World(World):
                                for vanilla_door, new_door in self.swapped_doors.items()},
         }
 
-    def collect_item(self, state: "CollectionState", item: "Item", remove: bool = False) -> Optional[str]:
-        if item.name in item_name.artifacts_set:
-            return item_name.artifacts_name
-        return item.name
+    def collect(self, state: "CollectionState", item: "Item") -> bool:
+        state_changed = super().collect(state, item)
+        if state_changed and item.name in item_name.artifacts_set:
+            state.add_item(item_name.artifacts_name, self.player, 1)
+        return state_changed
+
+    def remove(self, state: "CollectionState", item: "Item") -> bool:
+        state_changed = super().remove(state, item)
+        if state_changed and item.name in item_name.artifacts_set:
+            state.remove_item(item_name.artifacts_name, self.player, 1)
+        return state_changed
 
     def generate_early(self):
         # Validate options
