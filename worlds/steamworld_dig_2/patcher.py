@@ -1091,6 +1091,7 @@ def patch_entities(data_dir: str, offworld_item_names: List[str]):
     pickup_blueprint_node = pickups_root.find(".//Entity[@Name='pickup_blueprint']")
     blueprint_rigid_character_node = pickup_blueprint_node.find("./RigidCharacter/File")
     # blueprint_rigid_character_node.text = "Sprites/Pickups/ResourceBloodstone/resource_bloodstone.irc2"  # Default
+    # blueprint_rigid_character_node.text = "Sprites/Pickups/ResourceSodium/resource_sodium.irc2"  # Off center, vertic.
     # blueprint_rigid_character_node.text = "Sprites/Archaea/Dummy/SteamEngine_RustyCog.irc2"  # Too large but looks ok
     # blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_01.irc2"  # Also too large, a lighter color
     blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_03.irc2"  # Not a bad size, lightish color
