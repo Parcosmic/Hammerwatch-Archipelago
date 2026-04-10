@@ -2,10 +2,12 @@
 from .names import item_name, location_name, region_name, entrance_name
 from .items import item_table
 from .locations import all_locations
-from typing import NamedTuple, Dict, List, Optional
+from typing import Dict, List, Optional
 
 
 cog_item = "pickup_upgrade_cog"
+ore_entity = "placeholder_ore"
+gem_entity = "placeholder_gem"
 
 
 class GameData:
@@ -136,7 +138,9 @@ in_game_item_data: Dict[str, GameData] = {
     "collectible_04": GameData(item_name.a_fertilizer, location_name.a_top_l_t),
     "collectible_43": GameData(item_name.a_completion_proof, location_name.c_hell_end),
     "fate.hell_cave_sigil": GameData(item_name.up_fate_sigil, location_name.em_artifact_42),
-    cog_item: GameData(item_name.cog, None)
+    cog_item: GameData(item_name.cog, None),
+    ore_entity: GameData(item_name.ore_pack, None),
+    gem_entity: GameData(item_name.gem_pack, None),
 }
 shop_item_data: Dict[str, List[Optional[GameData]]] = {
     "pickaxe": [

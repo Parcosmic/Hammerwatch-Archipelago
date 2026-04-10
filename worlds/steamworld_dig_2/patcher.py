@@ -2,10 +2,9 @@
 # https://github.com/clementgallet/SWD2Randomizer
 
 import os
-import io
 import shutil
 import random
-from typing import List, Dict, Any, Callable, Tuple, Optional, Iterable
+from typing import Callable, Tuple, Optional, Iterable
 from copy import deepcopy
 from NetUtils import NetworkItem
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -14,7 +13,7 @@ from BaseClasses import ItemClassification
 import xml.etree.ElementTree as et
 
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
-                              COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item)
+                        COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity)
 from .names import option_name, item_name, location_name, entrance_name
 from . import options
 from .items import item_table, lookup_id_to_name, ItemType
@@ -51,7 +50,6 @@ def patch_files(ctx: ClientContextData):
 non_data_files_that_need_patching = [
     os.path.join("Patchsets", "TempleOfGuidance", "temple_of_guidance.le.z"),
     os.path.join("Language", "en.csv.z"),
-    # os.path.join("Atlases", "atlases.map.z"),
 ]
 
 
@@ -95,7 +93,6 @@ def pack_game_files(game_dir: str, non_data_files: List[str]):
         os.remove(impak_file)
     shutil.make_archive(impak_file, "zip", data_dir)
     shutil.move(impak_file + ".zip", impak_file)
-    # shutil.rmtree(data_dir)  # TODO: remove for release
 
     for non_data_info in non_data_files:
         compress_file(non_data_info)
@@ -152,15 +149,15 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
             start_items[lookup_id_to_name[item_id]] = 0
         start_items[lookup_id_to_name[item_id]] += 1
     # Hack testing full mobility, remove for release
-    # start_items.update({
-    #     # item_name.armor: 6,
-    #     item_name.sprint: 1,
-    #     item_name.bomb: 1,
-    #     item_name.jackhammer: 1,
-    #     item_name.jetengine: 1,
-    #     item_name.hookshot: 1,
-    #     item_name.up_lamp_secret_sight: 1,
-    # })
+    start_items.update({
+        # item_name.armor: 6,
+        item_name.sprint: 1,
+        item_name.bomb: 1,
+        item_name.jackhammer: 1,
+        item_name.jetengine: 1,
+        item_name.hookshot: 1,
+        item_name.up_lamp_secret_sight: 1,
+    })
     cogs = start_inventory.count(item_table[item_name.cog].code)
     money: int = slot_data[option_name.starting_money]
     level: int = slot_data[option_name.starting_level]
@@ -170,6 +167,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     # new_game_outset.find(".//Level").text = "yarrow_cave_run"
     # new_game_outset.find(".//Level").text = "west_desert"
     # new_game_outset.find(".//Level").text = "temple_of_guidance"
+    # new_game_outset.find(".//Level").text = "archaea_cave_cactus"
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "outside_temple_spawnpoint"
     # new_game_outset.append(entrance_node)
@@ -281,7 +279,7 @@ def get_randomized_shop_item(tool_name: str, tier_index: int, locations: Dict[in
         return None
     network_item = locations[loc_id]
     randomized_item = ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
-    if randomized_item == cog_item:  # TODO implement cogs appearing in shops
+    if randomized_item == cog_item:
         return None
     return randomized_item
 
@@ -295,7 +293,7 @@ def get_randomized_item_at_location(loc_id: int, locations: Dict[int, NetworkIte
 
 
 def is_item_upgrade(name: str):
-    return name != cog_item and "collectible" not in name
+    return name != cog_item and "collectible" not in name and name != ore_entity and name != gem_entity
 
 
 def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
@@ -334,6 +332,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     entrance_swaps: Dict[str, int] = slot_data["Entrance Swaps"]
     randomize_cogs: Dict[str, int] = slot_data["randomize_cogs"]
     randomize_artifacts: Dict[str, int] = slot_data["randomize_artifacts"]
+    randomize_ores: Dict[str, int] = slot_data["randomize_ores"]
     for patchset_file in patchset_files:
         patchset_doc = et.parse(patchset_file)
         patchset_root = patchset_doc.getroot()
@@ -341,7 +340,11 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         if patchset_file in custom_patches:
             custom_patches[patchset_file](patchset_root)
 
-        entity_parent_node = patchset_root.find(".//TileLayer[Name='Foreground']/Entities")
+        foreground_node = patchset_root.find(".//TileLayer[Name='Foreground']")
+        entity_parent_node = foreground_node.find("Entities")
+
+        sand_tiles_to_add = []  # For randomizing ore/gem blocks
+        air_tiles_to_add = []
 
         # Patch randomized locations
         upgrade_nodes = []
@@ -349,10 +352,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             *patchset_root.findall(".//CustomEntity[Definition='upgrade_podium']"),
         ]
         upgrade_nodes.extend(upgrade_podium_nodes)
-        # upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium']"))
-        # upgrade_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium1']"))
         upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Definition='GiveBlueprint']"))
-        # upgrade_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint1']"))
         for upgrade_node in upgrade_nodes:
             upgrade_value_node = upgrade_node.find(".//Property/Value")
             if upgrade_value_node is None:
@@ -369,10 +369,12 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 logger.error(f"""Could not find a randomized item for vanilla item {loc_vanilla_item}""")
             else:
                 if not is_item_upgrade(randomized_item):
-                    entity_node_name = upgrade_node.find("./Name").text + "_item"
                     loc_id = get_location_from_vanilla_item(loc_vanilla_item, locations)
+                    # entity_node_name = upgrade_node.find("./Name").text + "_item"
+                    entity_node_name = str(loc_id)
                     position = upgrade_node.find("./Position").text
-                    new_pos = edit_position(position, 0, -60)
+                    # new_pos = edit_position(position, 0, -60)
+                    new_pos = position
                     if randomized_item == cog_item:
                         entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
                                                                 new_pos,
@@ -381,6 +383,15 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                                                                 "0, 0, 0.5, 0.5",
                                                                 "120, 120",
                                                                 "upgrade_cog_container")
+                    elif randomized_item == ore_entity or randomized_item == gem_entity:
+                        entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
+                                                                new_pos,
+                                                                True,
+                                                                "Editor/Textures/placeholder_ore.png",
+                                                                "0, 0, 0.5, 0.5",
+                                                                "120, 120",
+                                                                randomized_item)
+                        sand_tiles_to_add.append(new_pos)
                     else:  # Artifact
                         entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
                                                                 new_pos,
@@ -394,25 +405,34 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     randomized_item = ""
                 upgrade_value_node.text = randomized_item
 
-        # Patch gearboxes and artifacts
+        # Patch freestanding items and ore blocks
         freestanding_nodes = []
         if randomize_cogs:
-            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_cog_container']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='upgrade_cog_container']"))
         if randomize_artifacts:
-            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Name='pickup_collectible']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_collectible']"))
+        if randomize_ores:
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_ore']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_gem']"))
 
         for freestanding_node in freestanding_nodes:
-            id_node = freestanding_node.find(".//Id")
+            position_node = freestanding_node.find(".//Position")
             property_node = freestanding_node.find(".//Property")
-            asset_name_node = freestanding_node.find(".//AssetName")
+            asset_name_node = freestanding_node.find(".//AssetName")  # Likely not needed to be set
             size_node = freestanding_node.find(".//Size")
             definition_node = freestanding_node.find(".//Definition")
             has_property_node = property_node is not None
             property_value_node = None
             if has_property_node:
                 property_value_node = freestanding_node.find(".//Property/Value")
+            was_ore = definition_node.text.startswith("placeholder_")
             # Get item from entity id
-            node_loc_id = int(id_node.text)
+            node_id = freestanding_node.find(".//Id").text
+            node_loc_id = int(node_id)
+            if was_ore:  # This is a hack but all ore locations are prepended with a 1 to avoid collisions
+                node_loc_id = int("1" + node_id)
+            # Set the name so that the mod knows what location this is
+            freestanding_node.find(".//Name").text = str(node_loc_id)
             randomized_item = get_randomized_item_at_location(node_loc_id, locations)
             if randomized_item is None:
                 continue
@@ -423,9 +443,19 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             if randomized_item_pickup_name == cog_item:
                 asset_name_node.text = "Sprites/General/UpgradeCogContainer/all.png"
                 size_node.text = "120, 120"
-                definition_node.text = "upgrade_cog_container"
+                definition_node.text = "pickup_upgrade_cog" if was_ore else "upgrade_cog_container"
                 if has_property_node:
                     freestanding_node.remove(property_node)
+            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity:
+                asset_name_node.text = "Editor/Textures/placeholder_gem.png"
+                size_node.text = "64, 64"
+                definition_node.text = randomized_item_pickup_name
+                if has_property_node:
+                    freestanding_node.remove(property_node)
+                if was_ore:
+                    was_ore = False
+                else:
+                    sand_tiles_to_add.append(position_node.text)
             else:
                 if "collectible" in randomized_item_pickup_name:
                     asset_name = "Editor/Textures/collectible.png"
@@ -444,6 +474,44 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     property_value_node = property_node.find(".//Value")
                     freestanding_node.append(property_node)
                 property_value_node.text = randomized_item_pickup_name
+            if was_ore:
+                air_tiles_to_add.append(position_node.text)
+
+        # Change tilemap if ore blocks need to be created/destroyed
+        foreground_tilelayer_tile_size = [int(s) for s in foreground_node.find("TileSize").text.split(", ")]
+        foreground_tilelayer_offset = [int(s) for s in foreground_node.find("TileOffset").text.split(", ")]
+        foreground_tile_mapping_node = foreground_node.find("TileMappings")
+        foreground_tiles_node = foreground_node.find("Tiles")
+        if len(sand_tiles_to_add) > 0:
+            sand_node = foreground_tile_mapping_node.find(".//Mapping[@Name=\"sand\"]")
+            if sand_node is not None:
+                sand_node_index = list(foreground_tile_mapping_node).index(sand_node)
+            else:
+                sand_node = et.Element("Mapping", attrib={
+                    "Name": "sand",
+                    "FlipX": "False",
+                    "FlipY": "False",
+                    "Rotation": "0",
+                })
+                sand_node_index = len(foreground_tile_mapping_node)
+                foreground_tile_mapping_node.append(sand_node)
+            for entity_pos in sand_tiles_to_add:
+                tile_pos: list[int] = [int(p) for p in entity_pos.split(", ")]
+                tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0]) - foreground_tilelayer_offset[0]
+                tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1]) - foreground_tilelayer_offset[1]
+                row_node = foreground_tiles_node[tile_pos_y]
+                row_indices = row_node.text.split(" ")
+                row_indices[tile_pos_x] = str(sand_node_index)
+                row_node.text = " ".join(row_indices)
+        if len(air_tiles_to_add) > 0:  # I think air is always index 0 so crossing fingers this works
+            for entity_pos in air_tiles_to_add:
+                tile_pos: list[int] = [int(p) for p in entity_pos.split(", ")]
+                tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0] - 0.5) - foreground_tilelayer_offset[0]
+                tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1] - 0.5) - foreground_tilelayer_offset[1]
+                row_node = foreground_tiles_node[tile_pos_y]
+                row_indices = row_node.text.split(" ")
+                row_indices[tile_pos_x] = "0"
+                row_node.text = " ".join(row_indices)
 
         # Patch entrances
         door_nodes = patchset_root.findall(".//CustomEntity[Definition='door']")
@@ -1172,80 +1240,3 @@ def compress_file(file_path: str):
         compress_bytes = prefix_bytes + zlib.compress(file_bytes, 9)
         with open(target_file, "wb") as zip_writer:
             zip_writer.write(compress_bytes)
-
-
-def main():
-    data_dir = "C:\\Programs\\SWD2Randomizer\\data01"
-    read_locations(data_dir)
-    # try_to_patch_lang_file()
-
-
-def read_locations(game_dir):
-    patchsets_dir = os.path.join(game_dir, "Patchsets")
-    walk_results = [(dirpath, dirnames, files) for (dirpath, dirnames, files) in os.walk(patchsets_dir)]
-    patchset_files = []
-    for walk in walk_results:
-        for file in walk[2]:
-            patchset_files.append(os.path.join(walk[0], file))
-
-    upgrade_names = []
-    id_nodes = {}
-    for patchset_file in patchset_files:
-        # print(patchset_file)
-        patchset_doc = et.parse(patchset_file)
-        patchset_root = patchset_doc.getroot()
-
-        location_nodes = []
-        location_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='upgrade_podium']"))
-        # location_nodes.extend(patchset_root.findall(".//CustomEntity[Name='upgrade_podium1']"))
-        location_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint']"))
-        location_nodes.extend(patchset_root.findall(".//ScriptEntity[Name='GiveBlueprint1']"))
-        location_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_collectible']"))
-        location_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='upgrade_cog_container']"))
-        for upgrade_node in location_nodes:
-            node_id = upgrade_node.find(".//Id").text
-            if node_id in id_nodes:
-                new_node_name = upgrade_node.find('.//Name').text
-                old_name = id_nodes[node_id][1].find('.//Name').text
-                print(f"{node_id} for node {new_node_name} already in dict as {old_name}")
-                print(f"  Existing file: {id_nodes[node_id][0]}")
-                print(f"  New file:      {patchset_file}")
-            else:
-                id_nodes[node_id] = (patchset_file, upgrade_node)
-            # upgrade_names.append(upgrade_node.find(".//Property/Value").text)
-        cog_object_info = []
-        for loc_node in location_nodes:
-            node_name = loc_node.find(".//Name").text
-            node_id = loc_node.find(".//Id").text
-            node_pos = loc_node.find(".//Position").text
-            cog_object_info.append(f",{node_name},{node_id},{node_pos}")
-        if len(cog_object_info) > 0:
-            print(patchset_file)
-        for cog_info in cog_object_info:
-            print(cog_info)
-    print(upgrade_names)
-
-
-def try_to_patch_lang_file():
-    language_dir = "C:/Program Files (x86)/Steam/steamapps/common/SteamWorld Dig 2/Bundle/Language/"
-    lang_file = os.path.join(language_dir, "en.csv")
-    language_file = os.path.join(language_dir, "en.csv.z.bak")
-    zip_file = os.path.join(language_dir, "en.csv.z")
-
-    test_dir = "C:/Program Files (x86)/Steam/steamapps/common/SteamWorld Dig 2/Bundle/data01/Definitions/levels.xml"
-    test_doc = et.parse(test_dir)
-    test_root = test_doc.getroot()
-
-    # for level_node in test_root:
-    #     print(level_node.attrib["Name"])
-
-    # output = extract_file(zip_file)
-    #
-    # with open(output, "a") as csv:
-    #     csv.write("apitem\tArchipelago Item")
-    #
-    # compress_file(output)
-
-
-if __name__ == "__main__":
-    main()

@@ -18,6 +18,7 @@ class StartLocation(Choice):
     option_el_machino = 1
     option_the_oasis = 2
     option_temple_of_the_destroyer = 3
+    alias_temple_of_guidance = 0
     default = 0
 # Don't forget to update the patcher if adding new start locations!
 
@@ -110,6 +111,12 @@ class RandomizeShopUpgrades(Choice):
     default = 0
 
 
+class RandomizeOres(Toggle):
+    """Determines if ore blocks that have a consistent location are randomized into the item pool"""
+    display_name = "Randomize Static Ores"
+    default = False
+
+
 class RandomizeTrialReward(Toggle):
     """Determines if the reward at the end of the trials is randomized
     WARNING: the Trials are stupidly hard, enable at risk to the multiworld!
@@ -154,6 +161,7 @@ class SWD2Options(PerGameCommonOptions):
     entrance_rando: EntranceRandomization
     randomize_cogs: RandomizeCogs
     randomize_artifacts: RandomizeArtifacts
+    randomize_ores: RandomizeOres
     randomize_shops: RandomizeShopUpgrades
     randomize_trials_reward: RandomizeTrialReward
     shuffle_resources: ShuffleResources
@@ -173,6 +181,7 @@ client_required_options = [
     option_name.entrance_rando,
     option_name.randomize_cogs,
     option_name.randomize_artifacts,
+    option_name.randomize_ores,
     option_name.randomize_shops,
     option_name.shuffle_resources,
     option_name.shop_cost_max,

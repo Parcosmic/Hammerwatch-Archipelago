@@ -4,7 +4,6 @@ wd_start_cliff_ore = "WD: Start Cliff Ore"
 
 gt_tut_dig_gearbox = "ToG: Tutorial Dig Left Wall"
 gt_tut_podium = "ToG: Tutorial Upgrade Podium"
-gt_tut_podium_water_ore = "ToG: Tutorial Upgrade Podium ---"
 gt_tut_podium_secret = "ToG: Tutorial Upgrade Podium Secret"
 gt_tut_above_hallway = "ToG: Tutorial Above Hallway To Boss Room"
 gt_tut_boss_totem = "ToG: Tutorial Below Boss Totem"
@@ -15,7 +14,7 @@ wd_bottom = "WD: Bottom of Middle Hill"
 
 c_tt_breakable_wall = "Tenacious Trollies: Breakable Wall"
 c_tt_end = "Tenacious Trollies: Reward"
-c_tt_3 = "Tenacious Trollies: Gem"
+c_tt_ore = "Tenacious Trollies: Ore"
 
 # El Machino
 em_heisenberg = "Clifford Heisenberg Upgrade"
@@ -40,9 +39,11 @@ wp_bottom_l = "WP: Plains Left"
 wp_bottom_r = "WP: Plains Right"
 wp_hill_right = "WP: Right Cliff"
 
+c_pp_ore = "Prickly Panorama: Ore"
+
 c_rf_top_right = "Rock Falls: Top Right"
 c_rf_end = "Rock Falls: End"
-c_rf_3 = "Rock Falls: 3"
+c_rf_ore = "Rock Falls: Ore"
 
 a_top_l_t = "Archaea Top: Upper Left in Wall"
 a_top_l_b = "Archaea Top: Lower Left in Wall"
@@ -85,7 +86,8 @@ c_ms_podium_ore = "Mason's Station: Ore Above Podium"
 c_rrh_end = "Rupture Rock Hollow: End"
 c_rrh_top = "Rupture Rock Hollow: Top Secret"
 c_rrh_right = "Rupture Rock Hollow: Right Ledge"
-c_rrh_ores = "Rupture Rock Hollow: Ores"
+c_rrh_ore_1 = "Rupture Rock Hollow: Ore #1"
+c_rrh_ore_2 = "Rupture Rock Hollow: Ore #2"
 
 o_top = "Oasis: Top Secret"
 

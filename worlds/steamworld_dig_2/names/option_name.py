@@ -4,6 +4,7 @@ start_location = "start_location"
 randomize_cogs = "randomize_cogs"
 randomize_artifacts = "randomize_artifacts"
 randomize_shops = "randomize_shops"
+randomize_ores = "randomize_ores"
 starting_level = "starting_level"
 starting_money = "starting_money"
 

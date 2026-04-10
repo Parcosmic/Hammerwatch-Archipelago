@@ -158,6 +158,9 @@ item_table: Dict[str, ItemData] = {
 }
 
 item_counts: Dict[str, int] = {
+    item_name.ore_pack: 2,
+    item_name.gem_pack: 5,
+
     item_name.cog: 77,  # 84
     # item_name.lamp: 1,
     item_name.bomb: 1,
@@ -197,6 +200,9 @@ def get_item_counts(world: "SWD2World") -> Tuple[Dict[str, int], int]:
 
     if not world.options.randomize_cogs:
         item_counts_dict[item_name.cog] = 0
+    if not world.options.randomize_ores:
+        item_counts_dict[item_name.ore_pack] = 0
+        item_counts_dict[item_name.gem_pack] = 0
 
     if world.options.randomize_artifacts:
         for artifact in item_name.artifacts:

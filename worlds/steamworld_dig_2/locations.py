@@ -33,7 +33,6 @@ class SWD2Location(Location):
         self.show_in_spoiler = code is not None
 
 
-counter = Counter(id_start - 1)
 default_locs: Dict[str, LocationData] = {
     location_name.wd_zebulon_yonker: LocationData(32579550, LocType.Upgrade),
     location_name.gt_tut_dig_gearbox: LocationData(32569640, LocType.Cog),
@@ -168,12 +167,6 @@ default_locs: Dict[str, LocationData] = {
     location_name.c_as_end: LocationData(32588510, LocType.Cog),
     location_name.c_as_secret: LocationData(32588423, LocType.Cog),
     location_name.c_hell_end: LocationData(32596828, LocType.Artifact),
-
-    location_name.wd_start_cliff_ore: LocationData(counter.count(), LocType.Resource),
-    location_name.gt_tut_podium_water_ore: LocationData(counter.count(), LocType.Resource),
-    location_name.c_tt_3: LocationData(counter.count(), LocType.Resource),
-    location_name.c_rf_3: LocationData(counter.count(), LocType.Resource),
-    location_name.c_bs_podium_ore: LocationData(counter.count(), LocType.Resource),
 }
 
 counter = Counter(id_start + 0x100 - 1)
@@ -242,10 +235,21 @@ shop_locs: Dict[str, LocationData] = {
     location_name.em_jetpack_3: LocationData(counter.count(), LocType.Shop),
 }
 
+ore_locs: dict[str, LocationData] = {
+    location_name.c_pp_ore: LocationData(132568934, LocType.Resource),
+    location_name.c_bs_podium_ore: LocationData(132566214, LocType.Resource),
+    location_name.c_rrh_ore_1: LocationData(132575410, LocType.Resource),
+    location_name.c_rrh_ore_2: LocationData(132575409, LocType.Resource),
+    location_name.c_rf_ore: LocationData(132569041, LocType.Resource),
+    location_name.c_tt_ore: LocationData(132583914, LocType.Resource),
+    location_name.wd_start_cliff_ore: LocationData(132592453, LocType.Resource),
+}
+
 
 all_locations: Dict[str, LocationData] = {
     **default_locs,
     **shop_locs,
+    **ore_locs,
 }
 
 artifact_locations = [loc for loc, data in all_locations.items() if data.loc_type == LocType.Artifact]
@@ -258,14 +262,14 @@ def setup_locations(world: "SWD2World"):
 
     item_counts, extra_items = get_item_counts(world)
 
-    disallowed_types = [
-        LocType.Resource,
-    ]
+    disallowed_types = []
 
     if not world.options.randomize_cogs:
         disallowed_types.append(LocType.Cog)
     if not world.options.randomize_artifacts:
         disallowed_types.append(LocType.Artifact)
+    if not world.options.randomize_ores:
+        disallowed_types.append(LocType.Resource)
     if world.options.randomize_shops != world.options.randomize_shops.option_randomize:
         disallowed_types.append(LocType.Shop)
 

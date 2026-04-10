@@ -33,10 +33,11 @@ HasGrenadeOrAirShot: Rule = HasBomb & (Has(item_name.up_bomb_grenades) | Has(ite
 HasTank: Rule = HasBomb | HasJackhammer
 
 # Item rules
-def is_not_freestanding_rule_factory(world: "SWD2World"):
-    def is_not_local_freestanding(item: Item):
-        return item.player != world.player or (item.name != item_name.cog and item.name not in item_name.artifacts)
-    return is_not_local_freestanding
+def is_valid_shop_item_factory(world: "SWD2World"):
+    def is_valid_shop_item(item: Item):
+        return item.player != world.player or (item.name != item_name.cog and item.name not in item_name.artifacts
+                                               and not item.filler)  # All our filler items can't be in the shop
+    return is_valid_shop_item
 
 
 class LocData(NamedTuple):
@@ -97,7 +98,8 @@ class SWD2Entrance(Entrance):
 region_data: dict[str, RegionData] = {
     region_name.menu: RegionData(None, None),
     region_name.west_desert_start: RegionData([
-        LocData(location_name.wd_zebulon_yonker, HasJet & HasSprint),
+        LocData(location_name.wd_zebulon_yonker, HasVertical & HasSprint),
+        LocData(location_name.wd_start_cliff_ore, HasVertical & HasSprint),
         # Don't actually need sprint but it prevents sprint from being placed here, you can't go backwards to it
     ], [
         ExitData(region_name.temple_guidance, ExitType.Level)
@@ -180,7 +182,7 @@ region_data: dict[str, RegionData] = {
     region_name.tenacious_trollies: RegionData([
         LocData(location_name.c_tt_breakable_wall, CanDigDistantDirt),
         LocData(location_name.c_tt_end, CanDigDistantDirt),
-        LocData(location_name.c_tt_3, CanDigDistantDirt),
+        LocData(location_name.c_tt_ore, CanDigDistantDirt),
     ], None),
     region_name.machino: RegionData([
         LocData(location_name.em_artifact_1, Has(item_name.artifacts_name, 1)),
@@ -290,7 +292,7 @@ region_data: dict[str, RegionData] = {
     region_name.rock_falls: RegionData([
         LocData(location_name.c_rf_top_right, CanHighJump),
         LocData(location_name.c_rf_end),
-        LocData(location_name.c_rf_3),
+        LocData(location_name.c_rf_ore),
     ], None),
     region_name.archaea_top: RegionData(None, [
         ExitData(region_name.archaea, ExitType.Internal),
@@ -349,7 +351,7 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.c_tbr_reward, CanDigDistantDirt),
     ], None),
     region_name.prickly_panorama: RegionData([
-        # Only has a gem location
+        LocData(location_name.c_pp_ore),
     ], None),
     region_name.archaea_wall: RegionData([
         LocData(location_name.a_wall),
@@ -461,6 +463,8 @@ region_data: dict[str, RegionData] = {
     region_name.rupture_rock_hollow: RegionData([
         LocData(location_name.c_rrh_right),
         LocData(location_name.c_rrh_end),
+        LocData(location_name.c_rrh_ore_1),
+        LocData(location_name.c_rrh_ore_2),
         LocData(location_name.c_rrh_top, HasVertical),
     ], None),
     region_name.archaea_bricks_entrance: RegionData([
@@ -728,7 +732,7 @@ def create_region(world: "SWD2World", active_locations: set[str], event_location
             loc_id = None if event else all_locations[loc_data.name].code
             location = SWD2Location(world.player, loc_data.name, loc_id, region)
             if location.name in shop_locs:
-                location.item_rule = is_not_freestanding_rule_factory(world)
+                location.item_rule = is_valid_shop_item_factory(world)
             region.locations.append(location)
             if loc_data.rule is not None:
                 world.set_rule(location, loc_data.rule)
