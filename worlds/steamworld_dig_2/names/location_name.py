@@ -227,6 +227,7 @@ c_bb_ore = "Bushwack Beehive: Ore"
 
 c_lime_loop_end = "Lime Loop: End"
 c_lime_loop_secret = "Lime Loop: Secret"
+c_lime_loop_orb = "Lime Loop: Orb"
 
 c_as_podium = "Aeronaut's Station: Upgrade Podium"
 c_as_end = "Aeronaut's Station: End"

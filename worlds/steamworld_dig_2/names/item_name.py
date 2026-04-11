@@ -1,7 +1,7 @@
 # Item Names
 
-ore_pack = "Ore Pack"
-gem_pack = "Gem Pack"
+ore = "Ore"
+gem = "Gem"
 omni_orbs = "Omni Orbs"
 
 cog = "Upgrade Cog"

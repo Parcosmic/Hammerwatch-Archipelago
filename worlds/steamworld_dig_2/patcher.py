@@ -13,7 +13,7 @@ from BaseClasses import ItemClassification
 import xml.etree.ElementTree as et
 
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
-                        COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity)
+                        COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity, orb_entity)
 from .names import option_name, item_name, location_name, entrance_name
 from . import options
 from .items import item_table, lookup_id_to_name, ItemType
@@ -157,6 +157,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
         item_name.jetengine: 1,
         item_name.hookshot: 1,
         item_name.up_lamp_secret_sight: 1,
+        item_name.pickaxe: 8,
     })
     cogs = start_inventory.count(item_table[item_name.cog].code)
     money: int = slot_data[option_name.starting_money]
@@ -201,9 +202,9 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
         elif item_type == ItemType.Resource:
             # Add ores and gems to inventory, orbs do nothing
             resource_name = None
-            if start_item_name == item_name.ore_pack:
+            if start_item_name == item_name.ore:
                 resource_name = "resource_gold"
-            elif start_item_name == item_name.gem_pack:
+            elif start_item_name == item_name.gem:
                 resource_name = "resource_diamond"
             if resource_name is None:
                 continue
@@ -293,7 +294,8 @@ def get_randomized_item_at_location(loc_id: int, locations: Dict[int, NetworkIte
 
 
 def is_item_upgrade(name: str):
-    return name != cog_item and "collectible" not in name and name != ore_entity and name != gem_entity
+    return (name != cog_item and "collectible" not in name and name != ore_entity and name != gem_entity
+            and name != orb_entity)
 
 
 def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
@@ -333,6 +335,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     randomize_cogs: Dict[str, int] = slot_data["randomize_cogs"]
     randomize_artifacts: Dict[str, int] = slot_data["randomize_artifacts"]
     randomize_ores: Dict[str, int] = slot_data["randomize_ores"]
+    randomize_orbs: Dict[str, int] = slot_data["randomize_orbs"]
     for patchset_file in patchset_files:
         patchset_doc = et.parse(patchset_file)
         patchset_root = patchset_doc.getroot()
@@ -370,6 +373,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             else:
                 if not is_item_upgrade(randomized_item):
                     loc_id = get_location_from_vanilla_item(loc_vanilla_item, locations)
+                    upgrade_node.find("./Name").text = str(loc_id)
                     # entity_node_name = upgrade_node.find("./Name").text + "_item"
                     entity_node_name = str(loc_id)
                     position = upgrade_node.find("./Position").text
@@ -394,6 +398,14 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                                                                 "120, 120",
                                                                 randomized_item)
                         sand_tiles_to_add.append(new_pos)
+                    elif randomized_item == orb_entity:
+                        entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
+                                                                new_pos,
+                                                                True,
+                                                                "Editor/Textures/placeholder_ore.png",
+                                                                "0, 0, 0.5, 0.5",
+                                                                "120, 120",
+                                                                randomized_item)
                     else:  # Artifact
                         entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
                                                                 new_pos,
@@ -416,11 +428,15 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         if randomize_ores:
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_ore']"))
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_gem']"))
+        if randomize_orbs:
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_health_container']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_light_container']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_container']"))
+            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_super_container']"))
 
         for freestanding_node in freestanding_nodes:
             position_node = freestanding_node.find(".//Position")
             property_node = freestanding_node.find(".//Property")
-            asset_name_node = freestanding_node.find(".//AssetName")  # Likely not needed to be set
             size_node = freestanding_node.find(".//Size")
             definition_node = freestanding_node.find(".//Definition")
             has_property_node = property_node is not None
@@ -428,11 +444,16 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             if has_property_node:
                 property_value_node = freestanding_node.find(".//Property/Value")
             was_ore = definition_node.text.startswith("placeholder_")
+            was_orb = definition_node.text.startswith("orb_")
             # Get item from entity id
             node_id = freestanding_node.find(".//Id").text
             node_loc_id = int(node_id)
-            if was_ore:  # This is a hack but all ore locations are prepended with a 1 to avoid collisions
+            # This is a hack but all ore/orb locations are prepended with a 1 to avoid collisions
+            if was_ore or was_orb:
                 node_loc_id = int("1" + node_id)
+            # This is even more of a hack but all omni orb locations are prepended with a 2 to avoid collisions
+            if definition_node.text == "orb_container":
+                node_loc_id = int("2" + node_id)
             # Set the name so that the mod knows what location this is
             freestanding_node.find(".//Name").text = str(node_loc_id)
             randomized_item = get_randomized_item_at_location(node_loc_id, locations)
@@ -442,33 +463,43 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 randomized_item_pickup_name = ap_item_to_in_game_name[randomized_item.item]
             else:
                 randomized_item_pickup_name = f"ap_{randomized_item.location}"
+
             if randomized_item_pickup_name == cog_item:
-                asset_name_node.text = "Sprites/General/UpgradeCogContainer/all.png"
                 size_node.text = "120, 120"
-                definition_node.text = "pickup_upgrade_cog" if was_ore else "upgrade_cog_container"
+                if was_orb:
+                    definition_node.text = cog_item
+                else:
+                    definition_node.text = "upgrade_cog_container"
                 if has_property_node:
                     freestanding_node.remove(property_node)
             elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity:
-                asset_name_node.text = "Editor/Textures/placeholder_gem.png"
                 size_node.text = "64, 64"
-                definition_node.text = randomized_item_pickup_name
                 if has_property_node:
                     freestanding_node.remove(property_node)
                 if was_ore:
-                    was_ore = False
+                    definition_node.text = randomized_item_pickup_name
                 else:
-                    sand_tiles_to_add.append(position_node.text)
+                    # TODO: change this dynamically based on the level
+                    if randomized_item_pickup_name == ore_entity:
+                        definition_node.text = "pickup_resource_gold"
+                    else:
+                        definition_node.text = "pickup_resource_diamond"
+                    # sand_tiles_to_add.append(position_node.text)
+            elif randomized_item_pickup_name == orb_entity:
+                size_node.text = "82, 81"
+                if has_property_node:
+                    freestanding_node.remove(property_node)
+                definition_node.text = randomized_item_pickup_name
             else:
                 if "collectible" in randomized_item_pickup_name:
-                    asset_name = "Editor/Textures/collectible.png"
-                    definition_name = "pickup_collectible"
+                    if was_ore:
+                        definition_name = "pickup_blueprint"  # TODO make this a custom artifact item w gravity
+                    else:
+                        definition_name = "pickup_collectible"
                 elif randomized_item_pickup_name.startswith("ap_"):
-                    asset_name = "Editor/Textures/pickup_blueprint.png"
                     definition_name = "ap_item_offworld"
                 else:
-                    asset_name = "Editor/Textures/pickup_blueprint.png"
                     definition_name = "pickup_blueprint"
-                asset_name_node.text = asset_name
                 size_node.text = "86, 83"
                 definition_node.text = definition_name
                 if not has_property_node:
@@ -476,8 +507,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     property_value_node = property_node.find(".//Value")
                     freestanding_node.append(property_node)
                 property_value_node.text = randomized_item_pickup_name
-            if was_ore:
-                air_tiles_to_add.append(position_node.text)
 
         # Change tilemap if ore blocks need to be created/destroyed
         foreground_tilelayer_tile_size = [int(s) for s in foreground_node.find("TileSize").text.split(", ")]
@@ -498,7 +527,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 sand_node_index = len(foreground_tile_mapping_node)
                 foreground_tile_mapping_node.append(sand_node)
             for entity_pos in sand_tiles_to_add:
-                tile_pos: list[int] = [int(p) for p in entity_pos.split(", ")]
+                tile_pos: list[float] = [float(p) for p in entity_pos.split(", ")]
                 tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0]) - foreground_tilelayer_offset[0]
                 tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1]) - foreground_tilelayer_offset[1]
                 row_node = foreground_tiles_node[tile_pos_y]
@@ -507,7 +536,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 row_node.text = " ".join(row_indices)
         if len(air_tiles_to_add) > 0:  # I think air is always index 0 so crossing fingers this works
             for entity_pos in air_tiles_to_add:
-                tile_pos: list[int] = [int(p) for p in entity_pos.split(", ")]
+                tile_pos: list[float] = [float(p) for p in entity_pos.split(", ")]
                 tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0] - 0.5) - foreground_tilelayer_offset[0]
                 tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1] - 0.5) - foreground_tilelayer_offset[1]
                 row_node = foreground_tiles_node[tile_pos_y]

@@ -428,6 +428,7 @@ region_data: dict[str, RegionData] = {
     region_name.lime_loop: RegionData([
         LocData(location_name.c_lime_loop_end),
         LocData(location_name.c_lime_loop_secret),
+        LocData(location_name.c_lime_loop_orb),
     ], None),
     region_name.aeronauts_station: RegionData([
         LocData(location_name.c_as_podium, HasJet),

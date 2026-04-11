@@ -1,4 +1,3 @@
-from schema import Schema, Optional, And
 from dataclasses import dataclass
 from Options import Choice, Range, Toggle, DeathLink, FreeText, PerGameCommonOptions, OptionGroup, NamedRange
 from .names import option_name
@@ -117,6 +116,12 @@ class RandomizeOres(Toggle):
     default = False
 
 
+class RandomizeOrbs(Toggle):
+    """Determines if floating orb containers (health, lamp, and omni) are randomized into the item pool"""
+    display_name = "Randomize Orb Containers"
+    default = False
+
+
 class RandomizeTrialReward(Toggle):
     """Determines if the reward at the end of the trials is randomized
     WARNING: the Trials are stupidly hard, enable at risk to the multiworld!
@@ -162,6 +167,7 @@ class SWD2Options(PerGameCommonOptions):
     randomize_cogs: RandomizeCogs
     randomize_artifacts: RandomizeArtifacts
     randomize_ores: RandomizeOres
+    randomize_orbs: RandomizeOrbs
     randomize_shops: RandomizeShopUpgrades
     randomize_trials_reward: RandomizeTrialReward
     shuffle_resources: ShuffleResources
@@ -182,6 +188,7 @@ client_required_options = [
     option_name.randomize_cogs,
     option_name.randomize_artifacts,
     option_name.randomize_ores,
+    option_name.randomize_orbs,
     option_name.randomize_shops,
     option_name.shuffle_resources,
     option_name.shop_cost_max,

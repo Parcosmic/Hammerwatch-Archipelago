@@ -53,8 +53,8 @@ item_table: Dict[str, ItemData] = {
     item_name.up_fate_blood_quest: ItemData(counter.count(), ItemClassification.trap, ItemType.Blueprint),
     item_name.up_fate_thrillseekers_tale: ItemData(counter.count(), ItemClassification.trap, ItemType.Blueprint),
     item_name.up_fate_deathplosions: ItemData(counter.count(), ItemClassification.trap, ItemType.Blueprint),
-    item_name.ore_pack: ItemData(counter.count(), ItemClassification.filler, ItemType.Resource),
-    item_name.gem_pack: ItemData(counter.count(), ItemClassification.filler, ItemType.Resource),
+    item_name.ore: ItemData(counter.count(), ItemClassification.filler, ItemType.Resource),
+    item_name.gem: ItemData(counter.count(), ItemClassification.filler, ItemType.Resource),
     item_name.omni_orbs: ItemData(counter.count(), ItemClassification.filler, ItemType.Resource),
     item_name.up_pickaxe_xp: ItemData(counter.count(), ItemClassification.useful, ItemType.ShopBlueprint),
     item_name.up_pickaxe_resource_dmg: ItemData(counter.count(), ItemClassification.useful, ItemType.ShopBlueprint),
@@ -158,8 +158,9 @@ item_table: Dict[str, ItemData] = {
 }
 
 item_counts: Dict[str, int] = {
-    item_name.ore_pack: 2,
-    item_name.gem_pack: 5,
+    item_name.ore: 2,
+    item_name.gem: 5,
+    item_name.omni_orbs: 1,
 
     item_name.cog: 77,  # 84
     # item_name.lamp: 1,
@@ -190,7 +191,9 @@ item_counts: Dict[str, int] = {
 }
 
 active_filler_items: List[str] = [
-    item_name.ore_pack,
+    item_name.ore,
+    item_name.gem,
+    item_name.omni_orbs,
 ]
 
 
@@ -201,8 +204,10 @@ def get_item_counts(world: "SWD2World") -> Tuple[Dict[str, int], int]:
     if not world.options.randomize_cogs:
         item_counts_dict[item_name.cog] = 0
     if not world.options.randomize_ores:
-        item_counts_dict[item_name.ore_pack] = 0
-        item_counts_dict[item_name.gem_pack] = 0
+        item_counts_dict[item_name.ore] = 0
+        item_counts_dict[item_name.gem] = 0
+    if not world.options.randomize_orbs:
+        item_counts_dict[item_name.omni_orbs] = 0
 
     if world.options.randomize_artifacts:
         for artifact in item_name.artifacts:

@@ -1,7 +1,7 @@
-from typing import List, Tuple, Dict, Set, NamedTuple, Optional, TYPE_CHECKING
+from typing import Dict, Set, NamedTuple, Optional, TYPE_CHECKING
 from BaseClasses import Location
-from .names import item_name, location_name, option_name, const
-from .util import Counter, GoalType, get_goal_type, is_using_universal_tracker
+from .names import location_name, const
+from .util import Counter
 from .items import id_start, get_item_counts
 from enum import IntEnum
 
@@ -17,6 +17,7 @@ class LocType(IntEnum):
     Artifact = 4,
     Resource = 5,
     Shop = 6,
+    Orb = 7,
 
 
 class LocationData(NamedTuple):
@@ -167,6 +168,14 @@ default_locs: Dict[str, LocationData] = {
     location_name.c_as_end: LocationData(32588510, LocType.Cog),
     location_name.c_as_secret: LocationData(32588423, LocType.Cog),
     location_name.c_hell_end: LocationData(32596828, LocType.Artifact),
+    location_name.c_pp_ore: LocationData(132568934, LocType.Resource),
+    location_name.c_bs_podium_ore: LocationData(132566214, LocType.Resource),
+    location_name.c_rrh_ore_1: LocationData(132575410, LocType.Resource),
+    location_name.c_rrh_ore_2: LocationData(132575409, LocType.Resource),
+    location_name.c_rf_ore: LocationData(132569041, LocType.Resource),
+    location_name.c_tt_ore: LocationData(132583914, LocType.Resource),
+    location_name.wd_start_cliff_ore: LocationData(132592453, LocType.Resource),
+    location_name.c_lime_loop_orb: LocationData(132597409, LocType.Orb),
 }
 
 counter = Counter(id_start + 0x100 - 1)
@@ -235,21 +244,10 @@ shop_locs: Dict[str, LocationData] = {
     location_name.em_jetpack_3: LocationData(counter.count(), LocType.Shop),
 }
 
-ore_locs: dict[str, LocationData] = {
-    location_name.c_pp_ore: LocationData(132568934, LocType.Resource),
-    location_name.c_bs_podium_ore: LocationData(132566214, LocType.Resource),
-    location_name.c_rrh_ore_1: LocationData(132575410, LocType.Resource),
-    location_name.c_rrh_ore_2: LocationData(132575409, LocType.Resource),
-    location_name.c_rf_ore: LocationData(132569041, LocType.Resource),
-    location_name.c_tt_ore: LocationData(132583914, LocType.Resource),
-    location_name.wd_start_cliff_ore: LocationData(132592453, LocType.Resource),
-}
-
 
 all_locations: Dict[str, LocationData] = {
     **default_locs,
     **shop_locs,
-    **ore_locs,
 }
 
 artifact_locations = [loc for loc, data in all_locations.items() if data.loc_type == LocType.Artifact]
@@ -270,6 +268,8 @@ def setup_locations(world: "SWD2World"):
         disallowed_types.append(LocType.Artifact)
     if not world.options.randomize_ores:
         disallowed_types.append(LocType.Resource)
+    if not world.options.randomize_orbs:
+        disallowed_types.append(LocType.Orb)
     if world.options.randomize_shops != world.options.randomize_shops.option_randomize:
         disallowed_types.append(LocType.Shop)
 
