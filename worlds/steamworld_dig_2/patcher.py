@@ -373,8 +373,10 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     # entity_node_name = upgrade_node.find("./Name").text + "_item"
                     entity_node_name = str(loc_id)
                     position = upgrade_node.find("./Position").text
-                    # new_pos = edit_position(position, 0, -60)
-                    new_pos = position
+                    if loc_id in { 32579550, 32588814, 32592305 }:  # Make the object spawn normally for the yonker bros
+                        new_pos = position
+                    else:
+                        new_pos = edit_position(position, 0, -60)
                     if randomized_item == cog_item:
                         entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
                                                                 new_pos,
