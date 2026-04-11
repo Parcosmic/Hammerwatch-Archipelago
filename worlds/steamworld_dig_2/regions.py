@@ -734,6 +734,8 @@ def create_region(world: "SWD2World", active_locations: set[str], event_location
             location = SWD2Location(world.player, loc_data.name, loc_id, region)
             if location.name in shop_locs:
                 location.item_rule = is_valid_shop_item_factory(world)
+            elif location.name in location_name.YONKER_LOCS:
+                location.item_rule = is_valid_shop_item_factory(world)
             region.locations.append(location)
             if loc_data.rule is not None:
                 world.set_rule(location, loc_data.rule)

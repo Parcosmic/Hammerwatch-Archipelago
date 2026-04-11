@@ -298,3 +298,9 @@ ev_device_of_devastation = "Device of Devastation"
 ev_device_of_disaster = "Device of Disaster"
 
 ev_defeat_rosie = "Defeat Rosie"
+
+YONKER_LOCS = {
+    wd_zebulon_yonker,
+    y_up_luke_yonker,
+    a_josh_yonker,
+}
