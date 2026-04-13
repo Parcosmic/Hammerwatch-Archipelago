@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 import xml.etree.ElementTree as et
 from NetUtils import NetworkItem
-from CommonClient import logger, CommonContext
+from CommonClient import CommonContext
 
 
 class ClientContextData:
@@ -86,6 +86,14 @@ def create_custom_entity_node(entity_id: int, name: str, position: str, snap_to_
     return custom_entity_node
 
 
+def create_ap_spawner_node(entity_id: int, name: str, position: str, entity: str):
+    ap_spawner_node = create_custom_entity_node(entity_id, name, position, True,
+                                                "Editor/Textures/generic_spawner.png", "0, 0, 0.5, 0.5",
+                                                "150, 150", "spawner_ap")
+    ap_spawner_node.append(create_property_node("Entity", "String", entity))
+    return ap_spawner_node
+
+
 def create_give_valuables_node(entity_id: int, position: str, area: str, health: int = 0, money: int = 0, cogs: int = 0,
                                light: int = 0, water: int = 0, diesel: int = 0, silent: bool = False):
     custom_entity_node = et.Element("ScriptEntity")
@@ -132,6 +140,21 @@ def create_delay_node(entity_id: int, position: str, area: str, delay: float, ou
         connections_node.append(create_connection_node("out", "in", str(out_id)))
     custom_entity_node.append(connections_node)
     custom_entity_node.append(create_property_node("Delay", "Single", str(delay)))
+    return custom_entity_node
+
+
+def create_toggle_node(entity_id: int, position: str, area: str, target_id: int, out_ids: list[int]):
+    custom_entity_node = et.Element("ScriptEntity")
+    custom_entity_node.append(create_node("Id", None, str(entity_id)))
+    custom_entity_node.append(create_node("Name", None, "ToggleEntity"))
+    custom_entity_node.append(create_node("Position", None, position))
+    custom_entity_node.append(create_node("Definition", None, "ToggleEntity"))
+    custom_entity_node.append(create_node("Area", None, area))
+    connections_node = create_node("Connections")
+    connections_node.append(create_connection_node("entity", "", str(target_id)))
+    for out_id in out_ids:
+        connections_node.append(create_connection_node("out", "in", str(out_id)))
+    custom_entity_node.append(connections_node)
     return custom_entity_node
 
 

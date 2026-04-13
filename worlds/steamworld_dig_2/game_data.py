@@ -145,6 +145,11 @@ in_game_item_data: Dict[str, GameData] = {
     ore_entity: GameData(item_name.ore, None),
     gem_entity: GameData(item_name.gem, None),
     orb_entity: GameData(item_name.omni_orbs, None),
+    "pickup_resource_vectron": GameData(item_name.vectron_ore_1, None),
+    "pickup_resource_vectron_02": GameData(item_name.vectron_ore_2, None),
+    "pickup_resource_vectron_03": GameData(item_name.vectron_ore_3, None),
+    "pickup_resource_vectron_04": GameData(item_name.vectron_ore_4, None),
+    "pickup_resource_vectron_05": GameData(item_name.vectron_ore_5, None),
 }
 shop_item_data: Dict[str, List[Optional[GameData]]] = {
     "pickaxe": [

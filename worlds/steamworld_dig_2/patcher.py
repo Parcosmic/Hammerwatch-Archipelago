@@ -107,6 +107,9 @@ def patch_lang_file(bundle_dir: str, language_lines_to_add: Iterable[tuple[str, 
         ("apitem", "Archipelago Item"),
         ("upgrade_cog_desc", "Used to enable Cog Mods."),
         ("upgrade_cog_flavor", "\"\"\"Upgrades, people, upgrades!\"\"\""),
+        (orb_entity, item_name.omni_orbs),
+        (f"{orb_entity}_desc", "Restores health, water, and light when broken open."),
+        (f"{orb_entity}_flavor", "\"\"\"Taste the rainbow!\"\"\""),
         *language_lines_to_add
     ]
 
@@ -170,7 +173,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     new_game_outset = outsets_root.find(".//Outset[@Name='new_game']")
     new_game_outset.find(".//Level").text = start_location_data[start_location]
     # new_game_outset.find(".//Level").text = "yarrow_cave_run"
-    # new_game_outset.find(".//Level").text = "firetemple_cave_treasure_chamber"
+    # new_game_outset.find(".//Level").text = "firetemple_cave_armor"
     # new_game_outset.find(".//Level").text = "archaea_1"
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "door_archaea_vectron1"
@@ -298,7 +301,7 @@ def get_randomized_item_at_location(loc_id: int, locations: Dict[int, NetworkIte
 
 def is_item_upgrade(name: str):
     return (name != cog_item and "collectible" not in name and name != ore_entity and name != gem_entity
-            and name != orb_entity)
+            and name != orb_entity and not name.startswith("pickup_resource_"))
 
 
 def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
@@ -383,7 +386,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 if not is_item_upgrade(randomized_item) and "collectible" not in randomized_item:
                     upgrade_node.find("./Name").text = str(loc_id)
                     # entity_node_name = upgrade_node.find("./Name").text + "_item"
-                    entity_node = None
                     entity_node_name = str(loc_id)
                     position = upgrade_node.find("./Position").text
                     if loc_id in { 32579550, 32588814, 32592305 }:  # Make the object spawn normally for the yonker bros
@@ -402,26 +404,28 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                             create_delay_node(delay_node_id, position, area, PODIUM_ANIM_TIME, [give_node_id]))
                         entity_parent_node.append(
                             create_give_valuables_node(give_node_id, position, area, cogs=1))
-                    elif randomized_item == ore_entity or randomized_item == gem_entity:
-                        entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
-                                                                new_pos,
-                                                                True,
-                                                                "Editor/Textures/placeholder_ore.png",
-                                                                "0, 0, 0.5, 0.5",
-                                                                "120, 120",
-                                                                randomized_item)
-                        sand_tiles_to_add.append(new_pos)
-                    else:  # Orb entity
-                        entity_node = create_custom_entity_node(loc_id * 10, entity_node_name,
-                                                                new_pos,
-                                                                True,
-                                                                "Editor/Textures/placeholder_ore.png",
-                                                                "0, 0, 0.5, 0.5",
-                                                                "120, 120",
-                                                                randomized_item)
-                        # Could also do a similar thing here as we did with the cogs? Idk if orbs would appear though
-                    if entity_node is not None:
-                        entity_parent_node.append(entity_node)
+                    else:  # Entities that we need to hack in a spawner for
+                        # TODO: change this dynamically based on the level
+                        if randomized_item == ore_entity:
+                            pickup_name = "pickup_resource_gold"
+                        elif randomized_item == gem_entity:
+                            pickup_name = "pickup_resource_diamond"
+                        else:
+                            pickup_name = randomized_item
+                        on_act_node_id = loc_id * 10
+                        delay_node_id = on_act_node_id + 1
+                        toggle_node_1_id = on_act_node_id + 2
+                        spawner_id = on_act_node_id + 5
+                        area = f"{edit_position(position, -70, -32)}, 140, 63"
+                        entity_parent_node.append(
+                            create_on_activated_node(on_act_node_id, position, area, loc_id, [delay_node_id]))
+                        entity_parent_node.append(
+                            create_delay_node(delay_node_id, position, area, PODIUM_ANIM_TIME, [toggle_node_1_id]))
+                        entity_parent_node.append(
+                            create_toggle_node(toggle_node_1_id, position, area, spawner_id, []))
+                        entity_parent_node.append(
+                            create_ap_spawner_node(spawner_id, entity_node_name, new_pos, pickup_name))
+                        randomized_item = pickup_name  # So the podium knows what item to display
                     nodes_to_delete.append(upgrade_node)
                 upgrade_node.find("Name").text = str(loc_id)
                 upgrade_value_node.text = randomized_item
@@ -492,7 +496,8 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     definition_node.text = "upgrade_cog_container"
                 if has_property_node:
                     freestanding_node.remove(property_node)
-            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity:
+            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity\
+                    or "pickup_resource_vectron" in randomized_item_pickup_name:
                 size_node.text = "64, 64"
                 if has_property_node:
                     freestanding_node.remove(property_node)
@@ -502,8 +507,10 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     # TODO: change this dynamically based on the level
                     if randomized_item_pickup_name == ore_entity:
                         definition_node.text = "pickup_resource_gold"
-                    else:
+                    elif randomized_item_pickup_name == gem_entity:
                         definition_node.text = "pickup_resource_diamond"
+                    else:
+                        definition_node.text = randomized_item_pickup_name
                     # sand_tiles_to_add.append(position_node.text)
             elif randomized_item_pickup_name == orb_entity:
                 size_node.text = "82, 81"
@@ -1154,7 +1161,7 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
                 continue
             cost_node.text = str(new_cog_costs[upgrade_node.attrib["Name"]])
 
-    # Create upgrades for collectibles
+    # Create upgrades for collectibles/other items
     collectibles_file = os.path.join(data_dir, "Definitions", "collectibles.xml")
     collectibles_doc = et.parse(collectibles_file)
     collectibles_root = collectibles_doc.getroot()
@@ -1170,6 +1177,24 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
                                              "upgrade_cog_desc",
                                              "upgrade_cog_flavor",
                                              "Icons/Currency/cogs_big"))
+    upgrades_root.append(create_upgrade_node(orb_entity, orb_entity,
+                                             f"{orb_entity}_desc",
+                                             f"{orb_entity}_flavor",
+                                             "Icons/Currency/cogs_big"))
+    podium_pickups = [
+        "resource_gold",
+        "resource_diamond",
+        "resource_vectron",
+        "resource_vectron_02",
+        "resource_vectron_03",
+        "resource_vectron_04",
+        "resource_vectron_05",
+    ]
+    for pickup in podium_pickups:
+        upgrades_root.append(create_upgrade_node(f"pickup_{pickup}", pickup,
+                                                 f"{pickup}_desc",
+                                                 pickup,
+                                                 "Icons/Currency/cogs_big"))
 
     # Create upgrades for other people's items
     # test_root_upgrade = create_upgrade_node("ap_upgrades", "upgrade_cog",
@@ -1274,6 +1299,28 @@ def patch_entities(data_dir: str, offworld_item_names: List[str]):
     # teleporter_blocker_info.find("./UnblockBanner").attrib["IsTeleporter"] = "false"
     # teleporter_ap_object.remove(teleporter_blocker_info)
     objects_root.append(teleporter_ap_object)
+
+    # Gotta build the spawner from scratch so it doesn't get frozen during cutscenes
+    spawner_ap_object = et.Element("Entity", attrib={"Name": "spawner_ap", "Template": "triggered_arrow_shooter_single"})
+    spawner_ap_object.append(et.Element("CutsceneFreeze", attrib={"Enable": "false"}))
+
+    spawner_node = create_node("Spawner")
+    spawner_node.append(et.Element("Spawn", attrib={"Offset": "0, 1"}))
+    spawner_node.append(create_node("Interval", text="0"))
+    spawner_node.append(create_node("StartActive", text="false"))
+    spawner_node.append(create_node("DeactivateAfterActiveTime", text="true"))
+    spawner_node.append(create_node("ActiveTime", text="0.1"))
+    spawner_node.append(create_node("SpawnsPerActiveTime", text="1"))
+    spawner_ap_object.append(spawner_node)
+
+    physics_node = create_node("Physics")
+    physics_node.append(create_node("CollisionType", text="ghost"))
+    spawner_ap_object.append(physics_node)
+
+    texture_node = create_node("Texture")
+    texture_node.append(create_node("File", text=""))
+    spawner_ap_object.append(texture_node)
+    objects_root.append(spawner_ap_object)
 
     objects_doc.write(objects_file)
 

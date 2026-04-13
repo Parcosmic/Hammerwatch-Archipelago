@@ -4,9 +4,10 @@ from enum import IntEnum
 from BaseClasses import Region, Entrance, Item, LocationProgressType
 from .locations import SWD2Location, all_locations, shop_locs
 from .names import location_name, region_name, item_name, entrance_name, const
+from .options import RandomizeShopUpgrades
 from . import options
 from .util import Counter
-from rule_builder.rules import Rule, Has, True_, CanReachRegion
+from rule_builder.rules import Rule, Has, CanReachRegion, OptionFilter
 
 if TYPE_CHECKING:
     from . import SWD2World
@@ -20,24 +21,31 @@ HasHookshot: Rule = Has(item_name.hookshot)
 HasFullHookshot: Rule = Has(item_name.hookshot, 2)
 HasJet: Rule = Has(item_name.jetengine)
 
-CanDigBricks: Rule = HasJackhammer  # TODO: add rule for digging bricks with bombs with the power upgrade?
+OptionFilterShopRando = OptionFilter(RandomizeShopUpgrades, RandomizeShopUpgrades.option_randomize)
+
+CanDigBricks: Rule = HasJackhammer | (HasBomb & Has(item_name.up_bomb_strength,
+                                                    options=[OptionFilterShopRando],
+                                                    filtered_resolution=True))
 CanRamjet: Rule = HasJet | Has(item_name.up_ramjet)
 CanDigDistantDirt: Rule = HasBomb | CanRamjet
-CanDigInAir: Rule = HasBomb & Has(item_name.up_bomb_air_firing)
+CanDigInAir: Rule = HasBomb & Has(item_name.up_bomb_air_firing,
+                                  options=[OptionFilterShopRando],
+                                  filtered_resolution=True)
 HasVertical: Rule = HasHookshot | HasJet
 HasBothVertical: Rule = HasHookshot & HasJet
 CanHighJump: Rule = HasSprint | HasVertical
-HasLiquidRes: Rule = True_() # TODO: add rule for Vidar Boots (Armor Tier 3 upgrade)
+HasLiquidRes: Rule = Has(item_name.up_armor_liquid_res,
+                         options=[OptionFilterShopRando],
+                         filtered_resolution=True)
 HasInfiniteFlight: Rule = Has(item_name.jetengine, 1)  # TODO: Change to tier 4 when we add shop logic
 CanCrossCeiling: Rule = HasHookshot | HasInfiniteFlight
-HasGrenadeOrAirShot: Rule = HasBomb & (Has(item_name.up_bomb_grenades) | Has(item_name.up_bomb_air_firing))
+HasGrenadeOrAirShot: Rule = HasBomb & Has(item_name.up_bomb_grenades) | CanDigInAir
 HasTank: Rule = HasBomb | HasJackhammer
 
 # Item rules
 def is_valid_shop_item_factory(world: "SWD2World"):
     def is_valid_shop_item(item: Item):
-        return item.player != world.player or (item.name != item_name.cog and item.name not in item_name.artifacts
-                                               and not item.filler)  # All our filler items can't be in the shop
+        return item.player != world.player or item.name in item_name.shop_set
     return is_valid_shop_item
 
 

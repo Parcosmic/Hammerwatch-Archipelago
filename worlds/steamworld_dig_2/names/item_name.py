@@ -2,7 +2,13 @@
 
 ore = "Ore"
 gem = "Gem"
-omni_orbs = "Omni Orbs"
+omni_orbs = "Super Omni Orb Container"
+
+vectron_ore_1 = "Cryptium No. 5-1 16.17.4.8"
+vectron_ore_2 = "Cryptium No. 5-2 10.15.9"
+vectron_ore_3 = "Cryptium No. 5-3 7.3.14.5"
+vectron_ore_4 = "Cryptium No. 5-4 12.18.2.1"
+vectron_ore_5 = "Cryptium No. 5-5 6.19.11.13"
 
 cog = "Upgrade Cog"
 
@@ -140,6 +146,16 @@ ev_totd_treasure_brazier = "EV TotD: Treasure Brazier"
 ev_dampener_destroyed = "EV Dampener Destroyed"
 ev_blastoff = "EV Escaped the Planet"
 
+resources = [
+    ore,
+    gem,
+    vectron_ore_1,
+    vectron_ore_2,
+    vectron_ore_3,
+    vectron_ore_4,
+    vectron_ore_5,
+]
+
 artifacts_name = "Artifacts"
 artifacts = [
     a_building_plans,
@@ -188,8 +204,22 @@ artifacts = [
 ]
 artifacts_set = set(artifacts)
 
-blueprints = [
+podium_upgrades = [
+    bomb,
+    jackhammer,
+    jetengine,
+    hookshot,
+    up_hookshot_range,
+    sprint,
+    up_pickaxe_ignition,
+    up_ramjet,
+    up_armor_defense,
     up_bomb_grenades,
+]
+podium_set = set(podium_upgrades)
+
+blueprints = [
+    up_bomb_more_grenades,
     up_pickaxe_xp,
     up_pickaxe_resource_dmg,
     up_pickaxe_gold_kills,
@@ -240,6 +270,8 @@ blueprints = [
     up_map_health,
     up_fate_dmg_aoe,
 
+    up_fate_sigil,
+
     up_fate_blood_quest,
     up_fate_thrillseekers_tale,
     up_fate_deathplosions,
@@ -251,6 +283,7 @@ blueprints = [
     up_hammer_shockwave,
     up_hammer_water_usage,
 ]
+blueprints_set = set(blueprints)
 
 unused_items = {
     up_lamp_damage,
@@ -261,8 +294,12 @@ unused_items = {
     up_hammer_water_usage,
 }
 
+shop_set = podium_set | blueprints_set
+
 item_groups = {
+    "Podium Upgrades": podium_set,
     artifacts_name: artifacts_set,
-    "Blueprints": set(blueprints),
+    "Blueprints": blueprints_set,
     "Unused Blueprints": unused_items,
+    "Resources": set(resources)
 }

@@ -155,12 +155,23 @@ item_table: Dict[str, ItemData] = {
     item_name.a_lime_snowman: ItemData(counter.count(), ItemClassification.progression_skip_balancing, ItemType.Artifact),
     item_name.a_completion_proof: ItemData(counter.count(), ItemClassification.useful, ItemType.Artifact),
     item_name.up_fate_sigil: ItemData(counter.count(), ItemClassification.progression, ItemType.Blueprint),
+    item_name.vectron_ore_1: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
+    item_name.vectron_ore_2: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
+    item_name.vectron_ore_3: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
+    item_name.vectron_ore_4: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
+    item_name.vectron_ore_5: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
 }
 
 item_counts: Dict[str, int] = {
-    item_name.ore: 99,
+    item_name.ore: 94,
     item_name.gem: 60,
     item_name.omni_orbs: 130,
+
+    item_name.vectron_ore_1: 1,
+    item_name.vectron_ore_2: 1,
+    item_name.vectron_ore_3: 1,
+    item_name.vectron_ore_4: 1,
+    item_name.vectron_ore_5: 1,
 
     item_name.cog: 77,  # 84
     # item_name.lamp: 1,
@@ -206,6 +217,12 @@ def get_item_counts(world: "SWD2World") -> Tuple[Dict[str, int], int]:
     if not world.options.randomize_ores:
         item_counts_dict[item_name.ore] = 0
         item_counts_dict[item_name.gem] = 0
+    if world.options.skip_vectron or not world.options.randomize_ores:
+        item_counts_dict[item_name.vectron_ore_1] = 0
+        item_counts_dict[item_name.vectron_ore_2] = 0
+        item_counts_dict[item_name.vectron_ore_3] = 0
+        item_counts_dict[item_name.vectron_ore_4] = 0
+        item_counts_dict[item_name.vectron_ore_5] = 0
     if not world.options.randomize_orbs:
         item_counts_dict[item_name.omni_orbs] = 0
 
