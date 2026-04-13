@@ -153,6 +153,12 @@ class StartWithPortal(Toggle):
     default = False
 
 
+class SkipVectron(Toggle):
+    """Adds a passage to the podium in the Mysterious Cave, preventing the need to struggle through Vectron"""
+    display_name = "Skip Vectron"
+    default = True
+
+
 class ERSeed(FreeText):
     """Determines the seed for generating the entrance randomization layout. If "random" the seed will be random"""
     display_name = "Entrance Randomization Seed"
@@ -178,6 +184,7 @@ class SWD2Options(PerGameCommonOptions):
     starting_level: StartingLevel
     starting_money: StartingMoney
     start_with_portal: StartWithPortal
+    skip_vectron: SkipVectron
     er_seed: ERSeed
 
 
@@ -197,6 +204,7 @@ client_required_options = [
     option_name.add_unused_cog_upgrades,
     option_name.starting_level,
     option_name.starting_money,
+    option_name.skip_vectron,
     option_name.er_seed,
 ]
 

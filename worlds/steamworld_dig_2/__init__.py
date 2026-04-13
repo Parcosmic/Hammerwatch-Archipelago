@@ -70,6 +70,7 @@ class SWD2World(World):
     # location_name_groups = location_groups.location_groups
 
     active_location_list: Set[str]
+    excluded_loc_ids: Set[int]
     item_counts: Dict[str, int]
     world_itempool: List[Item]
     swapped_entrances: List[ExitData]

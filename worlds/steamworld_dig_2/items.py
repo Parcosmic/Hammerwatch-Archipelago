@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Set, NamedTuple, Optional, TYPE_CHECKING
+from typing import List, Tuple, Dict, NamedTuple, Optional, TYPE_CHECKING
 from enum import IntEnum
 from BaseClasses import Item, ItemClassification
 from .names import item_name, const
@@ -158,9 +158,9 @@ item_table: Dict[str, ItemData] = {
 }
 
 item_counts: Dict[str, int] = {
-    item_name.ore: 2,
-    item_name.gem: 5,
-    item_name.omni_orbs: 1,
+    item_name.ore: 99,
+    item_name.gem: 60,
+    item_name.omni_orbs: 130,
 
     item_name.cog: 77,  # 84
     # item_name.lamp: 1,

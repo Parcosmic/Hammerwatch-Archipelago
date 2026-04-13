@@ -10,6 +10,7 @@ starting_level = "starting_level"
 starting_money = "starting_money"
 
 start_with_portal = "start_with_portal"
+skip_vectron = "skip_vectron"
 
 shuffle_resources = "shuffle_resources"
 entrance_rando = "entrance_rando"

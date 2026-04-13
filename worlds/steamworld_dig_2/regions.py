@@ -1,7 +1,7 @@
 import string
 from typing import NamedTuple, Optional, TYPE_CHECKING
 from enum import IntEnum
-from BaseClasses import Region, Entrance, Item
+from BaseClasses import Region, Entrance, Item, LocationProgressType
 from .locations import SWD2Location, all_locations, shop_locs
 from .names import location_name, region_name, item_name, entrance_name, const
 from . import options
@@ -20,9 +20,10 @@ HasHookshot: Rule = Has(item_name.hookshot)
 HasFullHookshot: Rule = Has(item_name.hookshot, 2)
 HasJet: Rule = Has(item_name.jetengine)
 
-CanDigBricks: Rule = HasJackhammer
+CanDigBricks: Rule = HasJackhammer  # TODO: add rule for digging bricks with bombs with the power upgrade?
 CanRamjet: Rule = HasJet | Has(item_name.up_ramjet)
 CanDigDistantDirt: Rule = HasBomb | CanRamjet
+CanDigInAir: Rule = HasBomb & Has(item_name.up_bomb_air_firing)
 HasVertical: Rule = HasHookshot | HasJet
 HasBothVertical: Rule = HasHookshot & HasJet
 CanHighJump: Rule = HasSprint | HasVertical
@@ -108,12 +109,23 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.gt_tut_dig_gearbox),
         LocData(location_name.gt_tut_podium),
         LocData(location_name.gt_tut_podium_secret),
+        LocData(location_name.gt_tut_orb_b, HasSprint | HasHookshot),
+        LocData(location_name.gt_tut_orb_m, HasSprint | HasHookshot),
+        LocData(location_name.gt_tut_orb_t),
     ], [
         ExitData(region_name.temple_guidance_right, ExitType.Internal, HasSprint),
         ExitData(region_name.temple_guidance_cistern, ExitType.Internal, (HasSprint | HasHookshot) & HasVertical),
     ]),
     region_name.temple_guidance_right: RegionData([
-        LocData(location_name.gt_tut_above_hallway, HasVertical),
+        LocData(location_name.gt_tut_orb_boss_entr),
+        # Both of these can be collected during the boss fight, but the blocks could get broken
+        LocData(location_name.gt_tut_orb_boss_1, HasVertical),
+        LocData(location_name.gt_tut_orb_boss_2, HasVertical),
+        LocData(location_name.gt_tut_orb_boss_3),
+        LocData(location_name.gt_tut_orb_boss_4),
+        LocData(location_name.gt_tut_orb_boss_5),
+        LocData(location_name.gt_tut_orb_boss_6),
+        LocData(location_name.gt_tut_above_hallway, CanHighJump),
         LocData(location_name.gt_tut_boss_totem, CanDigBricks),
     ], [
         ExitData(region_name.west_desert_r, ExitType.Level),
@@ -123,24 +135,43 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.tog_cistern_l, HasVertical & CanDigDistantDirt),
         LocData(location_name.tog_cistern_r, HasVertical),
         LocData(location_name.tog_cistern_m, HasVertical & CanDigBricks),
+        LocData(location_name.tog_cistern_ore_l_1),
+        LocData(location_name.tog_cistern_ore_l_2),
+        LocData(location_name.tog_cistern_ore_l_3),
+        LocData(location_name.tog_cistern_ore_r_1),
+        LocData(location_name.tog_cistern_ore_r_2),
+        LocData(location_name.tog_cistern_ore_r_3),
     ], [
         ExitData(region_name.temple_guidance, ExitType.Internal, HasVertical),
         ExitData(region_name.yarrow_top_entr, ExitType.Level, HasVertical),
+        ExitData(region_name.temple_guidance_cistern_cave_entr, ExitType.Level, HasVertical),
         DoorData(region_name.chamber_of_secrets,
                  entrance_name.door_cavemaze_guidance, entrance_name.door_guidance_cavemaze),
-        ExitData(region_name.chamber_of_arrows, ExitType.ExitCave, HasVertical),
-        ExitData(region_name.chamber_of_wheels, ExitType.ExitCave, HasVertical),
         DoorData(region_name.device_of_devastation,
                  entrance_name.door_cavegenerator_guidance, entrance_name.door_guidance_cavegenerator,
-                 Has(item_name.ev_tog_cistern_button, 2)),
+                 Has(item_name.ev_tog_cistern_button, 2) & HasVertical),
+    ]),
+    region_name.temple_guidance_cistern_cave_entr: RegionData(None, [  # Has the Temple Cistern tube
+        ExitData(region_name.chamber_of_arrows, ExitType.ExitCave),
+        ExitData(region_name.chamber_of_wheels, ExitType.ExitCave),
     ]),
     region_name.chamber_of_secrets: RegionData([
+        LocData(location_name.c_cos_orb_entr),
         LocData(location_name.c_cos_podium),
+        LocData(location_name.c_cos_ore_t),
+        LocData(location_name.c_cos_ore_b),
+        LocData(location_name.c_cos_orb_r),
         LocData(location_name.c_cos_wall_l, HasGrenadeOrAirShot),
+        LocData(location_name.c_cos_orb_end, HasGrenadeOrAirShot & HasVertical),
         LocData(location_name.c_cos_end, HasGrenadeOrAirShot & HasVertical),
     ], None),
     region_name.chamber_of_arrows: RegionData([
-        LocData(location_name.c_coa_secret, HasVertical & HasSprint),
+        LocData(location_name.c_coa_orb_entr),
+        LocData(location_name.c_coa_ore, HasBomb),
+        LocData(location_name.c_coa_secret, HasVertical & HasSprint),  # Might not need HasVertical here?
+        LocData(location_name.c_coa_orb_before_arrows_1, HasVertical & HasSprint),
+        LocData(location_name.c_coa_orb_before_arrows_2, HasVertical & HasSprint),
+        LocData(location_name.c_coa_orb_arrows, HasVertical & HasSprint),
         LocData(location_name.c_coa_end, HasVertical & HasSprint),
     ], [
         ExitData(region_name.temple_guidance_cistern_l, ExitType.ExitCave, HasVertical & HasSprint),
@@ -151,6 +182,8 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.temple_guidance_cistern, ExitType.Internal)
     ]),
     region_name.chamber_of_wheels: RegionData([
+        LocData(location_name.c_cow_orb_entr),
+        LocData(location_name.c_cow_orb_m, HasVertical),
         LocData(location_name.c_cow_secret, HasVertical & HasBomb),
         LocData(location_name.c_cow_end, HasVertical),
     ], [
@@ -174,6 +207,11 @@ region_data: dict[str, RegionData] = {
     region_name.west_desert_m: RegionData([
         LocData(location_name.wd_top),
         LocData(location_name.wd_bottom),
+        LocData(location_name.wd_cliffs_ore_l),
+        LocData(location_name.wd_cliffs_ore_m),
+        LocData(location_name.wd_cliffs_ore_t),
+        LocData(location_name.wd_cliffs_ore_b),
+        LocData(location_name.wd_cliffs_ore_r, CanHighJump),
     ], [
         ExitData(region_name.west_desert_start, ExitType.Level),
         DoorData(region_name.tenacious_trollies,
@@ -183,6 +221,7 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.c_tt_breakable_wall, CanDigDistantDirt),
         LocData(location_name.c_tt_end, CanDigDistantDirt),
         LocData(location_name.c_tt_ore, CanDigDistantDirt),
+        LocData(location_name.c_tt_orb, CanDigDistantDirt),
     ], None),
     region_name.machino: RegionData([
         LocData(location_name.em_artifact_1, Has(item_name.artifacts_name, 1)),
@@ -274,6 +313,11 @@ region_data: dict[str, RegionData] = {
     ], None),
     region_name.windy_plains: RegionData([
         LocData(location_name.wp_cliff),
+        LocData(location_name.wp_cliffside_ore),
+        LocData(location_name.wp_cliff_ore_1, HasSprint | HasVertical),
+        LocData(location_name.wp_cliff_ore_2, HasSprint | HasVertical),
+        LocData(location_name.wp_cliff_ore_3, HasSprint | HasVertical),
+        LocData(location_name.wp_cliff_ore_4, HasSprint | HasVertical),
         LocData(location_name.wp_bottom_l, CanDigBricks),
         LocData(location_name.wp_bottom_r),
     ], [
@@ -299,6 +343,18 @@ region_data: dict[str, RegionData] = {
     ]),
     region_name.archaea: RegionData([
         LocData(location_name.a_top_l_t, CanDigBricks),
+        LocData(location_name.a_top_ore_l_t, CanDigBricks),
+        LocData(location_name.a_top_ore_l_1),
+        LocData(location_name.a_top_ore_l_2),
+        LocData(location_name.a_top_ore_l_3),
+        LocData(location_name.a_top_ore_l_4),
+        LocData(location_name.a_top_ore_l_5),
+        LocData(location_name.a_top_ore_l_6),
+        LocData(location_name.a_top_ore_l_7),
+        LocData(location_name.a_top_ore_l_8),
+        LocData(location_name.a_top_ore_gates_l),
+        LocData(location_name.a_top_ore_gates_r),
+        LocData(location_name.a_top_ore_r),
         LocData(location_name.a_top_l_b),
         LocData(location_name.a_top_r),
     ], [
@@ -311,30 +367,44 @@ region_data: dict[str, RegionData] = {
     region_name.patch_wall_grotto: RegionData([
         LocData(location_name.c_pwg_ledge),
         LocData(location_name.c_pwg_secret),
+        LocData(location_name.c_pwg_orb),
     ], None),
     region_name.bursters_station: RegionData([
         LocData(location_name.c_bs_podium),
         LocData(location_name.c_bs_secret_r, CanDigDistantDirt),
         LocData(location_name.c_bs_secret_t, CanDigDistantDirt),
         LocData(location_name.c_bs_podium_ore, CanDigDistantDirt),
+        LocData(location_name.c_bs_orb_start),
+        LocData(location_name.c_bs_orb_end, CanDigDistantDirt),
     ], None),
-    region_name.archaea_cp_entrance: RegionData(None, [
+    region_name.archaea_cp_entrance: RegionData([
+        LocData(location_name.a_cp_ore_from_wp),
+    ], [
         ExitData(region_name.windy_plains, ExitType.Level),
     ]),
     region_name.archaea_below_rrp: RegionData([
         LocData(location_name.a_rrp_l),
+        LocData(location_name.a_rrp_ore),
         LocData(location_name.a_rrp_r),
+        LocData(location_name.a_rrp_ore_n),
+        LocData(location_name.a_rrp_ore_m),
+        LocData(location_name.a_rrp_ore_se),
+        LocData(location_name.a_rrp_ore_sw),
+        LocData(location_name.a_rrp_ore_w),
     ], [
         DoorData(region_name.cave_in_catacomb,
                  entrance_name.door_cavesnakestoneblocks_arch1, entrance_name.door_arch1_cavesnakestoneblocks),
         ExitData(region_name.archaea_cactus_plantation, ExitType.Internal),
     ]),
     region_name.cave_in_catacomb: RegionData([
+        LocData(location_name.c_cic_orb),
         LocData(location_name.c_cic_end),
         LocData(location_name.c_cic_top_secret, CanHighJump),
     ], None),
     region_name.archaea_cactus_plantation: RegionData([
         LocData(location_name.a_cp_from_wp, HasBomb & CanHighJump),
+        LocData(location_name.a_cp_ore_nw, HasBomb),
+        LocData(location_name.a_cp_ore_m, CanDigInAir),  # Can get with nothing if you're smart
     ], [
         DoorData(region_name.tick_boom_room,
                  entrance_name.door_cavefallblockpuzzle_arch1, entrance_name.door_arch1_cavefallblockpuzzle),
@@ -349,6 +419,7 @@ region_data: dict[str, RegionData] = {
     ]),
     region_name.tick_boom_room: RegionData([
         LocData(location_name.c_tbr_reward, CanDigDistantDirt),
+        LocData(location_name.c_tbr_orb),
     ], None),
     region_name.prickly_panorama: RegionData([
         LocData(location_name.c_pp_ore),
@@ -360,6 +431,7 @@ region_data: dict[str, RegionData] = {
                  entrance_name.door_cavetrilobitepuzzle_arch1, entrance_name.door_arch1_cavetrilobitepuzzle),
     ]),
     region_name.trilobyte_bluff: RegionData([
+        LocData(location_name.c_tb_orb),
         LocData(location_name.c_tb_end),
     ], None),
     region_name.yarrow_top_entr: RegionData([
@@ -369,39 +441,83 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.temple_guidance_cistern, ExitType.Level, HasVertical),
     ]),
     region_name.yarrow: RegionData([
-        LocData(location_name.y_up_lake_t),
-        LocData(location_name.y_up_lake_r),
+        LocData(location_name.y_up_lake_ore_l, CanDigDistantDirt & CanHighJump),
+        LocData(location_name.y_up_lake_ore_m),  # Blocks regenerate in case they're dug incorrectly
+        LocData(location_name.y_up_lake_ore_r),
     ], [
         ExitData(region_name.yarrow_top_entr, ExitType.Level, HasVertical),
+        ExitData(region_name.yarrow_upper_lower_lake, ExitType.Internal),
+    ]),
+    region_name.yarrow_upper_lower_lake: RegionData([
+        LocData(location_name.y_up_lake_t),
+        LocData(location_name.y_up_lake_r),
+        LocData(location_name.y_lo_lake_ore_l, HasJet),
+        LocData(location_name.y_lo_lake_ore_r),
+    ], [
+        ExitData(region_name.yarrow, ExitType.Level, (CanRamjet | CanDigInAir) & HasBomb),
         ExitData(region_name.archaea_below_wall, ExitType.Level),
         ExitData(region_name.yarrow_below_glittering_grove, ExitType.Internal, HasJet),
     ]),
     region_name.yarrow_below_glittering_grove: RegionData(None, [
+        ExitData(region_name.yarrow_upper_lower_lake, ExitType.Internal, HasJet),
         DoorData(region_name.swim_swam_sway,
                  entrance_name.door_cavewater_yarr, entrance_name.door_yarr_cavewater),
         ExitData(region_name.sludge_river_bend, ExitType.ExitCave, CanRamjet),
         ExitData(region_name.leaky_lodge, ExitType.ExitCave),
     ]),
     region_name.swim_swam_sway: RegionData([
+        LocData(location_name.c_sss_orb_entr),
+        LocData(location_name.c_sss_ore_r, HasBomb | CanHighJump),
+        LocData(location_name.c_sss_ore_l_1),
+        LocData(location_name.c_sss_ore_l_2),
         LocData(location_name.c_sss_secret_r),
         LocData(location_name.c_sss_secret_l),
+        LocData(location_name.c_sss_orb_end),
         LocData(location_name.c_sss_end),
     ], None),
     region_name.sludge_river_bend: RegionData([
+        LocData(location_name.c_srb_orb_entr),
+        LocData(location_name.c_srb_ore_entr),
+        LocData(location_name.c_srb_orb_l),
+        LocData(location_name.c_srb_ore_l, HasBomb),
+        LocData(location_name.c_srb_ore_m_1, HasBomb),  # Can get easily without bomb, but it's possible to be dumb
+        LocData(location_name.c_srb_ore_m_2),
+        LocData(location_name.c_srb_ore_m_3),
+        LocData(location_name.c_srb_orb_m, HasLiquidRes | HasVertical),
+        LocData(location_name.c_srb_ore_r, HasBomb & (HasLiquidRes | HasVertical)),
         LocData(location_name.c_srb_r),
+        LocData(location_name.c_srb_orb_r, HasLiquidRes | HasVertical),
+        # Wonder if aerial bombs can work to hit the warhead
         LocData(location_name.c_srb_m, HasHookshot & HasBomb & HasLiquidRes),
     ], [
         ExitData(region_name.oasis, ExitType.Level, HasLiquidRes)
     ]),
-    region_name.leaky_lodge: RegionData([
+    region_name.leaky_lodge: RegionData([  # This level is difficult combat-wise. Could add some logic req. armor?
+        LocData(location_name.c_ll_orb_entr),
         LocData(location_name.c_ll_secret_b),
+        LocData(location_name.c_ll_orb_bl),
+        LocData(location_name.c_ll_ore_bl),
+        LocData(location_name.c_ll_orb_tl, HasVertical & HasBomb),
+        LocData(location_name.c_ll_ore_tl_1, HasVertical & CanDigInAir),  # Can get with just bomb if you don't dig bad
+        LocData(location_name.c_ll_ore_tl_2, HasVertical & HasBomb),
+        LocData(location_name.c_ll_ore_t, HasVertical & HasBomb),
+        LocData(location_name.c_ll_ore_tr_1, HasVertical & HasBomb),
+        LocData(location_name.c_ll_ore_tr_2, HasVertical & HasBomb),
+        LocData(location_name.c_ll_ore_tr_3, HasVertical & HasBomb),
         LocData(location_name.c_ll_secret_t, HasVertical & HasBomb),
+        LocData(location_name.c_ll_orb_tr, HasVertical & HasBomb),
         LocData(location_name.c_ll_end, HasVertical & HasBomb),
     ], [
         ExitData(region_name.yarrow_below_acid_swamp, ExitType.Internal, HasVertical & HasBomb),
     ]),
     region_name.yarrow_below_acid_swamp: RegionData([
         LocData(location_name.y_lower_below_acid_l),
+        LocData(location_name.y_lower_ore_m),
+        LocData(location_name.y_lower_ore_b, CanDigBricks & HasGrenadeOrAirShot),
+        LocData(location_name.y_lower_ore_bouncy_1, HasVertical),
+        LocData(location_name.y_lower_ore_bouncy_2, HasVertical),
+        LocData(location_name.y_lower_ore_bouncy_3, HasVertical),
+        LocData(location_name.y_lower_ore_bouncy_4, HasGrenadeOrAirShot),
         LocData(location_name.y_lower_bouncy_ceil, HasVertical),
         LocData(location_name.y_lower_above_mm, HasLiquidRes),
     ], [
@@ -414,14 +530,24 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.aeronauts_station, ExitType.ExitCave),
     ]),
     region_name.hodge_podge_hang: RegionData([
-        LocData(location_name.c_hph_secret, Has(item_name.jetengine, 1)),  # TODO: Switch this to 2
+        LocData(location_name.c_hph_orb_entr),
+        # Technically doable with just 1 tier of jet, but it's very tight platforming, it should probably require 2
+        LocData(location_name.c_hph_secret, HasHookshot & Has(item_name.jetengine, 1)),
+        LocData(location_name.c_hph_ore, HasVertical),
         LocData(location_name.c_hph_end, HasVertical),
+        LocData(location_name.c_hph_orb_end, HasVertical),
     ], None),
     region_name.mushi_mushi_snuggery: RegionData([
+        LocData(location_name.c_mms_orb_entr),
+        LocData(location_name.c_mms_ore, HasVertical),
         LocData(location_name.c_mms_secret, HasVertical),
+        LocData(location_name.c_mms_orb_end, HasVertical),
         LocData(location_name.c_mms_end, HasVertical),
     ], None),
     region_name.bushwack_beehive: RegionData([
+        LocData(location_name.c_bb_orb),
+        LocData(location_name.c_bb_ore_1),
+        LocData(location_name.c_bb_ore_2),
         LocData(location_name.c_bb_secret, HasHookshot),
         LocData(location_name.c_bb_end, HasVertical),
     ], None),
@@ -431,7 +557,9 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.c_lime_loop_orb),
     ], None),
     region_name.aeronauts_station: RegionData([
+        LocData(location_name.c_as_orb),
         LocData(location_name.c_as_podium, HasJet),
+        LocData(location_name.c_as_ore, CanRamjet),
         LocData(location_name.c_as_end, CanRamjet),
         LocData(location_name.c_as_secret, CanRamjet),
     ], [
@@ -446,12 +574,26 @@ region_data: dict[str, RegionData] = {
     region_name.device_of_disaster: RegionData([
         LocData(location_name.ev_device_of_disaster),
     ], None),
-    region_name.archaea_below_wall: RegionData([
+    region_name.archaea_below_wall: RegionData([  # archaea_patch_stripes
         LocData(location_name.a_bwall_l, CanDigBricks),
+        LocData(location_name.a_bwall_ore_l, CanDigBricks & HasVertical),  # Possible without vertical but it's tricky
+        LocData(location_name.a_bwall_ore_r, HasVertical),  # Possible without vertical but it's tricky
         LocData(location_name.a_josh_yonker, CanDigBricks),
     ], [
         DoorData(region_name.masons_station,
                  entrance_name.door_cavejackhammer_arch2, entrance_name.door_arch2_cavejackhammer),
+        ExitData(region_name.archaea_before_oasis, ExitType.Internal, CanDigBricks),
+    ]),
+    region_name.archaea_before_oasis: RegionData([  # archaea_patch_dirt
+        LocData(location_name.a_bo_ore_nw_1),
+        LocData(location_name.a_bo_ore_nw_2),
+        LocData(location_name.a_bo_ore_nw_3),
+        LocData(location_name.a_bo_ore_m),  # Let's not insult the player by assuming they can't get this w/o air bombs
+        LocData(location_name.a_bo_ore_r_secret_1, CanDigBricks),
+        LocData(location_name.a_bo_ore_r_secret_2, CanDigBricks),
+        LocData(location_name.a_bo_ore_r_secret_3, CanDigBricks),
+        LocData(location_name.a_bo_ore_r_secret_4, CanDigBricks),
+    ], [
         DoorData(region_name.rupture_rock_hollow,
                  entrance_name.door_cavesnakestone_arch1, entrance_name.door_arch1_cavesnakestone),
         ExitData(region_name.archaea_bricks, ExitType.Internal, CanDigBricks),
@@ -459,10 +601,21 @@ region_data: dict[str, RegionData] = {
     region_name.masons_station: RegionData([
         LocData(location_name.c_ms_podium, CanDigDistantDirt | CanDigBricks),
         LocData(location_name.c_ms_top, CanDigDistantDirt | CanDigBricks),
+        LocData(location_name.c_ms_before_podium_ore_1, CanDigDistantDirt),
+        LocData(location_name.c_ms_before_podium_ore_2, CanDigDistantDirt),
+        LocData(location_name.c_ms_before_podium_ore_3, CanDigDistantDirt),
+        LocData(location_name.c_ms_orb),
+        LocData(location_name.c_ms_podium_ore, CanDigDistantDirt),
+        LocData(location_name.c_ms_bricks_ore_1, CanDigBricks),
+        LocData(location_name.c_ms_bricks_ore_2, CanDigBricks),
+        LocData(location_name.c_ms_bricks_ore_3, CanDigBricks),
         LocData(location_name.c_ms_end, CanDigBricks),
     ], None),
     region_name.rupture_rock_hollow: RegionData([
+        LocData(location_name.c_rrh_orb_start),
         LocData(location_name.c_rrh_right),
+        LocData(location_name.c_rrh_orb_mid),
+        LocData(location_name.c_rrh_orb_end),
         LocData(location_name.c_rrh_end),
         LocData(location_name.c_rrh_ore_1),
         LocData(location_name.c_rrh_ore_2),
@@ -474,7 +627,10 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.archaea_bricks, ExitType.Internal),
         ExitData(region_name.totd_lava_dripper_hall, ExitType.Level),
     ]),
-    region_name.archaea_bricks: RegionData(None, [
+    region_name.archaea_bricks: RegionData([
+        LocData(location_name.a_bwall_ore_t),
+        LocData(location_name.a_bwall_ore_b),
+    ], [
         ExitData(region_name.oasis, ExitType.Level),
         ExitData(region_name.archaea_bricks_entrance, ExitType.Internal, HasVertical),
         ExitData(region_name.archaea_lower_mining_outpost, ExitType.Internal),
@@ -487,14 +643,66 @@ region_data: dict[str, RegionData] = {
                  entrance_name.door_cavegrapplinghook_thehub, entrance_name.door_thehub_cavegrapplinghook),
         ExitData(region_name.archaea_bricks, ExitType.Level),
         # Yeah no let's not randomize the final boss arena lol
-        ExitData(region_name.the_reactor, ExitType.Internal, Has(item_name.ev_dampener_destroyed, 4)),
+        ExitData(region_name.the_reactor, ExitType.Internal,
+                 Has(item_name.ev_dampener_destroyed, 4) & HasVertical & CanDigBricks),
     ]),
     region_name.rosies_storage: RegionData([
+        LocData(location_name.c_rs_orb),
         LocData(location_name.c_rs_podium),
         LocData(location_name.c_rs_secret_r, HasVertical),
+        LocData(location_name.c_rs_ore_1, HasVertical),
+        LocData(location_name.c_rs_ore_2, HasVertical),
+        LocData(location_name.c_rs_ore_3, HasVertical),
+        LocData(location_name.c_rs_ore_4, HasVertical),
         LocData(location_name.c_rs_end, HasVertical),
     ], None),
-    region_name.the_reactor: RegionData(None, [
+    region_name.the_reactor: RegionData([
+        LocData(location_name.o_r_orb_entr_1),
+        LocData(location_name.o_r_orb_entr_2),
+        LocData(location_name.o_r_orb_entr_3),
+        LocData(location_name.o_r_orb_entr_4),
+        LocData(location_name.o_r_orb_p1_1),
+        LocData(location_name.o_r_orb_p1_2),
+        LocData(location_name.o_r_orb_p1_3),
+        LocData(location_name.o_r_orb_p1_4),
+        LocData(location_name.o_r_orb_p2_1),
+        LocData(location_name.o_r_orb_p2_2),
+        LocData(location_name.o_r_orb_p2_3),
+        LocData(location_name.o_r_orb_p2_4),
+        LocData(location_name.o_r_orb_p3_1),  # This phase spawns bricks, but the entrance already requires it
+        LocData(location_name.o_r_orb_p3_2),
+        LocData(location_name.o_r_orb_p3_3),
+        LocData(location_name.o_r_orb_p3_4),
+        LocData(location_name.o_r_orb_p4_1),  # This phase spawns bricks, but the entrance already requires it
+        LocData(location_name.o_r_orb_p4_2),
+        LocData(location_name.o_r_orb_p4_3),
+        LocData(location_name.o_r_orb_p4_4),
+        LocData(location_name.o_r_orb_p5_1),
+        LocData(location_name.o_r_orb_p5_2),
+        LocData(location_name.o_r_orb_p5_3),
+        LocData(location_name.o_r_orb_p5_4),
+        LocData(location_name.o_r_orb_p6_1),
+        LocData(location_name.o_r_orb_p6_2),
+        LocData(location_name.o_r_orb_p6_3),
+        LocData(location_name.o_r_orb_p6_4),
+        LocData(location_name.o_r_orb_p7_1),
+        LocData(location_name.o_r_orb_p7_2),
+        LocData(location_name.o_r_orb_p7_3),
+        LocData(location_name.o_r_orb_p7_4),
+        LocData(location_name.o_r_orb_p8_1),
+        LocData(location_name.o_r_orb_p8_2),
+        LocData(location_name.o_r_orb_p8_3),
+        LocData(location_name.o_r_orb_p8_4),
+        LocData(location_name.o_r_orb_p9_1),
+        LocData(location_name.o_r_orb_p9_2),
+        LocData(location_name.o_r_orb_p9_3),
+        LocData(location_name.o_r_orb_p9_4),
+        LocData(location_name.o_r_orb_p10_1),  # This phase spawns bricks, but the entrance already requires it
+        LocData(location_name.o_r_orb_p10_2),
+        LocData(location_name.o_r_orb_p10_3),
+        LocData(location_name.o_r_orb_p10_4),
+        LocData(location_name.o_r_orb_p10_5),
+    ], [
         ExitData(region_name.defeat_rosie, ExitType.Internal),
     ]),
     region_name.defeat_rosie: RegionData([
@@ -502,6 +710,19 @@ region_data: dict[str, RegionData] = {
     ], None),
     region_name.archaea_lower_mining_outpost: RegionData([
         LocData(location_name.a_lmo_ceiling, CanDigDistantDirt & HasVertical),
+        LocData(location_name.a_lmo_ore_end_1, CanDigBricks),
+        LocData(location_name.a_lmo_ore_end_2, CanDigBricks),
+        LocData(location_name.a_lmo_ore_end_3, CanDigBricks),
+        LocData(location_name.a_lmo_ore_n, CanDigDistantDirt),
+        LocData(location_name.a_lmo_ore_nw_1, CanDigDistantDirt & CanDigBricks),
+        LocData(location_name.a_lmo_ore_nw_2, CanDigDistantDirt & CanDigBricks),  # Can get w/o distance if you're smart
+        LocData(location_name.a_lmo_ore_nw_3, CanDigBricks),
+        LocData(location_name.a_lmo_ore_e_1, CanDigBricks),
+        LocData(location_name.a_lmo_ore_e_2, CanDigBricks),
+        LocData(location_name.a_lmo_ore_e_3, CanDigBricks),
+        LocData(location_name.a_lmo_ore_e_loner),
+        # You can get this with just regular bombs, but it's possible to dig blocks so you need grenade or air shot
+        LocData(location_name.a_lmo_ore_bricks, CanDigBricks & HasGrenadeOrAirShot),
     ], [
         ExitData(region_name.archaea_bottom, ExitType.Internal, CanDigBricks),
     ]),
@@ -517,17 +738,40 @@ region_data: dict[str, RegionData] = {
     region_name.archaea_bottom_jet: RegionData([
         LocData(location_name.a_b_jet_b),
         LocData(location_name.a_b_jet_end),
+        LocData(location_name.a_b_jet_orb),
+        LocData(location_name.a_b_jet_ore_1),
+        LocData(location_name.a_b_jet_ore_2),
+        LocData(location_name.a_b_jet_ore_3),
+        LocData(location_name.a_b_jet_ore_4),
     ], None),
     region_name.mysterious_cave: RegionData([
-        LocData(location_name.c_mc_podium),
+        LocData(location_name.c_mc_orb),
         LocData(location_name.c_mc_top, HasVertical),
     ], [
-        # ExitData(region_name.vectron, ExitType.Internal),
+        ExitData(region_name.vectron, ExitType.Internal),
     ]),
-    # region_name.vectron: RegionData(None, None),  # There are unique ores here, but I don't think they're tracked?
+    region_name.vectron: RegionData([  # It's impossible to traverse without taking tons of damage >:|
+        LocData(location_name.v_ore_1),
+        LocData(location_name.v_ore_2),
+        LocData(location_name.v_ore_3, HasSprint),
+        LocData(location_name.v_ore_4, HasSprint),
+        LocData(location_name.v_ore_5, HasSprint),
+    ], [
+        ExitData(region_name.mysterious_cave_lower, ExitType.Internal, HasSprint),
+    ]),
+    region_name.mysterious_cave_lower: RegionData([
+        LocData(location_name.c_mc_podium),
+    ], [
+        ExitData(region_name.mysterious_cave, ExitType.Internal),
+    ]),
     region_name.temple_destroyer_upper: RegionData([
         LocData(location_name.totd_upper_m),
         LocData(location_name.totd_upper_r),
+        LocData(location_name.totd_upper_ore_r_1),
+        LocData(location_name.totd_upper_ore_r_2),
+        LocData(location_name.totd_upper_ore_r_3),
+        LocData(location_name.totd_upper_ore_r_4),
+        LocData(location_name.totd_upper_ore_m, HasBomb),
         LocData(location_name.ev_totd_treasure_brazier_top, HasIgnitionAxe),
     ], [
         ExitData(region_name.windy_plains_temple, ExitType.Level),
@@ -540,7 +784,10 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.demons_crib, ExitType.Internal, HasIgnitionAxe),
     ]),
     region_name.demons_crib: RegionData([
-        LocData(location_name.c_dc_bottom, CanHighJump | HasHookshot),
+        LocData(location_name.c_dc_orb_entr),
+        LocData(location_name.c_dc_ore, CanHighJump),
+        LocData(location_name.c_dc_orb_end, CanHighJump),
+        LocData(location_name.c_dc_bottom, CanHighJump),
     ], [
         ExitData(region_name.temple_destroyer_upper, ExitType.Internal),
         # Technically an exit cave, but the exit is one-way!
@@ -552,13 +799,23 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.totd_conveyor_maze, ExitType.Internal),
     ]),
     region_name.the_batcave: RegionData([
-        LocData(location_name.c_tb_top_r, HasVertical),
-        LocData(location_name.c_tb_top_l, HasVertical),
+        LocData(location_name.c_tbc_orb),
+        LocData(location_name.c_tbc_top_r, HasVertical),
+        LocData(location_name.c_tbc_top_l, HasVertical),
     ], None),
     region_name.totd_conveyor_maze: RegionData([
         LocData(location_name.totd_cm_m, CanDigBricks),
         LocData(location_name.totd_cm_end_t),
         LocData(location_name.totd_cm_end_b),
+        # Can tank a bit of lava to ignore HasVertical
+        LocData(location_name.totd_cm_ore_tl_1, HasBomb & (HasLiquidRes | HasVertical)),
+        LocData(location_name.totd_cm_ore_tl_2, HasBomb & (HasLiquidRes | HasVertical)),
+        LocData(location_name.totd_cm_ore_t),
+        LocData(location_name.totd_cm_ore_b),
+        LocData(location_name.totd_cm_ore_bl_1),
+        LocData(location_name.totd_cm_ore_bl_2),
+        LocData(location_name.totd_cm_orb_t),
+        LocData(location_name.totd_cm_orb_b),
         LocData(location_name.ev_totd_treasure_brazier_right, HasIgnitionAxe),
     ], [
         DoorData(region_name.floor_is_lava,
@@ -566,11 +823,15 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.totd_lava_dripper_hall, ExitType.Internal),
     ]),
     region_name.floor_is_lava: RegionData([
+        LocData(location_name.c_fil_orb_entr, HasVertical | HasSprint),
+        LocData(location_name.c_fil_orb_m, HasVertical),
+        LocData(location_name.c_fil_orb_t, HasVertical),
         LocData(location_name.c_fil_end, HasVertical),
         LocData(location_name.c_fil_perfect, HasBothVertical),
     ], None),
     region_name.totd_lava_dripper_hall: RegionData([
-        LocData(location_name.totd_ga, HasVertical | HasFullHookshot),
+        LocData(location_name.totd_ga, HasJet | HasFullHookshot),
+        LocData(location_name.totd_ga_ore, HasIgnitionAxe),
         LocData(location_name.ev_totd_treasure_brazier_left, HasIgnitionAxe)
     ], [
         DoorData(region_name.lava_shooters,
@@ -585,27 +846,43 @@ region_data: dict[str, RegionData] = {
         ExitData(region_name.totd_bowels, ExitType.Internal),
     ]),
     region_name.lava_shooters: RegionData([
+        LocData(location_name.c_ls_orb_entr),
+        LocData(location_name.c_ls_orb_t, HasVertical),
+        LocData(location_name.c_ls_orb_b, HasVertical),
+        LocData(location_name.c_ls_orb_end, HasVertical),
         LocData(location_name.c_ls_ledge_r, HasVertical),
         LocData(location_name.c_ls_end_secret, HasVertical),
         LocData(location_name.c_ls_end, HasVertical),
     ], None),
     region_name.roasted_romp: RegionData([
-        LocData(location_name.c_rr_secret_l),
+        LocData(location_name.c_rr_orb_entr),
+        LocData(location_name.c_rr_secret_l, HasVertical),  # To get out of the secret area
+        LocData(location_name.c_rr_ore_1),
+        LocData(location_name.c_rr_ore_2),
+        LocData(location_name.c_rr_ore_3),
+        LocData(location_name.c_rr_orb_end),
         LocData(location_name.c_rr_end),
     ], None),
     region_name.grim_hollow: RegionData([
-        LocData(location_name.c_gh_secret_left,
-                HasVertical & Has(item_name.bomb, 1)), # TODO: change to 2 when we add shop locations
+        LocData(location_name.c_gh_orb_entr),
+        # TODO: needs extra range, change to 2 when we add shop locations
+        LocData(location_name.c_gh_secret_left, HasVertical & Has(item_name.bomb, 1)),
+        LocData(location_name.c_gh_orb_m, HasVertical),
         LocData(location_name.c_gh_end, HasVertical),
     ], None),
-    region_name.spikes_conveyors: RegionData([
-        LocData(location_name.c_sac_secret_r, HasHookshot),
-        LocData(location_name.c_sac_secret_t, HasHookshot),
-        LocData(location_name.c_sac_end, HasHookshot),
+    region_name.spikes_conveyors: RegionData([  # Jet and no hookshot is a little tricky, but it's not too bad
+        LocData(location_name.c_sac_orb_entr),
+        LocData(location_name.c_sac_orb_m, HasSprint),
+        LocData(location_name.c_sac_orb_end, HasVertical),
+        LocData(location_name.c_sac_secret_r, HasHookshot | HasInfiniteFlight),
+        LocData(location_name.c_sac_secret_t, HasVertical),
+        LocData(location_name.c_sac_end, HasVertical),
     ], None),
     region_name.totd_bowels: RegionData([
         LocData(location_name.totd_bowels_l, HasLiquidRes),
         LocData(location_name.totd_bowels_m, HasJet),
+        LocData(location_name.totd_river_t_orb_entr, HasJet),  # Sprint and liquid res might work here too
+        LocData(location_name.totd_river_t_ore_entr, HasJet),  # Sprint and liquid res might work here too
     ], [
         DoorData(region_name.combusters_station,
                  entrance_name.door_caveflamer_fire1, entrance_name.door_fire1_caveflamer),
@@ -617,25 +894,51 @@ region_data: dict[str, RegionData] = {
                  HasIgnitionAxe & Has(item_name.ev_totd_treasure_brazier, 3)),
         ExitData(region_name.totd_rivers, ExitType.Internal, HasInfiniteFlight),
     ]),
-    region_name.combusters_station: RegionData([
+    region_name.combusters_station: RegionData([  # Don't really need CanDigBricks but it makes the combat harder
+        LocData(location_name.c_cs_orb_entr_1),
+        LocData(location_name.c_cs_orb_entr_2),
+        LocData(location_name.c_cs_orb_arena_1, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_orb_arena_2, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_orb_arena_3, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_orb_arena_4, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_orb_arena_5, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_orb_arena_m, HasVertical & CanDigBricks),
         LocData(location_name.c_cs_podium, HasVertical & CanDigBricks),
+        LocData(location_name.c_cs_ore, HasVertical & CanDigBricks),
         LocData(location_name.c_cs_secret_l, (HasVertical | HasIgnitionAxe) & CanDigBricks),
+        LocData(location_name.c_cs_orb_end, HasVertical & CanDigBricks),
     ], None),
     region_name.device_of_doom: RegionData([
         LocData(location_name.ev_device_of_doom),
     ], None),
     region_name.ronalds_treasure_chamber: RegionData([
+        LocData(location_name.c_rtc_ore_b),
         LocData(location_name.c_rtc_podium, HasVertical),
+        LocData(location_name.c_rtc_ore_secret, HasVertical),
         LocData(location_name.c_rtc_secret_1, HasVertical),
         LocData(location_name.c_rtc_secret_2, HasVertical),
         LocData(location_name.c_rtc_secret_3, HasVertical),
     ], None),
-    region_name.totd_rivers: RegionData([
+    region_name.totd_rivers: RegionData([  # I lot of the things here you can get with Vertical but it's a bit tricky
         LocData(location_name.totd_river_t, HasBomb),
+        LocData(location_name.totd_river_t_orb_m, HasInfiniteFlight),  # CanCrossCeiling might be good enough here
+        LocData(location_name.totd_river_t_ore_end, CanCrossCeiling),
+        LocData(location_name.totd_river_m_r_ore, CanCrossCeiling & CanDigDistantDirt),
         LocData(location_name.totd_river_b_l, CanCrossCeiling),
         LocData(location_name.totd_river_b_b, CanCrossCeiling),
         LocData(location_name.totd_river_b_r, CanCrossCeiling),
         LocData(location_name.totd_river_b_t, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_l_1, HasVertical),
+        LocData(location_name.totd_river_b_ore_l_2, HasVertical),
+        LocData(location_name.totd_river_b_ore_armory, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_1, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_2, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_3, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_4, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_5, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_6, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_7, CanCrossCeiling),
+        LocData(location_name.totd_river_b_ore_8, CanCrossCeiling),
     ], [
         DoorData(region_name.infernal_crates,
                  entrance_name.door_caveboxes_ftemp, entrance_name.door_ftemp_caveboxes, CanCrossCeiling & CanRamjet),
@@ -648,15 +951,23 @@ region_data: dict[str, RegionData] = {
     ]),
     region_name.infernal_crates: RegionData([
         LocData(location_name.c_ic_secret_r, HasVertical & HasBomb),
+        LocData(location_name.c_ic_orb_entr),
+        LocData(location_name.c_ic_ore),
+        LocData(location_name.c_ic_orb_m, HasVertical),
         LocData(location_name.c_ic_end, HasVertical),
     ], None),
     region_name.mine_cart_madness: RegionData([
+        LocData(location_name.c_mm_ore, CanDigDistantDirt & HasVertical),
+        LocData(location_name.c_mm_orb_1),
+        LocData(location_name.c_mm_orb_2, CanDigDistantDirt & HasVertical),
+        LocData(location_name.c_mm_orb_3, CanDigDistantDirt & HasVertical),
         LocData(location_name.c_mm_reward_1, CanDigDistantDirt & HasVertical),
         LocData(location_name.c_mm_reward_2, CanDigDistantDirt & HasVertical),
         LocData(location_name.c_mm_reward_3, CanDigDistantDirt & HasVertical),
     ], None),
     region_name.the_sun_armory: RegionData([
         LocData(location_name.c_sa_podium),
+        LocData(location_name.c_sa_ore),
     ], None),
     region_name.device_of_destruction: RegionData([
         LocData(location_name.ev_device_of_destruction),
@@ -732,6 +1043,8 @@ def create_region(world: "SWD2World", active_locations: set[str], event_location
                 continue
             loc_id = None if event else all_locations[loc_data.name].code
             location = SWD2Location(world.player, loc_data.name, loc_id, region)
+            if loc_id in world.excluded_loc_ids:
+                location.progress_type = LocationProgressType.EXCLUDED
             if location.name in shop_locs:
                 location.item_rule = is_valid_shop_item_factory(world)
             elif location.name in location_name.YONKER_LOCS:

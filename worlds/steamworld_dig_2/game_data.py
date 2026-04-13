@@ -4,6 +4,8 @@ from .items import item_table
 from .locations import all_locations
 from typing import Dict, List, Optional
 
+BLOODSTONE_VALUE_MULTIPLIER = 5
+PODIUM_ANIM_TIME = 12.76
 
 cog_item = "pickup_upgrade_cog"
 ore_entity = "placeholder_ore"
@@ -113,7 +115,7 @@ in_game_item_data: Dict[str, GameData] = {
     "collectible_39": GameData(item_name.a_dumbells, location_name.c_rs_secret_r),
     "collectible_20": GameData(item_name.a_monster_plushy, location_name.a_b_r),
     "collectible_28": GameData(item_name.a_stone_tablet, location_name.c_dc_bottom),
-    "collectible_21": GameData(item_name.a_shark_tooth, location_name.c_tb_top_l),
+    "collectible_21": GameData(item_name.a_shark_tooth, location_name.c_tbc_top_l),
     "collectible_25": GameData(item_name.a_theremin, location_name.totd_cm_end_b),
     "collectible_32": GameData(item_name.a_red_cloth, location_name.c_fil_perfect),
     "collectible_26": GameData(item_name.a_weird_stone, location_name.totd_ga),
