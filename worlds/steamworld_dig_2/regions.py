@@ -18,7 +18,7 @@ HasLamp: Rule = Has(item_name.lamp)
 HasBomb: Rule = Has(item_name.bomb)
 HasJackhammer: Rule = Has(item_name.jackhammer)
 HasHookshot: Rule = Has(item_name.hookshot)
-HasFullHookshot: Rule = Has(item_name.hookshot, 2)
+HasFullHookshot: Rule = HasHookshot & Has(item_name.up_hookshot_range, 1)
 HasJet: Rule = Has(item_name.jetengine)
 
 OptionFilterShopRando = OptionFilter(RandomizeShopUpgrades, RandomizeShopUpgrades.option_randomize)

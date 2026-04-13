@@ -196,7 +196,8 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
             continue
         start_item_id = item_table[start_item_name].code
         item_type = item_table[start_item_name].item_type
-        if item_type == ItemType.Upgrade or item_type == ItemType.Blueprint or item_type == ItemType.ShopUpgrade:
+        if (item_type == ItemType.Upgrade or item_type == ItemType.Blueprint or item_type == ItemType.ShopUpgrade
+                or item_type == ItemType.ShopBlueprint):
             start_upgrade_node = et.Element("Upgrade")
             start_upgrade_node.attrib["Name"] = ap_item_to_in_game_name[start_item_id]
             start_upgrade_node.attrib["Tier"] = str(start_count)
@@ -982,7 +983,7 @@ def get_ap_item_desc_and_flavor(item: NetworkItem, ap_item_player):
     return ap_item_desc, ap_item_flavor
 
 
-def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterable[Tuple[str, str]], List[str]]:
+def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> tuple[Iterable[tuple[str, str]], list[str]]:
     slot: int = ctx_data.slot
     slot_data: Dict[str, Any] = ctx_data.slot_data
     locations: Dict[int, NetworkItem] = ctx_data.locations_info
@@ -1039,11 +1040,12 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
     # Cog upgrade shuffle
     use_unused: int = slot_data[option_name.add_unused_cog_upgrades]
     randomize_shops: int = slot_data[option_name.randomize_shops]
+    start_with_portal: int = slot_data[option_name.start_with_portal]
     if randomize_shops:
         # (upgrade, [exclude list], [include list])
-        items_to_randomize: List[Tuple[str, Optional[List[str]], Optional[List[str]]]] = [
+        items_to_randomize: list[tuple[str, Optional[list[str]], Optional[list[str]]]] = [
             ("pickaxe", ["pickaxe.fire"], None),
-            ("backpack", None, None),
+            ("backpack", ["backpack.town_portal"] if start_with_portal else None, None),
             ("lamp", None, ["lamp.damaging_light"] if use_unused else None),
             ("armor", ["armor.damage_reduction"], None),
             ("watertank", None, ["watertank.water_pickup"] if use_unused else None),
@@ -1052,7 +1054,7 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
             ("jackhammer", None, ["jackhammer.shockwave", "jackhammer.improved_water"] if use_unused else None),
             ("steampack", ["steampack.slayer"], None),
         ]
-        upgrade_subupgrades: Dict[et.Element, List[str]] = {}
+        upgrade_subupgrades: dict[et.Element, list[str]] = {}
         used_subupgrades = set()
         for upgrade_data in items_to_randomize:
             upgrades = []
@@ -1076,12 +1078,15 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
                 # if (money_cost_node is None or money_cost_node.text == 0) and sub_upgrade_node is None:
                     # if len(upgrades) != 0:
                     # continue
-                available_upgrade_tier_nodes.append(upgrade_tier_node)
                 if sub_upgrade_node is None:
+                    available_upgrade_tier_nodes.append(upgrade_tier_node)
                     upgrades.append(None)
                 else:
-                    upgrades.append(sub_upgrade_node.attrib["Id"])
-                    upgrade_subupgrades[upgrade_node].append(sub_upgrade_node.attrib["Id"])
+                    sub_upgrade_id = sub_upgrade_node.attrib["Id"]
+                    if upgrade_data[1] is None or sub_upgrade_id not in upgrade_data[1]:
+                        available_upgrade_tier_nodes.append(upgrade_tier_node)
+                        upgrades.append(sub_upgrade_id)
+                        upgrade_subupgrades[upgrade_node].append(sub_upgrade_node.attrib["Id"])
                     upgrade_tier_node.remove(sub_upgrade_node)
             if randomize_shops == 1:  # Shuffle
                 # Add upgrades to the list, replacing None's if they exist
@@ -1131,11 +1136,18 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
         #         locked_upgrade_node.attrib["Id"] = subupgrade
         #         locked_upgrade_node.attrib["AfterTier"] = "100"
         #         locked_upgrades_node.append(locked_upgrade_node)
+    # If we start with the portal remove it as a tiered upgrade and
+    if start_with_portal:
+        backpack_locked_upgrade_node = upgrades_root.find(".//Upgrade[@Name='backpack']/LockedUpgrades")
+        backpack_locked_upgrade_node.append(et.Element("LockedUpgrade", attrib={"Id": "backpack.town_portal",
+                                                                                    "AfterTier": "100"}))
 
     # Cog cost randomization
     total_cog_costs = slot_data[option_name.randomize_cog_costs]
     if total_cog_costs != -1:
         cog_costs = dict(COG_COSTS)
+        if start_with_portal:  # If start with portal is on don't shuffle its cost
+            cog_costs.pop("backpack.town_portal")
         if use_unused:
             cog_costs.update(EXTRA_COG_COSTS)
         new_cog_costs = {cog_upgrade: 0 for cog_upgrade in cog_costs.keys()}
@@ -1154,6 +1166,8 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> Tuple[Iterab
                 if new_cog_costs[available_upgrades_to_increase_cost[upgrade_index]] >= 5:
                     available_upgrades_to_increase_cost.pop(upgrade_index)
                 total_cog_costs -= 1
+        if start_with_portal:  # If start with portal is on set its cost to 0
+            new_cog_costs["backpack.town_portal"] = 0
         # Set costs on nodes
         for upgrade_node in upgrades_root:
             cost_node = upgrade_node.find(".//Tier/CogCost")

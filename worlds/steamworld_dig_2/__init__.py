@@ -100,9 +100,6 @@ class SWD2World(World):
     def generate_early(self):
         # Validate options
         if self.options.start_with_portal:
-            if item_name.cog not in self.options.start_inventory.value:
-                self.options.start_inventory.value[item_name.cog] = 0
-            self.options.start_inventory.value[item_name.cog] += 3
             self.options.start_inventory.value[item_name.up_bag_portal] = 1
 
     def create_regions(self) -> None:

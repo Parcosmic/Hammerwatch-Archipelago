@@ -148,7 +148,7 @@ class StartingMoney(Range):
 
 
 class StartWithPortal(Toggle):
-    """Start the game with the Portal of Pardon blueprint and 3 cogs to equip it"""
+    """Start the game with the Portal of Pardon blueprint and set its cost to 0"""
     display_name = "Start With Portal of Pardon"
     default = False
 
@@ -204,6 +204,7 @@ client_required_options = [
     option_name.add_unused_cog_upgrades,
     option_name.starting_level,
     option_name.starting_money,
+    option_name.start_with_portal,
     option_name.skip_vectron,
     option_name.er_seed,
 ]
