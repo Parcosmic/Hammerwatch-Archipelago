@@ -12,6 +12,8 @@ from CommonClient import logger, CommonContext
 from BaseClasses import ItemClassification
 import xml.etree.ElementTree as et
 
+from .patcher_atlas import patch_atlas_and_sprites
+from . import game_data
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
                         COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity, orb_entity,
                         BLOODSTONE_VALUE_MULTIPLIER, PODIUM_ANIM_TIME)
@@ -30,6 +32,8 @@ def patch_files(ctx: ClientContextData):
 
     non_data_files: List[str] = extract_game_files(ctx.game_dir)
 
+    patch_atlas_and_sprites(ctx)
+
     # Convenience patches
     patch_quests(data_dir, ctx)
     patch_damage_types(data_dir)
@@ -37,6 +41,7 @@ def patch_files(ctx: ClientContextData):
     patch_resources(data_dir, ctx)
     language_lines_to_add, offworld_item_names = patch_blueprints(data_dir, ctx)
     patch_entities(data_dir, offworld_item_names)
+    patch_effects(data_dir)
 
     patch_start_location_and_inventory(data_dir, ctx)
 
@@ -51,6 +56,7 @@ def patch_files(ctx: ClientContextData):
 non_data_files_that_need_patching = [
     os.path.join("Patchsets", "TempleOfGuidance", "temple_of_guidance.le.z"),
     os.path.join("Language", "en.csv.z"),
+    os.path.join("Atlases", "atlases.map.z"),
 ]
 
 
@@ -173,7 +179,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     new_game_outset = outsets_root.find(".//Outset[@Name='new_game']")
     new_game_outset.find(".//Level").text = start_location_data[start_location]
     # new_game_outset.find(".//Level").text = "yarrow_cave_run"
-    # new_game_outset.find(".//Level").text = "firetemple_cave_armor"
+    new_game_outset.find(".//Level").text = "firetemple_cave_hell_carts"
     # new_game_outset.find(".//Level").text = "archaea_1"
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "door_archaea_vectron1"
@@ -525,7 +531,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     else:
                         definition_name = "pickup_collectible"
                 elif randomized_item_pickup_name.startswith("ap_"):
-                    definition_name = "ap_item_offworld"
+                    definition_name = game_data.AP_OFFWORLD_ITEM
                 else:
                     definition_name = "pickup_blueprint"
                 size_node.text = "86, 83"
@@ -1261,23 +1267,43 @@ def patch_entities(data_dir: str, offworld_item_names: List[str]):
 
     # Edit sprite of freestanding blueprints
     pickup_blueprint_node = pickups_root.find(".//Entity[@Name='pickup_blueprint']")
-    blueprint_rigid_character_node = pickup_blueprint_node.find("./RigidCharacter/File")
-    # blueprint_rigid_character_node.text = "Sprites/Pickups/ResourceBloodstone/resource_bloodstone.irc2"  # Default
-    # blueprint_rigid_character_node.text = "Sprites/Pickups/ResourceSodium/resource_sodium.irc2"  # Off center, vertic.
-    # blueprint_rigid_character_node.text = "Sprites/Archaea/Dummy/SteamEngine_RustyCog.irc2"  # Too large but looks ok
-    # blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_01.irc2"  # Also too large, a lighter color
-    blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_03.irc2"  # Not a bad size, lightish color
-    # blueprint_rigid_character_node.text = "Icons/Symbols/upgrade_arrow"
-    # blueprint_rigid_character_node.text = "Icons/Symbols/upgrade_arrow_frozen"
-    # blueprint_rigid_character_node.text = "$sym_215"  # In game_menus
+    pickup_blueprint_fall_node = deepcopy(pickup_blueprint_node)
+    pickup_blueprint_node.remove(pickup_blueprint_node.find("./RigidCharacter"))
+    # blueprint_rigid_character_node = pickup_blueprint_node.find("./RigidCharacter/File")
+    # blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_03.irc2"
+    pickup_blueprint_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
+    blueprint_effect_node = create_node("Effect")
+    blueprint_effect_node.append(create_node("ParticleEffect", text=game_data.UPGRADE_EFFECT))
+    pickup_blueprint_node.append(blueprint_effect_node)
 
-    # Add custom archipelago pickups when we get around to making them
+    # Floating offworld item to replace artifacts and containers
     ap_offworld_item_node = deepcopy(pickup_blueprint_node)
-    ap_offworld_item_node.attrib["Name"] = "ap_item_offworld"
-    ap_rigid_character_node = ap_offworld_item_node.find("./RigidCharacter/File")
-    ap_rigid_character_node.text = "Sprites/FireTemple/cog_03.irc2"
-    ap_offworld_item_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
+    ap_offworld_item_node.attrib["Name"] = game_data.AP_OFFWORLD_ITEM
+    # ap_offworld_item_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
+    ap_offworld_item_node.find("./Effect/ParticleEffect").text = game_data.AP_CONTAINER_EFFECT
     pickups_root.append(ap_offworld_item_node)
+
+    # Falling offworld item to replace ores and cogboxes
+    ap_offworld_item_fall_node = deepcopy(pickup_blueprint_fall_node)
+    ap_offworld_item_fall_node.attrib["Name"] = game_data.AP_OFFWORLD_ITEM_FALL
+    ap_rigid_character_node = ap_offworld_item_fall_node.find("./RigidCharacter")
+    ap_rigid_character_node.find("File").text = "Sprites/Pickups/ResourceSodium/resource_sodium.irc2"
+    ap_rigid_character_node.append(create_node("Priority", text="750"))
+    ap_rigid_character_node.append(create_node("Animation", text="Idle"))
+
+    ap_offworld_item_fall_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
+    effect_node = create_node("Effect")
+    effect_node.append(create_node("ParticleEffect", text=game_data.AP_CONTAINER_EFFECT))
+    ap_offworld_item_fall_node.append(effect_node)
+    ap_offworld_physics_node = ap_offworld_item_fall_node.find("Physics")
+    ap_offworld_physics_node.find("CollisionType").text = "pickup"
+    ap_offworld_physics_node.find("CollideWith").text = "hard;actor;golem"
+    ap_offworld_physics_node.find("GravityMultiplier").text = "50"
+    ap_offworld_physics_node.append(create_node("ProhibitInsideLiquidEffect", text="true"))
+    ap_offworld_physics_node.append(create_node("GroundFriction", text="0.3"))
+    ap_offworld_physics_node.append(create_node("WallFriction", text="0.04"))
+    ap_offworld_physics_node.append(create_node("AirResistanceLinear", text="0"))
+    pickups_root.append(ap_offworld_item_fall_node)
 
     pickups_doc.write(pickups_file)
 
@@ -1337,6 +1363,86 @@ def patch_entities(data_dir: str, offworld_item_names: List[str]):
     objects_root.append(spawner_ap_object)
 
     objects_doc.write(objects_file)
+
+
+def patch_effects(data_dir: str):
+    pickups_file = os.path.join(data_dir, "Effects", "pickups.pe")
+    pickups_doc = et.parse(pickups_file)
+    pickups_root = pickups_doc.getroot()
+
+    ap_colors = {
+        "0": "195, 117, 129",
+        "0.167": "211, 160, 125",
+        "0.333": "232, 228, 144",
+        "0.5": "115, 194, 116",
+        "0.667": "122, 120, 186",
+        "0.833": "199, 143, 191",
+    }
+    ap_gradient = ""
+    for key, col in ap_colors.items():
+        ap_gradient += f"{key}:{col}, 182;"
+    ap_gradient += f"1:{ap_colors['0']}, 182"
+
+    super_omni_container_effect_node = None
+    for particle_effect in pickups_root:
+        name_node = particle_effect.find("Name")
+        if name_node is None:
+            continue
+        if name_node.text == "all_resource":
+            super_omni_container_effect_node = particle_effect
+            break
+
+    if super_omni_container_effect_node is None:
+        print("Couldn't find Super Omni Orb Container particle effect node!!")
+        return
+
+    ap_particle_effect_node = deepcopy(super_omni_container_effect_node)
+    ap_particle_effect_node.find("Name").text = game_data.AP_CONTAINER_EFFECT
+    children_node = ap_particle_effect_node.find("Children")
+    core_gem_node = children_node[0]
+    core_gem_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/ap_container_core"
+    for parameter in core_gem_node.find("Parameters"):
+        param_name = parameter.find("Name").text
+        if param_name == "EmitterInitialRotationSpeed":
+            parameter.find("Value").text = "0"
+    glow_node = children_node[3]
+    for parameter in glow_node.find("Parameters"):
+        param_name = parameter.find("Name").text
+        if param_name == "ParticleColor":
+            parameter.find("Value").text = ap_gradient
+    children_node.remove(children_node[2])
+    pickups_root.append(ap_particle_effect_node)
+
+    upgrade_particle_effect_node = deepcopy(ap_particle_effect_node)
+    upgrade_particle_effect_node.find("Name").text = game_data.UPGRADE_EFFECT
+    children_node = upgrade_particle_effect_node.find("Children")
+    core_gem_node = children_node[0]
+    core_gem_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/upgrade_container_core"
+    case_node = children_node[1]
+    case_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/fire_case"
+    glow_node = children_node[2]
+    for parameter in glow_node.find("Parameters"):
+        param_name = parameter.find("Name").text
+        if param_name == "ParticleColor":
+            parameter.find("Value").text = "0:255, 255, 255, 255;1:255, 255, 255, 255"
+    pickups_root.append(upgrade_particle_effect_node)
+
+    pickups_doc.write(pickups_file)
+
+    # Add our custom particles to the definitions file
+    particles_file = os.path.join(data_dir, "Definitions", "particles.xml")
+    particles_doc = et.parse(particles_file)
+    particles_root = particles_doc.getroot()
+
+    new_particles = [
+        game_data.AP_CONTAINER_EFFECT,
+        game_data.UPGRADE_EFFECT,
+    ]
+
+    for particle in new_particles:
+        particles_root.append(create_node("ParticleEffect", name=particle))
+
+    particles_doc.write(particles_file)
 
 
 def extract_file(file_path: str):

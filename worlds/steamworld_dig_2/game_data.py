@@ -12,6 +12,12 @@ ore_entity = "placeholder_ore"
 gem_entity = "placeholder_gem"
 orb_entity = "orb_super_container"
 
+AP_OFFWORLD_ITEM = "ap_item_offworld"
+AP_OFFWORLD_ITEM_FALL = "ap_item_offworld_fall"
+
+AP_CONTAINER_EFFECT = "ap_container"
+UPGRADE_EFFECT = "upgrade"
+
 
 class GameData:
     ap_item_id: Optional[int]
