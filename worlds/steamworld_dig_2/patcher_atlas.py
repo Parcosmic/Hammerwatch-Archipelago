@@ -1,6 +1,6 @@
 import os
 
-from . import patch_files
+from . import assets
 from .client_util import ClientContextData
 
 
@@ -21,7 +21,7 @@ def patch_atlas_and_sprites(ctx: ClientContextData):
 
     # Copy AP atlas to the game files
     ap_atlas_png = f"{AP_ATLAS_NAME}.png"
-    atlas_bytes = files(patch_files).joinpath(ap_atlas_png).read_bytes()
+    atlas_bytes = files(assets).joinpath(ap_atlas_png).read_bytes()
     with open(os.path.join(atlases_dir, ap_atlas_png), "wb") as atlas_writer:
         atlas_writer.write(atlas_bytes)
 
