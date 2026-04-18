@@ -94,68 +94,83 @@ def create_ap_spawner_node(entity_id: int, name: str, position: str, entity: str
     return ap_spawner_node
 
 
-def create_give_valuables_node(entity_id: int, position: str, area: str, health: int = 0, money: int = 0, cogs: int = 0,
-                               light: int = 0, water: int = 0, diesel: int = 0, silent: bool = False):
-    custom_entity_node = et.Element("ScriptEntity")
-    custom_entity_node.append(create_node("Id", None, str(entity_id)))
-    custom_entity_node.append(create_node("Name", None, "GiveValuables"))
-    custom_entity_node.append(create_node("Position", None, position))
-    custom_entity_node.append(create_node("Definition", None, "GiveValuables"))
-    custom_entity_node.append(create_node("Area", None, area))
-    custom_entity_node.append(create_node("Connections"))
-    custom_entity_node.append(create_property_node("Health", "Single", str(health)))
-    custom_entity_node.append(create_property_node("Money", "Int32", str(money)))
-    custom_entity_node.append(create_property_node("Cogs", "Int32", str(cogs)))
-    custom_entity_node.append(create_property_node("Light", "Single", str(light)))
-    custom_entity_node.append(create_property_node("Water", "Single", str(water)))
-    custom_entity_node.append(create_property_node("Diesel", "Single", str(diesel)))
-    custom_entity_node.append(create_property_node("Silent", "Boolean", str(silent)))
-    return custom_entity_node
+def create_script_entity_node_base(entity_id: int, name: str, position: str, definition: str, area: str):
+    script_node = et.Element("ScriptEntity")
+    script_node.append(create_node("Id", None, str(entity_id)))
+    script_node.append(create_node("Name", None, name))
+    script_node.append(create_node("Position", None, position))
+    script_node.append(create_node("Definition", None, definition))
+    script_node.append(create_node("Area", None, area))
+    return script_node
+
+
+def create_give_valuables_node(entity_id: int, position: str, area: str, health: float = 0, money: int = 0, cogs: int = 0,
+                               light: float = 0, water: float = 0, diesel: float = 0, silent: bool = False):
+    script_node = create_script_entity_node_base(entity_id, "GiveValuables", position, "GiveValuables", area)
+    script_node.append(create_node("Connections"))
+    script_node.append(create_property_node("Health", "Single", str(health)))
+    script_node.append(create_property_node("Money", "Int32", str(money)))
+    script_node.append(create_property_node("Cogs", "Int32", str(cogs)))
+    script_node.append(create_property_node("Light", "Single", str(light)))
+    script_node.append(create_property_node("Water", "Single", str(water)))
+    script_node.append(create_property_node("Diesel", "Single", str(diesel)))
+    script_node.append(create_property_node("Silent", "Boolean", str(silent)))
+    return script_node
+
+
+def create_give_blueprint_node(entity_id: int, position: str, area: str, upgrade_id: str):
+    script_node = create_script_entity_node_base(entity_id, "GiveBlueprint", position, "GiveBlueprint", area)
+    script_node.append(create_node("Connections"))
+    script_node.append(create_property_node("UpgradeId", "String", upgrade_id))
+    return script_node
+
+
+def create_give_upgrade_node(entity_id: int, position: str, area: str, upgrade_id: str, require_payment: bool = False):
+    script_node = create_script_entity_node_base(entity_id, "GiveBlueprint", position, "GiveBlueprint", area)
+    script_node.append(create_node("Connections"))
+    script_node.append(create_property_node("UpgradeId", "String", upgrade_id))
+    script_node.append(create_property_node("RequirePayment", "Boolean", str(require_payment)))
+    return script_node
 
 
 def create_on_activated_node(entity_id: int, position: str, area: str, source_id: int, out_ids: list[int]):
-    custom_entity_node = et.Element("ScriptEntity")
-    custom_entity_node.append(create_node("Id", None, str(entity_id)))
-    custom_entity_node.append(create_node("Name", None, "OnActivated"))
-    custom_entity_node.append(create_node("Position", None, position))
-    custom_entity_node.append(create_node("Definition", None, "OnActivated"))
-    custom_entity_node.append(create_node("Area", None, area))
+    script_node = create_script_entity_node_base(entity_id, "OnActivated", position, "OnActivated", area)
     connections_node = create_node("Connections")
     connections_node.append(create_connection_node("entity", "", str(source_id)))
     for out_id in out_ids:
         connections_node.append(create_connection_node("out", "in", str(out_id)))
-    custom_entity_node.append(connections_node)
-    return custom_entity_node
+    script_node.append(connections_node)
+    return script_node
+
+
+def create_on_destroyed_node(entity_id: int, position: str, area: str, source_id: int, out_ids: list[int]):
+    script_node = create_script_entity_node_base(entity_id, "OnDestroyed", position, "OnDestroyed", area)
+    connections_node = create_node("Connections")
+    connections_node.append(create_connection_node("entity", "", str(source_id)))
+    for out_id in out_ids:
+        connections_node.append(create_connection_node("out", "in", str(out_id)))
+    script_node.append(connections_node)
+    return script_node
 
 
 def create_delay_node(entity_id: int, position: str, area: str, delay: float, out_ids: list[int]):
-    custom_entity_node = et.Element("ScriptEntity")
-    custom_entity_node.append(create_node("Id", None, str(entity_id)))
-    custom_entity_node.append(create_node("Name", None, "Delay"))
-    custom_entity_node.append(create_node("Position", None, position))
-    custom_entity_node.append(create_node("Definition", None, "Delay"))
-    custom_entity_node.append(create_node("Area", None, area))
+    script_node = create_script_entity_node_base(entity_id, "Delay", position, "Delay", area)
     connections_node = create_node("Connections")
     for out_id in out_ids:
         connections_node.append(create_connection_node("out", "in", str(out_id)))
-    custom_entity_node.append(connections_node)
-    custom_entity_node.append(create_property_node("Delay", "Single", str(delay)))
-    return custom_entity_node
+    script_node.append(connections_node)
+    script_node.append(create_property_node("Delay", "Single", str(delay)))
+    return script_node
 
 
 def create_toggle_node(entity_id: int, position: str, area: str, target_id: int, out_ids: list[int]):
-    custom_entity_node = et.Element("ScriptEntity")
-    custom_entity_node.append(create_node("Id", None, str(entity_id)))
-    custom_entity_node.append(create_node("Name", None, "ToggleEntity"))
-    custom_entity_node.append(create_node("Position", None, position))
-    custom_entity_node.append(create_node("Definition", None, "ToggleEntity"))
-    custom_entity_node.append(create_node("Area", None, area))
+    script_node = create_script_entity_node_base(entity_id, "ToggleEntity", position, "ToggleEntity", area)
     connections_node = create_node("Connections")
     connections_node.append(create_connection_node("entity", "", str(target_id)))
     for out_id in out_ids:
         connections_node.append(create_connection_node("out", "in", str(out_id)))
-    custom_entity_node.append(connections_node)
-    return custom_entity_node
+    script_node.append(connections_node)
+    return script_node
 
 
 def edit_position(position: str, adjust_x: float, adjust_y: float):

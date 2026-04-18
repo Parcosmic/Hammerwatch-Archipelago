@@ -13,7 +13,10 @@ gem_entity = "placeholder_gem"
 orb_entity = "orb_super_container"
 
 AP_OFFWORLD_ITEM = "ap_item_offworld"
-AP_OFFWORLD_ITEM_FALL = "ap_item_offworld_fall"
+# BLUEPRINT_ITEM_FALL = "blueprint_fall"
+# AP_OFFWORLD_ITEM_FALL = "ap_item_offworld_fall"
+COGBOX_EMPTY = "cogbox_empty"
+COGBOX_SUPER_ORBS = "cogbox_super_orbs"
 
 AP_CONTAINER_EFFECT = "ap_container"
 UPGRADE_EFFECT = "upgrade"

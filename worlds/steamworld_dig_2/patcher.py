@@ -5,14 +5,12 @@ import os
 import shutil
 import random
 from typing import Callable, Tuple, Optional, Iterable
-from copy import deepcopy
 from NetUtils import NetworkItem
 from zipfile import ZipFile, ZIP_DEFLATED
 from CommonClient import logger, CommonContext
 from BaseClasses import ItemClassification
-import xml.etree.ElementTree as et
 
-from .patcher_atlas import patch_atlas_and_sprites
+from .patcher_custom_files import patch_atlas_and_sprites, patch_entities, patch_effects
 from . import game_data
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
                         COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity, orb_entity,
@@ -40,6 +38,7 @@ def patch_files(ctx: ClientContextData):
     patch_levels(data_dir)
     patch_resources(data_dir, ctx)
     language_lines_to_add, offworld_item_names = patch_blueprints(data_dir, ctx)
+
     patch_entities(data_dir, offworld_item_names)
     patch_effects(data_dir)
 
@@ -179,7 +178,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     new_game_outset = outsets_root.find(".//Outset[@Name='new_game']")
     new_game_outset.find(".//Level").text = start_location_data[start_location]
     # new_game_outset.find(".//Level").text = "yarrow_cave_run"
-    new_game_outset.find(".//Level").text = "firetemple_cave_hell_carts"
+    # new_game_outset.find(".//Level").text = "firetemple_cave_hell_carts"
     # new_game_outset.find(".//Level").text = "archaea_1"
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "door_archaea_vectron1"
@@ -385,12 +384,12 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             #     # upgrade_node.find(".//Definition").text = "upgrade_podium_artifact"
             #     randomized_item = cog_item
             # else:
-            randomized_item = get_randomized_item(loc_vanilla_item, locations)
-            if randomized_item is None:
+            randomized_item_name = get_randomized_item(loc_vanilla_item, locations)
+            if randomized_item_name is None:
                 logger.error(f"""Could not find a randomized item for vanilla item {loc_vanilla_item}""")
             else:
                 loc_id = get_location_from_vanilla_item(loc_vanilla_item, locations)
-                if not is_item_upgrade(randomized_item) and "collectible" not in randomized_item:
+                if not is_item_upgrade(randomized_item_name) and "collectible" not in randomized_item_name:
                     upgrade_node.find("./Name").text = str(loc_id)
                     # entity_node_name = upgrade_node.find("./Name").text + "_item"
                     entity_node_name = str(loc_id)
@@ -399,7 +398,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                         new_pos = position
                     else:
                         new_pos = edit_position(position, 0, -60)
-                    if randomized_item == cog_item:
+                    if randomized_item_name == cog_item:
                         # Create nodes to award the cog after the podium animation finishes
                         on_act_node_id = loc_id * 10
                         delay_node_id = on_act_node_id + 1
@@ -413,12 +412,12 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                             create_give_valuables_node(give_node_id, position, area, cogs=1))
                     else:  # Entities that we need to hack in a spawner for
                         # TODO: change this dynamically based on the level
-                        if randomized_item == ore_entity:
+                        if randomized_item_name == ore_entity:
                             pickup_name = "pickup_resource_gold"
-                        elif randomized_item == gem_entity:
+                        elif randomized_item_name == gem_entity:
                             pickup_name = "pickup_resource_diamond"
                         else:
-                            pickup_name = randomized_item
+                            pickup_name = randomized_item_name
                         on_act_node_id = loc_id * 10
                         delay_node_id = on_act_node_id + 1
                         toggle_node_1_id = on_act_node_id + 2
@@ -432,10 +431,10 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                             create_toggle_node(toggle_node_1_id, position, area, spawner_id, []))
                         entity_parent_node.append(
                             create_ap_spawner_node(spawner_id, entity_node_name, new_pos, pickup_name))
-                        randomized_item = pickup_name  # So the podium knows what item to display
+                        randomized_item_name = pickup_name  # So the podium knows what item to display
                     nodes_to_delete.append(upgrade_node)
                 upgrade_node.find("Name").text = str(loc_id)
-                upgrade_value_node.text = randomized_item
+                upgrade_value_node.text = randomized_item_name
         for node_to_delete in nodes_to_delete:
             upgrade_nodes.remove(node_to_delete)
 
@@ -445,16 +444,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='upgrade_cog_container']"))
         if randomize_artifacts:
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_collectible']"))
-        if randomize_ores:
-            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_ore']"))
-            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_gem']"))
-            freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_trashium']"))
-            if "vectron" in patchset_file:
-                freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron']"))
-                freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_02']"))
-                freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_03']"))
-                freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_04']"))
-                freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_05']"))
         if randomize_orbs:
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_health_container']"))
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='orb_light_container']"))
@@ -471,23 +460,21 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             if has_property_node:
                 property_value_node = freestanding_node.find(".//Property/Value")
             node_def = definition_node.text
-            was_ore = node_def.startswith("placeholder_") or node_def == "pickup_resource_trashium"
             was_orb = node_def.startswith("orb_")
             # Get item from entity id
             node_id = freestanding_node.find(".//Id").text
             node_loc_id = int(node_id)
             # This is a hack but all ore/orb locations are prepended with a 1 to avoid collisions
-            if was_ore or was_orb:
-                if hack_ore_ids:  # More hacks!!!!
-                    node_loc_id = int("3" + node_id)
+            if was_orb:
+                # This is even more of a hack but all omni orb locations are prepended with a 2 to avoid collisions
+                if node_def == "orb_container":
+                    node_loc_id = int("2" + node_id)
                 else:
                     node_loc_id = int("1" + node_id)
-            # This is even more of a hack but all omni orb locations are prepended with a 2 to avoid collisions
-            if node_def == "orb_container":
-                node_loc_id = int("2" + node_id)
             # Set the name so that the mod knows what location this is
-            freestanding_node.find(".//Name").text = str(node_loc_id)
-            randomized_item = get_randomized_item_at_location(node_loc_id, locations)
+            entity_node_name = str(node_loc_id)
+            freestanding_node.find(".//Name").text = entity_node_name
+            randomized_item: Optional[NetworkItem] = get_randomized_item_at_location(node_loc_id, locations)
             if randomized_item is None:
                 continue
             if randomized_item.item in ap_item_to_in_game_name:
@@ -508,17 +495,14 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 size_node.text = "64, 64"
                 if has_property_node:
                     freestanding_node.remove(property_node)
-                if was_ore:
-                    definition_node.text = randomized_item_pickup_name
+                # TODO: change this dynamically based on the level
+                if randomized_item_pickup_name == ore_entity:
+                    definition_node.text = "pickup_resource_gold"
+                elif randomized_item_pickup_name == gem_entity:
+                    definition_node.text = "pickup_resource_diamond"
                 else:
-                    # TODO: change this dynamically based on the level
-                    if randomized_item_pickup_name == ore_entity:
-                        definition_node.text = "pickup_resource_gold"
-                    elif randomized_item_pickup_name == gem_entity:
-                        definition_node.text = "pickup_resource_diamond"
-                    else:
-                        definition_node.text = randomized_item_pickup_name
-                    # sand_tiles_to_add.append(position_node.text)
+                    definition_node.text = randomized_item_pickup_name
+                # sand_tiles_to_add.append(position_node.text)
             elif randomized_item_pickup_name == orb_entity:
                 size_node.text = "82, 81"
                 if has_property_node:
@@ -526,10 +510,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 definition_node.text = randomized_item_pickup_name
             else:
                 if "collectible" in randomized_item_pickup_name:
-                    if was_ore:
-                        definition_name = "pickup_blueprint"  # TODO make this a custom artifact item w gravity
-                    else:
-                        definition_name = "pickup_collectible"
+                    definition_name = "pickup_collectible"
                 elif randomized_item_pickup_name.startswith("ap_"):
                     definition_name = game_data.AP_OFFWORLD_ITEM
                 else:
@@ -541,6 +522,75 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                     property_value_node = property_node.find(".//Value")
                     freestanding_node.append(property_node)
                 property_value_node.text = randomized_item_pickup_name
+
+        # Patch ore blocks
+        ore_entities = []
+        if randomize_ores:
+            ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_ore']"))
+            ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_gem']"))
+            ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_trashium']"))
+            if "vectron" in patchset_file:
+                ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron']"))
+                ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_02']"))
+                ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_03']"))
+                ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_04']"))
+                ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='pickup_resource_vectron_05']"))
+        for ore_node in ore_entities:
+            position_node = ore_node.find(".//Position")
+            size_node = ore_node.find(".//Size")
+            definition_node = ore_node.find(".//Definition")
+            node_def = definition_node.text
+            # Get item from entity id
+            node_id = ore_node.find(".//Id").text
+            orig_node_loc_id = int(node_id)
+            # This is a hack but all ore/orb locations are prepended with a 1 to avoid collisions
+            if hack_ore_ids:  # More hacks!!!!
+                node_loc_id = int("3" + node_id)
+            else:
+                node_loc_id = int("1" + node_id)
+            # Set the name so that the mod knows what location this is
+            entity_node_name = str(node_loc_id)
+            ore_node.find(".//Name").text = entity_node_name
+            randomized_item: Optional[NetworkItem] = get_randomized_item_at_location(node_loc_id, locations)
+            if randomized_item is None:
+                continue
+            if randomized_item.item in ap_item_to_in_game_name:
+                randomized_item_pickup_name = ap_item_to_in_game_name[randomized_item.item]
+            else:
+                randomized_item_pickup_name = f"ap_{randomized_item.location}"
+
+            if randomized_item_pickup_name == cog_item:
+                size_node.text = "120, 120"
+                definition_node.text = "upgrade_cog_container"
+            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity\
+                    or "pickup_resource_vectron" in randomized_item_pickup_name:
+                size_node.text = "64, 64"
+                definition_node.text = randomized_item_pickup_name
+            elif randomized_item_pickup_name == orb_entity:
+                size_node.text = "120, 120"
+                definition_node.text = game_data.COGBOX_SUPER_ORBS
+            else:
+                # For other item types, replace it with our empty cogbox and create nodes to award the item
+                # TODO GiveUpgrade doesn't award collectibles for some stupid reason >:|
+                definition_name = game_data.COGBOX_EMPTY
+                position = position_node.text
+                on_des_node_id = orig_node_loc_id * 10
+                give_node_id = on_des_node_id + 1
+                area = f"{edit_position(position, -70, -32)}, 140, 63"
+                entity_parent_node.append(
+                    create_on_destroyed_node(on_des_node_id, position, area, orig_node_loc_id, [give_node_id]))
+                if is_item_upgrade(randomized_item_pickup_name) or "collectible" in randomized_item_pickup_name:
+                    entity_parent_node.append(
+                        create_give_upgrade_node(give_node_id, position, area, randomized_item_pickup_name))
+                else:  # Entities that we need to hack in a spawner for
+                    spawner_id = on_des_node_id + 5
+                    pickup_name = randomized_item_pickup_name
+                    entity_parent_node.append(
+                        create_toggle_node(give_node_id, position, area, spawner_id, []))
+                    entity_parent_node.append(
+                        create_ap_spawner_node(spawner_id, entity_node_name, position, pickup_name))
+                size_node.text = "86, 83"
+                definition_node.text = definition_name
 
         # Change tilemap if ore blocks need to be created/destroyed
         foreground_tilelayer_tile_size = [int(s) for s in foreground_node.find("TileSize").text.split(", ")]
@@ -1258,191 +1308,6 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> tuple[Iterab
     upgrades_doc.write(upgrades_file)
 
     return lang_lines_to_add, offworld_item_names
-
-
-def patch_entities(data_dir: str, offworld_item_names: List[str]):
-    pickups_file = os.path.join(data_dir, "Definitions", "entities.pickups.xml")
-    pickups_doc = et.parse(pickups_file)
-    pickups_root = pickups_doc.getroot()
-
-    # Edit sprite of freestanding blueprints
-    pickup_blueprint_node = pickups_root.find(".//Entity[@Name='pickup_blueprint']")
-    pickup_blueprint_fall_node = deepcopy(pickup_blueprint_node)
-    pickup_blueprint_node.remove(pickup_blueprint_node.find("./RigidCharacter"))
-    # blueprint_rigid_character_node = pickup_blueprint_node.find("./RigidCharacter/File")
-    # blueprint_rigid_character_node.text = "Sprites/ElMachino/cog_03.irc2"
-    pickup_blueprint_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
-    blueprint_effect_node = create_node("Effect")
-    blueprint_effect_node.append(create_node("ParticleEffect", text=game_data.UPGRADE_EFFECT))
-    pickup_blueprint_node.append(blueprint_effect_node)
-
-    # Floating offworld item to replace artifacts and containers
-    ap_offworld_item_node = deepcopy(pickup_blueprint_node)
-    ap_offworld_item_node.attrib["Name"] = game_data.AP_OFFWORLD_ITEM
-    # ap_offworld_item_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
-    ap_offworld_item_node.find("./Effect/ParticleEffect").text = game_data.AP_CONTAINER_EFFECT
-    pickups_root.append(ap_offworld_item_node)
-
-    # Falling offworld item to replace ores and cogboxes
-    ap_offworld_item_fall_node = deepcopy(pickup_blueprint_fall_node)
-    ap_offworld_item_fall_node.attrib["Name"] = game_data.AP_OFFWORLD_ITEM_FALL
-    ap_rigid_character_node = ap_offworld_item_fall_node.find("./RigidCharacter")
-    ap_rigid_character_node.find("File").text = "Sprites/Pickups/ResourceSodium/resource_sodium.irc2"
-    ap_rigid_character_node.append(create_node("Priority", text="750"))
-    ap_rigid_character_node.append(create_node("Animation", text="Idle"))
-
-    ap_offworld_item_fall_node.find("./LightComponent/Color").text = "1.0, 1.0, 1.0"
-    effect_node = create_node("Effect")
-    effect_node.append(create_node("ParticleEffect", text=game_data.AP_CONTAINER_EFFECT))
-    ap_offworld_item_fall_node.append(effect_node)
-    ap_offworld_physics_node = ap_offworld_item_fall_node.find("Physics")
-    ap_offworld_physics_node.find("CollisionType").text = "pickup"
-    ap_offworld_physics_node.find("CollideWith").text = "hard;actor;golem"
-    ap_offworld_physics_node.find("GravityMultiplier").text = "50"
-    ap_offworld_physics_node.append(create_node("ProhibitInsideLiquidEffect", text="true"))
-    ap_offworld_physics_node.append(create_node("GroundFriction", text="0.3"))
-    ap_offworld_physics_node.append(create_node("WallFriction", text="0.04"))
-    ap_offworld_physics_node.append(create_node("AirResistanceLinear", text="0"))
-    pickups_root.append(ap_offworld_item_fall_node)
-
-    pickups_doc.write(pickups_file)
-
-    editor_pickups_file = os.path.join(data_dir, "Definitions", "editor_pickups.xml")
-    editor_pickups_doc = et.parse(editor_pickups_file)
-    editor_pickups_root = editor_pickups_doc.getroot()
-
-    editor_pickup_entries_to_add = [
-        *in_game_item_data.keys(),
-        *offworld_item_names,
-    ]
-    # Add custom blueprint pickup items
-    for editor_string in editor_pickup_entries_to_add:
-        if "collectible" in editor_string:
-            continue
-        editor_pickup_node = et.Element("EditorPickup")
-        editor_pickup_node.attrib["Name"] = editor_string
-        value_node = et.Element("Value")
-        value_node.text = editor_string
-        editor_pickup_node.append(value_node)
-        editor_pickups_root.append(editor_pickup_node)
-
-    editor_pickups_doc.write(editor_pickups_file)
-
-    objects_file = os.path.join(data_dir, "Definitions", "entities.objects.xml")
-    objects_doc = et.parse(objects_file)
-    objects_root = objects_doc.getroot()
-
-    teleporter_ap_object = deepcopy(objects_root.find("./Entity[@Name='teleporter']"))
-    teleporter_ap_object.attrib["Name"] = "teleporter_ap"
-    teleporter_blocker_info = teleporter_ap_object.find("./Blocker")
-    teleporter_blocker_info.find("./ThemedBlockerEntities").clear()
-    # teleporter_blocker_info.find("./UnblockBanner").attrib["IsTeleporter"] = "false"
-    # teleporter_ap_object.remove(teleporter_blocker_info)
-    objects_root.append(teleporter_ap_object)
-
-    # Gotta build the spawner from scratch so it doesn't get frozen during cutscenes
-    spawner_ap_object = et.Element("Entity", attrib={"Name": "spawner_ap", "Template": "triggered_arrow_shooter_single"})
-    spawner_ap_object.append(et.Element("CutsceneFreeze", attrib={"Enable": "false"}))
-
-    spawner_node = create_node("Spawner")
-    spawner_node.append(et.Element("Spawn", attrib={"Offset": "0, 1"}))
-    spawner_node.append(create_node("Interval", text="0"))
-    spawner_node.append(create_node("StartActive", text="false"))
-    spawner_node.append(create_node("DeactivateAfterActiveTime", text="true"))
-    spawner_node.append(create_node("ActiveTime", text="0.1"))
-    spawner_node.append(create_node("SpawnsPerActiveTime", text="1"))
-    spawner_ap_object.append(spawner_node)
-
-    physics_node = create_node("Physics")
-    physics_node.append(create_node("CollisionType", text="ghost"))
-    spawner_ap_object.append(physics_node)
-
-    texture_node = create_node("Texture")
-    texture_node.append(create_node("File", text=""))
-    spawner_ap_object.append(texture_node)
-    objects_root.append(spawner_ap_object)
-
-    objects_doc.write(objects_file)
-
-
-def patch_effects(data_dir: str):
-    pickups_file = os.path.join(data_dir, "Effects", "pickups.pe")
-    pickups_doc = et.parse(pickups_file)
-    pickups_root = pickups_doc.getroot()
-
-    ap_colors = {
-        "0": "195, 117, 129",
-        "0.167": "211, 160, 125",
-        "0.333": "232, 228, 144",
-        "0.5": "115, 194, 116",
-        "0.667": "122, 120, 186",
-        "0.833": "199, 143, 191",
-    }
-    ap_gradient = ""
-    for key, col in ap_colors.items():
-        ap_gradient += f"{key}:{col}, 182;"
-    ap_gradient += f"1:{ap_colors['0']}, 182"
-
-    super_omni_container_effect_node = None
-    for particle_effect in pickups_root:
-        name_node = particle_effect.find("Name")
-        if name_node is None:
-            continue
-        if name_node.text == "all_resource":
-            super_omni_container_effect_node = particle_effect
-            break
-
-    if super_omni_container_effect_node is None:
-        print("Couldn't find Super Omni Orb Container particle effect node!!")
-        return
-
-    ap_particle_effect_node = deepcopy(super_omni_container_effect_node)
-    ap_particle_effect_node.find("Name").text = game_data.AP_CONTAINER_EFFECT
-    children_node = ap_particle_effect_node.find("Children")
-    core_gem_node = children_node[0]
-    core_gem_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/ap_container_core"
-    for parameter in core_gem_node.find("Parameters"):
-        param_name = parameter.find("Name").text
-        if param_name == "EmitterInitialRotationSpeed":
-            parameter.find("Value").text = "0"
-    glow_node = children_node[3]
-    for parameter in glow_node.find("Parameters"):
-        param_name = parameter.find("Name").text
-        if param_name == "ParticleColor":
-            parameter.find("Value").text = ap_gradient
-    children_node.remove(children_node[2])
-    pickups_root.append(ap_particle_effect_node)
-
-    upgrade_particle_effect_node = deepcopy(ap_particle_effect_node)
-    upgrade_particle_effect_node.find("Name").text = game_data.UPGRADE_EFFECT
-    children_node = upgrade_particle_effect_node.find("Children")
-    core_gem_node = children_node[0]
-    core_gem_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/upgrade_container_core"
-    case_node = children_node[1]
-    case_node.find("./Parameters/Parameter/Value").text = "Textures/Pickups/fire_case"
-    glow_node = children_node[2]
-    for parameter in glow_node.find("Parameters"):
-        param_name = parameter.find("Name").text
-        if param_name == "ParticleColor":
-            parameter.find("Value").text = "0:255, 255, 255, 255;1:255, 255, 255, 255"
-    pickups_root.append(upgrade_particle_effect_node)
-
-    pickups_doc.write(pickups_file)
-
-    # Add our custom particles to the definitions file
-    particles_file = os.path.join(data_dir, "Definitions", "particles.xml")
-    particles_doc = et.parse(particles_file)
-    particles_root = particles_doc.getroot()
-
-    new_particles = [
-        game_data.AP_CONTAINER_EFFECT,
-        game_data.UPGRADE_EFFECT,
-    ]
-
-    for particle in new_particles:
-        particles_root.append(create_node("ParticleEffect", name=particle))
-
-    particles_doc.write(particles_file)
 
 
 def extract_file(file_path: str):
