@@ -4,8 +4,7 @@
 import os
 import shutil
 import random
-from typing import Callable, Tuple, Optional, Iterable
-from NetUtils import NetworkItem
+from typing import Callable, Optional, Iterable
 from zipfile import ZipFile, ZIP_DEFLATED
 from CommonClient import logger, CommonContext
 from BaseClasses import ItemClassification
@@ -13,12 +12,10 @@ from BaseClasses import ItemClassification
 from .patcher_custom_files import patch_atlas_and_sprites, patch_entities, patch_effects
 from . import game_data
 from .game_data import (in_game_item_data, ap_item_to_in_game_name, door_source_regions, cave_doors,
-                        COG_COSTS, EXTRA_COG_COSTS, shop_item_data, cog_item, ore_entity, gem_entity, orb_entity,
-                        BLOODSTONE_VALUE_MULTIPLIER, PODIUM_ANIM_TIME)
-from .names import option_name, item_name, location_name, entrance_name
+                        COG_COSTS, EXTRA_COG_COSTS, shop_item_data)
+from .names import option_name, item_name, entrance_name
 from . import options
 from .items import item_table, lookup_id_to_name, ItemType
-from .regions import REGIONS
 from .client_util import *
 
 import zlib
@@ -28,7 +25,7 @@ def patch_files(ctx: ClientContextData):
     bundle_dir = os.path.join(ctx.game_dir, "Bundle")
     data_dir = os.path.join(bundle_dir, "data01")
 
-    non_data_files: List[str] = extract_game_files(ctx.game_dir)
+    non_data_files: list[str] = extract_game_files(ctx.game_dir)
 
     patch_atlas_and_sprites(ctx)
 
@@ -84,14 +81,14 @@ def extract_game_files(game_dir: str):
             for member in data_zip.infolist():
                 data_zip.extract(member, path=data_dir)
 
-    non_data_files: List[str] = []
+    non_data_files: list[str] = []
     for non_data_file in non_data_files_that_need_patching:
         file_path = os.path.join(bundle_dir, non_data_file)
         non_data_files.append(extract_file(file_path))
     return non_data_files
 
 
-def pack_game_files(game_dir: str, non_data_files: List[str]):
+def pack_game_files(game_dir: str, non_data_files: list[str]):
     bundle_dir = os.path.join(game_dir, "Bundle")
     data_dir = os.path.join(bundle_dir, "data01")
     impak_file = os.path.join(bundle_dir, "data01.impak")
@@ -112,9 +109,9 @@ def patch_lang_file(bundle_dir: str, language_lines_to_add: Iterable[tuple[str, 
         ("apitem", "Archipelago Item"),
         ("upgrade_cog_desc", "Used to enable Cog Mods."),
         ("upgrade_cog_flavor", "\"\"\"Upgrades, people, upgrades!\"\"\""),
-        (orb_entity, item_name.omni_orbs),
-        (f"{orb_entity}_desc", "Restores health, water, and light when broken open."),
-        (f"{orb_entity}_flavor", "\"\"\"Taste the rainbow!\"\"\""),
+        (game_data.ORB_SUPER_CONTAINER, item_name.omni_orbs),
+        (f"{game_data.ORB_SUPER_CONTAINER}_desc", "Restores health, water, and light when broken open."),
+        (f"{game_data.ORB_SUPER_CONTAINER}_flavor", "\"\"\"Taste the rainbow!\"\"\""),
         *language_lines_to_add
     ]
 
@@ -124,7 +121,7 @@ def patch_lang_file(bundle_dir: str, language_lines_to_add: Iterable[tuple[str, 
 
 
 def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextData):
-    slot_data: Dict[str, Any] = ctx_data.slot_data
+    slot_data: dict[str, Any] = ctx_data.slot_data
     items_received: list[NetworkItem] = ctx_data.items_received
 
     outsets_file = os.path.join(data_dir, "Definitions", "outsets.xml")
@@ -141,7 +138,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
 
     start_inventory: list[int] = [item.item for item in items_received if item.location == -2]
     # Add default items to the dict
-    start_items: Dict[str, int] = {
+    start_items: dict[str, int] = {
         item_name.lamp: 2,
         item_name.armor: 1,
         item_name.pickaxe: 1,
@@ -220,8 +217,6 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
                 resource_name = "resource_diamond"
             if resource_name is None:
                 continue
-            # if resource_name not in start_resources:
-            #     start_resources[resource_name] = 0
             start_resources[resource_name] = start_count
 
     if level > 1:
@@ -264,7 +259,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     outsets_doc.write(outsets_file)
 
 
-def get_location_from_vanilla_item(vanilla_item: str, locations: Dict[int, NetworkItem]):
+def get_location_from_vanilla_item(vanilla_item: str, locations: dict[int, NetworkItem]):
     if vanilla_item not in in_game_item_data:
         return None
     loc_id = in_game_item_data[vanilla_item].ap_loc_id
@@ -273,7 +268,7 @@ def get_location_from_vanilla_item(vanilla_item: str, locations: Dict[int, Netwo
     return loc_id
 
 
-def get_randomized_item(vanilla_item: str, locations: Dict[int, NetworkItem]):
+def get_randomized_item(vanilla_item: str, locations: dict[int, NetworkItem]):
     loc_id = get_location_from_vanilla_item(vanilla_item, locations)
     if loc_id is None:
         return None
@@ -281,7 +276,7 @@ def get_randomized_item(vanilla_item: str, locations: Dict[int, NetworkItem]):
     return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else f"ap_{loc_id}"
 
 
-def get_randomized_shop_item(tool_name: str, tier_index: int, locations: Dict[int, NetworkItem]):
+def get_randomized_shop_item(tool_name: str, tier_index: int, locations: dict[int, NetworkItem]):
     if tier_index >= len(shop_item_data[tool_name]):
         return None
     loc_data = shop_item_data[tool_name][tier_index]
@@ -292,27 +287,26 @@ def get_randomized_shop_item(tool_name: str, tier_index: int, locations: Dict[in
         return None
     network_item = locations[loc_id]
     randomized_item = ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
-    if randomized_item == cog_item:
+    if randomized_item == game_data.PICKUP_UPGRADE_COG:
         return None
     return randomized_item
 
 
-def get_randomized_item_at_location(loc_id: int, locations: Dict[int, NetworkItem]):
+def get_randomized_item_at_location(loc_id: int, locations: dict[int, NetworkItem]):
     if loc_id not in locations:
         return None
     network_item = locations[loc_id]
     return network_item
-    # return ap_item_to_in_game_name[network_item.item] if network_item.item in ap_item_to_in_game_name else None
 
 
 def is_item_upgrade(name: str):
-    return (name != cog_item and "collectible" not in name and name != ore_entity and name != gem_entity
-            and name != orb_entity and not name.startswith("pickup_resource_"))
+    return ("collectible" not in name and name not in game_data.RANDOMIZED_ITEM_ENTITIES
+            and not name.startswith("pickup_resource_"))
 
 
 def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
-    slot_data: Dict[str, Any] = ctx_data.slot_data
-    locations: Dict[int, NetworkItem] = ctx_data.locations_info
+    slot_data: dict[str, Any] = ctx_data.slot_data
+    locations: dict[int, NetworkItem] = ctx_data.locations_info
 
     data_dir = os.path.join(bundle_dir, "data01")
     patchsets_dir = os.path.join(data_dir, "Patchsets")
@@ -326,7 +320,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     patchset_files.append(os.path.join(bundle_dir, "Patchsets", "TempleOfGuidance", "temple_of_guidance.le"))
 
     # These files are going to be custom patched to include various convenience patches from the base rando
-    custom_patches: Dict[str, Callable[[et.Element], None]] = {
+    custom_patches: dict[str, Callable[[et.Element], None]] = {
         os.path.join(patchsets_dir, "WestDesert", "west_desert_intro.le"): patch_intro,
         os.path.join(patchsets_dir, "Archaea", "archaea_patch_entrance.le"): patch_archaea_entrance,
         os.path.join(patchsets_dir, "TheHub", "the_hub_patch_main.le"): patch_oasis,
@@ -335,7 +329,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     if option_name.skip_vectron not in ctx_data.slot_data or ctx_data.slot_data[option_name.skip_vectron]:
         custom_patches[os.path.join(patchsets_dir, "Archaea", "archaea_cave_vectron_entrance.le")] = patch_vectron
 
-    return_tubes: List[Tuple[str, int, int]] = [
+    return_tubes: list[tuple[str, int, int]] = [
         ("temple_of_guidance.le", -240, 0),
         ("archaea_cave_pressurebomb.le", -240, 0),
         ("archaea_cave_jackhammer.le", 240, 0),
@@ -346,11 +340,11 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         ("yarrow_cave_steampack_slayer.le", 240, 0),
     ]
 
-    entrance_swaps: Dict[str, int] = slot_data["Entrance Swaps"]
-    randomize_cogs: Dict[str, int] = slot_data["randomize_cogs"]
-    randomize_artifacts: Dict[str, int] = slot_data["randomize_artifacts"]
-    randomize_ores: Dict[str, int] = slot_data["randomize_ores"]
-    randomize_orbs: Dict[str, int] = slot_data["randomize_orbs"]
+    entrance_swaps: dict[str, int] = slot_data["Entrance Swaps"]
+    randomize_cogs: dict[str, int] = slot_data["randomize_cogs"]
+    randomize_artifacts: dict[str, int] = slot_data["randomize_artifacts"]
+    randomize_ores: dict[str, int] = slot_data["randomize_ores"]
+    randomize_orbs: dict[str, int] = slot_data["randomize_orbs"]
     for patchset_file in patchset_files:
         patchset_doc = et.parse(patchset_file)
         patchset_root = patchset_doc.getroot()
@@ -361,13 +355,11 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         foreground_node = patchset_root.find(".//TileLayer[Name='Foreground']")
         entity_parent_node = foreground_node.find("Entities")
 
-        sand_tiles_to_add = []  # For randomizing ore/gem blocks
-        air_tiles_to_add = []
         hack_ore_ids = "firetemple_cave_treasure_chamber" in patchset_file
 
         # Patch randomized locations
         upgrade_nodes = []
-        upgrade_podium_nodes: List[et.Element] = [
+        upgrade_podium_nodes: list[et.Element] = [
             *patchset_root.findall(".//CustomEntity[Definition='upgrade_podium']"),
         ]
         upgrade_nodes.extend(upgrade_podium_nodes)
@@ -378,12 +370,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             if upgrade_value_node is None:
                 continue
             loc_vanilla_item = upgrade_value_node.text
-            # if loc_vanilla_item == "run_boots":  # For testing
-            #     # property_name_node = upgrade_node.find(".//Property/Name")
-            #     # property_name_node.text = "EditorPickup"
-            #     # upgrade_node.find(".//Definition").text = "upgrade_podium_artifact"
-            #     randomized_item = cog_item
-            # else:
             randomized_item_name = get_randomized_item(loc_vanilla_item, locations)
             if randomized_item_name is None:
                 logger.error(f"""Could not find a randomized item for vanilla item {loc_vanilla_item}""")
@@ -391,14 +377,13 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 loc_id = get_location_from_vanilla_item(loc_vanilla_item, locations)
                 if not is_item_upgrade(randomized_item_name) and "collectible" not in randomized_item_name:
                     upgrade_node.find("./Name").text = str(loc_id)
-                    # entity_node_name = upgrade_node.find("./Name").text + "_item"
                     entity_node_name = str(loc_id)
                     position = upgrade_node.find("./Position").text
                     if loc_id in { 32579550, 32588814, 32592305 }:  # Make the object spawn normally for the yonker bros
                         new_pos = position
                     else:
                         new_pos = edit_position(position, 0, -60)
-                    if randomized_item_name == cog_item:
+                    if randomized_item_name == game_data.PICKUP_UPGRADE_COG:
                         # Create nodes to award the cog after the podium animation finishes
                         on_act_node_id = loc_id * 10
                         delay_node_id = on_act_node_id + 1
@@ -407,14 +392,14 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                         entity_parent_node.append(
                             create_on_activated_node(on_act_node_id, position, area, loc_id, [delay_node_id]))
                         entity_parent_node.append(
-                            create_delay_node(delay_node_id, position, area, PODIUM_ANIM_TIME, [give_node_id]))
+                            create_delay_node(delay_node_id, position, area, game_data.PODIUM_ANIM_TIME, [give_node_id]))
                         entity_parent_node.append(
                             create_give_valuables_node(give_node_id, position, area, cogs=1))
                     else:  # Entities that we need to hack in a spawner for
                         # TODO: change this dynamically based on the level
-                        if randomized_item_name == ore_entity:
+                        if randomized_item_name == game_data.PLACEHOLDER_ORE:
                             pickup_name = "pickup_resource_gold"
-                        elif randomized_item_name == gem_entity:
+                        elif randomized_item_name == game_data.PLACEHOLDER_GEM:
                             pickup_name = "pickup_resource_diamond"
                         else:
                             pickup_name = randomized_item_name
@@ -426,7 +411,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                         entity_parent_node.append(
                             create_on_activated_node(on_act_node_id, position, area, loc_id, [delay_node_id]))
                         entity_parent_node.append(
-                            create_delay_node(delay_node_id, position, area, PODIUM_ANIM_TIME, [toggle_node_1_id]))
+                            create_delay_node(delay_node_id, position, area, game_data.PODIUM_ANIM_TIME, [toggle_node_1_id]))
                         entity_parent_node.append(
                             create_toggle_node(toggle_node_1_id, position, area, spawner_id, []))
                         entity_parent_node.append(
@@ -482,28 +467,29 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             else:
                 randomized_item_pickup_name = f"ap_{randomized_item.location}"
 
-            if randomized_item_pickup_name == cog_item:
+            if randomized_item_pickup_name == game_data.PICKUP_UPGRADE_COG:
                 size_node.text = "120, 120"
                 if was_orb:
-                    definition_node.text = cog_item
+                    definition_node.text = game_data.PICKUP_UPGRADE_COG
                 else:
                     definition_node.text = "upgrade_cog_container"
                 if has_property_node:
                     freestanding_node.remove(property_node)
-            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity\
-                    or "pickup_resource_vectron" in randomized_item_pickup_name:
+            elif (randomized_item_pickup_name == game_data.PLACEHOLDER_ORE
+                  or randomized_item_pickup_name == game_data.PLACEHOLDER_GEM
+                  or "pickup_resource_vectron" in randomized_item_pickup_name):
                 size_node.text = "64, 64"
                 if has_property_node:
                     freestanding_node.remove(property_node)
                 # TODO: change this dynamically based on the level
-                if randomized_item_pickup_name == ore_entity:
+                if randomized_item_pickup_name == game_data.PLACEHOLDER_ORE:
                     definition_node.text = "pickup_resource_gold"
-                elif randomized_item_pickup_name == gem_entity:
+                elif randomized_item_pickup_name == game_data.PLACEHOLDER_GEM:
                     definition_node.text = "pickup_resource_diamond"
                 else:
                     definition_node.text = randomized_item_pickup_name
                 # sand_tiles_to_add.append(position_node.text)
-            elif randomized_item_pickup_name == orb_entity:
+            elif randomized_item_pickup_name == game_data.ORB_SUPER_CONTAINER:
                 size_node.text = "82, 81"
                 if has_property_node:
                     freestanding_node.remove(property_node)
@@ -539,7 +525,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             position_node = ore_node.find(".//Position")
             size_node = ore_node.find(".//Size")
             definition_node = ore_node.find(".//Definition")
-            node_def = definition_node.text
             # Get item from entity id
             node_id = ore_node.find(".//Id").text
             orig_node_loc_id = int(node_id)
@@ -559,14 +544,15 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             else:
                 randomized_item_pickup_name = f"ap_{randomized_item.location}"
 
-            if randomized_item_pickup_name == cog_item:
+            if randomized_item_pickup_name == game_data.PICKUP_UPGRADE_COG:
                 size_node.text = "120, 120"
                 definition_node.text = "upgrade_cog_container"
-            elif randomized_item_pickup_name == ore_entity or randomized_item_pickup_name == gem_entity\
-                    or "pickup_resource_vectron" in randomized_item_pickup_name:
+            elif (randomized_item_pickup_name == game_data.PLACEHOLDER_ORE
+                  or randomized_item_pickup_name == game_data.PLACEHOLDER_GEM
+                  or "pickup_resource_vectron" in randomized_item_pickup_name):
                 size_node.text = "64, 64"
                 definition_node.text = randomized_item_pickup_name
-            elif randomized_item_pickup_name == orb_entity:
+            elif randomized_item_pickup_name == game_data.ORB_SUPER_CONTAINER:
                 size_node.text = "120, 120"
                 definition_node.text = game_data.COGBOX_SUPER_ORBS
             else:
@@ -591,42 +577,6 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                         create_ap_spawner_node(spawner_id, entity_node_name, position, pickup_name))
                 size_node.text = "86, 83"
                 definition_node.text = definition_name
-
-        # Change tilemap if ore blocks need to be created/destroyed
-        foreground_tilelayer_tile_size = [int(s) for s in foreground_node.find("TileSize").text.split(", ")]
-        foreground_tilelayer_offset = [int(s) for s in foreground_node.find("TileOffset").text.split(", ")]
-        foreground_tile_mapping_node = foreground_node.find("TileMappings")
-        foreground_tiles_node = foreground_node.find("Tiles")
-        if len(sand_tiles_to_add) > 0:
-            sand_node = foreground_tile_mapping_node.find(".//Mapping[@Name=\"sand\"]")
-            if sand_node is not None:
-                sand_node_index = list(foreground_tile_mapping_node).index(sand_node)
-            else:
-                sand_node = et.Element("Mapping", attrib={
-                    "Name": "sand",
-                    "FlipX": "False",
-                    "FlipY": "False",
-                    "Rotation": "0",
-                })
-                sand_node_index = len(foreground_tile_mapping_node)
-                foreground_tile_mapping_node.append(sand_node)
-            for entity_pos in sand_tiles_to_add:
-                tile_pos: list[float] = [float(p) for p in entity_pos.split(", ")]
-                tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0]) - foreground_tilelayer_offset[0]
-                tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1]) - foreground_tilelayer_offset[1]
-                row_node = foreground_tiles_node[tile_pos_y]
-                row_indices = row_node.text.split(" ")
-                row_indices[tile_pos_x] = str(sand_node_index)
-                row_node.text = " ".join(row_indices)
-        if len(air_tiles_to_add) > 0:  # I think air is always index 0 so crossing fingers this works
-            for entity_pos in air_tiles_to_add:
-                tile_pos: list[float] = [float(p) for p in entity_pos.split(", ")]
-                tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0] - 0.5) - foreground_tilelayer_offset[0]
-                tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1] - 0.5) - foreground_tilelayer_offset[1]
-                row_node = foreground_tiles_node[tile_pos_y]
-                row_indices = row_node.text.split(" ")
-                row_indices[tile_pos_x] = "0"
-                row_node.text = " ".join(row_indices)
 
         # Patch entrances
         door_nodes = patchset_root.findall(".//CustomEntity[Definition='door']")
@@ -672,12 +622,12 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
     reward_nodes = collectors_root.findall(".//Rewards/Reward")
     for reward_node in reward_nodes:
         loc_vanilla_item = reward_node.attrib["Blueprint"]
-        randomized_item = get_randomized_item(loc_vanilla_item, locations)
-        if randomized_item is None:
+        randomized_item_name = get_randomized_item(loc_vanilla_item, locations)
+        if randomized_item_name is None:
             logger.error(f"""Could not find a randomized item for vanilla location {loc_vanilla_item},
                           ap item: {locations[in_game_item_data[loc_vanilla_item].ap_loc_id].item}""")
         else:
-            reward_node.attrib["Blueprint"] = randomized_item
+            reward_node.attrib["Blueprint"] = randomized_item_name
 
     collectors_doc.write(collectors_file)
 
@@ -688,20 +638,20 @@ def patch_quests(data_dir: str, ctx: ClientContextData):
     quests_doc = et.parse(quests_file)
     quests_root = quests_doc.getroot()
 
-    SIDE_QUEST = "SIDE_QUEST"
+    side_quest_str = "SIDE_QUEST"
 
     q_earthquake = quests_root.find(".//Quest[@Name='quest_earthquake']")
-    q_earthquake.attrib["Template"] = SIDE_QUEST
+    q_earthquake.attrib["Template"] = side_quest_str
 
     q_temple = quests_root.find(".//Quest[@Name='quest_enter_temple']")
     q_temple.remove(q_temple.find("UnlockedBy"))
 
     q_fen = quests_root.find(".//Quest[@Name='quest_find_fen']")
-    q_fen.attrib["Template"] = SIDE_QUEST
+    q_fen.attrib["Template"] = side_quest_str
     q_fen.remove(q_fen.find("UnlockedBy"))
 
     q_release_fen = quests_root.find(".//Quest[@Name='quest_release_fen']")
-    q_release_fen.attrib["Template"] = SIDE_QUEST
+    q_release_fen.attrib["Template"] = side_quest_str
 
     q_exit_temple = quests_root.find(".//Quest[@Name='quest_exit_temple']")
     q_exit_temple.find("UnlockedBy").text = "quest_get_run_boots"
@@ -759,7 +709,7 @@ def patch_levels(data_dir: str):
 
 
 def patch_resources(data_dir: str, ctx: ClientContextData):
-    slot_data: Dict[str, Any] = ctx.slot_data
+    slot_data: dict[str, Any] = ctx.slot_data
 
     # Make bloodstones more valuable to ease grinding
     resources_file = os.path.join(data_dir, "Definitions", "resources.xml")
@@ -770,7 +720,7 @@ def patch_resources(data_dir: str, ctx: ClientContextData):
     for res in bloodstone_resources:
         money_value_node = res.find("MoneyValue")
         value = int(money_value_node.text)
-        value *= BLOODSTONE_VALUE_MULTIPLIER
+        value *= game_data.BLOODSTONE_VALUE_MULTIPLIER
         money_value_node.text = str(value)
 
     resources_doc.write(resources_file)
@@ -818,143 +768,6 @@ def patch_intro(intro_patch_root: et.Element):
     # Revove SpecialInteractiveEvent whatever that is
     music_connections_node = intro_patch_root.find(".//ScriptEntity[Id='32586922']/Connections")
     music_connections_node.remove(music_connections_node.find(".//Connection[TargetId='32586789']"))
-
-    # Replace earthquake CheckQuestState node with one that awards the minimap
-    # earthquake_quest_check_node = intro_patch_root.find(".//ScriptEntity[Id='32564402']")
-    # earthquake_quest_check_node.clear()
-    # earthquake_quest_check_node.extend(et.fromstring("""
-    # <Node>
-    #     <Id>32564402</Id>
-    #     <Name>SetUpgrade2</Name>
-    #     <Position>1664, 2035</Position>
-    #     <Definition>SetUpgrade</Definition>
-    #     <Area>1562, 2003, 203, 63</Area>
-    #     <Connections>
-    #         <Connection>
-    #             <SourceContact>out</SourceContact>
-    #             <TargetContact>in</TargetContact>
-    #         <TargetId>32564403</TargetId>
-    #         </Connection>
-    #     </Connections>
-    #     <Property>
-    #         <Name>UpgradeId</Name>
-    #         <Type>String</Type>
-    #         <Value>minimap</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>Tier</Name>
-    #         <Type>Int32</Type>
-    #         <Value>1</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>HideNewMarker</Name>
-    #         <Type>Boolean</Type>
-    #         <Value>True</Value>
-    #     </Property>
-    # </Node>
-    # """).findall("*"))
-
-    # Replace the next node (what's a Once node?) with one that completes the light the lamp quest
-    # once_node = intro_patch_root.find(".//ScriptEntity[Id='32564403']")
-    # once_node.clear()
-    # once_node.extend(et.fromstring("""
-    # <Node>
-    #     <Id>32564403</Id>
-    #     <Name>ProgressQuest4</Name>
-    #     <Position>1839, 2035</Position>
-    #     <Definition>ProgressQuest</Definition>
-    #     <Area>1807, 2003, 63, 63</Area>
-    #     <Connections>
-    #         <Connection>
-    #             <SourceContact>out</SourceContact>
-    #             <TargetContact>in</TargetContact>
-    #             <TargetId>32564404</TargetId>
-    #         </Connection>
-    #     </Connections>
-    #     <Property>
-    #         <Name>QuestName</Name>
-    #         <Type>String</Type>
-    #         <Value>quest_lit_the_lamp</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>ObjectiveName</Name>
-    #         <Type>String</Type>
-    #         <Value>obj_lit_the_lamp</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>Increase</Name>
-    #         <Type>Int32</Type>
-    #         <Value>1</Value>
-    #     </Property>
-    # </Node>
-    # """).findall("*"))
-
-    # The base rando hacks in a node to automatically complete the arrow trap in the Chamber of Arrows
-    # I personally disagree with this but I'll leave a note here in case I want to revert to the base behavior
-
-    # Replace a node with one that sets that you found the hub
-    # set_position_node = intro_patch_root.find(".//ScriptEntity[Id='32581848']")
-    # set_position_node.clear()
-    # set_position_node.extend(et.fromstring("""
-    # <Node>
-    #     <Id>32581848</Id>
-    #     <Name>ProgressQuest5</Name>
-    #     <Position>2168, 2036</Position>
-    #     <Definition>ProgressQuest</Definition>
-    #     <Area>2101, 2004, 132, 63</Area>
-    #     <Connections>
-    #         <Connection>
-    #             <SourceContact>out</SourceContact>
-    #             <TargetContact>in</TargetContact>
-    #             <TargetId>32566045</TargetId>
-    #         </Connection>
-    #     </Connections>
-    #     <Property>
-    #         <Name>QuestName</Name>
-    #         <Type>String</Type>
-    #         <Value>quest_find_the_hub</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>ObjectiveName</Name>
-    #         <Type>String</Type>
-    #         <Value>obj_find_the_hub</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>Increase</Name>
-    #         <Type>Int32</Type>
-    #         <Value>1</Value>
-    #     </Property>
-    # </Node>
-    # """).findall("*"))
-
-    # Remove intro cutscene
-    # freeze_input_node = intro_patch_root.find(".//ScriptEntity[Id='32566045']")
-    # freeze_input_node.clear()
-    # freeze_input_node.extend(et.fromstring("""
-    # <Node>
-    #     <Id>32566045</Id>
-    #     <Name>ProgressQuest6</Name>
-    #     <Position>2389, 2036</Position>
-    #     <Definition>ProgressQuest</Definition>
-    #     <Area>2280, 2004, 216, 63</Area>
-    #     <Connections/>
-    #     <Property>
-    #         <Name>QuestName</Name>
-    #         <Type>String</Type>
-    #         <Value>quest_enter_temple</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>ObjectiveName</Name>
-    #         <Type>String</Type>
-    #         <Value>obj_enter_temple</Value>
-    #     </Property>
-    #     <Property>
-    #         <Name>Increase</Name>
-    #         <Type>Int32</Type>
-    #         <Value>1</Value>
-    #     </Property>
-    # </Node>
-    # """).findall("*"))
 
 
 def patch_archaea_entrance(archaea_entrance_root: et.Element):
@@ -1041,10 +854,10 @@ def get_ap_item_desc_and_flavor(item: NetworkItem, ap_item_player):
 
 def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> tuple[Iterable[tuple[str, str]], list[str]]:
     slot: int = ctx_data.slot
-    slot_data: Dict[str, Any] = ctx_data.slot_data
-    locations: Dict[int, NetworkItem] = ctx_data.locations_info
+    slot_data: dict[str, Any] = ctx_data.slot_data
+    locations: dict[int, NetworkItem] = ctx_data.locations_info
     item_names: CommonContext.NameLookupDict = ctx_data.item_names
-    player_names: Dict[int, str] = ctx_data.player_names
+    player_names: dict[int, str] = ctx_data.player_names
 
     shop_cost_min: int = slot_data[option_name.shop_cost_min]
     shop_cost_max: int = slot_data[option_name.shop_cost_max]
@@ -1243,13 +1056,13 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> tuple[Iterab
                                            collectible_node.find("./FlavorStringId").text,
                                            collectible_node.find("./Icon").text)
         upgrades_root.append(upgrade_node)
-    upgrades_root.append(create_upgrade_node(cog_item, "upgrade_cog",
+    upgrades_root.append(create_upgrade_node(game_data.PICKUP_UPGRADE_COG, "upgrade_cog",
                                              "upgrade_cog_desc",
                                              "upgrade_cog_flavor",
                                              "Icons/Currency/cogs_big"))
-    upgrades_root.append(create_upgrade_node(orb_entity, orb_entity,
-                                             f"{orb_entity}_desc",
-                                             f"{orb_entity}_flavor",
+    upgrades_root.append(create_upgrade_node(game_data.ORB_SUPER_CONTAINER, game_data.ORB_SUPER_CONTAINER,
+                                             f"{game_data.ORB_SUPER_CONTAINER}_desc",
+                                             f"{game_data.ORB_SUPER_CONTAINER}_flavor",
                                              "Icons/Currency/cogs_big"))
     podium_pickups = [
         "resource_gold",
@@ -1267,11 +1080,6 @@ def patch_blueprints(data_dir: str, ctx_data: ClientContextData) -> tuple[Iterab
                                                  "Icons/Currency/cogs_big"))
 
     # Create upgrades for other people's items
-    # test_root_upgrade = create_upgrade_node("ap_upgrades", "upgrade_cog",
-    #                                         "upgrade_cog_desc",
-    #                                         "upgrade_cog_flavor",
-    #                                         "Icons/Currency/cogs_big", True)
-    # upgrades_root.append(test_root_upgrade)
     lang_lines_to_add = []
     name_data_created_items = set()
     offworld_item_names = []

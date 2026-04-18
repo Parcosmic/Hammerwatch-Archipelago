@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Any
 import xml.etree.ElementTree as et
 from NetUtils import NetworkItem
 from CommonClient import CommonContext
@@ -8,13 +8,13 @@ class ClientContextData:
     game_dir: str
     slot: int
     slot_data: dict[str, Any]
-    items_received: List[NetworkItem]
+    items_received: list[NetworkItem]
     locations_info: dict[int, NetworkItem]
     item_names: CommonContext.NameLookupDict
     location_names: CommonContext.NameLookupDict
     player_names: dict[int, str]
 
-    def __init__(self, game_dir: str, slot: int, slot_data: dict[str, Any], items_received: List[NetworkItem],
+    def __init__(self, game_dir: str, slot: int, slot_data: dict[str, Any], items_received: list[NetworkItem],
                  locations_info: dict[int, NetworkItem], item_names: CommonContext.NameLookupDict,
                  location_names: CommonContext.NameLookupDict, player_names: dict[int, str]):
         self.game_dir = game_dir
@@ -36,7 +36,7 @@ def create_node(node_name: str, name: str = None, text: str = None):
     return node
 
 
-def create_node_with_attributes(node_name: str, attributes: Dict[str, str]):
+def create_node_with_attributes(node_name: str, attributes: dict[str, str]):
     node = et.Element(node_name)
     for attrib, value in attributes.items():
         node.attrib[attrib] = value

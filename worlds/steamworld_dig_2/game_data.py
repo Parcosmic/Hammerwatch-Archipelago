@@ -2,19 +2,24 @@
 from .names import item_name, location_name, region_name, entrance_name
 from .items import item_table
 from .locations import all_locations
-from typing import Dict, List, Optional
+from typing import Optional
 
 BLOODSTONE_VALUE_MULTIPLIER = 5
 PODIUM_ANIM_TIME = 12.76
 
-cog_item = "pickup_upgrade_cog"
-ore_entity = "placeholder_ore"
-gem_entity = "placeholder_gem"
-orb_entity = "orb_super_container"
+PICKUP_UPGRADE_COG = "pickup_upgrade_cog"
+PLACEHOLDER_ORE = "placeholder_ore"
+PLACEHOLDER_GEM = "placeholder_gem"
+ORB_SUPER_CONTAINER = "orb_super_container"
+
+RANDOMIZED_ITEM_ENTITIES = {
+    PICKUP_UPGRADE_COG,
+    PLACEHOLDER_ORE,
+    PLACEHOLDER_GEM,
+    ORB_SUPER_CONTAINER,
+}
 
 AP_OFFWORLD_ITEM = "ap_item_offworld"
-# BLUEPRINT_ITEM_FALL = "blueprint_fall"
-# AP_OFFWORLD_ITEM_FALL = "ap_item_offworld_fall"
 COGBOX_EMPTY = "cogbox_empty"
 COGBOX_SUPER_ORBS = "cogbox_super_orbs"
 
@@ -31,7 +36,7 @@ class GameData:
         self.ap_loc_id = all_locations[ap_loc].code if ap_loc is not None else None
 
 
-in_game_item_data: Dict[str, GameData] = {
+in_game_item_data: dict[str, GameData] = {
     "pickaxe": GameData(item_name.pickaxe, None),
     "backpack": GameData(item_name.backpack, None),
     "lamp": GameData(item_name.lamp, None),
@@ -150,17 +155,17 @@ in_game_item_data: Dict[str, GameData] = {
     "collectible_04": GameData(item_name.a_fertilizer, location_name.a_top_l_t),
     "collectible_43": GameData(item_name.a_completion_proof, location_name.c_hell_end),
     "fate.hell_cave_sigil": GameData(item_name.up_fate_sigil, location_name.em_artifact_42),
-    cog_item: GameData(item_name.cog, None),
-    ore_entity: GameData(item_name.ore, None),
-    gem_entity: GameData(item_name.gem, None),
-    orb_entity: GameData(item_name.omni_orbs, None),
+    PICKUP_UPGRADE_COG: GameData(item_name.cog, None),
+    PLACEHOLDER_ORE: GameData(item_name.ore, None),
+    PLACEHOLDER_GEM: GameData(item_name.gem, None),
+    ORB_SUPER_CONTAINER: GameData(item_name.omni_orbs, None),
     "pickup_resource_vectron": GameData(item_name.vectron_ore_1, None),
     "pickup_resource_vectron_02": GameData(item_name.vectron_ore_2, None),
     "pickup_resource_vectron_03": GameData(item_name.vectron_ore_3, None),
     "pickup_resource_vectron_04": GameData(item_name.vectron_ore_4, None),
     "pickup_resource_vectron_05": GameData(item_name.vectron_ore_5, None),
 }
-shop_item_data: Dict[str, List[Optional[GameData]]] = {
+shop_item_data: dict[str, list[Optional[GameData]]] = {
     "pickaxe": [
         None,
         GameData(None, location_name.em_pickaxe_2),
@@ -229,10 +234,10 @@ shop_item_data: Dict[str, List[Optional[GameData]]] = {
     ],
 }
 
-ap_item_to_in_game_name: Dict[int, str] = {data.ap_item_id: itm for itm, data in in_game_item_data.items()}
+ap_item_to_in_game_name: dict[int, str] = {data.ap_item_id: itm for itm, data in in_game_item_data.items()}
 
 # Unused rn
-level_to_region: Dict[str, str] = {
+level_to_region: dict[str, str] = {
     "west_desert": region_name.west_desert_start,  #
     "west_desert_cave_cart_puzzle": region_name.tenacious_trollies,
     "east_desert": region_name.windy_plains,
