@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, ClassVar, Dict, List, Set, Any
+from typing import ClassVar, Dict, List, Set, Any
 
 from .names import item_name, location_name, region_name, const, entrance_name
 from .items import SWD2Item, item_table, filler_items, trap_items, active_filler_items
@@ -10,19 +10,28 @@ from .util import is_using_universal_tracker, get_random_element, get_random_ele
 from .options import SWD2Options, client_required_options, option_groups, option_presets
 from settings import Group, FilePath
 
-from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
+from BaseClasses import Item, Tutorial, ItemClassification, CollectionState
 from ..AutoWorld import World, WebWorld
-from worlds.LauncherComponents import Component, components, Type, launch_subprocess
-from Utils import visualize_regions
-from Fill import fill_restrictive
+from worlds.LauncherComponents import Component, components, Type, launch_subprocess, icon_paths
 
 
-def launch_client():
+def launch_client() -> None:
     from .client import launch
     launch_subprocess(launch, name="SteamWorldDig2Client")
 
 
-components.append(Component("SteamWorld Dig 2 Client", "SteamWorldDig2Client", func=launch_client, component_type=Type.CLIENT))
+components.append(
+    Component(
+        "SteamWorld Dig 2 Client",
+        "SteamWorldDig2Client",
+        icon=const.game,
+        component_type=Type.CLIENT,
+        func=launch_client,
+        game_name=const.game,
+    )
+)
+
+icon_paths[const.game] = f"ap:{__name__}/assets/component_icon.png"
 
 
 class SWD2Settings(Group):
