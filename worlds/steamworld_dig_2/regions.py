@@ -48,6 +48,11 @@ def is_valid_shop_item_factory(world: "SWD2World"):
         return item.player != world.player or item.name in item_name.shop_set
     return is_valid_shop_item
 
+def item_can_fall_factory(world: "SWD2World"):
+    def item_can_fall(item: Item):
+        return item.player != world.player or item.name not in item_name.artifacts_set
+    return item_can_fall
+
 
 class LocData(NamedTuple):
     name: str
@@ -585,6 +590,8 @@ region_data: dict[str, RegionData] = {
     region_name.archaea_below_wall: RegionData([  # archaea_patch_stripes
         LocData(location_name.a_bwall_l, CanDigBricks),
         LocData(location_name.a_bwall_ore_l, CanDigBricks & HasVertical),  # Possible without vertical but it's tricky
+        # a_bwall_ore_l could be possible with 2 bomb upgrades and brick breaker to have the item fall down, but we
+        # can't take advantage of this for collectibles as they can't fall
         LocData(location_name.a_bwall_ore_r, HasVertical),  # Possible without vertical but it's tricky
         LocData(location_name.a_josh_yonker, CanDigBricks),
     ], [
@@ -983,6 +990,12 @@ region_data: dict[str, RegionData] = {
 }
 REGIONS = list(region_data.keys())
 
+FLOATING_ORE_LOCS = {
+    location_name.c_ms_podium_ore,
+    location_name.c_bs_podium_ore,
+    location_name.totd_river_b_ore_2,
+}
+
 
 def create_and_connect_regions(world: "SWD2World", active_locations: set[str], event_locations: set[set]):
     used_names: dict[str, int] = {}
@@ -1053,10 +1066,10 @@ def create_region(world: "SWD2World", active_locations: set[str], event_location
             location = SWD2Location(world.player, loc_data.name, loc_id, region)
             if loc_id in world.excluded_loc_ids:
                 location.progress_type = LocationProgressType.EXCLUDED
-            if location.name in shop_locs:
+            if location.name in shop_locs or location.name in location_name.YONKER_LOCS:
                 location.item_rule = is_valid_shop_item_factory(world)
-            elif location.name in location_name.YONKER_LOCS:
-                location.item_rule = is_valid_shop_item_factory(world)
+            elif location.name in FLOATING_ORE_LOCS:
+                location.item_rule = item_can_fall_factory(world)
             region.locations.append(location)
             if loc_data.rule is not None:
                 world.set_rule(location, loc_data.rule)

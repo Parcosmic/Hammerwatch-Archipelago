@@ -2,6 +2,7 @@ from typing import List, Tuple, Dict, NamedTuple, Optional, TYPE_CHECKING
 from enum import IntEnum
 from BaseClasses import Item, ItemClassification
 from .names import item_name, const
+from .options import RandomizeShopUpgrades
 from .util import Counter
 
 if TYPE_CHECKING:
@@ -231,7 +232,7 @@ def get_item_counts(world: "SWD2World") -> Tuple[Dict[str, int], int]:
             item_counts_dict[artifact] = 1
         if not world.options.randomize_trials_reward:
             item_counts_dict.pop(item_name.a_completion_proof)
-    if world.options.randomize_shops:
+    if world.options.randomize_shops == RandomizeShopUpgrades.option_randomize:
         for item, data in item_table.items():
             if data.item_type == ItemType.ShopBlueprint:
                 if item in item_name.unused_items and not world.options.add_unused_cog_upgrades:

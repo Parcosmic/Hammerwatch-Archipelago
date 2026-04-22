@@ -1,6 +1,7 @@
 from typing import Dict, Set, NamedTuple, Optional, TYPE_CHECKING
 from BaseClasses import Location
 from .names import location_name, const
+from .options import RandomizeShopUpgrades
 from .items import get_item_counts
 from enum import IntEnum
 
@@ -566,6 +567,14 @@ def setup_locations(world: "SWD2World"):
             location_name.totd_river_b_ore_7,
             location_name.totd_river_b_ore_8,
         ])
+        if not world.options.skip_vectron:
+            excluded_locations.extend([
+                location_name.v_ore_1,
+                location_name.v_ore_2,
+                location_name.v_ore_3,
+                location_name.v_ore_4,
+                location_name.v_ore_5,
+            ]),
     else:
         disallowed_types.append(LocType.Resource)
     if world.options.randomize_orbs:
@@ -615,7 +624,7 @@ def setup_locations(world: "SWD2World"):
         ])
     else:
         disallowed_types.append(LocType.Orb)
-    if world.options.randomize_shops != world.options.randomize_shops.option_randomize:
+    if world.options.randomize_shops != RandomizeShopUpgrades.option_randomize:
         disallowed_types.append(LocType.Shop)
 
     for loc, data in all_locations.items():
@@ -633,7 +642,7 @@ def setup_locations(world: "SWD2World"):
     # active_locations.remove(location_name.em_carson_5)
     # active_locations.remove(location_name.em_carson_6)
     # active_locations.remove(location_name.em_carson_7)
-    if world.options.randomize_shops == world.options.randomize_shops.option_randomize:
+    if world.options.randomize_shops == RandomizeShopUpgrades.option_randomize:
         active_locations.difference_update({
             location_name.em_lamp_1,
             location_name.em_tank_1,

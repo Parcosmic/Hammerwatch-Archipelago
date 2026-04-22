@@ -423,7 +423,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         for node_to_delete in nodes_to_delete:
             upgrade_nodes.remove(node_to_delete)
 
-        # Patch freestanding items and ore blocks
+        # Patch freestanding items
         freestanding_nodes = []
         if randomize_cogs:
             freestanding_nodes.extend(patchset_root.findall(".//CustomEntity[Definition='upgrade_cog_container']"))
@@ -510,6 +510,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 property_value_node.text = randomized_item_pickup_name
 
         # Patch ore blocks
+        air_tiles_to_add = []
         ore_entities = []
         if randomize_ores:
             ore_entities.extend(patchset_root.findall(".//CustomEntity[Definition='placeholder_ore']"))
@@ -555,9 +556,15 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
             elif randomized_item_pickup_name == game_data.ORB_SUPER_CONTAINER:
                 size_node.text = "120, 120"
                 definition_node.text = game_data.COGBOX_SUPER_ORBS
+            elif "collectible" in randomized_item_pickup_name:
+                # If an artifact would be placed here delete the dirt block
+                definition_node.text = "pickup_collectible"
+                size_node.text = "86, 83"
+                property_node = create_property_node(value=randomized_item_pickup_name)
+                ore_node.append(property_node)
+                air_tiles_to_add.append(position_node.text)
             else:
                 # For other item types, replace it with our empty cogbox and create nodes to award the item
-                # TODO GiveUpgrade doesn't award collectibles for some stupid reason >:|
                 definition_name = game_data.COGBOX_EMPTY
                 position = position_node.text
                 on_des_node_id = orig_node_loc_id * 10
@@ -577,6 +584,20 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                         create_ap_spawner_node(spawner_id, entity_node_name, position, pickup_name))
                 size_node.text = "86, 83"
                 definition_node.text = definition_name
+
+        # Change tilemap if ore blocks need to be destroyed for artifacts to be placed
+        foreground_tilelayer_tile_size = [int(s) for s in foreground_node.find("TileSize").text.split(", ")]
+        foreground_tilelayer_offset = [int(s) for s in foreground_node.find("TileOffset").text.split(", ")]
+        foreground_tiles_node = foreground_node.find("Tiles")
+        if len(air_tiles_to_add) > 0:
+            for entity_pos in air_tiles_to_add:
+                tile_pos: list[float] = [float(p) for p in entity_pos.split(", ")]
+                tile_pos_x = int(tile_pos[0] / foreground_tilelayer_tile_size[0] - 0.5) - foreground_tilelayer_offset[0]
+                tile_pos_y = int(tile_pos[1] / foreground_tilelayer_tile_size[1] - 0.5) - foreground_tilelayer_offset[1]
+                row_node = foreground_tiles_node[tile_pos_y]
+                row_indices = row_node.text.split(" ")
+                row_indices[tile_pos_x] = "0"  # I think air is always index 0 so crossing fingers this works
+                row_node.text = " ".join(row_indices)
 
         # Patch entrances
         door_nodes = patchset_root.findall(".//CustomEntity[Definition='door']")
