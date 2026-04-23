@@ -159,6 +159,43 @@ class SkipVectron(Toggle):
     default = True
 
 
+class LogicSmartDig(Toggle):
+    """Relaxes logic such that players may have to break blocks in a specific order to reach checks
+    WARNING: If this is on, digging incorrectly can prevent you from getting checks. Be smart when you dig!"""
+    display_name = "Smart Digging Logic"
+    default = False
+
+
+class LogicOverhangJumps(Toggle):
+    """Places skips in logic involving jumping around 1 block overhangs, bypassing some spots requiring hookshot"""
+    display_name = "Overhang Jump Skips"
+    default = False
+
+
+class LogicHookshotSkips(Toggle):
+    """Places skips in logic involving using the hookshot to jump around overhangs or move quickly through closing gates"""
+    display_name = "Hookshot Skips"
+    default = False
+
+
+class LogicDamageTank(Toggle):
+    """Places skips in logic involving tanking moderate amounts of damage and surviving"""
+    display_name = "Damage Tank Skips"
+    default = False
+
+
+class LogicHardPlatforming(Toggle):
+    """Relaxes logic on what items the player requires in order to do certain platforming segments"""
+    display_name = "Hard Platforming Logic"
+    default = False
+
+
+class LogicCombatDifficulty(Toggle):
+    """Removes extra logic on combat-difficult sections of the game"""
+    display_name = "Remove Combat Difficulty Logic"
+    default = False
+
+
 class ERSeed(FreeText):
     """Determines the seed for generating the entrance randomization layout. If "random" the seed will be random"""
     display_name = "Entrance Randomization Seed"
@@ -185,6 +222,12 @@ class SWD2Options(PerGameCommonOptions):
     starting_money: StartingMoney
     start_with_portal: StartWithPortal
     skip_vectron: SkipVectron
+    smart_digging_logic: LogicSmartDig
+    hard_platforming_logic: LogicHardPlatforming
+    combat_logic: LogicCombatDifficulty
+    overhang_jump_logic: LogicOverhangJumps
+    hookshot_skip_logic: LogicHookshotSkips
+    damage_tank_logic: LogicDamageTank
     er_seed: ERSeed
 
 
@@ -218,5 +261,13 @@ option_presets = {
 option_groups = [
     OptionGroup("Generation", [
         Goal
+    ]),
+    OptionGroup("Logic", [
+        LogicSmartDig,
+        LogicCombatDifficulty,
+        LogicOverhangJumps,
+        LogicHookshotSkips,
+        LogicDamageTank,
+        LogicHardPlatforming,
     ]),
 ]

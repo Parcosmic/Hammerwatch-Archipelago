@@ -22,3 +22,10 @@ shop_cost_min = "shop_cost_min"
 add_unused_cog_upgrades = "add_unused_cog_upgrades"
 
 randomize_trials_reward = "randomize_trials_reward"
+
+smart_digging_logic = "smart_digging_logic"
+combat_logic = "combat_logic"
+overhang_jump_logic = "overhang_jump_logic"
+hookshot_skip_logic = "hookshot_skip_logic"
+damage_tank_logic = "damage_tank_logic"
+hard_platforming_logic = "hard_platforming_logic"
