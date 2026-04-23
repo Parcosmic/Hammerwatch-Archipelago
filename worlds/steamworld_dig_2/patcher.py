@@ -4,6 +4,7 @@
 import os
 import shutil
 import random
+from copy import deepcopy
 from typing import Callable, Optional, Iterable
 from zipfile import ZipFile, ZIP_DEFLATED
 from CommonClient import logger, CommonContext
@@ -180,6 +181,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
     # entrance_node = et.Element("Entrance")
     # entrance_node.text = "door_archaea_vectron1"
     # new_game_outset.append(entrance_node)
+
     # Handle start-inventory
     new_game_outset.find(".//Money").text = str(money)
     new_game_outset.find(".//Cogs").text = str(cogs)
@@ -236,6 +238,7 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
         ("quest_enter_temple", "completed"),
         # ("guard_quest_pathfinder_deactivate", "completed"),
         ("quest_tutorial_indicators", "completed"),
+        # ("quest_vectron_helper", "completed"),
         ("quest_find_the_hub", "in_progress"),
         ("quest_workbench_cog_conversation", "completed"),  # For convenience
     ]
@@ -246,15 +249,18 @@ def patch_start_location_and_inventory(data_dir: str, ctx_data: ClientContextDat
         quest_node.text = quest_data[0]
         new_game_outset.append(quest_node)
 
-    # conversations = [
-    #     "guard_open_hatch"
-    # ]
-    # conversations_node = et.Element("Conversations")
-    # for conversation in conversations:
-    #     conversation_node = et.Element("Conversation")
-    #     conversation_node.text = conversation
-    #     conversations_node.append(conversation_node)
-    # new_game_outset.append(conversations_node)
+    # Stop Fen from bothering us about basic gameplay mechanics
+    conversations = [
+        "buddy_inventory_full",
+        "buddy_reminder_use_cogs",
+        "buddy_need_light",
+    ]
+    conversations_node = et.Element("Conversations")
+    for conversation in conversations:
+        conversation_node = et.Element("Conversation")
+        conversation_node.text = conversation
+        conversations_node.append(conversation_node)
+    new_game_outset.append(conversations_node)
 
     outsets_doc.write(outsets_file)
 
@@ -326,8 +332,11 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
         os.path.join(patchsets_dir, "TheHub", "the_hub_patch_main.le"): patch_oasis,
     }
     # If skip vectron is on then apply the vectron patch
+    archaea_cave_vectron_entrance_patchset = os.path.join(patchsets_dir, "Archaea", "archaea_cave_vectron_entrance.le")
     if option_name.skip_vectron not in ctx_data.slot_data or ctx_data.slot_data[option_name.skip_vectron]:
-        custom_patches[os.path.join(patchsets_dir, "Archaea", "archaea_cave_vectron_entrance.le")] = patch_vectron
+        custom_patches[archaea_cave_vectron_entrance_patchset] = patch_vectron
+    else:
+        custom_patches[archaea_cave_vectron_entrance_patchset] = patch_vectron_entrance_teleporter
 
     return_tubes: list[tuple[str, int, int]] = [
         ("temple_of_guidance.le", -240, 0),
@@ -746,35 +755,50 @@ def patch_resources(data_dir: str, ctx: ClientContextData):
 
     resources_doc.write(resources_file)
 
-    # Resource shuffle
-    if slot_data[option_name.shuffle_resources] == 0:
-        return
     resource_table_file = os.path.join(data_dir, "Definitions", "resource_table.xml")
     resource_table_doc = et.parse(resource_table_file)
     resource_table_root = resource_table_doc.getroot()
 
-    ore_list = []
-    gem_list = []
+    vectron_ore = "pickup_resource_gold"
+    vectron_gem = "pickup_resource_diamond"
 
-    resource_table = resource_table_root.find(".//ResourceTable[@Name='default']")
-    ore_group = resource_table.find(".//ResourceGroup[@Name='ore']")
-    gem_group = resource_table.find(".//ResourceGroup[@Name='gem']")
-    for ore_entry in ore_group:
-        ore_list.append(ore_entry.attrib["Name"])
-    for gem_entry in gem_group:
-        gem_list.append(gem_entry.attrib["Name"])
+    # Resource shuffle
+    if slot_data[option_name.shuffle_resources]:
+        ore_list = []
+        gem_list = []
 
-    random.shuffle(ore_list)
-    random.shuffle(gem_list)
+        resource_table = resource_table_root.find(".//ResourceTable[@Name='default']")
+        ore_group = resource_table.find(".//ResourceGroup[@Name='ore']")
+        gem_group = resource_table.find(".//ResourceGroup[@Name='gem']")
+        for ore_entry in ore_group:
+            ore_list.append(ore_entry.attrib["Name"])
+        for gem_entry in gem_group:
+            gem_list.append(gem_entry.attrib["Name"])
 
-    for ore_entry in ore_group:
-        ore_entry.attrib["Name"] = ore_list.pop()
-    for gem_entry in gem_group:
-        gem_entry.attrib["Name"] = gem_list.pop()
+        random.shuffle(ore_list)
+        random.shuffle(gem_list)
+        vectron_ore = ore_list[0]
+        vectron_gem = gem_list[0]
+
+        for ore_entry in ore_group:
+            ore_entry.attrib["Name"] = ore_list.pop()
+        for gem_entry in gem_group:
+            gem_entry.attrib["Name"] = gem_list.pop()
+
+    # Make ores/gems drop in Vectron
+    vectron_table = resource_table_root.find(".//ResourceTable[@Name='vectron']")
+    vectron_ore_group = vectron_table.find("ResourceGroup")
+    vectron_ore_group.append(et.Element("Entry", attrib={ "Depth": "0.0", "Name": vectron_ore }))
+    vectron_gem_group = deepcopy(vectron_ore_group)
+    vectron_gem_group.attrib["Name"] = "gem"
+    vectron_gem_group.attrib.pop("ScatterVariance")
+    vectron_gem_group.find("Entry").attrib["Name"] = vectron_gem
+    vectron_table.append(vectron_gem_group)
 
     resource_table_doc.write(resource_table_file)
 
 
+### Patchset specific patches
 def patch_intro(intro_patch_root: et.Element):
     # Intro patch
 
@@ -832,6 +856,18 @@ def patch_vectron(cave_patch_root: et.Element):
     tiles_node.find(".//TileMappings").append(snake_tile_node)
     tiles_node.find(".//Tiles")[33].text = "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 1 0 0 0 0 0 0 1 17 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1"
 
+
+def patch_vectron_entrance_teleporter(cave_patch_root: et.Element):
+    # Make the teleporter enabled by default
+    teleporter_node = cave_patch_root.find(".//CustomEntity[Id='32586922']")
+    teleporter_node.find("./Property/Value").text = "True"
+    # Make interacting with the teleporter always teleport you to Vectron
+    on_activated_node = cave_patch_root.find(".//ScriptEntity[Id='32568092']")
+    on_activated_connections_node = on_activated_node.find("Connections")
+    on_activated_connections_node.remove(on_activated_connections_node[0])
+    on_activated_connections_node.remove(on_activated_connections_node[0])
+    on_activated_connections_node[1].find("TargetId").text = "32568109"
+###
 
 def get_ap_item_upgrade_name(item: NetworkItem):
     return f"ap_item_{item.item}_{item.player}_{item.flags}"
