@@ -581,7 +581,7 @@ def patch_patchsets(bundle_dir: str, ctx_data: ClientContextData):
                 area = f"{edit_position(position, -70, -32)}, 140, 63"
                 entity_parent_node.append(
                     create_on_destroyed_node(on_des_node_id, position, area, orig_node_loc_id, [give_node_id]))
-                if is_item_upgrade(randomized_item_pickup_name) or "collectible" in randomized_item_pickup_name:
+                if is_item_upgrade(randomized_item_pickup_name):
                     entity_parent_node.append(
                         create_give_upgrade_node(give_node_id, position, area, randomized_item_pickup_name))
                 else:  # Entities that we need to hack in a spawner for

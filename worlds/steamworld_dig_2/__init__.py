@@ -252,5 +252,6 @@ class SWD2World(World):
     def write_spoiler(self, spoiler_handle) -> None:
         pass
 
-    def interpret_slot_data(self, slot_data: Dict[str, Any]):
-        return {"er_seed": slot_data["er_seed"]}
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+        return slot_data

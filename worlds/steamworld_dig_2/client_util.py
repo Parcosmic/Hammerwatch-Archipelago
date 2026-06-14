@@ -104,6 +104,17 @@ def create_script_entity_node_base(entity_id: int, name: str, position: str, def
     return script_node
 
 
+def create_shape_entity_node(entity_id: int, name: str, position: str, shape: str, origin: str = "0, 0, 0, 0"):
+    script_node = et.Element("ShapeEntity")
+    script_node.append(create_node("Id", None, str(entity_id)))
+    script_node.append(create_node("Name", None, name))
+    script_node.append(create_node("Position", None, position))
+    script_node.append(create_node("Shape", None, shape))  # Point
+    script_node.append(create_node("Origin", None, origin))
+    script_node.append(create_node("Color", None, "255, 0, 0, 255"))
+    return script_node
+
+
 def create_give_valuables_node(entity_id: int, position: str, area: str, health: float = 0, money: int = 0, cogs: int = 0,
                                light: float = 0, water: float = 0, diesel: float = 0, silent: bool = False):
     script_node = create_script_entity_node_base(entity_id, "GiveValuables", position, "GiveValuables", area)
@@ -126,7 +137,7 @@ def create_give_blueprint_node(entity_id: int, position: str, area: str, upgrade
 
 
 def create_give_upgrade_node(entity_id: int, position: str, area: str, upgrade_id: str, require_payment: bool = False):
-    script_node = create_script_entity_node_base(entity_id, "GiveBlueprint", position, "GiveBlueprint", area)
+    script_node = create_script_entity_node_base(entity_id, "GiveUpgrade", position, "GiveUpgrade", area)
     script_node.append(create_node("Connections"))
     script_node.append(create_property_node("UpgradeId", "String", upgrade_id))
     script_node.append(create_property_node("RequirePayment", "Boolean", str(require_payment)))
@@ -167,6 +178,16 @@ def create_toggle_node(entity_id: int, position: str, area: str, target_id: int,
     script_node = create_script_entity_node_base(entity_id, "ToggleEntity", position, "ToggleEntity", area)
     connections_node = create_node("Connections")
     connections_node.append(create_connection_node("entity", "", str(target_id)))
+    for out_id in out_ids:
+        connections_node.append(create_connection_node("out", "in", str(out_id)))
+    script_node.append(connections_node)
+    return script_node
+
+
+def create_on_tile_destroyed_node(entity_id: int, position: str, area: str, shape_id: int, out_ids: list[int]):
+    script_node = create_script_entity_node_base(entity_id, "OnTileDestroyed", position, "OnTileDestroyed", area)
+    connections_node = create_node("Connections")
+    connections_node.append(create_connection_node("shape", "", str(shape_id)))
     for out_id in out_ids:
         connections_node.append(create_connection_node("out", "in", str(out_id)))
     script_node.append(connections_node)
