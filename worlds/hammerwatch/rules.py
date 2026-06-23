@@ -1,6 +1,6 @@
 import random
 import string
-import typing
+from typing import TYPE_CHECKING, Optional, Tuple, Iterable
 from enum import IntFlag
 from BaseClasses import Region, Entrance
 from .names import (castle_region_names, temple_region_names, castle_location_names, temple_location_names,
@@ -12,11 +12,11 @@ from .options import ExitRandomization
 from .util import (GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity,
                    add_loc_rule, add_loc_item_rule)
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
-def set_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int]):
+def set_rules(world: "HammerwatchWorld", door_counts: dict[str, int]):
     set_extra_rules(world)
 
     menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
@@ -68,9 +68,9 @@ def connect_regions_er(world: "HammerwatchWorld"):
             entrance_block_types[blocked_entrance] = new_data
         # passage_blocking_codes = {}
 
-    code_to_exit: typing.Dict[str, typing.Optional[HWEntrance]] = {}
-    code_to_region: typing.Dict[str, Region] = {}
-    open_codes: typing.List[str] = []
+    code_to_exit: dict[str, Optional[HWEntrance]] = {}
+    code_to_region: dict[str, Region] = {}
+    open_codes: list[str] = []
     if world.options.exit_randomization.value > 0:
         for level_exit in world.level_exits:
             if level_exit.return_code is not None:
@@ -127,7 +127,7 @@ def set_extra_rules(world: "HammerwatchWorld"):
     if get_campaign(world) == Campaign.Castle:
         # Overwrite world completion condition if we need to defeat all bosses
         if goal == GoalType.KillBosses:
-            boss_names: typing.Tuple = (
+            boss_names: Tuple = (
                 item_name.evc_beat_boss_1,
                 item_name.evc_beat_boss_2,
                 item_name.evc_beat_boss_3,
@@ -142,7 +142,7 @@ def set_extra_rules(world: "HammerwatchWorld"):
                                                                                           world.player)
         # Buttonsanity additional rules
         if world.options.buttonsanity.value > 0:
-            boss_gate_locs: typing.Dict[str, typing.Tuple[str, str, str]] = {
+            boss_gate_locs: dict[str, tuple[str, str, str]] = {
                 castle_location_names.btn_p3_boss_door:
                     (item_name.btnc_b1_rune_1, item_name.btnc_b1_rune_2, item_name.btnc_b1_rune_3),
                 castle_location_names.btn_a1_boss_door:
@@ -154,16 +154,17 @@ def set_extra_rules(world: "HammerwatchWorld"):
             add_loc_item_rule(world, castle_location_names.a2_ne_l_bgate, item_name.btnc_a2_tp_ne_gates)
             if not get_buttonsanity_insanity(world):
                 # Sequence locations requiring access to multiple regions
-                c12_seq_loc = world.multiworld.get_location(castle_location_names.btn_c3_rune, world.player)
-                add_rule(c12_seq_loc,
-                         lambda state: state.can_reach_location(castle_location_names.c3_nw_ice_towers_1, world.player),
-                         "and")
+                add_loc_rule(world, castle_location_names.btn_c3_rune,
+                             lambda state: state.can_reach_location(castle_location_names.c3_nw_ice_towers_1,
+                                                                    world.player))
                 add_loc_rule(world, castle_location_names.btn_p2_rune_sequence,
                              lambda state: state.can_reach_region(castle_region_names.p2_m_bronze_gate, world.player)
                                            and state.can_reach_region(castle_region_names.p2_e_bronze_gate_2,
                                                                       world.player)
                                            and state.can_reach_region(castle_region_names.p2_se_bronze_gate,
                                                                       world.player))
+                add_loc_rule(world, castle_location_names.btn_r3_seq_simon_room,
+                             lambda state: state.can_reach_region(castle_region_names.r3_se_secret, world.player))
             # Boss gate button location logic
             for loc_name, rune_items in boss_gate_locs.items():
                 loc = world.multiworld.get_location(loc_name, world.player)
@@ -182,7 +183,7 @@ def set_extra_rules(world: "HammerwatchWorld"):
     else:
         # Overwrite world completion condition if we need to defeat all bosses
         if goal == GoalType.KillBosses:
-            boss_names: typing.Tuple = (
+            boss_names: tuple[str, str, str] = (
                 item_name.evt_beat_boss_1,
                 item_name.evt_beat_boss_2,
                 item_name.evt_beat_boss_3,
@@ -265,9 +266,9 @@ def set_extra_rules(world: "HammerwatchWorld"):
 
 
 def get_random_start_code(world: "HammerwatchWorld",
-                          entrance_block_types: typing.Dict[str, typing.Tuple[int, "EntranceFlags", typing.Iterable]],
+                          entrance_block_types: dict[str, tuple[int, "EntranceFlags", Iterable]],
                           start_act: int,
-                          open_codes: typing.List[str]):
+                          open_codes: list[str]):
     available_start_codes = [code for code in open_codes if entrance_block_types[code][0] == start_act
                              and entrance_block_types[code][1] == EntranceFlags.Unblocked]
     start_code = world.random.choice(available_start_codes)
@@ -275,11 +276,11 @@ def get_random_start_code(world: "HammerwatchWorld",
 
 
 def set_connections(world: "HammerwatchWorld",
-                    entrance_block_types: typing.Dict[str, typing.Tuple[int, "EntranceFlags", typing.Iterable]],
-                    passage_blocking_codes: typing.Dict[str, str],
-                    code_to_exit: typing.Dict[str, typing.Optional[HWEntrance]],
-                    code_to_region: typing.Dict[str, Region], open_codes_ref: typing.List[str]) -> bool:
-    level_exits: typing.List[HWEntrance] = world.level_exits.copy()
+                    entrance_block_types: dict[str, tuple[int, "EntranceFlags", Iterable]],
+                    passage_blocking_codes: dict[str, str],
+                    code_to_exit: dict[str, Optional[HWEntrance]],
+                    code_to_region: dict[str, Region], open_codes_ref: list[str]) -> bool:
+    level_exits: list[HWEntrance] = world.level_exits.copy()
     start_entrance = None
     act_range = world.options.er_act_range.value
     open_codes = open_codes_ref.copy()
@@ -298,17 +299,17 @@ def set_connections(world: "HammerwatchWorld",
     else:
         start_region = world.multiworld.get_region(castle_region_names.menu, world.player)
     entrances = start_region.exits.copy()
-    traversed_regions: typing.List[str] = [start_region.name]
+    traversed_regions: list[str] = [start_region.name]
     needed_region_names = []
     open_exits = []
     impassable_exits = []
     entrance_link_cache: dict[str, list[str]] = {}  # TODO: implement
 
-    # entrances: typing.List[HWEntrance] = start_region.exits.copy()
-    # traversed_regions: typing.Set[str] = {start_region.name}
-    # needed_region_names: typing.Set[str] = set()
+    # entrances: list[HWEntrance] = start_region.exits.copy()
+    # traversed_regions: set[str] = {start_region.name}
+    # needed_region_names: set[str] = set()
     # open_exits = []
-    # impassable_exits: typing.Set[HWEntrance] = set()
+    # impassable_exits: set[HWEntrance] = set()
 
     def disconnect_linked_exit(to_disconnect: HWEntrance):
         to_disconnect.connected_region.entrances.remove(to_disconnect)
@@ -448,7 +449,7 @@ class EntranceFlags(IntFlag):
 
 # Required traversed regions is of the exit_code of the original entrance that requires them
 # (act, EntranceBlockType, required traversed regions)
-c_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceFlags, typing.Optional[typing.List]]] = {
+c_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list]]] = {
     entrance_names.c_p1_1: (1, EntranceFlags.DeadEnd, None),
     # Technically not a dead end if shortcut portal is enabled
     entrance_names.c_p1_2: (1, EntranceFlags.Unblocked, None),  # Leads to 3
@@ -535,7 +536,7 @@ c_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceFlags, typing
 }
 
 # Hints to the ER system which entrance codes are needed for a given needed region
-c_passage_blocking_codes: typing.Dict[str, str] = {
+c_passage_blocking_codes: dict[str, str] = {
     castle_region_names.p1_from_p3_n: entrance_names.c_p1_10,
     castle_region_names.p2_s: entrance_names.c_p2_3,  # Not actually connected, got a gate in the way
     castle_region_names.a2_ne: entrance_names.c_a2_0,
@@ -570,7 +571,7 @@ pyramid_regions = (
 )
 # (act, EntranceBlockType, required traversed regions)
 # Required traversed regions are for the entrance with the exit_code in vanilla (not the return_code)
-t_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceFlags, typing.Optional[typing.List]]] = {
+t_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list]]] = {
     entrance_names.t_hub_t_ent: (1, EntranceFlags.Unblocked, None),
     entrance_names.t_hub_library: (1, EntranceFlags.Unblocked, None),
     entrance_names.t_hub_t3: (1, EntranceFlags.DeadEnd, None),
@@ -650,7 +651,7 @@ t_entrance_block_types: typing.Dict[str, typing.Tuple[int, EntranceFlags, typing
     entrance_names.t_n1_3_start: (3, EntranceFlags.OneWay, [temple_region_names.pof_2_n]),
 }
 
-t_passage_blocking_codes: typing.Dict[str, str] = {
+t_passage_blocking_codes: dict[str, str] = {
     temple_region_names.cave_3_main: entrance_names.t_c1_start,  # There are more entrances, but use this one for now
     temple_region_names.cave_2_main: entrance_names.t_c2_start,
     temple_region_names.cave_2_pumps: entrance_names.t_c2_start,
@@ -680,15 +681,15 @@ buttonsanity_entrance_data_exclusions = {
 }
 
 
-def get_valid_exits(entrance_block_types, open_codes: typing.List[str], code_to_region: typing.Dict[str, Region],
-                    traversed_regions, open_exits: typing.List[HWEntrance], entrance: HWEntrance,
-                    needed_codes: typing.List[str], act_range=4):
+def get_valid_exits(entrance_block_types, open_codes: list[str], code_to_region: dict[str, Region],
+                    traversed_regions, open_exits: list[HWEntrance], entrance: HWEntrance,
+                    needed_codes: list[str], act_range=4):
     act = entrance_block_types[entrance.return_code if entrance.return_code is not None else entrance.exit_code][0]
     exit_count = len(open_exits)
     open_exit_codes = [exit_.return_code for exit_ in open_exits]
-    exits: typing.List[str] = []
-    valid_exits: typing.List[str] = []
-    type_match_exits: typing.List[str] = []
+    exits: list[str] = []
+    valid_exits: list[str] = []
+    type_match_exits: list[str] = []
     for exit_code in open_codes:
         if exit_code == entrance.return_code:
             continue  # Can't connect an entrance to itself!
@@ -729,10 +730,10 @@ def get_entrance_loops(start_region: Region, next_region: Region):
     loops = []
     # The purpose of this list to prevent loops from appearing twice
     loop_ending_region_names = []
-    loop_entrances: typing.List[typing.List[HWEntrance]] = []
+    loop_entrances: list[list[HWEntrance]] = []
 
-    def cycle_search(node: Region, prev_node: Region, visited: typing.List[Region],
-                     visited_entrances: typing.List[HWEntrance]):
+    def cycle_search(node: Region, prev_node: Region, visited: list[Region],
+                     visited_entrances: list[HWEntrance]):
         visited.append(node)
         for exit_ in node.exits:
             if exit_.connected_region.name == prev_node.name or exit_.connected_region.name == node.name \
@@ -777,8 +778,8 @@ def delete_entrance(entrance: HWEntrance):
     del entrance
 
 
-def set_door_access_rules(world: "HammerwatchWorld", door_counts: typing.Dict[str, int],
-                          loop_entrances: typing.List[typing.List[HWEntrance]]):
+def set_door_access_rules(world: "HammerwatchWorld", door_counts: dict[str, int],
+                          loop_entrances: list[list[HWEntrance]]):
     # Set dynamic key/door access rules
     menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
 
@@ -891,12 +892,12 @@ big_key_table = {
 }
 
 
-def set_downstream_costs(key_names: typing.List[str], entrance: HWEntrance, seen,
-                         entrance_cache: typing.Dict[HWEntrance, typing.Dict[str, typing.Dict[str, int]]]):
+def set_downstream_costs(key_names: list[str], entrance: HWEntrance, seen,
+                         entrance_cache: dict[HWEntrance, dict[str, dict[str, int]]]):
     entr_id = get_unique_entrance_id(entrance)
     seen.append(entr_id)
     seen = seen.copy()
-    cost_dict: typing.Dict[str, typing.Dict[str, int]] = {item: {} for item in key_names}
+    cost_dict: dict[str, dict[str, int]] = {item: {} for item in key_names}
     if entrance.parent_region != entrance.connected_region:
         for exit_ in entrance.connected_region.exits:
             exit_id = get_unique_entrance_id(exit_)
