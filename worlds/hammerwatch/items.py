@@ -1,15 +1,15 @@
-import typing
+from typing import TYPE_CHECKING, NamedTuple, Optional, Iterable
 from BaseClasses import Item, ItemClassification
 from .names import item_name, option_names
-from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names, castle_act_names,
+from .util import (Counter, Campaign, GoalType, get_campaign, get_goal_type, get_active_key_names,
                    get_random_elements, PlayerClass, get_shopsanity_classes)
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
-class ItemData(typing.NamedTuple):
-    code: typing.Optional[int]
+class ItemData(NamedTuple):
+    code: Optional[int]
     classification: ItemClassification
 
 
@@ -20,7 +20,7 @@ class HammerwatchItem(Item):
 id_start = 0x110000
 
 counter = Counter(id_start - 1)
-collectable_table: typing.Dict[str, ItemData] = {
+collectable_table: dict[str, ItemData] = {
     item_name.bonus_chest: ItemData(counter.count(), ItemClassification.filler),
     item_name.key_bonus: ItemData(counter.count(), ItemClassification.progression),
     item_name.chest_blue: ItemData(counter.count(), ItemClassification.filler),
@@ -62,7 +62,7 @@ collectable_table: typing.Dict[str, ItemData] = {
     item_name.valuable_9: ItemData(counter.count(), ItemClassification.filler),
 }
 
-recovery_table: typing.Dict[str, ItemData] = {
+recovery_table: dict[str, ItemData] = {
     item_name.apple: ItemData(counter.count(), ItemClassification.filler),
     item_name.orange: ItemData(counter.count(), ItemClassification.filler),
     item_name.steak: ItemData(counter.count(), ItemClassification.filler),
@@ -71,7 +71,7 @@ recovery_table: typing.Dict[str, ItemData] = {
     item_name.mana_2: ItemData(counter.count(), ItemClassification.filler),
 }
 
-tool_table: typing.Dict[str, ItemData] = {
+tool_table: dict[str, ItemData] = {
     item_name.pan: ItemData(counter.count(), ItemClassification.progression),
     item_name.lever: ItemData(counter.count(), ItemClassification.progression),
     item_name.pickaxe: ItemData(counter.count(), ItemClassification.progression),
@@ -85,13 +85,13 @@ tool_table: typing.Dict[str, ItemData] = {
     item_name.lever_c1: ItemData(counter.count(), ItemClassification.progression),
 }
 
-special_table: typing.Dict[str, ItemData] = {
+special_table: dict[str, ItemData] = {
     item_name.sonic_ring: ItemData(counter.count(), ItemClassification.filler),
     item_name.serious_health: ItemData(counter.count(), ItemClassification.useful)
 }
 
 counter = Counter(id_start + 0x100 - 1)
-trap_table: typing.Dict[str, ItemData] = {
+trap_table: dict[str, ItemData] = {
     item_name.trap_bomb: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_mana: ItemData(counter.count(), ItemClassification.trap),
     item_name.trap_poison: ItemData(counter.count(), ItemClassification.trap),
@@ -108,7 +108,7 @@ trap_table: typing.Dict[str, ItemData] = {
 }
 
 counter = Counter(id_start + 0x200 - 1)
-custom_table: typing.Dict[str, ItemData] = {
+custom_table: dict[str, ItemData] = {
     item_name.key_bronze_big: ItemData(counter.count(), ItemClassification.progression),
     item_name.key_bronze_prison: ItemData(counter.count(4), ItemClassification.progression),
     item_name.key_silver_prison: ItemData(counter.count(), ItemClassification.progression),
@@ -132,11 +132,11 @@ custom_table: typing.Dict[str, ItemData] = {
     item_name.key_bronze_big_chambers: ItemData(counter.count(), ItemClassification.progression),
 }
 
-castle_floor_master_keys: typing.Dict[str, ItemData] = {}
+castle_floor_master_keys: dict[str, ItemData] = {}
 castle_floor_master_keys.update({key: ItemData(counter.count(), ItemClassification.progression) for key in item_name.castle_floor_master_keys})
 castle_floor_master_keys[item_name.key_bonus_archives_master] = ItemData(castle_floor_master_keys[item_name.key_bonus_archives_master].code, ItemClassification.useful)
 
-temple_floor_master_keys: typing.Dict[str, ItemData] = {
+temple_floor_master_keys: dict[str, ItemData] = {
     item_name.key_silver_b1: ItemData(counter.count(), ItemClassification.progression),
     item_name.key_silver_temple_1: ItemData(counter.count(), ItemClassification.progression),
     item_name.key_silver_temple_2: ItemData(counter.count(), ItemClassification.progression),
@@ -147,7 +147,7 @@ temple_floor_master_keys: typing.Dict[str, ItemData] = {
 }
 
 counter = Counter(id_start + 0x300 - 1)
-castle_button_table: typing.Dict[str, ItemData] = {
+castle_button_table: dict[str, ItemData] = {
     # item_name.btnc_b1_boss: ItemData(counter.count(), ItemClassification.progression),
     # item_name.btnc_b1_boss_part: ItemData(counter.count(), ItemClassification.progression_skip_balancing),
     # item_name.btnc_b2_boss: ItemData(counter.count(), ItemClassification.progression),
@@ -355,7 +355,7 @@ castle_button_table: typing.Dict[str, ItemData] = {
 }
 
 counter = Counter(id_start + 0x400 - 1)
-temple_button_table: typing.Dict[str, ItemData] = {
+temple_button_table: dict[str, ItemData] = {
     item_name.btn_pof: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_c3_puzzle: ItemData(counter.count(), ItemClassification.progression),
     item_name.btn_c2_puzzle: ItemData(counter.count(), ItemClassification.progression),
@@ -435,14 +435,14 @@ button_table = {
 }
 
 counter = Counter(id_start + 0x500 - 1)
-shop_table: typing.Dict[str, ItemData] = {}
+shop_table: dict[str, ItemData] = {}
 for upgrades in item_name.class_shop_upgrades.values():
     shop_table.update({upgrade: ItemData(counter.count(), ItemClassification.useful) for upgrade in upgrades})
 
 # for name, item_data in shop_table.items():
 #     print(f"{name}:{item_data.code}")
 
-item_table: typing.Dict[str, ItemData] = {
+item_table: dict[str, ItemData] = {
     **collectable_table,
     **recovery_table,
     **tool_table,
@@ -455,17 +455,17 @@ item_table: typing.Dict[str, ItemData] = {
     **shop_table,
 }
 
-stat_upgrade_items: typing.Tuple[str, str, str, str] = (
+stat_upgrade_items: tuple[str, str, str, str] = (
     item_name.stat_upgrade_damage,
     item_name.stat_upgrade_defense,
     item_name.stat_upgrade_health,
     item_name.stat_upgrade_mana,
 )
 
-trap_items: typing.List[str] = list(trap_table.keys())
+trap_items: list[str] = list(trap_table.keys())
 
 big_key_amount = 3
-key_table: typing.Dict[str, typing.Tuple[str, int]] = {
+key_table: dict[str, tuple[str, int]] = {
     item_name.key_bronze_big: (item_name.key_bronze, big_key_amount),
 
     item_name.key_bronze_big_prison: (item_name.key_bronze_prison, big_key_amount),
@@ -474,7 +474,7 @@ key_table: typing.Dict[str, typing.Tuple[str, int]] = {
     item_name.key_bronze_big_chambers: (item_name.key_bronze_chambers, big_key_amount),
 }
 
-castle_item_counts: typing.Dict[str, int] = {
+castle_item_counts: dict[str, int] = {
     item_name.bonus_chest: 227,
     item_name.key_bonus: 18,
     item_name.chest_blue: 15,
@@ -529,7 +529,7 @@ castle_item_counts: typing.Dict[str, int] = {
     item_name.key_bonus_chambers: 4,
 }
 
-temple_item_counts: typing.Dict[str, int] = {
+temple_item_counts: dict[str, int] = {
     item_name.bonus_chest: 75,
     item_name.key_bonus: 2,
     item_name.chest_blue: 10,
@@ -576,7 +576,7 @@ temple_item_counts: typing.Dict[str, int] = {
     item_name.loot_mini_flower: 51,
 }
 
-castle_button_item_counts: typing.Dict[str, int] = {
+castle_button_item_counts: dict[str, int] = {
     item_name.btnc_b1_rune_1: 1,
     item_name.btnc_p1_floor: 1,
     item_name.btnc_b1_rune_2: 1,
@@ -742,7 +742,7 @@ castle_button_item_counts: typing.Dict[str, int] = {
     item_name.btnc_c2_bonus_room: 1,
 }
 
-temple_button_item_counts: typing.Dict[str, int] = {
+temple_button_item_counts: dict[str, int] = {
     item_name.btn_c3_fall_bridge: 1,
     item_name.btn_c3_e_bridge: 1,
     item_name.btn_c3_puzzle: 1,
@@ -808,7 +808,7 @@ temple_button_item_counts: typing.Dict[str, int] = {
     item_name.btn_t3_gold_chutes: 1,
 }
 
-puzzle_button_items: typing.Set[str] = {
+puzzle_button_items: set[str] = {
     item_name.btnc_pstart_puzzle,
     item_name.btnc_p2_puzzle,
     item_name.btnc_a1_puzzle,
@@ -832,7 +832,7 @@ puzzle_button_items: typing.Set[str] = {
     item_name.btn_pof_puzzle,
 }
 
-shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {
+shop_item_counts: dict[PlayerClass, dict[str, int]] = {
     PlayerClass.Paladin: {
         item_name.shop_paladin_health: 5,
         item_name.shop_paladin_mana: 5,
@@ -998,7 +998,7 @@ shop_item_counts: typing.Dict[PlayerClass, typing.Dict[str, int]] = {
 #     print(f"{player_class.name}: {sum(shop_item_counts[player_class].values())}")
 
 
-def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: typing.Dict[str, int]):
+def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: dict[str, int]):
     if world.is_using_ut:
         return item_counts_table, 0
 
@@ -1199,7 +1199,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
         item_counts_table[item_name.ore] = 17
 
     # Build filler items list
-    filler_item_names: typing.List[str] = []
+    filler_item_names: list[str] = []
     filler_item_count: int = 0
     for item in item_counts_table.keys():
         if (item in item_table and item_table[item].classification == ItemClassification.filler
@@ -1224,7 +1224,7 @@ def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_t
     return item_counts_table, extra_items
 
 
-def roll_for_item(world, loot_chances: typing.Iterable[typing.Tuple[float, str]]):
+def roll_for_item(world, loot_chances: Iterable[tuple[float, str]]):
     rnd = world.random.random()
     for item in loot_chances:
         rnd -= item[0]
@@ -1233,6 +1233,6 @@ def roll_for_item(world, loot_chances: typing.Iterable[typing.Tuple[float, str]]
     return None
 
 
-filler_items: typing.List[str] = [item_name for item_name, data in item_table.items()
+filler_items: list[str] = [item_name for item_name, data in item_table.items()
                                   if data.classification == ItemClassification.filler]
-lookup_id_to_name: typing.Dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}
+lookup_id_to_name: dict[int, str] = {data.code: item_name for item_name, data in item_table.items() if data.code}

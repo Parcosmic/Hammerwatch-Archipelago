@@ -19,15 +19,15 @@ if TYPE_CHECKING:
 def set_rules(world: "HammerwatchWorld", door_counts: dict[str, int]):
     set_extra_rules(world)
 
-    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
+    start_region = world.multiworld.get_region(world.origin_region_name, world.player)
     if get_campaign(world) == Campaign.Castle:
         second_region_name = castle_region_names.p1_start
     else:
         second_region_name = temple_region_names.hub_main
     second_region = world.multiworld.get_region(second_region_name, world.player)
-    loop_entrances = get_entrance_loops(menu_region, second_region)
+    loop_entrances = get_entrance_loops(start_region, second_region)
 
-    set_door_access_rules(world, door_counts, loop_entrances)
+    set_door_access_rules(world, start_region, door_counts, loop_entrances)
 
 
 def connect_regions_er(world: "HammerwatchWorld"):
@@ -66,7 +66,6 @@ def connect_regions_er(world: "HammerwatchWorld"):
                 req_regions = None
             new_data = (old_data[0], block_type, req_regions)
             entrance_block_types[blocked_entrance] = new_data
-        # passage_blocking_codes = {}
 
     code_to_exit: dict[str, Optional[HWEntrance]] = {}
     code_to_region: dict[str, Region] = {}
@@ -281,7 +280,6 @@ def set_connections(world: "HammerwatchWorld",
                     code_to_exit: dict[str, Optional[HWEntrance]],
                     code_to_region: dict[str, Region], open_codes_ref: list[str]) -> bool:
     level_exits: list[HWEntrance] = world.level_exits.copy()
-    start_entrance = None
     act_range = world.options.er_act_range.value
     open_codes = open_codes_ref.copy()
 
@@ -294,10 +292,12 @@ def set_connections(world: "HammerwatchWorld",
         start_code = get_random_start_code(world, entrance_block_types, start_act, open_codes)
         world.start_exit = start_code
         start_region = code_to_region[start_code]
-        start_entrance = connect(world, {}, castle_region_names.menu, start_region.name, False)[0]
+        world.origin_region_name = start_region.name
+        # start_entrance = connect(world, {}, castle_region_names.menu, start_region.name, False)[0]
         # print(f"{start_region} : {start_code}")
     else:
-        start_region = world.multiworld.get_region(castle_region_names.menu, world.player)
+        start_region = world.multiworld.get_region(world.origin_region_name, world.player)
+    # print("Start Region: " + start_region.name)
     entrances = start_region.exits.copy()
     traversed_regions: list[str] = [start_region.name]
     needed_region_names = []
@@ -382,15 +382,18 @@ def set_connections(world: "HammerwatchWorld",
         needed_codes = []
         for needed_reg in needed_region_names:
             if needed_reg in passage_blocking_codes:
-                needed_codes.append(passage_blocking_codes[needed_reg])
+                needed_code = passage_blocking_codes[needed_reg]
+                if needed_code not in needed_codes:
+                    needed_codes.append(passage_blocking_codes[needed_reg])
         # print(f"  Needed regions: {needed_codes}")
+        world.random.shuffle(open_exits)
         # Move one way exits to the front of the list to be filled first
         for i in range(len(open_exits)):
             if open_exits[i].return_code is None:
                 open_exits.insert(0, open_exits.pop(i))
         # For each exit find a valid connection and connect them
         while len(open_exits):
-            open_exit = open_exits.pop(world.random.randint(0, len(open_exits) - 1))
+            open_exit = open_exits.pop(0)
             if open_exit.linked:
                 continue
             valid_exits = get_valid_exits(entrance_block_types, open_codes, code_to_region, traversed_regions,
@@ -419,7 +422,6 @@ def set_connections(world: "HammerwatchWorld",
             entrances.extend(link_region.exits)
     unconnected = []
     for exit_ in level_exits:
-        # Set exit names
         if not exit_.linked:
             unconnected.append(exit_)
     if len(unconnected) > 0:
@@ -429,10 +431,6 @@ def set_connections(world: "HammerwatchWorld",
             unconnect = level_exits.pop()
             if unconnect.linked:
                 disconnect_linked_exit(unconnect)
-        # If random start exit is on we have to remove the failed entrance
-        if world.options.random_start_exit.value:
-            start_entrance.parent_region.exits.remove(start_entrance)
-            start_entrance.connected_region.entrances.remove(start_entrance)
         return False
     return True
 
@@ -778,11 +776,9 @@ def delete_entrance(entrance: HWEntrance):
     del entrance
 
 
-def set_door_access_rules(world: "HammerwatchWorld", door_counts: dict[str, int],
+def set_door_access_rules(world: "HammerwatchWorld", start_region: Region, door_counts: dict[str, int],
                           loop_entrances: list[list[HWEntrance]]):
     # Set dynamic key/door access rules
-    menu_region = world.multiworld.get_region(castle_region_names.menu, world.player)
-
     # Remove some entrances and add new ones to make the downstream algo not traverse some paths and to consider some
     # doors as blocking
     def add_entrance(name: str, parent_name: str, to_name: str):
@@ -837,10 +833,15 @@ def set_door_access_rules(world: "HammerwatchWorld", door_counts: dict[str, int]
 
     # Set downstream costs - the keys that are required after a specific entrance
     key_names = get_active_key_names(world)
-    start_exits = [exit_ for exit_ in menu_region.exits if
-                   exit_.connected_region.name != castle_region_names.get_planks]
-    entrance_cache = {}
-    entrances = set_downstream_costs(key_names, start_exits[0], [], entrance_cache)
+    start_exits = [exit_ for exit_ in start_region.exits]
+    seen = []
+    entrance_cache: dict[HWEntrance, dict[str, dict[str, int]]] = {}
+    cost_dict: dict[str, dict[str, int]] = {item: {} for item in key_names}
+    for exit_ in start_exits:
+        entrances = set_downstream_costs(key_names, exit_, seen, entrance_cache)
+        entrance_cache[exit_] = entrances
+        for item in key_names:
+            cost_dict[item].update(entrances[item])
 
     # Set the downstream count for loops to be 0
     for loop in loop_entrances:

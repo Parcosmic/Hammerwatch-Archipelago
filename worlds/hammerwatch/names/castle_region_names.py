@@ -1,6 +1,4 @@
 # Castle Region Names
-menu = "Menu"
-
 hub = "AP Hub"
 
 p1_start = "PrF1: Start"

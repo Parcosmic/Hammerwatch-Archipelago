@@ -1,15 +1,14 @@
-import typing
-
+from typing import TYPE_CHECKING
 from .base import HammerwatchTestBase
 from .. import item_name, option_names
 from .. import options
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from .. import HammerwatchWorld
 
 
 def _get_floor_master_keys_in_itempool(test: HammerwatchTestBase):
-    keys_used: typing.Set[str] = set()
+    keys_used: set[str] = set()
     for item in test.multiworld.itempool:
         if "Master" not in item.name:
             continue
@@ -19,7 +18,7 @@ def _get_floor_master_keys_in_itempool(test: HammerwatchTestBase):
 
 def _test_no_duplicate_floor_master_keys(test: HammerwatchTestBase):
     test.world_setup()
-    keys_used: typing.Set[str] = set()
+    keys_used: set[str] = set()
     duplicate_keys = []
     for item in test.multiworld.itempool:
         if "Master" not in item.name:
@@ -37,7 +36,7 @@ def _test_no_useless_floor_master_keys(test: HammerwatchTestBase):
     test.world_setup()
     world: HammerwatchWorld = test.multiworld.worlds[1]
     existing_keys = _get_floor_master_keys_in_itempool(test)
-    gate_keys: typing.Set[str] = set()
+    gate_keys: set[str] = set()
     for entr in world.multiworld.get_entrances(world.player):
         if entr.pass_item is None or entr.pass_item in gate_keys:
             continue

@@ -1,11 +1,9 @@
-import typing
-
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING, Iterable, NamedTuple, Optional
 from BaseClasses import Location
 from .names import castle_location_names, temple_location_names, item_name, shop_location_names
 from .util import Counter, GoalType, Campaign, get_goal_type, get_buttonsanity_insanity, get_shopsanity_classes
 from .items import (castle_item_counts, temple_item_counts, castle_button_item_counts, temple_button_item_counts,
-                    recovery_table, get_item_counts, id_start, puzzle_button_items)
+                    get_item_counts, id_start, puzzle_button_items)
 from .options import RandomizeEnemyLoot
 from enum import IntFlag
 
@@ -25,8 +23,8 @@ class LocType(IntFlag):
     Buttoninsanity = 128 | Button
 
 
-class LocationData(typing.NamedTuple):
-    code: typing.Optional[int]
+class LocationData(NamedTuple):
+    code: Optional[int]
     loc_type: LocType = LocType.Normal
 
 
@@ -40,7 +38,7 @@ class HammerwatchLocation(Location):
 
 
 counter = Counter(id_start + 0x1000)
-castle_pickup_locations: typing.Dict[str, LocationData] = {
+castle_pickup_locations: dict[str, LocationData] = {
     castle_location_names.p1_p3_n_bridge: LocationData(counter.count(0)),
     castle_location_names.p1_bars_2: LocationData(counter.count()),
     castle_location_names.p1_entrance_hall_2: LocationData(counter.count(2), LocType.Recovery),
@@ -1216,7 +1214,7 @@ castle_pickup_locations: typing.Dict[str, LocationData] = {
     castle_location_names.e4_main: LocationData(counter.count(15), LocType.Recovery),
 }
 
-castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
+castle_enemy_loot_locations: dict[str, LocationData] = {
     castle_location_names.p2_miniboss_tick_1: LocationData(counter.count(), LocType.EnemyLoot),
     castle_location_names.p2_miniboss_tick_2: LocationData(counter.count(), LocType.EnemyLoot),
     castle_location_names.p2_tower_plant_1: LocationData(counter.count(), LocType.EnemyLoot),
@@ -1343,7 +1341,7 @@ castle_enemy_loot_locations: typing.Dict[str, LocationData] = {
     castle_location_names.b4_miniboss_lich_2: LocationData(counter.count(), LocType.EnemyLoot),
 }
 
-castle_button_locations: typing.Dict[str, LocationData] = {
+castle_button_locations: dict[str, LocationData] = {
     castle_location_names.btn_p1_boss: LocationData(counter.count(), LocType.Button),
     castle_location_names.btn_p1_boss_2: LocationData(counter.count(), LocType.Buttoninsanity),
     castle_location_names.btn_p1_boss_1: LocationData(counter.count(), LocType.Buttoninsanity),
@@ -1647,7 +1645,7 @@ castle_button_locations: typing.Dict[str, LocationData] = {
     castle_location_names.btn_c2_seq_bonus: LocationData(counter.count(), LocType.Button),
 }
 
-castle_combo_button_locations: typing.Set[str] = {
+castle_combo_button_locations: set[str] = {
     castle_location_names.btn_p1_boss,
     castle_location_names.btn_p2_boss,
     castle_location_names.btn_p3_boss_s,
@@ -1679,7 +1677,7 @@ castle_combo_button_locations: typing.Set[str] = {
     castle_location_names.btn_c3_rune,
 }
 
-castle_event_buttons: typing.Dict[str, str] = {
+castle_event_buttons: dict[str, str] = {
     castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,
     castle_location_names.btn_p2_rune_sequence_2: item_name.evc_p2_rune_sequence_part,
     castle_location_names.btn_p2_rune_sequence_1: item_name.evc_p2_rune_sequence_part,
@@ -1723,12 +1721,12 @@ castle_event_buttons: typing.Dict[str, str] = {
 }
 
 
-castle_locations: typing.Dict[str, LocationData] = {
+castle_locations: dict[str, LocationData] = {
     **castle_pickup_locations,
     **castle_enemy_loot_locations,
     **castle_button_locations,
 }
-castle_button_items: typing.Dict[str, str] = {
+castle_button_items: dict[str, str] = {
     castle_location_names.btn_p1_boss: item_name.btnc_b1_rune_1,
     castle_location_names.btn_p1_floor: item_name.btnc_p1_floor,
     castle_location_names.btn_p2_boss: item_name.btnc_b1_rune_2,
@@ -1893,7 +1891,7 @@ castle_button_items: typing.Dict[str, str] = {
 }
 
 counter = Counter(id_start)
-temple_pickup_locations: typing.Dict[str, LocationData] = {
+temple_pickup_locations: dict[str, LocationData] = {
     temple_location_names.hub_field_nw: LocationData(counter.count(0)),
     temple_location_names.hub_on_rock: LocationData(counter.count()),
     temple_location_names.hub_pof_reward: LocationData(counter.count()),
@@ -2422,7 +2420,7 @@ temple_pickup_locations: typing.Dict[str, LocationData] = {
     temple_location_names.pof_puzzle_4: LocationData(counter.count(), LocType.Puzzle),
 }
 
-temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
+temple_enemy_loot_locations: dict[str, LocationData] = {
     temple_location_names.c3_miniboss_tick_1: LocationData(counter.count(), LocType.EnemyLoot),
     temple_location_names.c3_miniboss_tick_2: LocationData(counter.count(), LocType.EnemyLoot),
     temple_location_names.c3_tower_plant: LocationData(counter.count(), LocType.EnemyLoot),
@@ -2532,7 +2530,7 @@ temple_enemy_loot_locations: typing.Dict[str, LocationData] = {
     temple_location_names.b3_tower_fire_3: LocationData(counter.count(), LocType.EnemyLoot),
 }
 
-temple_button_locations: typing.Dict[str, LocationData] = {
+temple_button_locations: dict[str, LocationData] = {
     temple_location_names.btn_hub_pof: LocationData(counter.count(), LocType.Button),
     temple_location_names.btn_hub_pof_1: LocationData(counter.count(), LocType.Buttoninsanity),
     temple_location_names.btn_hub_pof_2: LocationData(counter.count(), LocType.Buttoninsanity),
@@ -2641,7 +2639,7 @@ temple_button_locations: typing.Dict[str, LocationData] = {
     temple_location_names.btn_c2_pumps_3: LocationData(counter.count(), LocType.Button),
 }
 
-temple_combo_button_locations: typing.Set[str] = {
+temple_combo_button_locations: set[str] = {
     temple_location_names.btn_hub_pof,
     temple_location_names.btn_c3_pof,
     temple_location_names.btn_c2_pof,
@@ -2677,7 +2675,7 @@ temple_event_buttons = {
     # temple_location_names.btn_t2_rune_sw: item_name.btn_t2_light_bridges_part,
 }
 # Purely for remove_button in set_tots_random_locations, only needs data for buttons that could potentially not exist
-temple_button_items: typing.Dict[str, str] = {
+temple_button_items: dict[str, str] = {
     temple_location_names.btn_c3_floor_fall: item_name.btn_c3_fall_bridge,
     temple_location_names.btn_c3_bridge: item_name.btn_c3_e_bridge,
     temple_location_names.btn_c3_puzzle: item_name.btn_c3_puzzle,
@@ -2750,7 +2748,7 @@ temple_button_items: typing.Dict[str, str] = {
     temple_location_names.btn_t3_levers: item_name.btn_t3_gold_chutes,
 }
 
-temple_locations: typing.Dict[str, LocationData] = {
+temple_locations: dict[str, LocationData] = {
     **temple_pickup_locations,
     **temple_enemy_loot_locations,
     **temple_button_locations,
@@ -2758,7 +2756,7 @@ temple_locations: typing.Dict[str, LocationData] = {
 
 base_count = id_start + 0x10000 - 1
 counter = Counter(base_count)
-class_shop_table: typing.Dict[str, LocationData] = {}
+class_shop_table: dict[str, LocationData] = {}
 for _player_class, shop_type_locs in shop_location_names.shop_class_location_names.items():
     for shop_tier_names in shop_type_locs.values():
         for shop_tier in shop_tier_names:
@@ -2767,11 +2765,11 @@ for _player_class, shop_type_locs in shop_location_names.shop_class_location_nam
     base_count += 100
     counter = Counter(base_count)
 
-shop_locations: typing.Dict[str, LocationData] = {
+shop_locations: dict[str, LocationData] = {
     **class_shop_table,
 }
 
-all_locations: typing.Dict[str, LocationData] = {
+all_locations: dict[str, LocationData] = {
     **castle_locations,
     **temple_locations,
     **shop_locations,
@@ -2873,15 +2871,15 @@ def setup_locations(world: "HammerwatchWorld", hw_map: Campaign):
     return location_table, item_counts, random_locations
 
 
-def get_base_locations(world: "HammerwatchWorld", pickup_locs: typing.Dict[str, LocationData],
-                       enemy_loot_locs: typing.Dict[str, LocationData], button_locs: typing.Dict[str, LocationData],
-                       event_buttons: typing.Dict[str, str], combo_button_locs: typing.Set[str]):
-    location_table: typing.Dict[str, LocationData] = {}
+def get_base_locations(world: "HammerwatchWorld", pickup_locs: dict[str, LocationData],
+                       enemy_loot_locs: dict[str, LocationData], button_locs: dict[str, LocationData],
+                       event_buttons: dict[str, str], combo_button_locs: set[str]):
+    location_table: dict[str, LocationData] = {}
     location_table.update(pickup_locs)
     if world.options.randomize_enemy_loot != RandomizeEnemyLoot.option_off:
         location_table.update(enemy_loot_locs)
 
-    button_locations: typing.Dict[str, LocationData] = {}
+    button_locations: dict[str, LocationData] = {}
     if world.options.buttonsanity == world.options.buttonsanity.option_off:
         # Only add buttons that need locked items for logic
         button_locations.update({loc: button_locs[loc] for loc in event_buttons})
@@ -2940,9 +2938,9 @@ def get_tower_loot_table(world: "HammerwatchWorld"):
     return tower_loot_chances
 
 
-def set_castle_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
-                                item_counts: typing.Dict[str, int]):
-    random_locations: typing.Dict[str, int] = {}
+def set_castle_random_locations(world: "HammerwatchWorld", location_table: dict[str, LocationData],
+                                item_counts: dict[str, int]):
+    random_locations: dict[str, int] = {}
 
     if world.is_using_ut:
         if world.ut_re_gen_passthrough:
@@ -2956,7 +2954,7 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
             location_table.pop(location)
         item_counts[loc_item] -= 1
 
-    def keep_one_location(locations: typing.List[str]):
+    def keep_one_location(locations: list[str]):
         locations.pop(world.random.randrange(len(locations)))
         for location in locations:
             location_table.pop(location)
@@ -3233,9 +3231,9 @@ def set_castle_random_locations(world: "HammerwatchWorld", location_table: typin
     return location_table, item_counts, random_locations
 
 
-def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.Dict[str, LocationData],
-                              item_counts: typing.Dict[str, int]):
-    random_locations: typing.Dict[str, int] = {}
+def set_tots_random_locations(world: "HammerwatchWorld", location_table: dict[str, LocationData],
+                              item_counts: dict[str, int]):
+    random_locations: dict[str, int] = {}
 
     if world.is_using_ut:
         if world.ut_re_gen_passthrough:
@@ -3272,7 +3270,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
         if buttonsanity:
             remove_button(button_location)
 
-    def keep_one_location(locations: typing.List[str]):
+    def keep_one_location(locations: list[str]):
         index = world.random.randrange(len(locations))
         locations.pop(index)
         for location in locations:
@@ -3426,7 +3424,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     if random_locations[temple_location_names.rloc_passage_entrance] == 0:
         remove_secret(temple_location_names.p_ent2_secret)
     random_locations[temple_location_names.rloc_passage_middle] = world.random.randrange(5)
-    mid_locations_to_remove: typing.List[str] = [
+    mid_locations_to_remove: list[str] = [
         temple_location_names.p_mid1_1,
         temple_location_names.p_mid1_2,
         temple_location_names.p_mid2_1,
@@ -3504,7 +3502,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             location_table.pop(loc)
     random_locations[temple_location_names.rloc_passage_end] = world.random.randrange(3)
     random_locations[temple_location_names.rloc_p_alley] = world.random.randrange(4)
-    end_locations_to_remove: typing.List[str] = [
+    end_locations_to_remove: list[str] = [
         temple_location_names.p_end1_secret,
         temple_location_names.p_end3_1,
         temple_location_names.p_end3_2,
@@ -3524,7 +3522,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
             location_table.pop(loc)
     # Temple level 1
     # Custom logic for the keystone location, as a diamond spawns in one of the spots if it doesn't appear there
-    t1_keystone_locations: typing.List[str] = [
+    t1_keystone_locations: list[str] = [
         temple_location_names.t1_sun_block_hall_4,
         temple_location_names.t1_fire_trap_by_sun_turret_3,
         temple_location_names.t1_ledge_after_block_trap_1,
@@ -3632,7 +3630,7 @@ def set_tots_random_locations(world: "HammerwatchWorld", location_table: typing.
     else:
         remove_puzzle(temple_location_names.t2_sw_puzzle_1, temple_location_names.btn_t2_puzzle_s)
     t2_jones_reward = world.random.randrange(2)
-    t2_gold_key_locations: typing.List[str] = [
+    t2_gold_key_locations: list[str] = [
         temple_location_names.t2_right_of_pof_switch,
         temple_location_names.t2_sw_jail_2,
         temple_location_names.t2_boulder_room_2,

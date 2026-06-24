@@ -1,5 +1,4 @@
-from typing import Dict, List
-from . import castle_region_names 
+from . import castle_region_names
 from . import temple_region_names
 from .shop_location_names import shop_class_location_names
 from ..regions import castle_regions, temple_regions, p3_portal_boss_rune_room_regions
@@ -8,7 +7,7 @@ from ..locations import all_locations
 location_groups = {
 
 }
-castle_region_groups: Dict[str, List[str]] = {
+castle_region_groups: dict[str, list[str]] = {
     # Castle
     "Prison Floor 1 Locations": [
         castle_region_names.p1_start,
@@ -343,7 +342,7 @@ castle_region_groups: Dict[str, List[str]] = {
         castle_region_names.e4_main,
     ],
 }
-temple_region_groups: Dict[str, List[str]] = {
+temple_region_groups: dict[str, list[str]] = {
     "Temple Outside Locations": [
         temple_region_names.hub_main,
         temple_region_names.hub_rocks,

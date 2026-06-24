@@ -1,8 +1,5 @@
-import typing
-
 from .base import HammerwatchTestBase
-from .. import HammerwatchWorld, item_name, option_names
-from .. import options, locations, items
+from .. import HammerwatchWorld, option_names
 
 
 class TestERSeedOption(HammerwatchTestBase):

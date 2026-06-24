@@ -1,5 +1,5 @@
 import logging
-import typing
+from typing import Any, Optional
 
 from .names import item_name, castle_region_names, castle_location_names, temple_region_names, temple_location_names, \
     entrance_names, option_names, gate_names, location_groups
@@ -7,7 +7,7 @@ from .items import (HammerwatchItem, item_table, key_table, filler_items, trap_i
                     castle_item_counts, temple_item_counts, castle_button_table, temple_button_table)
 from .locations import (LocationData, all_locations, setup_locations, get_event_buttons,
                         castle_button_locations, temple_button_locations)
-from .regions import create_regions, HWEntrance, HWExitData, get_etr_name, connect_shops
+from .regions import create_regions, HWEntrance, get_etr_name, connect_shops
 from .rules import set_rules, connect_regions_er
 from . import tracker
 from .util import (Campaign, get_campaign, get_active_key_names, ShopInfo, ShopType, get_shopsanity_classes,
@@ -18,7 +18,6 @@ from .options import (HammerwatchOptions, client_required_options, option_groups
 from BaseClasses import Item, Tutorial, ItemClassification, CollectionState, MultiWorld
 from ..AutoWorld import World, WebWorld
 from Utils import visualize_regions
-from Fill import fill_restrictive
 
 
 class HammerwatchWeb(WebWorld):
@@ -56,7 +55,7 @@ class HammerwatchWorld(World):
 
     # Universal tracker variables
     is_using_ut: bool
-    ut_re_gen_passthrough: dict[str, typing.Any]
+    ut_re_gen_passthrough: dict[str, Any]
     ut_can_gen_without_yaml = True
     tracker_world = tracker.default_tracker_world
 
@@ -67,19 +66,19 @@ class HammerwatchWorld(World):
     location_name_groups = location_groups.location_groups
 
     campaign: Campaign
-    active_location_list: typing.Dict[str, LocationData]
-    item_counts: typing.Dict[str, int]
-    world_itempool: typing.List[Item]
-    random_locations: typing.Dict[str, int]
-    shop_locations: typing.Dict[str, ShopInfo]
-    door_counts: typing.Dict[str, int]
-    gate_types: typing.Dict[str, int]
-    level_exits: typing.List[HWEntrance]
-    exit_swaps: typing.Dict[str, str]
+    active_location_list: dict[str, LocationData]
+    item_counts: dict[str, int]
+    world_itempool: list[Item]
+    random_locations: dict[str, int]
+    shop_locations: dict[str, ShopInfo]
+    door_counts: dict[str, int]
+    gate_types: dict[str, int]
+    level_exits: list[HWEntrance]
+    exit_swaps: dict[str, str]
     start_exit: str
-    key_item_counts: typing.Dict[str, int]
+    key_item_counts: dict[str, int]
 
-    def fill_slot_data(self) -> typing.Dict[str, typing.Any]:
+    def fill_slot_data(self) -> dict[str, Any]:
         return {
             **self.options.as_dict(*client_required_options),
             "Random Locations": self.random_locations,
@@ -466,7 +465,7 @@ class HammerwatchWorld(World):
 
         # Portal Accessibility rune keys
         if self.options.portal_accessibility.value:
-            rune_key_locs: typing.List[str] = []
+            rune_key_locs: list[str] = []
 
             def get_region_item_locs(region: str):
                 # if self.options.buttonsanity.value == self.options.buttonsanity.option_shuffle:
@@ -580,14 +579,15 @@ class HammerwatchWorld(World):
         # state = CollectionState(self.multiworld)
         # state.update_reachable_regions(self.player)
         # state.sweep_for_advancements()
-        # visualize_regions(self.multiworld.get_region("Menu", self.player), "_testing.puml", show_locations=False,
-        #                   regions_to_highlight=state.reachable_regions[self.player])
+        # visualize_regions(self.multiworld.get_region(self.origin_region_name, self.player), "_testing.puml",
+        #                   show_locations=False,
+        #                   regions_to_highlight=set(state.reachable_regions[self.player]))
         pass
 
     @classmethod
     def stage_post_fill(cls, multiworld: MultiWorld):
         # If shopsanity is on for a given Hammerwatch world swap shop upgrades so the base upgrade is always first
-        world_shopsanity_items: typing.Dict[int, typing.Dict[str, typing.Optional[typing.Tuple]]] = {}
+        world_shopsanity_items: dict[int, dict[str, Optional[tuple]]] = {}
         swap_mode = 0
         for world in multiworld.get_game_worlds("Hammerwatch"):
             assert isinstance(world, HammerwatchWorld)
@@ -641,7 +641,7 @@ class HammerwatchWorld(World):
             for loc, shop in self.shop_locations.items():
                 spoiler_handle.write(f"\n{loc}: {shop.shop_type.name} Shop")
 
-    def interpret_slot_data(self, slot_data: typing.Dict[str, typing.Any]):
+    def interpret_slot_data(self, slot_data: dict[str, Any]):
         # self.gate_types = slot_data["Gate Types"]
         return {"Gate Types": {int(gate_index): key_type for gate_index, key_type in slot_data["Gate Types"].items()},
                 "Random Locations": slot_data["Random Locations"],

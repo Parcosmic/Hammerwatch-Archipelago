@@ -1,5 +1,4 @@
 # Shop region names
-import typing
 from .. import util
 
 shop_vitality_1 = "Vitality 1 Shop"
@@ -54,7 +53,7 @@ shop_defense = [
     shop_defense_5,
 ]
 
-shop_regions: typing.Dict[util.ShopType, typing.List[str]] = {
+shop_regions: dict[util.ShopType, list[str]] = {
     util.ShopType.Vitality: shop_vitality,
     util.ShopType.Combo: shop_combo,
     util.ShopType.Offense: shop_offense,

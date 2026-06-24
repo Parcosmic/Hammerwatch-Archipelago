@@ -1,7 +1,5 @@
-import typing
-from enum import Enum
-from collections import namedtuple
-from BaseClasses import Region, Entrance, CollectionState
+from typing import TYPE_CHECKING, Optional, Iterable
+from BaseClasses import Region, Entrance
 from worlds.generic.Rules import add_rule
 from .locations import HammerwatchLocation, LocationData, all_locations
 from .names import castle_location_names, temple_location_names, castle_region_names, temple_region_names, item_name, \
@@ -10,19 +8,8 @@ from .util import (GoalType, Campaign, get_goal_type, get_random_element, castle
                    get_key_code, get_key_name, ShopType, ShopInfo)
 from .options import RandomizeBonusKeys
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import HammerwatchWorld
-
-
-class DoorType(Enum):
-    Bronze = 0
-    Silver = 1
-    Gold = 2
-    Bonus = 3
-
-
-HWExitData = namedtuple("HWExitData",
-                        ["parent", "target", "return_code", "exit_code", "pass_item", "item_count", "items_consumed"])
 
 
 class HWEntrance(Entrance):
@@ -50,7 +37,7 @@ class HWEntrance(Entrance):
         self.swapped = False
 
 
-def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: typing.Dict[str, LocationData],
+def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locations: dict[str, LocationData],
                    gate_types: dict[str, int]):
     if campaign == Campaign.Castle:
         create_castle_regions(world, active_locations)
@@ -61,8 +48,7 @@ def create_regions(world: "HammerwatchWorld", campaign: Campaign, active_locatio
     create_shop_regions(world, active_locations)
 
 
-castle_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
-    castle_region_names.menu: None,
+castle_regions: dict[str, Optional[list[str]]] = {
     castle_region_names.hub: None,
     castle_region_names.p1_start: [
         castle_location_names.p1_by_nw_bronze_gate,
@@ -2217,7 +2203,7 @@ p3_portal_boss_rune_room_regions = {
 }
 
 
-def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
+def create_castle_regions(world: "HammerwatchWorld", active_locations: dict[str, LocationData]):
 
     castle_created_regions = [create_region(world, active_locations, region_name, locations)
                               for region_name, locations in castle_regions.items()]
@@ -2229,9 +2215,9 @@ def create_castle_regions(world: "HammerwatchWorld", active_locations: typing.Di
     world.multiworld.regions.extend(castle_created_regions)
 
 
-def create_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
+def create_shop_regions(world: "HammerwatchWorld", active_locations: dict[str, LocationData]):
     created_shop_regions = []
-    shop_regions: typing.Dict[ShopType, typing.List[Region]] = {}
+    shop_regions: dict[ShopType, list[Region]] = {}
 
     for shop_type, shop_names in shop_region_names.shop_regions.items():
         shop_regions[shop_type] = []
@@ -2246,30 +2232,30 @@ def create_shop_regions(world: "HammerwatchWorld", active_locations: typing.Dict
     world.multiworld.regions.extend(created_shop_regions)
 
 
-def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, int]):
-    used_names: typing.Dict[str, int] = {}
-    gate_counts: typing.List[typing.Dict[str, int]]
-    all_gate_counts: typing.Dict[str, int] = {
+def connect_castle_regions(world: "HammerwatchWorld", gate_codes: dict[str, int]):
+    used_names: dict[str, int] = {}
+    gate_counts: list[dict[str, int]]
+    all_gate_counts: dict[str, int] = {
         item_name.key_bronze: 103,
         item_name.key_silver: 13,
         item_name.key_gold: 16,
     }
-    prison_gate_items: typing.Dict[str, int] = {
+    prison_gate_items: dict[str, int] = {
         item_name.key_bronze_prison: 12,
         item_name.key_silver_prison: 2,
         item_name.key_gold_prison: 4,
     }
-    armory_gate_items: typing.Dict[str, int] = {
+    armory_gate_items: dict[str, int] = {
         item_name.key_bronze_armory: 29,
         item_name.key_silver_armory: 3,
         item_name.key_gold_armory: 2,
     }
-    archives_gate_items: typing.Dict[str, int] = {
+    archives_gate_items: dict[str, int] = {
         item_name.key_bronze_archives: 20,
         item_name.key_silver_archives: 5,
         item_name.key_gold_archives: 7,
     }
-    chambers_gate_items: typing.Dict[str, int] = {
+    chambers_gate_items: dict[str, int] = {
         item_name.key_bronze_chambers: 42,
         item_name.key_silver_chambers: 3,
         item_name.key_gold_chambers: 3,
@@ -2326,7 +2312,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
     if not world.options.exit_randomization.value or not world.options.random_start_exit.value:
-        connect(world, used_names, castle_region_names.menu, castle_region_names.p1_start, False)
+        world.origin_region_name = castle_region_names.p1_start
     connect(world, used_names, castle_region_names.p1_start, castle_region_names.hub, False)
 
     hub_start_regions = [
@@ -3201,8 +3187,7 @@ def connect_castle_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[st
             False, hammer_item, hammer_item_count, False, hammer_item_count > 0)
 
 
-temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
-    temple_region_names.menu: None,
+temple_regions: dict[str, Optional[list[str]]] = {
     temple_region_names.hub_main: [
         temple_location_names.hub_front_of_pof,
         temple_location_names.hub_behind_temple_entrance,
@@ -4225,8 +4210,7 @@ temple_regions: typing.Dict[str, typing.Optional[typing.List[str]]] = {
     ],
 }
 
-
-def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData]):
+def create_tots_regions(world: "HammerwatchWorld", active_locations: dict[str, LocationData]):
 
     temple_created_regions = [create_region(world, active_locations, region_name, locations)
                               for region_name, locations in temple_regions.items()]
@@ -4261,11 +4245,11 @@ def create_tots_regions(world: "HammerwatchWorld", active_locations: typing.Dict
         region.locations.append(HammerwatchLocation(world.player, loc_name, None, region))
 
 
-def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str, int]):
-    used_names: typing.Dict[str, int] = {}
+def connect_tots_regions(world: "HammerwatchWorld", gate_codes: dict[str, int]):
+    used_names: dict[str, int] = {}
 
-    gate_counts: typing.List[typing.Dict[str, int]]
-    all_gate_counts: typing.Dict[str, int] = {
+    gate_counts: list[dict[str, int]]
+    all_gate_counts: dict[str, int] = {
         item_name.key_silver: 6,
         item_name.key_gold: 4,
     }
@@ -4309,7 +4293,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
 
     # If not doing entrance randomization or randomizing the start we start in the normal spot
     if not (world.options.exit_randomization.value and world.options.random_start_exit.value):
-        connect(world, used_names, temple_region_names.menu, temple_region_names.hub_main, False)
+        world.origin_region_name = temple_region_names.hub_main
 
     buttonsanity = world.options.buttonsanity.value > 0
     use_puzzle_button_rule = world.options.randomize_puzzles and buttonsanity
@@ -4739,13 +4723,12 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: typing.Dict[str,
     connect_exit(world, used_names, temple_region_names.pof_3_main, temple_region_names.hub_main,
                  entrance_names.t_hub_pof_return, None)
 
-    connect(world, used_names, temple_region_names.hub_main, temple_region_names.hub_boss_portal, False,
-            item_name.ev_solar_node, 6, False)
+    connect(world, used_names, temple_region_names.hub_main, temple_region_names.hub_boss_portal, False)
     if rando_all_exits:
         connect(world, used_names, temple_region_names.hub_boss_portal, temple_region_names.hub_main, False)
     connect_exit(world, used_names, temple_region_names.hub_boss_portal, temple_region_names.b3_main,
                  entrance_names.t_b3, entrance_names.t_hub_b3,
-                 None, 0, False, rando_all_exits, rando_all_exits)
+                 item_name.ev_solar_node, 6, False, rando_all_exits, rando_all_exits)
     connect(world, used_names, temple_region_names.b3_main, temple_region_names.b3_platform_1, False)
     connect(world, used_names, temple_region_names.b3_platform_1, temple_region_names.b3_platform_2, False)
     connect(world, used_names, temple_region_names.b3_platform_2, temple_region_names.b3_platform_3, False)
@@ -4931,8 +4914,8 @@ def connect_shops(world: "HammerwatchWorld"):
                     item_name.ore, 14 + r, False)
 
 
-def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, LocationData], name: str,
-                  locations: typing.List[str] = None) -> Region:
+def create_region(world: "HammerwatchWorld", active_locations: dict[str, LocationData], name: str,
+                  locations: list[str] = None) -> Region:
     region = Region(name, world.player, world.multiworld)
     if locations:
         for location in locations:
@@ -4944,7 +4927,7 @@ def create_region(world: "HammerwatchWorld", active_locations: typing.Dict[str, 
     return region
 
 
-def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str,
+def connect(world: "HammerwatchWorld", used_names: dict[str, int], source: str, target: str,
             two_way: bool, pass_item: str = None, item_count=1, items_consumed=True, use_pass_item=True):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
@@ -4959,7 +4942,7 @@ def connect(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source
     return connections
 
 
-def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
+def connect_region(world: "HammerwatchWorld", used_names: dict[str, int],
                    source_region: Region, target_region: Region,
                    pass_item: str = None, item_count=1, items_consumed=True, use_pass_item=True):
     entrance_name = get_entrance_name(used_names, source_region.name, target_region.name)
@@ -4976,8 +4959,8 @@ def connect_region(world: "HammerwatchWorld", used_names: typing.Dict[str, int],
     return connection
 
 
-def connect_all(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
-                pass_items: typing.Iterable[str], use_rule: bool):
+def connect_all(world: "HammerwatchWorld", used_names: dict[str, int], source: str, target: str, two_way: bool,
+                pass_items: Iterable[str], use_rule: bool):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -4997,8 +4980,8 @@ def connect_all(world: "HammerwatchWorld", used_names: typing.Dict[str, int], so
     return connection
 
 
-def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, two_way: bool,
-               pass_items: typing.Iterable[str], use_rule: bool):
+def connect_or(world: "HammerwatchWorld", used_names: dict[str, int], source: str, target: str, two_way: bool,
+               pass_items: Iterable[str], use_rule: bool):
     source_region = world.multiworld.get_region(source, world.player)
     target_region = world.multiworld.get_region(target, world.player)
 
@@ -5018,8 +5001,8 @@ def connect_or(world: "HammerwatchWorld", used_names: typing.Dict[str, int], sou
     return connection
 
 
-def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str, key_type: str,
-                 gate_codes: typing.Dict[str, int] = None, gate_items: typing.Dict[str, int] = None,
+def connect_gate(world: "HammerwatchWorld", used_names: dict[str, int], source: str, target: str, key_type: str,
+                 gate_codes: dict[str, int] = None, gate_items: dict[str, int] = None,
                  gate_code: str = None, two_way=True):
     entrances = []
 
@@ -5073,7 +5056,7 @@ def connect_gate(world: "HammerwatchWorld", used_names: typing.Dict[str, int], s
     return entrances
 
 
-def connect_exit(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, target: str,
+def connect_exit(world: "HammerwatchWorld", used_names: dict[str, int], source: str, target: str,
                  exit_code: str, return_code: str = None, pass_item: str = None, item_count=1, items_consumed=True,
                  two_way=True, randomize_exit=True):
     source_region = world.multiworld.get_region(source, world.player)
@@ -5105,7 +5088,7 @@ def get_shop_region_name(world: "HammerwatchWorld", shop_loc_name: str):
     return shop_region_names.shop_regions[shop_data.shop_type][max(shop_data.level-1, 0)]
 
 
-def connect_shop(world: "HammerwatchWorld", used_names: typing.Dict[str, int], source: str, shop_loc: str):
+def connect_shop(world: "HammerwatchWorld", used_names: dict[str, int], source: str, shop_loc: str):
     connect(world, used_names, source, get_shop_region_name(world, shop_loc), False)
 
 
@@ -5113,7 +5096,7 @@ def get_etr_name(source: str, target: str):
     return source + " > " + target
 
 
-def get_entrance_name(used_names: typing.Dict[str, int], source: str, target: str):
+def get_entrance_name(used_names: dict[str, int], source: str, target: str):
     base_name = get_etr_name(source, target)
     if base_name not in used_names:
         used_names[base_name] = 1

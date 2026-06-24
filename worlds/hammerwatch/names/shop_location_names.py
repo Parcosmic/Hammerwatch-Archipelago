@@ -1,12 +1,10 @@
 # Shop location names
-import typing
-from . import option_names
 from .. import util
 
 vitality_shop_location_count = [2, 2, 3, 3, 3]
 combo_shop_location_count = [5, 4, 4, 4, 4]
 
-shop_class_base_location_names: typing.Dict[util.PlayerClass, typing.Dict[util.ShopType, typing.List[int]]] = {
+shop_class_base_location_names: dict[util.PlayerClass, dict[util.ShopType, list[int]]] = {
     util.PlayerClass.Paladin: {
             util.ShopType.Vitality: vitality_shop_location_count,
             util.ShopType.Combo: combo_shop_location_count,
@@ -57,7 +55,7 @@ shop_class_base_location_names: typing.Dict[util.PlayerClass, typing.Dict[util.S
             util.ShopType.Powerup: [0],
         },
 }
-shop_class_location_names: typing.Dict[util.PlayerClass, typing.Dict[util.ShopType, typing.List[typing.List[str]]]] = {}
+shop_class_location_names: dict[util.PlayerClass, dict[util.ShopType, list[list[str]]]] = {}
 for _player_class, shop_type_locs in shop_class_base_location_names.items():
     shop_class_location_names[_player_class] = {}
     for shop_type, shop_counts in shop_type_locs.items():

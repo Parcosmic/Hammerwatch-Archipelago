@@ -1,10 +1,10 @@
-import typing
+from typing import TYPE_CHECKING
 from enum import Enum
 from ..AutoWorld import World
 from worlds.generic.Rules import add_rule, CollectionRule
 from .names import item_name
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from . import HammerwatchWorld
 
 
@@ -96,7 +96,7 @@ def get_option_value_from_class_name(class_name: str):
     return 0
 
 
-def get_shopsanity_classes(world: "HammerwatchWorld") -> typing.List[PlayerClass]:
+def get_shopsanity_classes(world: "HammerwatchWorld") -> list[PlayerClass]:
     classes = []
     if world.options.shopsanity_p1 > 0:
         p1_class = get_class_from_option_value(world.options.shopsanity_p1.value)
@@ -138,7 +138,7 @@ def get_key_name(key_code: int):
         return "bonus"
 
 
-def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
+def get_active_key_names(world: "HammerwatchWorld") -> list[str]:
     campaign = get_campaign(world)
     if campaign == Campaign.Castle:
         if world.options.key_mode.value == world.options.key_mode.option_floor_master:
@@ -201,7 +201,7 @@ def get_active_key_names(world: "HammerwatchWorld") -> typing.List[str]:
     return key_names
 
 
-def get_random_element(world: World, dictionary: typing.Dict):
+def get_random_element(world: World, dictionary: dict):
     total = 0
     for item, value in dictionary.items():
         total += value
@@ -213,7 +213,7 @@ def get_random_element(world: World, dictionary: typing.Dict):
     return None
 
 
-def get_random_elements(world: World, dictionary: typing.Dict, amount: int):
+def get_random_elements(world: World, dictionary: dict, amount: int):
     total = 0
     for value in dictionary.values():
         total += value

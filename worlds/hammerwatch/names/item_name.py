@@ -1,6 +1,4 @@
 # Item Names
-import typing
-from . import option_names
 from .. import util
 
 empty = "Empty"
@@ -322,7 +320,7 @@ shop_sorcerer_chill_slow = "Progressive Sorcerer Chill Slow"
 shop_sorcerer_chill_duration = "Progressive Sorcerer Chill Duration"
 shop_sorcerer_frost_shield = "Progressive Sorcerer Frost Shield"
 
-shop_upgrade_prereqs: typing.Dict[str, str] = {
+shop_upgrade_prereqs: dict[str, str] = {
     shop_paladin_combo_timer: shop_paladin_combo,
     shop_paladin_combo_nova: shop_paladin_combo,
     shop_paladin_combo_healing: shop_paladin_combo,
@@ -382,7 +380,7 @@ shop_upgrade_prereqs: typing.Dict[str, str] = {
     shop_sorcerer_chill_slow: shop_sorcerer_chill,
     shop_sorcerer_chill_duration: shop_sorcerer_chill,
 }
-shop_upgrade_roots: typing.Set[str] = {
+shop_upgrade_roots: set[str] = {
     shop_paladin_combo,
     shop_paladin_healing,
     shop_paladin_holy_storm,
@@ -408,7 +406,7 @@ shop_upgrade_roots: typing.Set[str] = {
     shop_sorcerer_chill,
 }
 
-class_shop_upgrades: typing.Dict[util.PlayerClass, typing.List[str]] = {
+class_shop_upgrades: dict[util.PlayerClass, list[str]] = {
     util.PlayerClass.Paladin: [
         shop_paladin_health,
         shop_paladin_mana,
@@ -859,7 +857,7 @@ group_shop_thief = "Thief Shop Upgrades"
 group_shop_priest = "Priest Shop Upgrades"
 group_shop_sorcerer = "Sorcerer Shop Upgrades"
 
-item_groups: typing.Dict[str, typing.Set[str]] = {
+item_groups: dict[str, set[str]] = {
     group_chests: {
         bonus_chest,
         chest_blue,

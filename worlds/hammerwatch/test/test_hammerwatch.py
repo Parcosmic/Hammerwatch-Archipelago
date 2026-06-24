@@ -1,5 +1,4 @@
-import typing
-
+from typing import Any
 from .base import HammerwatchTestBase
 from .. import item_name, option_names
 from .. import options, locations, items
@@ -60,7 +59,7 @@ class TestPlankGoal(HammerwatchTestBase):
 
 
 class TestHammerwatchOptions(HammerwatchTestBase):
-    option_sets: typing.Dict[str, typing.Dict[str, typing.Any]] = {
+    option_sets: dict[str, dict[str, Any]] = {
         "Castle max locations": {
             "goal": options.Goal.option_castle_escape,
             "bonus_behavior": options.BonusChestLocationBehavior.option_all,

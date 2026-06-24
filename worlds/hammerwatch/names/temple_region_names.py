@@ -1,6 +1,4 @@
 # Temple Region Names
-menu = "Menu"
-
 hub_main = "Temple Outside"
 hub_west = "Temple Outside West"
 hub_pof = "Temple Outside PoF Entrance"
