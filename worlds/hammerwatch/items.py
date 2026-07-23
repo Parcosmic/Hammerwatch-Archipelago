@@ -999,9 +999,6 @@ shop_item_counts: dict[PlayerClass, dict[str, int]] = {
 
 
 def get_item_counts(world: "HammerwatchWorld", campaign: Campaign, item_counts_table: dict[str, int]):
-    if world.is_using_ut:
-        return item_counts_table, 0
-
     extra_items: int = 0
 
     secrets: int = item_counts_table.pop(item_name.secret)

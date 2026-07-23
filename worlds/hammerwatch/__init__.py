@@ -206,10 +206,6 @@ class HammerwatchWorld(World):
                     self.item_counts[item_name.key_gold_b1] = 0
                     self.item_counts[item_name.key_silver_b1] = 0
 
-        # If we're using UT we don't need to create any items
-        if self.is_using_ut:
-            return
-
         total_required_locations = len(self.multiworld.get_unfilled_locations(self.player))
 
         # Remove progression items if the player starts with them
