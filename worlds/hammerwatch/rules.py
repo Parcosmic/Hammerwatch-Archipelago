@@ -7,7 +7,7 @@ from .names import (castle_region_names, temple_region_names, castle_location_na
                     entrance_names, item_name)
 from worlds.generic.Rules import add_rule
 from .items import big_key_amount
-from .regions import HWEntrance, get_etr_name, connect
+from .regions import HWEntrance, get_etr_name
 from .options import ExitRandomization
 from .util import (GoalType, Campaign, get_goal_type, get_campaign, get_active_key_names, get_buttonsanity_insanity,
                    add_loc_rule, add_loc_item_rule)
@@ -275,7 +275,7 @@ def get_random_start_code(world: "HammerwatchWorld",
 
 
 def set_connections(world: "HammerwatchWorld",
-                    entrance_block_types: dict[str, tuple[int, "EntranceFlags", Iterable]],
+                    entrance_block_types: dict[str, tuple[int, "EntranceFlags", Optional[list[str]]]],
                     passage_blocking_codes: dict[str, str],
                     code_to_exit: dict[str, Optional[HWEntrance]],
                     code_to_region: dict[str, Region], open_codes_ref: list[str]) -> bool:
@@ -297,19 +297,27 @@ def set_connections(world: "HammerwatchWorld",
         # print(f"{start_region} : {start_code}")
     else:
         start_region = world.multiworld.get_region(world.origin_region_name, world.player)
-    # print("Start Region: " + start_region.name)
     entrances = start_region.exits.copy()
     traversed_regions: list[str] = [start_region.name]
     needed_region_names = []
     open_exits = []
     impassable_exits = []
-    entrance_link_cache: dict[str, list[str]] = {}  # TODO: implement
 
-    # entrances: list[HWEntrance] = start_region.exits.copy()
-    # traversed_regions: set[str] = {start_region.name}
-    # needed_region_names: set[str] = set()
-    # open_exits = []
-    # impassable_exits: set[HWEntrance] = set()
+    def traverse_and_find_exits():
+        while len(entrances) > 0:
+            _entr: HWEntrance = entrances.pop(0)
+            if not _entr.linked:
+                if not check_req_regions(_entr):
+                    continue
+                open_exits.append(_entr)
+                # print(f"  Added {_entr.name} to open_exits")
+                continue
+            if _entr.connected_region.name in traversed_regions:
+                continue
+            if not check_req_regions(_entr):
+                continue
+            traversed_regions.append(_entr.connected_region.name)
+            entrances.extend(_entr.connected_region.exits)
 
     def disconnect_linked_exit(to_disconnect: HWEntrance):
         to_disconnect.connected_region.entrances.remove(to_disconnect)
@@ -326,7 +334,9 @@ def set_connections(world: "HammerwatchWorld",
         _is_impassable = False
         for _reg in _req_regions:
             if _reg not in traversed_regions:
-                needed_region_names.append(_reg)
+                if _reg not in needed_region_names:
+                    needed_region_names.append(_reg)
+                # print(f"  {_entr.name} is not traversable due to not having access to {_reg}")
                 _is_impassable = True
         if _is_impassable:
             impassable_exits.append(_entr)
@@ -341,44 +351,30 @@ def set_connections(world: "HammerwatchWorld",
         impassable_exits.clear()
         needed_region_names.clear()
         # Traverse current section
-        while len(entrances) > 0:
-            entr: HWEntrance = entrances.pop(0)
-            if not entr.linked:
-                if not check_req_regions(entr):
-                    continue
-                open_exits.append(entr)
-                continue
-            if entr.connected_region.name in traversed_regions:
-                continue
-            if not check_req_regions(entr):
-                continue
-            traversed_regions.append(entr.connected_region.name)
-            entrances.extend(entr.connected_region.exits)
-        for impassable in impassable_exits:
-            if impassable in open_exits:
-                open_exits.remove(impassable)
-        # If we ran out of valid placements we gotta swap a connection
+        traverse_and_find_exits()
+        # Removing the swap code because it produces more generation failures than it saves
         if (len(impassable_exits) + len(open_codes) > 0) and len(open_exits) == 0:
+            break
             # Get all two-way exits that are dead ends
-            options = [e for e in level_exits.copy() if e.linked and not e.swapped and e.return_code is not None
-                       and entrance_block_types[e.return_code][1] & EntranceFlags.DeadEnd and e.return_code not in passage_blocking_codes.values()]
-            if len(options) == 0:
-                # We don't have any more dead ends to swap with, give up and start over
-                break
-            swap = options.pop(world.random.randint(0, len(options) - 1))
-            swap2 = None
-            # Get opposite connection
-            for swapp in swap.connected_region.exits:
-                if swapp.connected_region == swap.parent_region and swapp.exit_code is not None:
-                    swap2 = swapp
-                    break
-            # print(f"  Unhooked {swap.name}: {swap.parent_region.name} > {swap.connected_region.name}")
-            traversed_regions.remove(swap.parent_region.name)
-            disconnect_linked_exit(swap)
-            disconnect_linked_exit(swap2)
-            swap.swapped = True
-            swap2.swapped = True
-            open_exits.insert(0, swap)
+            # options = [e for e in level_exits.copy() if e.linked and not e.swapped and e.return_code is not None
+            #            and entrance_block_types[e.return_code][1] & EntranceFlags.DeadEnd and e.return_code not in passage_blocking_codes.values()]
+            # if len(options) == 0:
+            #     # We don't have any more dead ends to swap with, give up and start over
+            #     break
+            # swap = options.pop(world.random.randint(0, len(options) - 1))
+            # swap2 = None
+            # # Get opposite connection
+            # for swapp in swap.connected_region.exits:
+            #     if swapp.connected_region == swap.parent_region and swapp.exit_code is not None:
+            #         swap2 = swapp
+            #         break
+            # # print(f"  Unhooked {swap.name}: {swap.parent_region.name} > {swap.connected_region.name}")
+            # traversed_regions.remove(swap.parent_region.name)
+            # disconnect_linked_exit(swap)
+            # disconnect_linked_exit(swap2)
+            # swap.swapped = True
+            # swap2.swapped = True
+            # open_exits.insert(0, swap)
         needed_codes = []
         for needed_reg in needed_region_names:
             if needed_reg in passage_blocking_codes:
@@ -386,14 +382,18 @@ def set_connections(world: "HammerwatchWorld",
                 if needed_code not in needed_codes:
                     needed_codes.append(passage_blocking_codes[needed_reg])
         # print(f"  Needed regions: {needed_codes}")
-        world.random.shuffle(open_exits)
+        # Build list of exits to connect from, retaining open_exits to add to while we connect new exits as to prevent
+        #  exits connecting to areas already connected to
+        exits_to_connect = list(open_exits)
+        world.random.shuffle(exits_to_connect)
         # Move one way exits to the front of the list to be filled first
-        for i in range(len(open_exits)):
-            if open_exits[i].return_code is None:
-                open_exits.insert(0, open_exits.pop(i))
+        for i in range(len(exits_to_connect)):
+            if exits_to_connect[i].return_code is None:
+                exits_to_connect.insert(0, exits_to_connect.pop(i))
         # For each exit find a valid connection and connect them
-        while len(open_exits):
-            open_exit = open_exits.pop(0)
+        while len(exits_to_connect):
+            open_exit = exits_to_connect.pop(0)
+            open_exits.remove(open_exit)
             if open_exit.linked:
                 continue
             valid_exits = get_valid_exits(entrance_block_types, open_codes, code_to_region, traversed_regions,
@@ -420,6 +420,7 @@ def set_connections(world: "HammerwatchWorld",
             # Find new entrances from new connection
             traversed_regions.append(link_region.name)
             entrances.extend(link_region.exits)
+            traverse_and_find_exits()
     unconnected = []
     for exit_ in level_exits:
         if not exit_.linked:
@@ -447,7 +448,7 @@ class EntranceFlags(IntFlag):
 
 # Required traversed regions is of the exit_code of the original entrance that requires them
 # (act, EntranceBlockType, required traversed regions)
-c_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list]]] = {
+c_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list[str]]]] = {
     entrance_names.c_p1_1: (1, EntranceFlags.DeadEnd, None),
     # Technically not a dead end if shortcut portal is enabled
     entrance_names.c_p1_2: (1, EntranceFlags.Unblocked, None),  # Leads to 3
@@ -569,7 +570,7 @@ pyramid_regions = (
 )
 # (act, EntranceBlockType, required traversed regions)
 # Required traversed regions are for the entrance with the exit_code in vanilla (not the return_code)
-t_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list]]] = {
+t_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list[str]]]] = {
     entrance_names.t_hub_t_ent: (1, EntranceFlags.Unblocked, None),
     entrance_names.t_hub_library: (1, EntranceFlags.Unblocked, None),
     entrance_names.t_hub_t3: (1, EntranceFlags.DeadEnd, None),
@@ -618,20 +619,20 @@ t_entrance_block_types: dict[str, tuple[int, EntranceFlags, Optional[list]]] = {
     entrance_names.t_t2_s_light_bridge: (3, EntranceFlags.BlockedButton,
                                          [temple_region_names.boss2_defeated, temple_region_names.cave_2_pumps]),  # Need glass walk
     entrance_names.t_t2_t3: (3, EntranceFlags.BlockedButton, None),  # Need column gate on the other side
+    # Adding fake required regions so that the seed doesn't require the pickaxe immediately
     entrance_names.t_t3_start_1: (3, EntranceFlags.Unblocked,
                                   [temple_region_names.cave_1_main, temple_region_names.cave_2_main,
                                    temple_region_names.cave_3_main]),
-    # Not actually required, to enforce that the right exits in the hub will have items
     entrance_names.t_t3_start_2: (3, EntranceFlags.Unblocked,
                                   [temple_region_names.cave_1_main, temple_region_names.cave_2_main,
                                    temple_region_names.cave_3_main]),
     entrance_names.t_t3_start_3: (3, EntranceFlags.Unblocked,
                                   [temple_region_names.cave_1_main, temple_region_names.cave_2_main,
                                    temple_region_names.cave_3_main]),
-    entrance_names.t_t3_fall_1: (3, EntranceFlags.OneWay, [node_regions]),
-    entrance_names.t_t3_fall_2: (3, EntranceFlags.OneWay, [node_regions]),
-    entrance_names.t_t3_fall_3: (3, EntranceFlags.OneWay, [node_regions]),
-    entrance_names.t_c3_temple: (3, EntranceFlags.DeadEnd, [temple_region_names.boss2_defeated, temple_region_names.cave_2_pumps]),
+    entrance_names.t_t3_fall_1: (3, EntranceFlags.OneWay, None),
+    entrance_names.t_t3_fall_2: (3, EntranceFlags.OneWay, None),
+    entrance_names.t_t3_fall_3: (3, EntranceFlags.OneWay, None),
+    entrance_names.t_c3_temple: (3, EntranceFlags.DeadEnd, [temple_region_names.boss2_defeated]),
     entrance_names.t_t3_t2: (3, EntranceFlags.BlockedButton, None),  # Could be blocked, so we assume worst case
     entrance_names.t_t_ent_hub: (3, EntranceFlags.DeadEnd, None),  # The block can only be removed from the other side
     entrance_names.t_t_ent_temple: (3, EntranceFlags.Unblocked, None),
@@ -694,7 +695,7 @@ def get_valid_exits(entrance_block_types, open_codes: list[str], code_to_region:
         data = entrance_block_types[exit_code]
         if (entrance.return_code is not None) == ((data[1] & EntranceFlags.OneWay) > 0):
             continue  # Only shuffle one way transitions together
-        act_dist = abs(act - data[0])
+        act_dist = data[0] - act
         type_match_exits.append(exit_code)
         if code_to_region[exit_code].name in traversed_regions:
             continue  # If we can reach the destination then don't consider the transition
