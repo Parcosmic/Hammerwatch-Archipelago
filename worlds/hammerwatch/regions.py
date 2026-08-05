@@ -3973,6 +3973,7 @@ temple_regions: dict[str, Optional[list[str]]] = {
         temple_location_names.t2_s_light_bridge_1,
         temple_location_names.t2_s_light_bridge_2,
     ],
+    temple_region_names.t2_s_exit: None,
     temple_region_names.t2_portal_gate: [
         temple_location_names.t2_portal_gate,
     ],
@@ -4615,6 +4616,8 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: dict[str, int]):
             item_name.btn_t2_light_bridges, 1, False)
     connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridges_s, exit_rando,
             item_name.btn_t2_light_bridges, 1, False)
+    connect(world, used_names, temple_region_names.t2_light_bridges_s, temple_region_names.t2_s_exit, exit_rando,
+            item_name.btn_t2_light_bridges, 1, False, exit_rando)
     connect(world, used_names, temple_region_names.t2_main, temple_region_names.t2_light_bridge_w, False,
             item_name.btn_t2_light_bridges, 1, False)
     connect(world, used_names, temple_region_names.t2_light_bridge_w, temple_region_names.t2_portal_gate, buttonsanity,
@@ -4623,7 +4626,7 @@ def connect_tots_regions(world: "HammerwatchWorld", gate_codes: dict[str, int]):
             item_name.btn_t2_portal_gate, 1, False, buttonsanity)
     connect_exit(world, used_names, temple_region_names.t2_light_bridge_w, temple_region_names.cave_3_portal,
                  entrance_names.t_c1_portal, entrance_names.t_t2_w_portal)
-    connect_exit(world, used_names, temple_region_names.t2_light_bridges_s, temple_region_names.cave_1_temple,
+    connect_exit(world, used_names, temple_region_names.t2_s_exit, temple_region_names.cave_1_temple,
                  entrance_names.t_c3_temple, entrance_names.t_t2_s_light_bridge)
 
     connect(world, used_names, temple_region_names.t3_blockade_s, temple_region_names.t3_s_gate, buttonsanity,
