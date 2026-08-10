@@ -37,7 +37,7 @@ OptionFilterShopRando = OptionFilter(RandomizeShopUpgrades, RandomizeShopUpgrade
 CanDigBricks: Rule = HasJackhammer | (HasBomb & Has(item_name.up_bomb_strength,
                                                     options=[OptionFilterShopRando],
                                                     filtered_resolution=True))
-CanRamjet: Rule = HasJet | Has(item_name.up_ramjet)
+CanRamjet: Rule = HasJet & Has(item_name.up_ramjet)
 CanDigDistantDirt: Rule = HasBomb | CanRamjet
 CanDigInAir: Rule = HasBomb & Has(item_name.up_bomb_air_firing,
                                   options=[OptionFilterShopRando],
@@ -356,9 +356,19 @@ region_data: dict[str, RegionData] = {
         LocData(location_name.wp_hill_right),
     ], [
         ExitData(region_name.windy_plains, ExitType.Internal),
+        ExitData(region_name.hell_trials, ExitType.Level, HasInfiniteFlight),
         ExitData(region_name.temple_destroyer_upper, ExitType.Level),
         ExitData(region_name.temple_destroyer, ExitType.Level),
     ]),
+    region_name.hell_trials: RegionData(None, [
+        ExitData(region_name.hell_end, ExitType.Internal,
+                 HasInfiniteFlight & HasHookshot & HasBomb & CanDigBricks & HasSprint & HasIgnitionAxe & CanRamjet
+                 & CanReachRegion(region_name.machino_shop_14)),
+        # Add armor requirement to this eventually
+    ]),
+    region_name.hell_end: RegionData([
+        LocData(location_name.c_hell_end),
+    ], None),
     region_name.rock_falls: RegionData([
         LocData(location_name.c_rf_top_right, CanHighJump),
         LocData(location_name.c_rf_end),
