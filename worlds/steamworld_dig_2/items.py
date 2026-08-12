@@ -154,7 +154,7 @@ item_table: Dict[str, ItemData] = {
     item_name.a_cereal: ItemData(counter.count(), ItemClassification.progression_skip_balancing, ItemType.Artifact),
     item_name.a_painting: ItemData(counter.count(), ItemClassification.progression_skip_balancing, ItemType.Artifact),
     item_name.a_lime_snowman: ItemData(counter.count(), ItemClassification.progression_skip_balancing, ItemType.Artifact),
-    item_name.a_completion_proof: ItemData(counter.count(), ItemClassification.useful, ItemType.Artifact),
+    item_name.a_completion_proof: ItemData(counter.count(), ItemClassification.progression_skip_balancing, ItemType.Artifact),
     item_name.up_fate_sigil: ItemData(counter.count(), ItemClassification.progression, ItemType.Blueprint),
     item_name.vectron_ore_1: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),
     item_name.vectron_ore_2: ItemData(counter.count(), ItemClassification.useful, ItemType.Resource),

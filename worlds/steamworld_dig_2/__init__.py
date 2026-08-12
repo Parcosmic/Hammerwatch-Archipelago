@@ -212,8 +212,7 @@ class SWD2World(World):
 
         if not self.options.randomize_artifacts:
             artifact_locs = dict(zip(artifact_locations, item_name.artifacts))
-            if not self.options.randomize_trials_reward:
-                artifact_locs.pop(location_name.c_hell_end)
+            artifact_locs.pop(location_name.c_hell_end)
             events.update(artifact_locs)
 
         for loc, itm in events.items():

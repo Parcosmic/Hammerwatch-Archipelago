@@ -123,7 +123,7 @@ class RandomizeOrbs(Toggle):
 
 
 class RandomizeTrialReward(Toggle):
-    """Determines if the reward at the end of the Trials is randomized
+    """Determines if the reward at the end of the Trials is randomized. Does nothing if artifacts are not randomized
     WARNING: the Trials are stupidly hard, enable at risk to the multiworld!
     """
     display_name = "Randomize Trials Reward"

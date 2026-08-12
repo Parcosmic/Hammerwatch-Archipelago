@@ -652,6 +652,9 @@ def setup_locations(world: "SWD2World"):
         })
     if world.options.randomize_artifacts and not world.options.randomize_trials_reward:
         active_locations.remove(location_name.c_hell_end)
+    # Never consider the proof of completion for artifact count purposes
+    if not world.options.randomize_artifacts:
+        event_locations.remove(location_name.c_hell_end)
     if world.options.skip_vectron and world.options.randomize_ores:
         active_locations.difference_update({
             location_name.v_ore_1,
@@ -666,4 +669,4 @@ def setup_locations(world: "SWD2World"):
     return active_locations, event_locations, item_counts
 
 
-lookup_id_to_name: Dict[int, str] = {data.code: item_name for item_name, data in all_locations.items() if data.code}
+lookup_id_to_name: Dict[int, str] = {data.code: loc_name for loc_name, data in all_locations.items() if data.code}
