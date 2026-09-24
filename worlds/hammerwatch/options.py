@@ -14,7 +14,8 @@ class Goal(Choice):
     Castle Plank Hunt: Find a certain number of Strange Planks in Castle Hammerwatch
     Temple All Bosses: Defeat all the bosses in the Temple of the Sun
     Temple Plank Hunt: Find a certain number of Strange Planks in the Temple of the Sun
-    Temple Pyramid of Fear: Unlock and complete the Pyramid of Fear"""
+    Temple Pyramid of Fear: Unlock and complete the Pyramid of Fear
+    See the game info page on where to go after collecting all required planks in the Plank Hunt goal modes"""
     display_name = "Goal"
     option_castle_all_bosses = 0
     alias_castle_kill_worldfire = 0
@@ -389,7 +390,6 @@ class KeyMode(Choice):
     """
     display_name = "Key Mode"
     option_generic = 0
-    alias_vanilla = 0
     option_act_specific = 1
     option_floor_master = 2
     default = 1
